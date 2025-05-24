@@ -7,6 +7,7 @@ import 'package:farmers_hub/utils/constants.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/categories/categories_screen.dart';
+import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
@@ -904,7 +905,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 16),
 
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => FilteredResultsScreen()),
+                                );
+                              }
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: onboardingColor,
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -271,7 +271,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           },
                         ),
 
-                        SizedBox(height: 8),
+                        SizedBox(height: 26),
 
                         Text(
                           "Enter Your Address",

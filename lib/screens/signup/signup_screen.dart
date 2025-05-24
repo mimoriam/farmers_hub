@@ -256,7 +256,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         },
                       ),
 
-                      SizedBox(height: 8),
+                      SizedBox(height: 26),
 
                       Text(
                         "Enter Your Address",
