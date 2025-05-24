@@ -17,10 +17,7 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
   final double bottomCornerRadius;
 
-  const UpwardNotchedAndRoundedRectangle({
-    this.topCornerRadius = 0.0,
-    this.bottomCornerRadius = 0.0,
-  });
+  const UpwardNotchedAndRoundedRectangle({this.topCornerRadius = 0.0, this.bottomCornerRadius = 0.0});
 
   @override
   Path getOuterPath(Rect host, Rect? guest) {
@@ -28,13 +25,15 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
 
     if (guest == null || !host.overlaps(guest)) {
       // If no guest or no overlap, draw a simple rounded rectangle for the host.
-      path.addRRect(RRect.fromRectAndCorners(
-        host,
-        topLeft: Radius.circular(topCornerRadius),
-        topRight: Radius.circular(topCornerRadius),
-        bottomLeft: Radius.circular(bottomCornerRadius),
-        bottomRight: Radius.circular(bottomCornerRadius),
-      ));
+      path.addRRect(
+        RRect.fromRectAndCorners(
+          host,
+          topLeft: Radius.circular(topCornerRadius),
+          topRight: Radius.circular(topCornerRadius),
+          bottomLeft: Radius.circular(bottomCornerRadius),
+          bottomRight: Radius.circular(bottomCornerRadius),
+        ),
+      );
       return path;
     }
 
@@ -51,10 +50,16 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     if (bottomCornerRadius > 0) {
       path.moveTo(host.left + bottomCornerRadius, host.bottom);
       path.arcTo(
-          Rect.fromLTWH(host.left, host.bottom - bottomCornerRadius * 2, bottomCornerRadius * 2, bottomCornerRadius * 2),
-          math.pi / 2, // Start angle (90 deg) for bottom-left
-          math.pi / 2, // Sweep angle (90 deg)
-          false);
+        Rect.fromLTWH(
+          host.left,
+          host.bottom - bottomCornerRadius * 2,
+          bottomCornerRadius * 2,
+          bottomCornerRadius * 2,
+        ),
+        math.pi / 2, // Start angle (90 deg) for bottom-left
+        math.pi / 2, // Sweep angle (90 deg)
+        false,
+      );
     } else {
       path.moveTo(host.left, host.bottom);
     }
@@ -65,10 +70,11 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     // Top-left rounded corner
     if (topCornerRadius > 0) {
       path.arcTo(
-          Rect.fromLTWH(host.left, host.top, topCornerRadius * 2, topCornerRadius * 2),
-          math.pi, // Start angle (180 deg) for top-left
-          math.pi / 2, // Sweep angle (90 deg)
-          false);
+        Rect.fromLTWH(host.left, host.top, topCornerRadius * 2, topCornerRadius * 2),
+        math.pi, // Start angle (180 deg) for top-left
+        math.pi / 2, // Sweep angle (90 deg)
+        false,
+      );
     } else {
       // If no radius, just a straight line to the corner
       path.lineTo(host.left, host.top);
@@ -80,9 +86,7 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     // Upward semicircular arc for the notch/bump
     // The circle containing the arc is centered at (fabCenter.dx, host.top)
     // with radius fabRadius.
-    Rect arcRect = Rect.fromCircle(
-        center: Offset(fabCenter.dx, host.top),
-        radius: fabRadius);
+    Rect arcRect = Rect.fromCircle(center: Offset(fabCenter.dx, host.top), radius: fabRadius);
     // Start angle 'math.pi' (9 o'clock on the circle) corresponds to (leftBumpEdgeX, host.top).
     // Sweep angle 'math.pi' (180 degrees counter-clockwise) traces the upper semicircle.
     path.arcTo(arcRect, math.pi, math.pi, false);
@@ -93,10 +97,11 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     // Top-right rounded corner
     if (topCornerRadius > 0) {
       path.arcTo(
-          Rect.fromLTWH(host.right - topCornerRadius * 2, host.top, topCornerRadius * 2, topCornerRadius * 2),
-          math.pi * 3 / 2, // Start angle (270 deg) for top-right
-          math.pi / 2, // Sweep angle (90 deg)
-          false);
+        Rect.fromLTWH(host.right - topCornerRadius * 2, host.top, topCornerRadius * 2, topCornerRadius * 2),
+        math.pi * 3 / 2, // Start angle (270 deg) for top-right
+        math.pi / 2, // Sweep angle (90 deg)
+        false,
+      );
     } else {
       // If no radius, just a straight line to the corner
       path.lineTo(host.right, host.top);
@@ -108,10 +113,16 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     // Bottom-right rounded corner
     if (bottomCornerRadius > 0) {
       path.arcTo(
-          Rect.fromLTWH(host.right - bottomCornerRadius * 2, host.bottom - bottomCornerRadius * 2, bottomCornerRadius * 2, bottomCornerRadius * 2),
-          0, // Start angle (0 deg) for bottom-right
-          math.pi / 2, // Sweep angle (90 deg)
-          false);
+        Rect.fromLTWH(
+          host.right - bottomCornerRadius * 2,
+          host.bottom - bottomCornerRadius * 2,
+          bottomCornerRadius * 2,
+          bottomCornerRadius * 2,
+        ),
+        0, // Start angle (0 deg) for bottom-right
+        math.pi / 2, // Sweep angle (90 deg)
+        false,
+      );
     }
 
     path.close(); // Connects to the starting point (around bottom-left corner)
@@ -119,7 +130,6 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     return path;
   }
 }
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -282,12 +292,11 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomAppBar(
             height: 70,
-            shape: const UpwardNotchedAndRoundedRectangle(
-              topCornerRadius: 12,
-            ),
+            shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
             notchMargin: 10,
             color: Colors.white,
-            elevation: 0, // Shadow for the BottomAppBar
+            elevation: 0,
+            // Shadow for the BottomAppBar
             clipBehavior: Clip.antiAlias,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -297,16 +306,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      semanticsLabel: 'Home Icon',
-                      "images/icons/home.svg",
-                    ),
+                    SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
                     Text(
                       'Home',
                       style: GoogleFonts.montserrat(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
-                        color: onboardingColor
+                        color: onboardingColor,
                       ),
                     ),
                   ],
@@ -315,37 +321,29 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      semanticsLabel: 'Chat Icon',
-                      "images/icons/chat.svg",
-                    ),
+                    SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
                     Text(
                       'Chat',
                       style: GoogleFonts.montserrat(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: onboardingColor
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: onboardingColor,
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(
-                  width: 6,
-                ),
+                const SizedBox(width: 6),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      semanticsLabel: 'Favorites Icon',
-                      "images/icons/favorites.svg",
-                    ),
+                    SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
                     Text(
                       'Favorites',
                       style: GoogleFonts.montserrat(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: onboardingColor
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: onboardingColor,
                       ),
                     ),
                   ],
@@ -354,16 +352,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(
-                      semanticsLabel: 'Profile Icon',
-                      "images/icons/user.svg",
-                    ),
+                    SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/user.svg"),
                     Text(
                       'Profile',
                       style: GoogleFonts.montserrat(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
-                          color: onboardingColor
+                        fontSize: 11,
+                        fontWeight: FontWeight.w500,
+                        color: onboardingColor,
                       ),
                     ),
                   ],
@@ -492,7 +487,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: InputDecoration(
                             hintText: 'Search',
                             hintStyle: GoogleFonts.poppins(
-                              textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                              textStyle: TextStyle(
+                                fontSize: 13.69,
+                                fontWeight: FontWeight.w400,
+                                height: 1.43,
+                              ),
                               color: Colors.grey,
                             ),
                             filled: true,
@@ -546,8 +545,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           autoPlayCurve: Curves.fastOutSlowIn,
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
-                            setState(() {
-                              _currentCarouselPage = index; // Update the current page index
+                            // Added for fixing the freeze bug on animation:
+                            Future.delayed(const Duration(milliseconds: 650), () {
+                              setState(() {
+                                _currentCarouselPage = index; // Update the current page index
+                              });
                             });
                           },
                         ),
@@ -1002,11 +1004,7 @@ class PostCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
-                    child: Icon(
-                      Icons.favorite_border_outlined,
-                      color: Colors.grey,
-                      size: 18,
-                    ),
+                    child: Icon(Icons.favorite_border_outlined, color: Colors.grey, size: 18),
                   ),
                 ),
               ],
