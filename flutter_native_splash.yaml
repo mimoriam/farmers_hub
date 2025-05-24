@@ -1,0 +1,13 @@
+flutter_native_splash:
+  color: "#0EC66F"
+
+  android_12:
+    color: "#0EC66F"
+
+  android: true
+  ios: true
+  web: false
+
+  fullscreen: true
+
+# dart run flutter_native_splash:create --path=flutter_native_splash.yaml

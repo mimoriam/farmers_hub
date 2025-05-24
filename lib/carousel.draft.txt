@@ -1,0 +1,76 @@
+// --- Image Carousel with Dynamic Indicator ---
+              Column(
+                children: [
+                  CarouselSlider.builder(
+                    itemCount: imgList.length, // Use the length of your image list
+                    itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
+                      return Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0), // Optional: add some margin between items
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300], // Placeholder background if image fails
+                          borderRadius: BorderRadius.circular(12.0),
+                        ),
+                        child: ClipRRect( // To ensure the image respects the border radius
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: Image.network(
+                            imgList[itemIndex], // Use network images from the list
+                            fit: BoxFit.cover,
+                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Center(
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes != null
+                                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            },
+                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                              return const Center(child: Text('Could not load image', style: TextStyle(color: Colors.red)));
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                    options: CarouselOptions(
+                      height: 180.0, // Adjusted height to match previous placeholder
+                      viewportFraction: 1, // Each item takes the full viewport width
+                      enableInfiniteScroll: true,
+                      autoPlay: true,
+                      autoPlayInterval: const Duration(seconds: 3),
+                      autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                      autoPlayCurve: Curves.fastOutSlowIn,
+                      scrollDirection: Axis.horizontal,
+                      onPageChanged: (index, reason) {
+                        setState(() {
+                          _currentCarouselPage = index; // Update the current page index
+                        });
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  // Dynamic Page Indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: imgList.asMap().entries.map((entry) {
+                      return GestureDetector(
+                        onTap: () {
+                          // Optional: Allow tapping dots to change carousel page
+                          // _carouselController.animateToPage(entry.key);
+                        },
+                        child: Container(
+                          width: 8.0,
+                          height: 8.0,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.green)
+                                .withOpacity(_currentCarouselPage == entry.key ? 0.9 : 0.4),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
