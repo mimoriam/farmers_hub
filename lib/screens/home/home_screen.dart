@@ -147,57 +147,67 @@ class _HomeScreenState extends State<HomeScreen> {
   // Placeholder image URLs for the carousel
   final List<String> imgList = [
     'images/backgrounds/tractor_ad.jpg',
-    'images/backgrounds/cow.png',
-    'images/backgrounds/cow_2.png',
-    'images/backgrounds/bull_and_cow.png',
-    'images/backgrounds/tools_and_equipments_bg.jpg',
+    'images/backgrounds/olive_oil_bottle.jpg',
+    'images/backgrounds/dry_fruits.jpg',
+    'images/backgrounds/food_marketplace.jpg',
+    'images/backgrounds/pomegranates.jpg',
   ];
 
   Widget _buildCategoryItem(String name, String imageUrl) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(color: categoriesBorderColor, width: 1),
-      ),
-      color: Colors.white,
-      child: InkWell(
-        // onTap: () {
-        //   // TODO: Implement navigation or action for category item
-        // },
-        borderRadius: BorderRadius.circular(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0), // Space between image and text
-                  // Use Image.network here to dynamically load from DB
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.contain, // Use contain to see the whole placeholder image
-                    // Error handling for image loading
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
-                    },
+    return GestureDetector(
+      onTap: () {
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+          );
+        }
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: categoriesBorderColor, width: 1),
+        ),
+        color: Colors.white,
+        child: InkWell(
+          // onTap: () {
+          //   // TODO: Implement navigation or action for category item
+          // },
+          borderRadius: BorderRadius.circular(10.0),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0), // Space between image and text
+                    // Use Image.network here to dynamically load from DB
+                    child: Image.asset(
+                      imageUrl,
+                      fit: BoxFit.contain, // Use contain to see the whole placeholder image
+                      // Error handling for image loading
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                name,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  color: categoriesTextColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  height: 1.54,
+                Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: categoriesTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    height: 1.54,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Handle long text
                 ),
-                overflow: TextOverflow.ellipsis, // Handle long text
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -470,7 +480,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (context.mounted) {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                          // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                          MaterialPageRoute(builder: (context) => const FilteredResultsScreen()),
                         );
                       }
                     },
@@ -530,12 +541,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: ClipRRect(
                               // borderRadius: BorderRadius.circular(12.0),
-                              child: Image.asset(imgList[itemIndex], fit: BoxFit.cover),
+                              child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
                             ),
                           );
                         },
                         options: CarouselOptions(
-                          height: 180.0,
+                          height: 200.0,
                           viewportFraction: 1,
                           enableInfiniteScroll: true,
                           autoPlay: true,

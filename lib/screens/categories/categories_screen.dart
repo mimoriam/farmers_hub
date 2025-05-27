@@ -105,162 +105,165 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: FormBuilder(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
-                  child: FormBuilderTextField(
-                    name: "search",
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: GoogleFonts.poppins(
+        child: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            child: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+                    child: FormBuilderTextField(
+                      name: "search",
+                      style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                        color: Colors.grey,
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                        onPressed: null,
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        hintStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                          color: Colors.grey,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                          onPressed: null,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          'Categories',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.71,
-                            color: Colors.black,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 10),
+                          child: Text(
+                            'Categories',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.71,
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
 
-                      GridView.builder(
-                        shrinkWrap: true,
-                        // Important to make GridView work inside SingleChildScrollView
-                        physics: const NeverScrollableScrollPhysics(),
-                        // Disable GridView's own scrolling
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2, // Number of columns
-                          crossAxisSpacing: 16.0, // Horizontal spacing between items
-                          mainAxisSpacing: 14.0, // Vertical spacing between items
-                        ),
-                        itemCount: categories.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          final category = categories[index];
-                          return _buildCategoryItem(context, category["name"]!, category["image"]!);
-                        },
-                      ),
-
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20, bottom: 20),
-                        child: Text(
-                          'Popular Categories',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            height: 1.71,
-                            color: Colors.black,
+                        GridView.builder(
+                          shrinkWrap: true,
+                          // Important to make GridView work inside SingleChildScrollView
+                          physics: const NeverScrollableScrollPhysics(),
+                          // Disable GridView's own scrolling
+                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2, // Number of columns
+                            crossAxisSpacing: 16.0, // Horizontal spacing between items
+                            mainAxisSpacing: 14.0, // Vertical spacing between items
                           ),
-                        ),
-                      ),
-
-                      SizedBox(
-                        height: 130.0,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: popularCategories.length,
+                          itemCount: categories.length,
                           itemBuilder: (BuildContext context, int index) {
-                            final category = popularCategories[index];
-                            return Padding(
-                              padding: EdgeInsets.only(
-                                right: index == popularCategories.length - 1 ? 0 : 12.0,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 20),
-                                child: Container(
-                                  width: 128,
-                                  height: 102,
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: ShapeDecoration(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(width: 0.2, color: const Color(0xFFFF9800)),
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    shadows: [
-                                      BoxShadow(
-                                        color: Color(0x0C000000),
-                                        blurRadius: 2,
-                                        offset: Offset(0, 1),
-                                        spreadRadius: 0,
-                                      ),
-                                    ],
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 9),
-                                        child: Container(
-                                          width: 48,
-                                          height: 46,
-
-                                          child: Image.asset(category['image']!, fit: BoxFit.contain),
-                                        ),
-                                      ),
-                                      Text(
-                                        category["name"]!,
-                                        style: TextStyle(
-                                          color: const Color(0xFF505050),
-                                          fontSize: 13.69,
-                                          fontWeight: FontWeight.w400,
-                                          height: 1.43,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                            final category = categories[index];
+                            return _buildCategoryItem(context, category["name"]!, category["image"]!);
                           },
                         ),
-                      ),
 
-                      const SizedBox(height: 24),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20, bottom: 20),
+                          child: Text(
+                            'Popular Categories',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              height: 1.71,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(
+                          height: 130.0,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: popularCategories.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              final category = popularCategories[index];
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  right: index == popularCategories.length - 1 ? 0 : 12.0,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  child: Container(
+                                    width: 128,
+                                    height: 102,
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: ShapeDecoration(
+                                      color: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(width: 0.2, color: const Color(0xFFFF9800)),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      shadows: [
+                                        BoxShadow(
+                                          color: Color(0x0C000000),
+                                          blurRadius: 2,
+                                          offset: Offset(0, 1),
+                                          spreadRadius: 0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(bottom: 9),
+                                          child: Container(
+                                            width: 48,
+                                            height: 46,
+
+                                            child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                          ),
+                                        ),
+                                        Text(
+                                          category["name"]!,
+                                          style: TextStyle(
+                                            color: const Color(0xFF505050),
+                                            fontSize: 13.69,
+                                            fontWeight: FontWeight.w400,
+                                            height: 1.43,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -71,25 +71,25 @@ class FirebaseService {
   Future<void> saveUserDataOnRegister({
     required User user,
     required String username,
-    required Map<String, String> phone,
-    required String address,
-    required String signUpMode,
+    // required Map<String, String> phone,
+    // required String address,
+    // required String signUpMode,
   }) async {
     try {
       await _firestore.collection("users").doc(user.uid).set({
-        "address": address,
+        // "address": address,
         "createdAt": FieldValue.serverTimestamp(),
         "email": user.email,
         "id": user.uid,
         "isEmailVerified": user.emailVerified ? true : false,
         "is_admin": false,
-        "phoneInfo": {
-          "completeNumber": phone["completeNumber"],
-          "countryCode": phone["countryCode"],
-          "countryISOCode": phone["countryISOCode"],
-        },
+        // "phoneInfo": {
+          // "completeNumber": phone["completeNumber"],
+          // "countryCode": phone["countryCode"],
+          // "countryISOCode": phone["countryISOCode"],
+        // },
         "profileImage": "default_pfp.jpg",
-        "signUpMode": signUpMode,
+        // "signUpMode": signUpMode,
         "username": username,
       });
     } catch (e) {

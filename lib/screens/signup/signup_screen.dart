@@ -187,123 +187,123 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       SizedBox(height: 26),
 
-                      Text(
-                        "Enter Phone Number",
-                        style: GoogleFonts.poppins(
-                          color: signUpTextColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      // Text(
+                      //   "Enter Phone Number",
+                      //   style: GoogleFonts.poppins(
+                      //     color: signUpTextColor,
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
+                      //
+                      // SizedBox(height: 12),
+                      //
+                      // IntlPhoneField(
+                      //   showCountryFlag: false,
+                      //   dropdownTextStyle: GoogleFonts.poppins(
+                      //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //   ),
+                      //   style: GoogleFonts.poppins(
+                      //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //   ),
+                      //   pickerDialogStyle: PickerDialogStyle(backgroundColor: scaffoldBackgroundColor),
+                      //   decoration: InputDecoration(
+                      //     hintText: 'Enter Phone Number',
+                      //     filled: true,
+                      //     fillColor: Colors.white,
+                      //     counterText: "",
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     focusedErrorBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //   ),
+                      //   initialCountryCode: 'US',
+                      //   onChanged: (phone) {
+                      //     try {
+                      //       bool isValid = phone.isValidNumber();
+                      //
+                      //       setState(() {
+                      //         isPhoneValidated = isValid;
+                      //
+                      //         if (isValid == true) {
+                      //           phoneInfo.addAll({
+                      //             "countryISOCode": phone.countryISOCode,
+                      //             "countryCode": phone.countryCode,
+                      //             "completeNumber": phone.completeNumber,
+                      //           });
+                      //         } else {
+                      //           phoneInfo.clear();
+                      //         }
+                      //       });
+                      //     } catch (e) {
+                      //       setState(() {
+                      //         isPhoneValidated = false;
+                      //         phoneInfo.clear();
+                      //       });
+                      //     }
+                      //   },
+                      // ),
+                      //
+                      // SizedBox(height: 26),
 
-                      SizedBox(height: 12),
-
-                      IntlPhoneField(
-                        showCountryFlag: false,
-                        dropdownTextStyle: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        pickerDialogStyle: PickerDialogStyle(backgroundColor: scaffoldBackgroundColor),
-                        decoration: InputDecoration(
-                          hintText: 'Enter Phone Number',
-                          filled: true,
-                          fillColor: Colors.white,
-                          counterText: "",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                        ),
-                        initialCountryCode: 'US',
-                        onChanged: (phone) {
-                          try {
-                            bool isValid = phone.isValidNumber();
-
-                            setState(() {
-                              isPhoneValidated = isValid;
-
-                              if (isValid == true) {
-                                phoneInfo.addAll({
-                                  "countryISOCode": phone.countryISOCode,
-                                  "countryCode": phone.countryCode,
-                                  "completeNumber": phone.completeNumber,
-                                });
-                              } else {
-                                phoneInfo.clear();
-                              }
-                            });
-                          } catch (e) {
-                            setState(() {
-                              isPhoneValidated = false;
-                              phoneInfo.clear();
-                            });
-                          }
-                        },
-                      ),
-
-                      SizedBox(height: 26),
-
-                      Text(
-                        "Enter Your Address",
-                        style: GoogleFonts.poppins(
-                          color: signUpTextColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-
-                      SizedBox(height: 12),
-
-                      // TODO: Address validation:
-                      FormBuilderTextField(
-                        name: 'address',
-                        maxLength: 60,
-                        autovalidateMode: validateMode,
-                        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                        style: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        decoration: InputDecoration(
-                          counterText: "",
-                          hintText: "Enter Address",
-                          prefixIcon: Icon(Icons.location_on_outlined, color: loginTextFieldIconColor),
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                        ),
-                      ),
-
-                      SizedBox(height: 26),
+                      // Text(
+                      //   "Enter Your Address",
+                      //   style: GoogleFonts.poppins(
+                      //     color: signUpTextColor,
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
+                      //
+                      // SizedBox(height: 12),
+                      //
+                      // // TODO: Address validation:
+                      // FormBuilderTextField(
+                      //   name: 'address',
+                      //   maxLength: 60,
+                      //   autovalidateMode: validateMode,
+                      //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+                      //   style: GoogleFonts.poppins(
+                      //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //   ),
+                      //   decoration: InputDecoration(
+                      //     counterText: "",
+                      //     hintText: "Enter Address",
+                      //     prefixIcon: Icon(Icons.location_on_outlined, color: loginTextFieldIconColor),
+                      //     filled: true,
+                      //     fillColor: Colors.white,
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     focusedErrorBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //   ),
+                      // ),
+                      //
+                      // SizedBox(height: 26),
 
                       Text(
                         "Enter Password",
@@ -371,76 +371,76 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 26),
-
-                      Text(
-                        "Select Mode",
-                        style: GoogleFonts.poppins(
-                          color: signUpTextColor,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-
-                      SizedBox(height: 12),
-
-                      FormBuilderDropdown(
-                        name: 'signUpMode',
-                        // initialValue: 'Seller',
-                        autovalidateMode: validateMode,
-                        validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                        hint: Text(
-                          "Category",
-                          style: GoogleFonts.poppins(
-                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                          ),
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.group, color: loginTextFieldIconColor),
-                          filled: true,
-                          fillColor: Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: loginTextFieldIconColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: textFieldBorderSideColor),
-                          ),
-                        ),
-                        dropdownColor: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(8),
-                        elevation: 4,
-                        menuMaxHeight: 300,
-                        items: [
-                          DropdownMenuItem(
-                            value: 'Seller',
-                            child: Text(
-                              'Signup as Seller',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                          DropdownMenuItem(
-                            value: 'Buyer',
-                            child: Text(
-                              'Signup as Buyer',
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      // SizedBox(height: 26),
+                      //
+                      // Text(
+                      //   "Select Mode",
+                      //   style: GoogleFonts.poppins(
+                      //     color: signUpTextColor,
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
+                      //
+                      // SizedBox(height: 12),
+                      //
+                      // FormBuilderDropdown(
+                      //   name: 'signUpMode',
+                      //   // initialValue: 'Seller',
+                      //   autovalidateMode: validateMode,
+                      //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
+                      //   hint: Text(
+                      //     "Category",
+                      //     style: GoogleFonts.poppins(
+                      //       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //     ),
+                      //   ),
+                      //   decoration: InputDecoration(
+                      //     prefixIcon: Icon(Icons.group, color: loginTextFieldIconColor),
+                      //     filled: true,
+                      //     fillColor: Colors.white,
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //     focusedBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: loginTextFieldIconColor),
+                      //     ),
+                      //     focusedErrorBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(8),
+                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
+                      //     ),
+                      //   ),
+                      //   dropdownColor: scaffoldBackgroundColor,
+                      //   borderRadius: BorderRadius.circular(8),
+                      //   elevation: 4,
+                      //   menuMaxHeight: 300,
+                      //   items: [
+                      //     DropdownMenuItem(
+                      //       value: 'Seller',
+                      //       child: Text(
+                      //         'Signup as Seller',
+                      //         style: GoogleFonts.poppins(
+                      //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     DropdownMenuItem(
+                      //       value: 'Buyer',
+                      //       child: Text(
+                      //         'Signup as Buyer',
+                      //         style: GoogleFonts.poppins(
+                      //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ],
+                      // ),
 
                       const SizedBox(height: 52),
 
@@ -453,8 +453,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                           onPressed:
-                              isPhoneValidated
-                                  ? () async {
+                              // isPhoneValidated ?
+                                  () async {
                                     if (_formKey.currentState!.validate()) {
                                       setState(() {
                                         error = '';
@@ -468,9 +468,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         await firebaseService.saveUserDataOnRegister(
                                           user: user.user!,
                                           username: _formKey.currentState?.fields['username']?.value,
-                                          phone: phoneInfo,
-                                          address: _formKey.currentState?.fields['address']?.value,
-                                          signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
+                                          // phone: phoneInfo,
+                                          // address: _formKey.currentState?.fields['address']?.value,
+                                          // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
                                         );
 
                                         if (context.mounted) {
@@ -486,8 +486,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                         });
                                       }
                                     }
-                                  }
-                                  : null,
+                                  },
+                                  // : null,
                           child: Text(
                             "Signup",
                             style: GoogleFonts.poppins(
