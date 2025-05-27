@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
 
+import 'package:farmers_hub/screens/details/details_screen.dart';
+
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,7 +22,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> popularPostsData = const [
       {
-        "image_url": "images/backgrounds/cow.png",
+        "image_url": "images/backgrounds/cow_2.png",
         "price": "330,000",
         "location": "Mirpur Mathelo",
         "likes": 12,
@@ -195,74 +197,108 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // width: 170,
-      // height: 200,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(12.0),
-                    topRight: Radius.circular(12.0),
-                    bottomLeft: Radius.circular(12.0),
-                    bottomRight: Radius.circular(12.0),
+    return GestureDetector(
+      onTap: () {
+        if (context.mounted) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen()));
+        }
+      },
+      child: Container(
+        // width: 170,
+        // height: 200,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.0),
+          boxShadow: [
+            BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(12.0),
+                      topRight: Radius.circular(12.0),
+                      bottomLeft: Radius.circular(12.0),
+                      bottomRight: Radius.circular(12.0),
+                    ),
+                    child: Image.asset(
+                      widget.postData['image_url'],
+                      height: 120,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  child: Image.asset(
-                    widget.postData['image_url'],
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
+                      child: Icon(Icons.favorite_border_outlined, color: Colors.grey, size: 18),
+                    ),
                   ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
-                    child: Icon(Icons.favorite_border_outlined, color: Colors.grey, size: 18),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
 
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Divider(color: dividerColor)),
+            Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Divider(color: dividerColor)),
 
-          Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 6),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Rs: ${widget.postData['price']}',
-                  style: GoogleFonts.poppins(
-                    color: onboardingColor,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 6),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Rs: ${widget.postData['price']}',
+                    style: GoogleFonts.poppins(
+                      color: onboardingColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.location_on_outlined, size: 16, color: popularPostsLocationTextColor),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        widget.postData['location'],
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.location_on_outlined, size: 16, color: popularPostsLocationTextColor),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Text(
+                          widget.postData['location'],
+                          style: GoogleFonts.poppins(
+                            color: popularPostsLocationTextColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      // const Spacer(), // Pushes likes to the right if location text is short
+                      Icon(Icons.favorite, size: 16, color: Colors.redAccent),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.postData['likes'].toString(),
+                        style: GoogleFonts.poppins(
+                          color: popularPostsLocationTextColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.postData['posted_ago'],
                         style: GoogleFonts.poppins(
                           color: popularPostsLocationTextColor,
                           fontSize: 12,
@@ -270,53 +306,26 @@ class _ProductCardState extends State<ProductCard> {
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    // const Spacer(), // Pushes likes to the right if location text is short
-                    Icon(Icons.favorite, size: 16, color: Colors.redAccent),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.postData['likes'].toString(),
-                      style: GoogleFonts.poppins(
-                        color: popularPostsLocationTextColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                      const Spacer(), // Pushes views to the right
+                      const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
+                      const SizedBox(width: 4),
+                      Text(
+                        widget.postData['views'].toString(),
+                        style: GoogleFonts.poppins(
+                          color: popularPostsLocationTextColor,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.postData['posted_ago'],
-                      style: GoogleFonts.poppins(
-                        color: popularPostsLocationTextColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(), // Pushes views to the right
-                    const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
-                    const SizedBox(width: 4),
-                    Text(
-                      widget.postData['views'].toString(),
-                      style: GoogleFonts.poppins(
-                        color: popularPostsLocationTextColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w400,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

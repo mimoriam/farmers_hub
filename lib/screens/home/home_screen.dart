@@ -8,6 +8,7 @@ import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/categories/categories_screen.dart';
 import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
+import 'package:farmers_hub/screens/chat/chat_home.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
@@ -328,20 +329,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
-                    Text(
-                      'Chat',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: onboardingColor,
+                GestureDetector(
+                  onTap: () {
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ChatHome()),
+                      );
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
+                      Text(
+                        'Chat',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: onboardingColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 const SizedBox(width: 6),
                 Column(

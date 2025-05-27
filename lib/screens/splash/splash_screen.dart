@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return FlutterSplashScreen.fadeIn(
       backgroundColor: splashBackgroundColor,
-      useImmersiveMode: true,
+      // useImmersiveMode: true,
       asyncNavigationCallback: () async {
         // Get shared-prefs data here
         await Future.delayed(const Duration(seconds: 3));
