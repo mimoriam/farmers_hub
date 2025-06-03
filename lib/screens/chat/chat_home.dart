@@ -1,4 +1,5 @@
 import 'package:farmers_hub/screens/home/home_screen.dart';
+import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -118,83 +119,100 @@ class _ChatHomeState extends State<ChatHome> {
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-    bottomNavigationBar: BottomAppBar(
-      height: 70,
-      // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
-      notchMargin: 10,
-      color: Colors.white,
-      elevation: 0,
-      // Shadow for the BottomAppBar
-      clipBehavior: Clip.antiAlias,
+      bottomNavigationBar: BottomAppBar(
+        height: 70,
+        // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
+        notchMargin: 10,
+        color: Colors.white,
+        elevation: 0,
+        // Shadow for the BottomAppBar
+        clipBehavior: Clip.antiAlias,
 
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        // Children are the navigation items
-        children: <Widget>[
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
-              Text(
-                'Home',
-                style: GoogleFonts.montserrat(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: onboardingColor,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // Children are the navigation items
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
+                  Text(
+                    'Home',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat_selected.svg"),
-              Text(
-                'Chat',
-                style: GoogleFonts.montserrat(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: onboardingColor,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat_selected.svg"),
+                Text(
+                  'Chat',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: onboardingColor,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 6),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
-              Text(
-                'Favorites',
-                style: GoogleFonts.montserrat(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: onboardingColor,
+              ],
+            ),
+            const SizedBox(width: 6),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                Text(
+                  'Favorites',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: onboardingColor,
+                  ),
                 ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
+                  Text(
+                    'Profile',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
-              Text(
-                'Profile',
-                style: GoogleFonts.montserrat(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  color: onboardingColor,
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
-    ),
 
       body: SafeArea(
         child: GestureDetector(

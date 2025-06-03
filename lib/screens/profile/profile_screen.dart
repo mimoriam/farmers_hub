@@ -1,3 +1,4 @@
+import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -16,7 +17,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
   final firebaseService = FirebaseService();
   String _selectedTheme = 'Light';
 
@@ -47,35 +47,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           // Children are the navigation items
           children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
-                Text(
-                  'Home',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: onboardingColor,
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
+                  Text(
+                    'Home',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
-                Text(
-                  'Chat',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: onboardingColor,
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ChatHome()),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
+                  Text(
+                    'Chat',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             const SizedBox(width: 6),
             Column(
@@ -206,7 +223,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildSettingsItem(
                           icon: Icons.delete_outline,
                           text: 'Delete Account',
-                          textColor: Colors.red[700], // Optional: different color for destructive actions
+                          textColor: Colors.red[700],
+                          // Optional: different color for destructive actions
                           iconColor: Colors.red[700],
                           onTap: () {
                             // Handle Delete Account tap
@@ -435,9 +453,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0), // Rounded corners for the card
       ),
-      child: Column(
-        children: children,
-      ),
+      child: Column(children: children),
     );
   }
 
@@ -455,11 +471,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           leading: Icon(icon, color: iconColor ?? Colors.grey[600], size: 24),
           title: Text(
             text,
-            style: TextStyle(
-              fontSize: 16,
-              color: textColor ?? Colors.grey[800],
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 16, color: textColor ?? Colors.grey[800], fontWeight: FontWeight.w500),
           ),
           trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           onTap: onTap,
