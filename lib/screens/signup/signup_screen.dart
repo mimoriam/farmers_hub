@@ -52,7 +52,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 child: FormBuilder(
                   key: _formKey,
                   child: Column(
@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 12),
+                      SizedBox(height: 8),
 
                       FormBuilderTextField(
                         name: 'username',
@@ -128,7 +128,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 26),
+                      SizedBox(height: 18),
 
                       Text(
                         "Enter Your Email",
@@ -139,7 +139,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 12),
+                      SizedBox(height: 8),
 
                       FormBuilderTextField(
                         name: 'email',
@@ -185,7 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 26),
+                      SizedBox(height: 18),
 
                       // Text(
                       //   "Enter Phone Number",
@@ -314,7 +314,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 12),
+                      SizedBox(height: 8),
 
                       FormBuilderTextField(
                         name: 'password',
@@ -442,7 +442,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   ],
                       // ),
 
-                      const SizedBox(height: 52),
+                      const SizedBox(height: 42),
 
                       SizedBox(
                         width: double.infinity,
@@ -522,7 +522,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               "Login",
                               style: GoogleFonts.poppins(
                                 color: onboardingColor,
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                             ),
                           ),

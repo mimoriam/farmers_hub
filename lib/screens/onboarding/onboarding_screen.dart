@@ -8,6 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -84,12 +85,41 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
 
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6),
+              //   child: DropdownButtonFormField<String>(
+              //     menuMaxHeight: 100,
+              //     decoration: InputDecoration(
+              //       enabledBorder: OutlineInputBorder(
+              //         borderSide: const BorderSide(color: onboardingTextColor, width: 1.0),
+              //         borderRadius: BorderRadius.circular(8),
+              //       ),
+              //       focusedBorder: OutlineInputBorder(
+              //         borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+              //         borderRadius: BorderRadius.circular(8),
+              //       ),
+              //     ),
+              //     iconEnabledColor: onboardingTextColor,
+              //     value: selectedLanguage,
+              //     items:
+              //         [
+              //           'English',
+              //           'Arabic'
+              //         ].map((lang) => DropdownMenuItem(value: lang, child: Text(lang))).toList(),
+              //     onChanged: (value) {
+              //       setState(() {
+              //         selectedLanguage = value!;
+              //       });
+              //     },
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6),
-                child: DropdownButtonFormField<String>(
+                child: DropdownButtonFormField2<String>(
                   decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(color: onboardingTextColor, width: 1.0),
+                      borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -97,14 +127,26 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  iconEnabledColor: onboardingTextColor,
+                  iconStyleData: IconStyleData(
+                    // Using IconStyleData for icon properties
+                    iconEnabledColor: onboardingTextColor,
+                  ),
+
+                  dropdownStyleData: DropdownStyleData(
+                    offset: const Offset(0, -12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      color: Colors.white,
+                    ),
+                  ),
                   value: selectedLanguage,
+
                   items:
                       [
-                        'German',
-                        'Turkish',
                         'English',
-                      ].map((lang) => DropdownMenuItem(value: lang, child: Text(lang))).toList(),
+                        'Arabic',
+                      ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+
                   onChanged: (value) {
                     setState(() {
                       selectedLanguage = value!;
@@ -112,7 +154,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   },
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Row(

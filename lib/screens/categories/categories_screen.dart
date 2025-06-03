@@ -115,7 +115,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
@@ -147,7 +147,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +173,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2, // Number of columns
                             crossAxisSpacing: 16.0, // Horizontal spacing between items
-                            mainAxisSpacing: 14.0, // Vertical spacing between items
+                            mainAxisSpacing: 10.0, // Vertical spacing between items
+                            childAspectRatio: 1.2,
                           ),
                           itemCount: categories.length,
                           itemBuilder: (BuildContext context, int index) {

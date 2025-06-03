@@ -34,7 +34,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             _buildImageSection(),
 
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -115,7 +115,7 @@ Widget _buildTitleAndActions() {
                 style: TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green),
+                    color: onboardingColor),
               ),
               const SizedBox(height: 4),
               Text(
@@ -199,7 +199,7 @@ Widget _buildActionButtons(BuildContext context) {
             // Handle Chat action
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.green,
+            backgroundColor: onboardingColor,
             padding: const EdgeInsets.symmetric(vertical: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -207,7 +207,7 @@ Widget _buildActionButtons(BuildContext context) {
           ),
         ),
       ),
-      const SizedBox(width: 10),
+      // const SizedBox(width: 10),
     ],
   );
 }
@@ -219,7 +219,7 @@ Widget _buildVerifiedSellerBadge() {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: Colors.yellow[700],
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: const Text(
         'Verified Seller',

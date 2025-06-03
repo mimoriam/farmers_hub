@@ -120,7 +120,7 @@ class _ChatHomeState extends State<ChatHome> {
 
     bottomNavigationBar: BottomAppBar(
       height: 70,
-      shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
+      // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
       notchMargin: 10,
       color: Colors.white,
       elevation: 0,
@@ -150,7 +150,7 @@ class _ChatHomeState extends State<ChatHome> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
+              SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat_selected.svg"),
               Text(
                 'Chat',
                 style: GoogleFonts.montserrat(
@@ -181,7 +181,7 @@ class _ChatHomeState extends State<ChatHome> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/user.svg"),
+              SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
               Text(
                 'Profile',
                 style: GoogleFonts.montserrat(

@@ -100,7 +100,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
@@ -132,7 +132,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 18),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 18),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -158,23 +158,26 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     ),
                   ),
 
-                  GridView.builder(
-                    shrinkWrap: true,
-                    // Important to make GridView work inside SingleChildScrollView
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Number of columns
-                      crossAxisSpacing: 10.0, // Horizontal space between cards
-                      mainAxisSpacing: 14.0, // Vertical space between cards
-                      childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      // Important to make GridView work inside SingleChildScrollView
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of columns
+                        crossAxisSpacing: 10.0, // Horizontal space between cards
+                        mainAxisSpacing: 14.0, // Vertical space between cards
+                        childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                      ),
+                      itemCount: popularPostsData.length,
+                      itemBuilder: (context, index) {
+                        return ProductCard(postData: popularPostsData[index]);
+                      },
                     ),
-                    itemCount: popularPostsData.length,
-                    itemBuilder: (context, index) {
-                      return ProductCard(postData: popularPostsData[index]);
-                    },
                   ),
 
-                  const SizedBox(height: 82),
+                  const SizedBox(height: 42),
                 ],
               ),
             ),

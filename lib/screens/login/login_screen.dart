@@ -13,6 +13,8 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sign_button/sign_button.dart';
 
+import '../phone_auth/phone_auth_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -35,9 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: onboardingColor,
-    );
+    final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: systemUiOverlayStyle,
       child: Scaffold(
@@ -48,16 +48,16 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                   child: FormBuilder(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 16),
+                        SizedBox(height: 10),
 
                         Text(
-                          "Login to Farmer's Hub",
+                          "Login to YOUR CROP",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             color: onboardingTextColor,
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 22),
 
                         Text(
                           "Password",
@@ -217,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 42),
+                        SizedBox(height: 32),
 
                         SizedBox(
                           width: double.infinity,
@@ -265,7 +265,68 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 42),
+                        SizedBox(height: 12),
+
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: onboardingColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () {
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
+                                );
+                              }
+                            },
+                            child: Text(
+                              "Phone Authentication",
+                              style: GoogleFonts.montserrat(
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(height: 20),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: GoogleFonts.montserrat(
+                                color: accountText,
+                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                                );
+                              },
+                              child: Text(
+                                "Signup",
+                                style: GoogleFonts.montserrat(
+                                  color: onboardingColor,
+                                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        SizedBox(height: 22),
 
                         Row(
                           children: [
@@ -305,7 +366,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if (context.mounted) {
                                       Navigator.pushReplacement(
                                         context,
-                                        MaterialPageRoute(builder: (context) => SignupGoogleScreen(user: user)),
+                                        MaterialPageRoute(
+                                          builder: (context) => SignupGoogleScreen(user: user),
+                                        ),
                                       );
                                     }
                                   } else {
@@ -350,33 +413,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         SizedBox(height: 30),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: GoogleFonts.montserrat(
-                                color: accountText,
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
-                                );
-                              },
-                              child: Text(
-                                "Signup",
-                                style: GoogleFonts.montserrat(
-                                  color: onboardingColor,
-                                  textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     Text(
+                        //       "Don't have an account? ",
+                        //       style: GoogleFonts.montserrat(
+                        //         color: accountText,
+                        //         textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        //       ),
+                        //     ),
+                        //     GestureDetector(
+                        //       onTap: () {
+                        //         Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                        //         );
+                        //       },
+                        //       child: Text(
+                        //         "Signup",
+                        //         style: GoogleFonts.montserrat(
+                        //           color: onboardingColor,
+                        //           textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
 
                         SizedBox(height: 50),
                       ],

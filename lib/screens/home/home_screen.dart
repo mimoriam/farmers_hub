@@ -1,3 +1,6 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/screens/details/details_screen.dart';
+import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -14,6 +17,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'package:country_code_picker/country_code_picker.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -143,6 +148,34 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
 
+  String _selectedLocation = 'English';
+
+  void _openCountryPicker() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Select Country"),
+          content: SizedBox(
+            height: 300, // Limit height to avoid overflow
+            child: CountryCodePicker(
+              onChanged: (countryCode) {
+                setState(() {
+                  _selectedLocation = countryCode.name ?? countryCode.code!;
+                });
+                Navigator.of(context).pop(); // Close alert on selection
+              },
+              showCountryOnly: true,
+              showOnlyCountryWhenClosed: true,
+              showDropDownButton: true,
+              alignLeft: true,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   int _currentCarouselPage = 0; // To keep track of the current carousel page
 
   // Placeholder image URLs for the carousel
@@ -158,10 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CategoriesScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const FilteredResultsScreen()));
         }
       },
       child: Card(
@@ -217,7 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: scaffoldBackgroundColor);
+    final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
 
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
@@ -297,14 +327,14 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {},
             backgroundColor: onboardingColor,
-            elevation: 4,
+            elevation: 3,
             shape: CircleBorder(),
             child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomAppBar(
             height: 70,
-            shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
+            // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
             notchMargin: 10,
             color: Colors.white,
             elevation: 0,
@@ -318,7 +348,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
+                    SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home_selected.svg"),
                     Text(
                       'Home',
                       style: GoogleFonts.montserrat(
@@ -332,10 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 GestureDetector(
                   onTap: () {
                     if (context.mounted) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ChatHome()),
-                      );
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatHome()));
                     }
                   },
                   child: Column(
@@ -370,20 +397,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/user.svg"),
-                    Text(
-                      'Profile',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: onboardingColor,
+                GestureDetector(
+                  onTap: () {
+                    if (context.mounted) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
+                      Text(
+                        'Profile',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: onboardingColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -395,7 +429,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Location Picker
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 20),
+                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
                     child: Text.rich(
                       TextSpan(
                         children: [
@@ -424,60 +458,160 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.location_on_outlined, size: 20, color: onboardingColor),
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(width: 1, color: textFieldBorderSideColor),
-                              borderRadius: BorderRadius.circular(6),
+                        // ElevatedButton.icon(
+                        //   onPressed: _openCountryPicker,
+                        //   icon: const Icon(Icons.location_on_outlined, size: 20, color: onboardingColor),
+                        //   style: ElevatedButton.styleFrom(
+                        //     shape: RoundedRectangleBorder(
+                        //       side: BorderSide(width: 1, color: textFieldBorderSideColor),
+                        //       borderRadius: BorderRadius.circular(6),
+                        //     ),
+                        //     backgroundColor: homebackgroundColor,
+                        //     elevation: 0,
+                        //   ),
+                        //   label: Text(
+                        //     // 'Select Location',
+                        //     _selectedLocation,
+                        //     style: GoogleFonts.poppins(
+                        //       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        //       color: onboardingColor,
+                        //     ),
+                        //     overflow: TextOverflow.ellipsis,
+                        //   ),
+                        // ),
+
+                        Expanded(
+                          child: Padding(
+                            // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                            padding: const EdgeInsets.only(right: 8),
+                            child: DropdownButtonFormField2<String>(
+                              decoration: InputDecoration(
+                                labelText: "Location",
+                                floatingLabelBehavior: FloatingLabelBehavior.never,
+                                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: onboardingColor, width: 1.0),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              iconStyleData: IconStyleData(
+                                // Using IconStyleData for icon properties
+                                iconEnabledColor: onboardingTextColor,
+                              ),
+
+                              dropdownStyleData: DropdownStyleData(
+                                maxHeight: 300,
+                                offset: const Offset(0, -10),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.white,
+                                ),
+                              ),
+                              // value: "Damascus",
+
+                              items:
+                              [
+                                'Damascus',
+                                'Aleppo',
+                                'Homs',
+                                'Hama',
+                                "Latakia",
+                                "Tartus",
+                                "Idlib",
+                                "Deir ez-Zor",
+                                "Al-Hasakah",
+                                "Raqqa",
+                                "Daraa",
+                                "As-Suwayda",
+                                "Quneitra",
+                                "Al-Mayadin",
+                                "Al-Bukamal",
+                                'Manbij',
+                                "Afrin",
+                                "Tell Abyad",
+                                "Ras al-Ayn",
+                                "Ayn al-Arab"
+                              ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedLocation = value!;
+                                });
+                              },
                             ),
-                            backgroundColor: homebackgroundColor,
-                            elevation: 0,
-                          ),
-                          label: Text(
-                            'Select Location',
-                            style: GoogleFonts.poppins(
-                              textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                              color: onboardingColor,
-                            ),
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
 
-                        Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 10, left: 20),
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                              backgroundColor: onboardingColor,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Text(
-                              "Go",
-                              style: GoogleFonts.poppins(
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                                color: Colors.white,
+                        // Container(
+                        //   width: 176,
+                        //   decoration: BoxDecoration(
+                        //     borderRadius: BorderRadius.circular(6),
+                        //     color: homebackgroundColor,
+                        //     border: Border.all(
+                        //       width: 1,
+                        //       color: textFieldBorderSideColor,
+                        //     ),
+                        //   ),
+                        //   child: CountryCodePicker(
+                        //     showCountryOnly: true,
+                        //     showOnlyCountryWhenClosed: true,
+                        //     showFlag: false,
+                        //     initialSelection: "US",
+                        //       showFlagDialog: true,
+                        //     // alignLeft: true,
+                        //     textStyle: GoogleFonts.poppins(
+                        //       textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                        //       color: onboardingColor,
+                        //     ),
+                        //     textOverflow: TextOverflow.ellipsis,
+                        //   ),
+                        // ),
+
+                        Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 8, bottom: 10),
+                              child: ElevatedButton(
+                                onPressed: () {},
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                  backgroundColor: onboardingColor,
+                                  foregroundColor: Colors.white,
+                                  padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+                                ),
+                                child: Text(
+                                  "Go",
+                                  style: GoogleFonts.poppins(
+                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        ),
 
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.notifications_none_outlined),
-                          style: IconButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                            backgroundColor: onboardingColor,
-                            foregroundColor: Colors.white,
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                            SizedBox(width: 10),
+
+                            IconButton(
+                              onPressed: () {},
+                              icon: const Icon(Icons.notifications_none_outlined),
+                              style: IconButton.styleFrom(
+                                elevation: 0,
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                backgroundColor: onboardingColor,
+                                foregroundColor: Colors.white,
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 19),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -499,7 +633,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: IgnorePointer(
                       ignoring: true,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 20, right: 20, bottom: 16),
+                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 16),
                         child: FormBuilderTextField(
                           name: "search",
                           readOnly: true,
@@ -557,7 +691,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                         options: CarouselOptions(
-                          height: 200.0,
+                          height: 210.0,
                           viewportFraction: 1,
                           enableInfiniteScroll: true,
                           autoPlay: true,
@@ -615,7 +749,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Weather card:
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     child: Container(
                       width: 400,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
@@ -762,7 +896,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Categories
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -828,7 +962,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 20),
 
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       children: [
                         Text(
@@ -855,23 +989,33 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 12),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 20),
+                    padding: const EdgeInsets.only(left: 10),
                     child: SizedBox(
                       height: 240,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: popularPostsData.length,
-                        itemBuilder: (context, index) {
-                          final post = popularPostsData[index];
-                          return PostCard(
-                            imageUrl: post['image_url']!,
-                            price: post['price']!,
-                            location: post['location']!,
-                            likes: post['likes']!,
-                            postedAgo: post['posted_ago']!,
-                            views: post['views']!,
-                          );
+                      child: GestureDetector(
+                        onTap: () {
+                          if (context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const DetailsScreen()),
+                            );
+                          }
                         },
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: popularPostsData.length,
+                          itemBuilder: (context, index) {
+                            final post = popularPostsData[index];
+                            return PostCard(
+                              imageUrl: post['image_url']!,
+                              price: post['price']!,
+                              location: post['location']!,
+                              likes: post['likes']!,
+                              postedAgo: post['posted_ago']!,
+                              views: post['views']!,
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
@@ -879,7 +1023,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 14),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 8),
+                    padding: const EdgeInsets.only(left: 10, right: 10),
                     child: Container(
                       width: 360,
                       padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
@@ -952,21 +1096,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await firebaseService.signOut();
-                        if (context.mounted) {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()),
-                          );
-                        }
-                      },
-                      child: Text("Logout for testing"),
                     ),
                   ),
 
