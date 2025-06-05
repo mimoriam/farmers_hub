@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -181,10 +182,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // Placeholder image URLs for the carousel
   final List<String> imgList = [
     'images/backgrounds/tractor_ad.jpg',
-    'images/backgrounds/olive_oil_bottle.jpg',
     'images/backgrounds/dry_fruits.jpg',
-    'images/backgrounds/food_marketplace.jpg',
-    'images/backgrounds/pomegranates.jpg',
+    'images/backgrounds/olive_oil_bottle_2.jpg',
+    'images/backgrounds/grains.jpg',
   ];
 
   Widget _buildCategoryItem(String name, String imageUrl) {
@@ -325,7 +325,11 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Scaffold(
           backgroundColor: homebackgroundColor,
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () {
+              if (context.mounted) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPostScreen()));
+              }
+            },
             backgroundColor: onboardingColor,
             elevation: 3,
             shape: CircleBorder(),
@@ -484,7 +488,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         //     overflow: TextOverflow.ellipsis,
                         //   ),
                         // ),
-
                         Expanded(
                           child: Padding(
                             // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
@@ -516,31 +519,33 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-                              // value: "Damascus",
 
+                              // value: "Damascus",
                               items:
-                              [
-                                'Damascus',
-                                'Aleppo',
-                                'Homs',
-                                'Hama',
-                                "Latakia",
-                                "Tartus",
-                                "Idlib",
-                                "Deir ez-Zor",
-                                "Al-Hasakah",
-                                "Raqqa",
-                                "Daraa",
-                                "As-Suwayda",
-                                "Quneitra",
-                                "Al-Mayadin",
-                                "Al-Bukamal",
-                                'Manbij',
-                                "Afrin",
-                                "Tell Abyad",
-                                "Ras al-Ayn",
-                                "Ayn al-Arab"
-                              ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+                                  [
+                                        'Damascus',
+                                        'Aleppo',
+                                        'Homs',
+                                        'Hama',
+                                        "Latakia",
+                                        "Tartus",
+                                        "Idlib",
+                                        "Deir ez-Zor",
+                                        "Al-Hasakah",
+                                        "Raqqa",
+                                        "Daraa",
+                                        "As-Suwayda",
+                                        "Quneitra",
+                                        "Al-Mayadin",
+                                        "Al-Bukamal",
+                                        'Manbij',
+                                        "Afrin",
+                                        "Tell Abyad",
+                                        "Ras al-Ayn",
+                                        "Kobani",
+                                      ]
+                                      .map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang)))
+                                      .toList(),
 
                               onChanged: (value) {
                                 setState(() {
@@ -575,7 +580,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         //     textOverflow: TextOverflow.ellipsis,
                         //   ),
                         // ),
-
                         Row(
                           children: [
                             Padding(

@@ -87,9 +87,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     ];
 
     final List<Map<String, String>> popularCategories = [
-      {'name': 'Tomatoes', 'image': 'images/categories/tomatoes.jpg'},
-      {'name': 'Rice', 'image': 'images/categories/rice.jpg'},
       {'name': 'Apples', 'image': 'images/categories/apples.png'},
+      {'name': 'Cheese', 'image': 'images/categories/rice.jpg'},
+      {'name': 'Pomegranates', 'image': 'images/categories/tomatoes.jpg'},
     ];
 
     return Scaffold(

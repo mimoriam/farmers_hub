@@ -1,3 +1,4 @@
+import 'package:farmers_hub/screens/phone_auth/otp_verfication_screen.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -17,6 +18,7 @@ class PhoneAuthScreen extends StatefulWidget {
 class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
   bool isPhoneValidated = false;
   Map<String, String> phoneInfo = {};
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -112,7 +114,9 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                     dropdownTextStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                     ),
-                    style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    style: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                    ),
                     pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
                     decoration: InputDecoration(
                       hintText: 'Enter Phone Number',
@@ -177,9 +181,12 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                       onPressed: () {
-                        // if (context.mounted) {
-                        //   Navigator.push(context, MaterialPageRoute(builder: (context) => PhoneAuthScreen()));
-                        // }
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => OtpVerficationScreen()),
+                          );
+                        }
                       },
                       child: Text(
                         "Get OTP",

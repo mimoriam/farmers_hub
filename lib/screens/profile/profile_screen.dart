@@ -1,4 +1,7 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -20,12 +23,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final firebaseService = FirebaseService();
   String _selectedTheme = 'Light';
 
+  final List<String> _languages = ['English', 'Español', 'Français', 'Deutsch', '日本語', '中文', '한국어'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: homebackgroundColor,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (context.mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AddPostScreen()),
+            );
+          }
+        },
         backgroundColor: onboardingColor,
         elevation: 4,
         shape: CircleBorder(),
@@ -130,9 +142,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
 
       appBar: AppBar(
-        leading: BackButton(color: Colors.white),
+        // leading: BackButton(color: Colors.white),
         backgroundColor: onboardingColor,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         title: Text(
           "User Profile",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -303,7 +315,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icons.edit_note_outlined, // Pencil icon
           title: 'Edit Profile',
           onTap: () {
-            print('Edit Profile tapped');
             // Navigate to Edit Profile Screen
           },
         ),
@@ -311,19 +322,172 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icons.verified_user_outlined, // Shield/verified icon
           title: 'Account Verification Information',
           onTap: () {
-            print('Account Verification tapped');
             // Navigate to Account Verification Screen
           },
         ),
-        _buildSettingItemCard(
-          icon: Icons.language_outlined, // Globe icon
-          title: 'Language',
-          customTrailing: Text('English', style: TextStyle(color: Colors.grey[700], fontSize: 16)),
-          onTap: () {
-            print('Language tapped');
-            // Navigate to Language Selection Screen
-          },
+
+        SizedBox(height: 8),
+
+        Container(
+          // Decoration for the card-like appearance
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.0), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 2), // Subtle shadow
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Inner padding
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items to start and end
+            children: <Widget>[
+              // Left side: Icon and Label
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.language, // Globe icon
+                    color: Colors.grey[600],
+                    size: 24.0,
+                  ),
+                  SizedBox(width: 12.0), // Spacing between icon and text
+                  Text(
+                    'Language',
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey[700], fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+
+              // Right side: Language Dropdown
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 100, right: 0, top: 2, bottom: 2),
+                  // No explicit border for dropdown, styling via DropdownButton properties
+                  child: DropdownButtonFormField2<String>(
+                    items:
+                        [
+                          'English',
+                          'Arabic',
+                        ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    iconStyleData: IconStyleData(
+                      // Using IconStyleData for icon properties
+                      iconEnabledColor: onboardingTextColor,
+                    ),
+
+                    dropdownStyleData: DropdownStyleData(
+                      offset: const Offset(0, -12),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                    ),
+                    value: "English",
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
+
+        SizedBox(height: 8),
+
+        // _buildSettingItemCard(
+        //   icon: Icons.currency_exchange,
+        //   title: 'Currency',
+        //   onTap: () {
+        //     if (context.mounted) {
+        //       Navigator.push(
+        //           context, MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()));
+        //     }
+        //   },
+        // ),
+        Container(
+          // Decoration for the card-like appearance
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12.0), // Rounded corners
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                spreadRadius: 1,
+                blurRadius: 5,
+                offset: Offset(0, 2), // Subtle shadow
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Inner padding
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items to start and end
+            children: <Widget>[
+              // Left side: Icon and Label
+              Row(
+                children: <Widget>[
+                  Icon(Icons.currency_exchange, color: Colors.grey[600], size: 24.0),
+                  SizedBox(width: 12.0), // Spacing between icon and text
+                  Text(
+                    'Currency',
+                    style: TextStyle(fontSize: 16.0, color: Colors.grey[700], fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+
+              // Right side: Language Dropdown
+              Expanded(
+                child: Container(
+                  padding: EdgeInsets.only(left: 50, right: 0, top: 2, bottom: 2),
+                  // No explicit border for dropdown, styling via DropdownButton properties
+                  child: DropdownButtonFormField2<String>(
+                    items:
+                        [
+                          'Syria (SY)',
+                          'US Dollar (USD)',
+                        ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    iconStyleData: IconStyleData(
+                      // Using IconStyleData for icon properties
+                      iconEnabledColor: onboardingTextColor,
+                    ),
+
+                    dropdownStyleData: DropdownStyleData(
+                      offset: const Offset(0, -12),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                    ),
+                    value: "US Dollar (USD)",
+                    onChanged: (value) {
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+
         _buildSettingItemCard(
           icon: Icons.history_outlined, // Clock/history icon
           title: 'Post History',
@@ -338,6 +502,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettingItemCard({
+    required IconData icon,
+    required String title,
+    Widget? customTrailing,
+    VoidCallback? onTap,
+  }) {
+    return Card(
+      elevation: 2.0,
+      shadowColor: Colors.grey.withOpacity(0.15),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      margin: EdgeInsets.symmetric(vertical: 7.0),
+      color: Colors.white,
+      child: ListTile(
+        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        leading: Icon(icon, color: Colors.grey[700], size: 24),
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (customTrailing != null) customTrailing,
+            if (customTrailing != null) SizedBox(width: 8),
+            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+          ],
+        ),
+        onTap: onTap,
+        hoverColor: Colors.grey[50],
+        splashColor: Colors.grey[100],
+      ),
+    );
+  }
+
+  Widget _buildSettingLanguageItemCard({
     required IconData icon,
     required String title,
     Widget? customTrailing,

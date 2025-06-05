@@ -1,3 +1,4 @@
+import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -100,9 +101,9 @@ class _ChatHomeState extends State<ChatHome> {
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
-        leading: BackButton(color: Colors.white),
+        // leading: BackButton(color: Colors.white),
         backgroundColor: onboardingColor,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         title: Text(
           "All Chats",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -110,7 +111,11 @@ class _ChatHomeState extends State<ChatHome> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          if (context.mounted) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const AddPostScreen()));
+          }
+        },
         backgroundColor: onboardingColor,
         elevation: 4,
         shape: CircleBorder(),
