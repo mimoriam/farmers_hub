@@ -2,6 +2,8 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
+import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
+import 'package:farmers_hub/screens/feedback/send_feedback_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -11,6 +13,8 @@ import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -154,23 +158,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Profile Settings',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    'Profile Settings',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
                 ),
 
-                SizedBox(height: 10),
+                // SizedBox(height: 1),
                 _buildProfileInfoCard(),
 
-                SizedBox(height: 8),
+                // SizedBox(height: 1),
                 _buildSettingsList(),
 
-                SizedBox(height: 6),
-
+                // SizedBox(height: 1),
                 ListView(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -189,9 +195,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildSettingsItem(
                           icon: Icons.headset_mic_outlined,
                           text: 'Customer support',
-                          onTap: () {
-                            // Handle Customer support tap
-                            print('Customer support tapped');
+                          onTap: () async {
+                            String email = "mailto:M.mahsolek@gmail.com";
+
+                            if (await canLaunch(email)) {
+                              await launchUrlString(email);
+                            } else {
+                              throw 'Could not launch $email';
+                            }
                           },
                         ),
                         _buildSettingsItem(
@@ -204,18 +215,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         _buildSettingsItem(
                           icon: Icons.article_outlined,
-                          text: 'Terms & Conditions',
+                          text: 'Send Feedback',
                           onTap: () {
-                            // Handle Terms & Conditions tap
-                            print('Terms & Conditions tapped');
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => SendFeedBackScreen()),
+                              );
+                            }
                           },
                           showDivider: false, // No divider for the last item in a section
                         ),
                       ],
                     ),
 
-                    const SizedBox(height: 10),
-
+                    // const SizedBox(height: 3),
                     _buildSettingsCard(
                       context,
                       children: [
@@ -263,7 +277,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        // padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -297,7 +312,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildInfoRow(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -315,7 +330,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           icon: Icons.edit_note_outlined, // Pencil icon
           title: 'Edit Profile',
           onTap: () {
-            // Navigate to Edit Profile Screen
+            if (context.mounted) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfileScreen()));
+            }
           },
         ),
         _buildSettingItemCard(
@@ -326,7 +343,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
 
-        SizedBox(height: 8),
+        SizedBox(height: 4),
 
         Container(
           // Decoration for the card-like appearance
@@ -375,14 +392,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                     iconStyleData: IconStyleData(
                       // Using IconStyleData for icon properties
@@ -390,7 +401,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     dropdownStyleData: DropdownStyleData(
-                      offset: const Offset(0, -12),
+                      offset: const Offset(0, 0),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                     ),
                     value: "English",
@@ -404,18 +415,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        SizedBox(height: 8),
+        SizedBox(height: 4),
 
-        // _buildSettingItemCard(
-        //   icon: Icons.currency_exchange,
-        //   title: 'Currency',
-        //   onTap: () {
-        //     if (context.mounted) {
-        //       Navigator.push(
-        //           context, MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()));
-        //     }
-        //   },
-        // ),
+        _buildSettingItemCard(
+          icon: Icons.currency_exchange,
+          title: 'Currency',
+          onTap: () {
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
+              );
+            }
+          },
+        ),
         Container(
           // Decoration for the card-like appearance
           decoration: BoxDecoration(
@@ -459,14 +472,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
+                      enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                      focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
                     iconStyleData: IconStyleData(
                       // Using IconStyleData for icon properties
@@ -474,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     dropdownStyleData: DropdownStyleData(
-                      offset: const Offset(0, -12),
+                      offset: const Offset(0, 0),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                     ),
                     value: "US Dollar (USD)",
@@ -511,7 +518,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       elevation: 2.0,
       shadowColor: Colors.grey.withOpacity(0.15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      margin: EdgeInsets.symmetric(vertical: 7.0),
+      margin: EdgeInsets.symmetric(vertical: 5.0),
       color: Colors.white,
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
@@ -574,7 +581,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       elevation: 2.0,
       shadowColor: Colors.grey.withOpacity(0.15),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      margin: EdgeInsets.symmetric(vertical: 7.0),
+      margin: EdgeInsets.symmetric(vertical: 3.0),
       color: Colors.white,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),

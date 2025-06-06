@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   );
   final OutlineInputBorder _focusedInputBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8.0),
-    borderSide: const BorderSide(color: Colors.blue, width: 2.0),
+    borderSide: const BorderSide(color: onboardingColor, width: 2.0),
   );
   final OutlineInputBorder _errorInputBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(8.0),
@@ -47,10 +48,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
     Widget _buildRadioOptionContainer(String text, {bool isHorizontal = false}) {
       return Container(
         width: isHorizontal ? null : double.infinity, // Full width for vertical items
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.grey.shade300),
+          // borderRadius: BorderRadius.circular(8.0),
+          // border: Border.all(color: Colors.grey.shade300),
           // Note: To change background on selection, you'd need to listen to form changes
           // and rebuild, or use a more complex custom FormBuilderField.
           // This basic styling provides the border.
@@ -62,7 +63,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
-        // leading: BackButton(color: Colors.white),
+        leading: BackButton(color: Colors.white),
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
@@ -221,31 +222,78 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     Text("Category", style: _labelStyle),
                                     const SizedBox(height: 8),
 
-                                    FormBuilderRadioGroup<String>(
-                                      name: 'category',
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none, // No border for the group itself
-                                        contentPadding: EdgeInsets.zero,
+                                    Padding(
+                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                      padding: const EdgeInsets.only(right: 0, left: 6, bottom: 10),
+                                      child: DropdownButtonFormField2<String>(
+                                        decoration: InputDecoration(
+                                          labelText: "Select a category",
+                                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
+                                          enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        iconStyleData: IconStyleData(
+                                          // Using IconStyleData for icon properties
+                                          iconEnabledColor: onboardingTextColor,
+                                        ),
+
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 160,
+                                          offset: const Offset(0, -10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+
+                                        // value: "Damascus",
+                                        items:
+                                        [
+                                          'Fruits',
+                                          'Vegetables',
+                                          'Olive & Oil',
+                                          "Live Stock",
+                                          'Grains & Seeds',
+                                          "Fertilizers",
+                                        ]
+                                            .map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang)))
+                                            .toList(),
+                                        onChanged: (a) {},
                                       ),
-                                      options: ['Goat', 'Sheep', 'Dog']
-                                          .map(
-                                            (category) => FormBuilderFieldOption(
-                                              value: category,
-                                              child: _buildRadioOptionContainer(category),
-                                            ),
-                                          )
-                                          .toList(growable: false),
-                                      orientation: OptionsOrientation.vertical,
-                                      controlAffinity: ControlAffinity.leading,
-                                      // Shows radio circle
-                                      activeColor: Colors.blue,
-                                      validator: FormBuilderValidators.required(
-                                        errorText: 'Please select a category.',
-                                      ),
-                                      separator: const SizedBox(height: 10), // Spacing between options
                                     ),
 
-                                    const SizedBox(height: 24),
+                                    // FormBuilderRadioGroup<String>(
+                                    //   name: 'category',
+                                    //   decoration: const InputDecoration(
+                                    //     border: InputBorder.none, // No border for the group itself
+                                    //     contentPadding: EdgeInsets.zero,
+                                    //   ),
+                                    //   options: ['Goat', 'Sheep', 'Dog']
+                                    //       .map(
+                                    //         (category) => FormBuilderFieldOption(
+                                    //           value: category,
+                                    //           child: _buildRadioOptionContainer(category),
+                                    //         ),
+                                    //       )
+                                    //       .toList(growable: false),
+                                    //   orientation: OptionsOrientation.vertical,
+                                    //   controlAffinity: ControlAffinity.leading,
+                                    //   // Shows radio circle
+                                    //   activeColor: onboardingColor,
+                                    //   validator: FormBuilderValidators.required(
+                                    //     errorText: 'Please select a category.',
+                                    //   ),
+                                    //   separator: const SizedBox(height: 3), // Spacing between options
+                                    // ),
+
+                                    // const SizedBox(height: 24),
 
                                     Text("Gender", style: _labelStyle),
 
@@ -267,7 +315,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           .toList(growable: false),
                                       orientation: OptionsOrientation.horizontal,
                                       controlAffinity: ControlAffinity.leading,
-                                      activeColor: Colors.blue,
+                                      activeColor: onboardingColor,
                                       validator: FormBuilderValidators.required(
                                         errorText: 'Please select a gender.',
                                       ),
@@ -292,7 +340,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         // The image shows a dropdown arrow, this is a stylistic choice.
                                         // If it's a free text field, suffixIcon is decorative.
                                         // If it's a dropdown, use FormBuilderDropdown.
-                                        suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
                                       ),
                                       keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                       validator: FormBuilderValidators.compose([
@@ -318,7 +366,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         errorBorder: _errorInputBorder,
                                         focusedErrorBorder: _focusedInputBorder,
                                         contentPadding: _contentPadding,
-                                        suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
                                       ),
                                       keyboardType: TextInputType.number,
                                       validator: FormBuilderValidators.compose([

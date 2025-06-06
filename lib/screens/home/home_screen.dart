@@ -182,9 +182,10 @@ class _HomeScreenState extends State<HomeScreen> {
   // Placeholder image URLs for the carousel
   final List<String> imgList = [
     'images/backgrounds/tractor_ad.jpg',
-    'images/backgrounds/dry_fruits.jpg',
     'images/backgrounds/olive_oil_bottle_2.jpg',
     'images/backgrounds/grains.jpg',
+    'images/backgrounds/food_marketplace.jpg',
+    'images/backgrounds/pomegranates.jpg',
   ];
 
   Widget _buildCategoryItem(String name, String imageUrl) {
@@ -433,7 +434,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   // Location Picker
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                    // padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                    padding: EdgeInsets.only(top: 8, bottom: 0, left: 10, right: 10),
                     child: Text.rich(
                       TextSpan(
                         children: [
@@ -621,7 +623,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  SizedBox(height: 10),
+                  SizedBox(height: 3),
 
                   GestureDetector(
                     behavior: HitTestBehavior.opaque,
@@ -637,7 +639,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: IgnorePointer(
                       ignoring: true,
                       child: Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 16),
+                        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 12),
                         child: FormBuilderTextField(
                           name: "search",
                           readOnly: true,
@@ -706,12 +708,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           autoPlayCurve: Curves.fastOutSlowIn,
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
-                            // Added for fixing the freeze bug on animation:
-                            Future.delayed(const Duration(milliseconds: 650), () {
+                            if (reason.name == "manual") {
                               setState(() {
-                                _currentCarouselPage = index; // Update the current page index
+                                _currentCarouselPage = index;
                               });
-                            });
+                            } else {
+                              // Added for fixing the freeze bug on animation:
+                              Future.delayed(const Duration(milliseconds: 600), () {
+                                setState(() {
+                                  _currentCarouselPage = index; // Update the current page index
+                                });
+                              });
+                            }
                           },
                         ),
                       ),
@@ -842,12 +850,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.only(top: 12.7),
 
-                            decoration: ShapeDecoration(
-                              shape: RoundedRectangleBorder(
-                                side: BorderSide(width: 0.98, color: const Color(0xFFE5E7EB)),
-                              ),
-                            ),
-
+                            // decoration: ShapeDecoration(
+                            //   shape: RoundedRectangleBorder(
+                            //     side: BorderSide(width: 0.98, color: const Color(0xFFE5E7EB)),
+                            //   ),
+                            // ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [

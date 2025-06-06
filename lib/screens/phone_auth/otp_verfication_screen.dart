@@ -62,7 +62,7 @@ class _OtpVerficationScreenState extends State<OtpVerficationScreen> {
 
                 const SizedBox(height: 18),
 
-                Pinput(length: 5, onCompleted: (pin) => print(pin)),
+                Pinput(length: 4, onCompleted: (pin) => print(pin)),
 
                 SizedBox(height: 65),
 

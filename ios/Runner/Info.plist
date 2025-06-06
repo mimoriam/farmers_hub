@@ -10,6 +10,12 @@
 		<string>993215867881-582afiboqi4sqjj91da33v0pl22kp231.apps.googleusercontent.com</string>
 		<key>CFBundleDisplayName</key>
 		<string>Farmers Hub</string>
+		<key>LSApplicationQueriesSchemes</key>
+        <array>
+          <string>sms</string>
+          <string>tel</string>
+          <string>mailto</string>
+        </array>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>
