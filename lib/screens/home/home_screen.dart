@@ -585,7 +585,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 8, bottom: 10),
+                              padding: EdgeInsets.only(top: 4, bottom: 10),
                               child: ElevatedButton(
                                 onPressed: () {},
                                 style: ElevatedButton.styleFrom(
@@ -606,16 +606,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             SizedBox(width: 10),
 
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.notifications_none_outlined),
-                              style: IconButton.styleFrom(
-                                elevation: 0,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                                backgroundColor: onboardingColor,
-                                foregroundColor: Colors.white,
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 6),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: const Icon(Icons.notifications_none_outlined),
+                                style: IconButton.styleFrom(
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                  backgroundColor: onboardingColor,
+                                  foregroundColor: Colors.white,
+                                ),
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 19),
+                                // padding: EdgeInsets.only(left: 19, right: 19, top: 12, bottom: ),
                               ),
-                              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 19),
                             ),
                           ],
                         ),

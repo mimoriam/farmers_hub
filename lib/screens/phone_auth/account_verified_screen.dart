@@ -1,3 +1,4 @@
+import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _AccountVerifiedScreenState extends State<AccountVerifiedScreen> {
                         if (context.mounted) {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()),
+                            MaterialPageRoute(builder: (context) => HomeScreen()),
                           );
                         }
                       },

@@ -1,5 +1,6 @@
 import 'package:farmers_hub/screens/phone_auth/account_verified_screen.dart';
 import 'package:farmers_hub/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,13 +11,33 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:pinput/pinput.dart';
 
 class OtpVerficationScreen extends StatefulWidget {
-  const OtpVerficationScreen({super.key});
+  final String verificationId;
+
+  const OtpVerficationScreen({super.key, required this.verificationId});
 
   @override
   State<OtpVerficationScreen> createState() => _OtpVerficationScreenState();
 }
 
 class _OtpVerficationScreenState extends State<OtpVerficationScreen> {
+  final _otpController = TextEditingController();
+
+  void _verifyOTP() async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: widget.verificationId,
+        smsCode: _otpController.text,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      // Navigate to home screen
+    } on FirebaseAuthException catch (e) {
+      // Handle error
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.message ?? 'OTP verification failed')));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -62,7 +83,10 @@ class _OtpVerficationScreenState extends State<OtpVerficationScreen> {
 
                 const SizedBox(height: 18),
 
-                Pinput(length: 4, onCompleted: (pin) => print(pin)),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                  child: Pinput(controller: _otpController, length: 6, onCompleted: (pin) => _verifyOTP()),
+                ),
 
                 SizedBox(height: 65),
 

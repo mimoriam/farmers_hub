@@ -124,7 +124,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Center(
-                                      child: Icon(Icons.image_outlined, size: 80, color: onboardingColor),
+                                      child: Icon(Icons.image_outlined, size: 40, color: onboardingColor),
                                     ),
                                   ),
 
@@ -230,10 +230,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           labelText: "Select a category",
                                           floatingLabelBehavior: FloatingLabelBehavior.never,
                                           contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingColor, width: 1.0),
-                                            borderRadius: BorderRadius.circular(8),
-                                          ),
+                                          // enabledBorder: OutlineInputBorder(
+                                          //   borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                          //   borderRadius: BorderRadius.circular(8),
+                                          // ),
+                                          enabledBorder: _inputBorder,
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
                                             borderRadius: BorderRadius.circular(12),
@@ -441,12 +442,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         color: Colors.white,
                         child: Text(
                           'Location, Contact & Delivery Details',
-                          style: TextStyle(color: onboardingColor, fontSize: 18),
+                          style: TextStyle(color: onboardingColor, fontSize: 16),
                           textAlign: TextAlign.center,
                         ),
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 6),
 
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
@@ -505,6 +506,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     FormBuilderTextField(
                                       name: 'add_details',
                                       maxLength: 120,
+                                      maxLines: 5,
                                       buildCounter:
                                           (
                                             context, {
@@ -526,13 +528,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
-                                    const SizedBox(height: 24),
+                                    const SizedBox(height: 8),
                                   ],
                                 ),
                               ),
                             ),
 
-                            const SizedBox(height: 12),
+                            const SizedBox(height: 16),
 
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(

@@ -50,209 +50,199 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
       ),
 
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 4, right: 8),
-                    child: Container(
-                      // color: onboardingColor,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: onboardingColor,
-                        borderRadius: BorderRadius.circular(10.0),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 4, right: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Send Us Your Feedback!",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Send Us Your Feedback!",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
 
-                          const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                          Text(
-                            "Do you have a suggestion or found a bug? Let us know in the field below.",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              color: Colors.white.withOpacity(0.9),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        "Do you have a suggestion or found a bug? Let us know in the field below.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: Colors.black87,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                  
-                  const SizedBox(height: 8),
+                ),
 
-                  Card(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                      // side: BorderSide(color: categoriesBorderColor, width: 1),
-                    ),
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 4),
+                const SizedBox(height: 8),
 
-                          Text("How was your experience?"),
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    // side: BorderSide(color: categoriesBorderColor, width: 1),
+                  ),
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 4),
 
-                          SizedBox(height: 10),
+                        Text("How was your experience?"),
 
-                          RatingBar.builder(
-                            initialRating: 0,
-                            itemCount: 3,
-                            itemBuilder: (context, index) {
-                              switch (index) {
-                                case 0:
-                                  return Icon(Icons.sentiment_dissatisfied, color: Colors.redAccent);
+                        SizedBox(height: 10),
 
-                                case 1:
-                                  return Icon(Icons.sentiment_neutral, color: Colors.amber);
+                        RatingBar.builder(
+                          initialRating: 0,
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            switch (index) {
+                              case 0:
+                                return Icon(Icons.sentiment_dissatisfied, color: Colors.redAccent);
 
-                                case 2:
-                                  return Icon(Icons.sentiment_very_satisfied, color: Colors.lightGreen);
+                              case 1:
+                                return Icon(Icons.sentiment_neutral, color: Colors.amber);
 
-                                default: // This handles any other index value
-                                  return Icon(Icons.star);
-                              }
-                            },
-                            onRatingUpdate: (rating) {
-                              print(rating);
-                            },
+                              case 2:
+                                return Icon(Icons.sentiment_very_satisfied, color: Colors.lightGreen);
+
+                              default: // This handles any other index value
+                                return Icon(Icons.star);
+                            }
+                          },
+                          onRatingUpdate: (rating) {
+                            print(rating);
+                          },
+                        ),
+
+                        SizedBox(height: 20),
+
+                        Text("Describe your experience here... "),
+
+                        SizedBox(height: 6),
+
+                        FormBuilderTextField(
+                          name: 'post_title',
+                          maxLength: 240,
+                          maxLines: 6,
+                          buildCounter:
+                              (context, {required currentLength, required isFocused, maxLength}) => null,
+                          // Hide default counter
+                          decoration: InputDecoration(
+                            hintText: 'Type here',
+                            border: _inputBorder,
+                            enabledBorder: _inputBorder,
+                            focusedBorder: _focusedInputBorder,
+                            errorBorder: _errorInputBorder,
+                            focusedErrorBorder: _focusedInputBorder,
+                            contentPadding: _contentPadding,
+                            helperText: 'Max 120 Characters',
+                            helperStyle: TextStyle(color: Colors.grey[600]),
                           ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(errorText: 'Feedback is required.'),
+                            FormBuilderValidators.maxLength(120),
+                          ]),
+                        ),
 
-                          SizedBox(height: 20),
+                        SizedBox(height: 20),
 
-                          Text("Describe your experience here... "),
-
-                          SizedBox(height: 6),
-
-                          FormBuilderTextField(
-                            name: 'post_title',
-                            maxLength: 240,
-                            maxLines: 6,
-                            buildCounter:
-                                (context, {required currentLength, required isFocused, maxLength}) => null,
-                            // Hide default counter
-                            decoration: InputDecoration(
-                              hintText: 'Type here',
-                              border: _inputBorder,
-                              enabledBorder: _inputBorder,
-                              focusedBorder: _focusedInputBorder,
-                              errorBorder: _errorInputBorder,
-                              focusedErrorBorder: _focusedInputBorder,
-                              contentPadding: _contentPadding,
-                              helperText: 'Max 120 Characters',
-                              helperStyle: TextStyle(color: Colors.grey[600]),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Radio<FeedbackType>(
+                                  value: FeedbackType.bug,
+                                  groupValue: _selectedFeedbackType,
+                                  activeColor: onboardingColor,
+                                  onChanged: (FeedbackType? value) {
+                                    setState(() {
+                                      _selectedFeedbackType = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Bug'),
+                              ],
                             ),
-                            validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(errorText: 'Feedback is required.'),
-                              FormBuilderValidators.maxLength(120),
-                            ]),
-                          ),
 
-                          SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Radio<FeedbackType>(
+                                  value: FeedbackType.suggestion,
+                                  groupValue: _selectedFeedbackType,
+                                  activeColor: onboardingColor,
+                                  onChanged: (FeedbackType? value) {
+                                    setState(() {
+                                      _selectedFeedbackType = value!;
+                                    });
+                                  },
+                                ),
+                                const Text('Suggestion'),
+                              ],
+                            ),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
+                            Expanded(
+                              child: Row(
                                 children: [
                                   Radio<FeedbackType>(
-                                    value: FeedbackType.bug,
-                                    groupValue: _selectedFeedbackType,
+                                    value: FeedbackType.others,
                                     activeColor: onboardingColor,
+                                    groupValue: _selectedFeedbackType,
                                     onChanged: (FeedbackType? value) {
                                       setState(() {
                                         _selectedFeedbackType = value!;
                                       });
                                     },
                                   ),
-                                  const Text('Bug'),
+                                  const Text('Others'),
                                 ],
                               ),
+                            ),
+                          ],
+                        ),
 
-                              Row(
-                                children: [
-                                  Radio<FeedbackType>(
-                                    value: FeedbackType.suggestion,
-                                    groupValue: _selectedFeedbackType,
-                                    activeColor: onboardingColor,
-                                    onChanged: (FeedbackType? value) {
-                                      setState(() {
-                                        _selectedFeedbackType = value!;
-                                      });
-                                    },
-                                  ),
-                                  const Text('Suggestion'),
-                                ],
-                              ),
+                        SizedBox(height: 20),
 
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Radio<FeedbackType>(
-                                      value: FeedbackType.others,
-                                      activeColor: onboardingColor,
-                                      groupValue: _selectedFeedbackType,
-                                      onChanged: (FeedbackType? value) {
-                                        setState(() {
-                                          _selectedFeedbackType = value!;
-                                        });
-                                      },
-                                    ),
-                                    const Text('Others'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          SizedBox(height: 20),
-
-                          SizedBox(
-                            width: double.infinity,
-                            height: 50,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: onboardingColor,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                "Send Feedback",
-                                style: GoogleFonts.montserrat(
-                                  textStyle: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
+                        SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: onboardingColor,
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              "Send Feedback",
+                              style: GoogleFonts.montserrat(
+                                textStyle: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

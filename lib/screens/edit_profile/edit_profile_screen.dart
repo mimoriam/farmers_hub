@@ -174,7 +174,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
 
                 Row(
                   children: [

@@ -1,5 +1,6 @@
 import 'package:farmers_hub/screens/phone_auth/otp_verfication_screen.dart';
 import 'package:farmers_hub/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,6 +17,7 @@ class PhoneAuthScreen extends StatefulWidget {
 }
 
 class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   bool isPhoneValidated = false;
   Map<String, String> phoneInfo = {};
 
@@ -141,7 +143,7 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                       ),
                     ),
                     initialCountryCode: 'US',
-                    onChanged: (phone) {
+                    onChanged: (phone) async {
                       try {
                         bool isValid = phone.isValidNumber();
 
@@ -180,13 +182,33 @@ class _PhoneAuthScreenState extends State<PhoneAuthScreen> {
                         backgroundColor: onboardingColor,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
-                      onPressed: () {
-                        if (context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => OtpVerficationScreen()),
-                          );
-                        }
+                      onPressed: () async {
+                        await _auth.verifyPhoneNumber(
+                          phoneNumber: phoneInfo["completeNumber"],
+                          verificationCompleted: (PhoneAuthCredential credential) async {
+                            _auth.signInWithCredential(credential);
+                            // Navigate to home screen
+                          },
+                          verificationFailed: (FirebaseAuthException e) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(SnackBar(content: Text(e.message ?? 'Verification failed')));
+                          },
+                          codeSent: (String verificationId, int? resendToken) async {
+                            print("verficationId $verificationId");
+
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OtpVerficationScreen(verificationId: verificationId),
+                                ),
+                              );
+                            }
+                          },
+                          codeAutoRetrievalTimeout: (String verificationId) {},
+                          // timeout: Duration(seconds: 90),
+                        );
                       },
                       child: Text(
                         "Get OTP",
