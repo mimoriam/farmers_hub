@@ -12,10 +12,12 @@
 		<string>Farmers Hub</string>
 		<key>LSApplicationQueriesSchemes</key>
         <array>
-          <string>sms</string>
-          <string>tel</string>
           <string>mailto</string>
         </array>
+        <key>NSLocationWhenInUseUsageDescription</key>
+        <string>We need your location to show your position on the map and provide relevant features.</string>
+        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+        <string>This app needs your location to provide updates and features even when it is in the background.</string>
 		<key>CFBundleExecutable</key>
 		<string>$(EXECUTABLE_NAME)</string>
 		<key>CFBundleIdentifier</key>

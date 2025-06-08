@@ -1,10 +1,13 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/services/location_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:dotted_border/dotted_border.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -15,9 +18,22 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   final firebaseService = FirebaseService();
+  final LocationService _locationService = LocationService();
+
   final _formKey = GlobalKey<FormBuilderState>();
-  final validateMode = AutovalidateMode.onUserInteraction;
+  final validateMode = AutovalidateMode.onUnfocus;
   String error = '';
+
+  final ScrollController _scrollController = ScrollController();
+
+  String? selectedCategory;
+  String? selectedGender;
+
+  bool locationSelected = false;
+
+  late PlaceDetails placeDetails;
+
+  bool _isLoading = false;
 
   // Common style for input field borders
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
@@ -35,8 +51,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   // Common style for labels
   final TextStyle _labelStyle = const TextStyle(
-    fontWeight: FontWeight.bold,
-    color: Colors.black87,
+    fontWeight: FontWeight.w500,
+    // color: Colors.black87,
     fontSize: 16,
   );
 
@@ -79,6 +95,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
             GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
               child: SingleChildScrollView(
+                controller: _scrollController,
                 // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 child: FormBuilder(
                   key: _formKey,
@@ -103,58 +120,125 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                         child: Column(
                           children: [
-                            Container(
-                              // padding: EdgeInsets.only(bottom: 16),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: onboardingColor, // Mimicking the dotted line color
-                                  width: 2,
-                                  // style: BorderStyle.dotted, // This doesn't work directly, use a package or custom painter
-                                ),
-                                borderRadius: BorderRadius.circular(12),
+                            // Container(
+                            //   // padding: EdgeInsets.only(bottom: 16),
+                            //   decoration: BoxDecoration(
+                            //     border: Border.all(
+                            //       color: onboardingColor, // Mimicking the dotted line color
+                            //       width: 2,
+                            //       // style: BorderStyle.dotted, // This doesn't work directly, use a package or custom painter
+                            //     ),
+                            //     borderRadius: BorderRadius.circular(12),
+                            //   ),
+                            //   child: Column(
+                            //     children: [
+                            //       // Image preview area
+                            //       Container(
+                            //         height: 200, // Adjust height as needed
+                            //         width: double.infinity,
+                            //         decoration: BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius: BorderRadius.circular(8),
+                            //         ),
+                            //         child: Center(
+                            //           child: Icon(Icons.image_outlined, size: 40, color: onboardingColor),
+                            //         ),
+                            //       ),
+                            //
+                            //       // SizedBox(height: 16),
+                            //
+                            //       // "Add Images" Button
+                            //       // We will use a custom button and trigger FormBuilderImagePicker indirectly
+                            //       // or manage state ourselves as FormBuilderImagePicker might not offer this exact UI.
+                            //       // For this example, I'm managing the state and image picking manually.
+                            //     ],
+                            //   ),
+                            // ),
+                            //
+                            // SizedBox(height: 16),
+
+                            // Center(
+                            //   child: SizedBox(
+                            //     width: double.infinity,
+                            //     child: ElevatedButton.icon(
+                            //       icon: Icon(Icons.add_photo_alternate_outlined, color: Colors.white),
+                            //       label: Text(
+                            //         'Add Images',
+                            //         style: TextStyle(fontSize: 16, color: Colors.white),
+                            //       ),
+                            //       onPressed: () {},
+                            //       style: ElevatedButton.styleFrom(
+                            //         backgroundColor: onboardingColor, // Button color
+                            //         padding: EdgeInsets.symmetric(vertical: 15),
+                            //         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            //         elevation: 5,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                            DottedBorder(
+                              options: RoundedRectDottedBorderOptions(
+                                radius: const Radius.circular(20),
+                                color: onboardingColor,
+                                strokeWidth: 1,
+                                // dashPattern: const [6, 6],
                               ),
-                              child: Column(
-                                children: [
-                                  // Image preview area
-                                  Container(
-                                    height: 200, // Adjust height as needed
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.all(Radius.circular(12)),
+                                child: Container(
+                                  width: double.infinity, // Take up all available horizontal space.
+                                  height: 260, // Fixed height for the container.
+                                  color: Colors.white, // Background color of the container.
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 24, right: 24, top: 56, bottom: 24),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      // Center the content vertically.
+                                      children: [
+                                        // The Expanded widget allows the icon to take up available space,
+                                        // pushing the button to the bottom.
+                                        const Expanded(
+                                          child: Center(
+                                            child: Icon(
+                                              Icons.image_outlined,
+                                              size: 50,
+                                              color: onboardingColor,
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(height: 20),
+                                        // This is the "Add Images" button.
+                                        SizedBox(
+                                          width: double.infinity,
+                                          // Make button take full width of its parent.
+                                          child: ElevatedButton.icon(
+                                            onPressed: () {
+                                              // TODO: Implement image picking logic here.
+                                            },
+                                            icon: const Icon(
+                                              Icons.add_photo_alternate_rounded,
+                                              color: Colors.white,
+                                            ),
+                                            label: const Text(
+                                              'Add Images',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: onboardingColor, // Button background color.
+                                              padding: const EdgeInsets.symmetric(vertical: 16),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              elevation: 2, // Adds a subtle shadow.
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    child: Center(
-                                      child: Icon(Icons.image_outlined, size: 40, color: onboardingColor),
-                                    ),
-                                  ),
-
-                                  // SizedBox(height: 16),
-
-                                  // "Add Images" Button
-                                  // We will use a custom button and trigger FormBuilderImagePicker indirectly
-                                  // or manage state ourselves as FormBuilderImagePicker might not offer this exact UI.
-                                  // For this example, I'm managing the state and image picking manually.
-                                ],
-                              ),
-                            ),
-
-                            SizedBox(height: 16),
-
-                            Center(
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: ElevatedButton.icon(
-                                  icon: Icon(Icons.add_photo_alternate_outlined, color: Colors.white),
-                                  label: Text(
-                                    'Add Images',
-                                    style: TextStyle(fontSize: 16, color: Colors.white),
-                                  ),
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: onboardingColor, // Button color
-                                    padding: EdgeInsets.symmetric(vertical: 15),
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                    elevation: 5,
                                   ),
                                 ),
                               ),
@@ -176,6 +260,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                             SizedBox(height: 15),
 
+                            error.isNotEmpty
+                                ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
+                                : Container(),
+
                             Card(
                               color: Colors.white,
                               elevation: 1.0, // Subtle shadow
@@ -191,18 +279,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     const SizedBox(height: 8),
 
                                     FormBuilderTextField(
-                                      name: 'post_title',
+                                      name: 'title',
                                       maxLength: 120,
-                                      buildCounter:
-                                          (
-                                            context, {
-                                            required currentLength,
-                                            required isFocused,
-                                            maxLength,
-                                          }) => null,
+                                      maxLines: 2,
+                                      autovalidateMode: validateMode,
+                                      // buildCounter:
+                                      //     (
+                                      //       context, {
+                                      //       required currentLength,
+                                      //       required isFocused,
+                                      //       maxLength,
+                                      //     }) => null,
                                       // Hide default counter
                                       decoration: InputDecoration(
                                         hintText: 'Type here',
+                                        hintStyle: TextStyle(color: loginTextFieldIconColor),
+                                        counterText: "",
+                                        counter: const Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            'Max 120 Characters',
+                                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                                          ),
+                                        ),
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,
@@ -217,23 +316,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
-                                    const SizedBox(height: 24),
 
-                                    Text("Category", style: _labelStyle),
+                                    Text("City", style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     Padding(
                                       // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-                                      padding: const EdgeInsets.only(right: 0, left: 6, bottom: 10),
+                                      padding: const EdgeInsets.only(right: 0, left: 0, bottom: 10),
                                       child: DropdownButtonFormField2<String>(
+                                        autovalidateMode: validateMode,
                                         decoration: InputDecoration(
-                                          labelText: "Select a category",
+                                          labelText: "Select Your City",
                                           floatingLabelBehavior: FloatingLabelBehavior.never,
-                                          contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
-                                          // enabledBorder: OutlineInputBorder(
-                                          //   borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                                          //   borderRadius: BorderRadius.circular(8),
-                                          // ),
+                                          contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 6,
+                                          ),
+                                          errorBorder: _errorInputBorder,
                                           enabledBorder: _inputBorder,
                                           focusedBorder: OutlineInputBorder(
                                             borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
@@ -256,17 +355,123 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                        [
-                                          'Fruits',
-                                          'Vegetables',
-                                          'Olive & Oil',
-                                          "Live Stock",
-                                          'Grains & Seeds',
-                                          "Fertilizers",
-                                        ]
-                                            .map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang)))
-                                            .toList(),
-                                        onChanged: (a) {},
+                                            [
+                                                  'Damascus',
+                                                  'Aleppo',
+                                                  'Homs',
+                                                  'Hama',
+                                                  "Latakia",
+                                                  "Tartus",
+                                                  "Idlib",
+                                                  "Deir ez-Zor",
+                                                  "Al-Hasakah",
+                                                  "Raqqa",
+                                                  "Daraa",
+                                                  "As-Suwayda",
+                                                  "Quneitra",
+                                                  "Al-Mayadin",
+                                                  "Al-Bukamal",
+                                                  'Manbij',
+                                                  "Afrin",
+                                                  "Tell Abyad",
+                                                  "Ras al-Ayn",
+                                                  "Kobani",
+                                                ]
+                                                .map(
+                                                  (city) => DropdownMenuItem<String>(
+                                                    value: city,
+                                                    child: Text(city),
+                                                  ),
+                                                )
+                                                .toList(),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            return 'City is required.';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (String? value) {},
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 2),
+
+                                    Text("Category", style: _labelStyle),
+                                    const SizedBox(height: 8),
+
+                                    Padding(
+                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                      padding: const EdgeInsets.only(right: 0, left: 0, bottom: 10),
+                                      child: DropdownButtonFormField2<String>(
+                                        autovalidateMode: validateMode,
+                                        decoration: InputDecoration(
+                                          labelText: "Select a category",
+                                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                                          contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 6,
+                                          ),
+                                          // enabledBorder: OutlineInputBorder(
+                                          //   borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                          //   borderRadius: BorderRadius.circular(8),
+                                          // ),
+                                          enabledBorder: _inputBorder,
+                                          errorBorder: _errorInputBorder,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        iconStyleData: IconStyleData(
+                                          // Using IconStyleData for icon properties
+                                          iconEnabledColor: onboardingTextColor,
+                                        ),
+
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 160,
+                                          offset: const Offset(0, -10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+
+                                        // value: "Damascus",
+                                        items:
+                                            [
+                                                  'Fruits',
+                                                  'Vegetables',
+                                                  'Olive Oil',
+                                                  "Live Stock",
+                                                  'Grains & Seeds',
+                                                  "Fertilizers",
+                                                  "Tools & Equipments",
+                                                  "Land Services",
+                                                  "Delivery",
+                                                  "Worker Services",
+                                                  "Pesticides",
+                                                  "Animal Feed",
+                                                  "Others",
+                                                ]
+                                                .map(
+                                                  (lang) => DropdownMenuItem<String>(
+                                                    value: lang,
+                                                    child: Text(lang),
+                                                  ),
+                                                )
+                                                .toList(),
+                                        value: selectedCategory,
+                                        validator: (String? value) {
+                                          if (value == null) {
+                                            return 'Category is required.';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            selectedCategory = value;
+                                          });
+                                        },
                                       ),
                                     ),
 
@@ -293,43 +498,100 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   ),
                                     //   separator: const SizedBox(height: 3), // Spacing between options
                                     // ),
-
-                                    // const SizedBox(height: 24),
-
+                                    const SizedBox(height: 2),
                                     Text("Gender", style: _labelStyle),
 
                                     const SizedBox(height: 8),
 
-                                    FormBuilderRadioGroup<String>(
-                                      name: 'gender',
-                                      decoration: const InputDecoration(
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.zero,
+                                    Padding(
+                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                      padding: const EdgeInsets.only(right: 0, left: 0, bottom: 10),
+                                      child: DropdownButtonFormField2<String>(
+                                        autovalidateMode: validateMode,
+                                        decoration: InputDecoration(
+                                          labelText: "Select a Gender",
+                                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                                          contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 0,
+                                            horizontal: 6,
+                                          ),
+                                          enabledBorder: _inputBorder,
+                                          errorBorder: _errorInputBorder,
+                                          focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
+                                        ),
+                                        iconStyleData: IconStyleData(
+                                          // Using IconStyleData for icon properties
+                                          iconEnabledColor: onboardingTextColor,
+                                        ),
+
+                                        dropdownStyleData: DropdownStyleData(
+                                          maxHeight: 160,
+                                          offset: const Offset(0, -10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+
+                                        // value: "Damascus",
+                                        items:
+                                            ['Male', 'Female']
+                                                .map(
+                                                  (gender) => DropdownMenuItem<String>(
+                                                    value: gender,
+                                                    child: Text(gender),
+                                                  ),
+                                                )
+                                                .toList(),
+                                        value: selectedGender,
+                                        validator: (String? value) {
+                                          if (value == null) {
+                                            return 'Gender is required.';
+                                          }
+                                          return null;
+                                        },
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            selectedGender = value;
+                                          });
+                                        },
                                       ),
-                                      options: ['Male', 'Female']
-                                          .map(
-                                            (gender) => FormBuilderFieldOption(
-                                              value: gender,
-                                              child: _buildRadioOptionContainer(gender, isHorizontal: true),
-                                            ),
-                                          )
-                                          .toList(growable: false),
-                                      orientation: OptionsOrientation.horizontal,
-                                      controlAffinity: ControlAffinity.leading,
-                                      activeColor: onboardingColor,
-                                      validator: FormBuilderValidators.required(
-                                        errorText: 'Please select a gender.',
-                                      ),
-                                      separator: const SizedBox(width: 16), // Spacing between options
                                     ),
 
-                                    const SizedBox(height: 24),
+                                    // FormBuilderRadioGroup<String>(
+                                    //   name: 'gender',
+                                    //   decoration: const InputDecoration(
+                                    //     border: InputBorder.none,
+                                    //     contentPadding: EdgeInsets.zero,
+                                    //   ),
+                                    //   options: ['Male', 'Female']
+                                    //       .map(
+                                    //         (gender) => FormBuilderFieldOption(
+                                    //           value: gender,
+                                    //           child: _buildRadioOptionContainer(gender, isHorizontal: true),
+                                    //         ),
+                                    //       )
+                                    //       .toList(growable: false),
+                                    //   orientation: OptionsOrientation.horizontal,
+                                    //   controlAffinity: ControlAffinity.leading,
+                                    //   activeColor: onboardingColor,
+                                    //   validator: FormBuilderValidators.required(
+                                    //     errorText: 'Please select a gender.',
+                                    //   ),
+                                    //   separator: const SizedBox(width: 16), // Spacing between options
+                                    // ),
+                                    const SizedBox(height: 4),
 
                                     // Average Weight (in kgs)
                                     Text("Average Weight (in kgs)", style: _labelStyle),
                                     const SizedBox(height: 8),
+
                                     FormBuilderTextField(
                                       name: 'avg_weight',
+                                      autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         hintText: 'Enter Average Weight in kilograms',
                                         border: _inputBorder,
@@ -353,12 +615,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ]),
                                     ),
 
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 10),
 
                                     Text("Quantity", style: _labelStyle),
                                     const SizedBox(height: 8),
+
                                     FormBuilderTextField(
                                       name: 'quantity',
+                                      autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         hintText: 'Enter Quantity',
                                         border: _inputBorder,
@@ -379,12 +643,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                       ]),
                                     ),
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 10),
 
                                     Text("Age (in years)", style: _labelStyle),
                                     const SizedBox(height: 8),
+
                                     FormBuilderTextField(
                                       name: 'age',
+                                      autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         hintText: 'Enter age in years',
                                         border: _inputBorder,
@@ -402,12 +668,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ]),
                                     ),
 
-                                    const SizedBox(height: 16),
+                                    const SizedBox(height: 10),
 
                                     Text("Price", style: _labelStyle),
                                     const SizedBox(height: 8),
+
                                     FormBuilderTextField(
                                       name: 'price',
+                                      autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         hintText: 'Enter Your Price',
                                         border: _inputBorder,
@@ -480,10 +748,61 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 ),
                                 padding: const EdgeInsets.symmetric(vertical: 15),
                               ),
-                              onPressed: () {
-                                // Placeholder for location selection logic
-                                print('Select Location button pressed');
-                                // You would typically navigate to a map screen or open a location picker
+                              onPressed: _isLoading ? null : () async {
+                                setState(() {
+                                  _isLoading = true;
+                                  error = "";
+                                });
+
+                                try {
+                                  final position = await _locationService.getCurrentLocation();
+                                  print(position);
+
+                                  final place_details = await _locationService.getPlaceDetails(position);
+                                  print(place_details);
+
+                                  if (context.mounted) {
+                                    setState(() {
+                                      placeDetails = place_details;
+                                      locationSelected = true;
+                                    });
+                                  }
+                                } catch (e) {
+                                  if (e.toString().contains("Location services are disabled")) {
+                                    if (context.mounted) {
+                                      await showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder:
+                                            (ctx) => AlertDialog(
+                                              title: Text("Location Services Disabled"),
+                                              content: Text("Please enable location services in settings."),
+                                              backgroundColor: Colors.white,
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(ctx).pop();
+                                                    Geolocator.openLocationSettings();
+                                                    // setState(() {});
+                                                  },
+                                                  child: Text("Open Settings"),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(ctx).pop();
+                                                  },
+                                                  child: Text("Cancel"),
+                                                ),
+                                              ],
+                                            ),
+                                      );
+                                    }
+                                  }
+                                } finally {
+                                  setState(() {
+                                    _isLoading = false;
+                                  });
+                                }
                               },
                             ),
                             const SizedBox(height: 10),
@@ -506,16 +825,17 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     FormBuilderTextField(
                                       name: 'add_details',
                                       maxLength: 120,
-                                      maxLines: 5,
-                                      buildCounter:
-                                          (
-                                            context, {
-                                            required currentLength,
-                                            required isFocused,
-                                            maxLength,
-                                          }) => null,
+                                      maxLines: 4,
+                                      // buildCounter:
+                                      //     (
+                                      //       context, {
+                                      //       required currentLength,
+                                      //       required isFocused,
+                                      //       maxLength,
+                                      //     }) => null,
                                       // Hide default counter
                                       decoration: InputDecoration(
+                                        counterText: "",
                                         hintText: 'Type here',
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
@@ -525,7 +845,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         contentPadding: _contentPadding,
                                       ),
                                       validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.maxLength(120),
+                                        // FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
                                     const SizedBox(height: 8),
@@ -540,12 +860,44 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: onboardingColor,
                                 minimumSize: const Size(double.infinity, 33), // Full width, slightly taller
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                 padding: const EdgeInsets.symmetric(vertical: 15),
                               ),
-                              onPressed: () {},
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate() && locationSelected) {
+                                  firebaseService.createPost(
+                                    title: _formKey.currentState?.fields['title']?.value,
+                                    category: selectedCategory!,
+                                    gender: selectedGender!,
+                                    averageWeight: _formKey.currentState?.fields['avg_weight']?.value,
+                                    quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
+                                    age: int.parse(_formKey.currentState?.fields['age']?.value),
+                                    price: int.parse(_formKey.currentState?.fields['price']?.value),
+                                    details: _formKey.currentState?.fields['add_details']?.value,
+                                    city: placeDetails.city!,
+                                    province: placeDetails.province!,
+                                    country: placeDetails.country!,
+                                  );
+
+                                  _formKey.currentState?.reset();
+                                  setState(() {
+                                    locationSelected = false;
+                                    error = "";
+                                  });
+                                } else {
+                                  if (!locationSelected) {
+                                    setState(() {
+                                      error = "Location not selected";
+                                      
+                                      _scrollController.animateTo(
+                                        _scrollController.position.minScrollExtent,
+                                        curve: Curves.easeOut,
+                                        duration: const Duration(milliseconds: 300),
+                                      );
+                                    });
+                                  }
+                                }
+                              },
                               child: const Text(
                                 'Submit',
                                 style: TextStyle(fontSize: 18, color: Colors.white),

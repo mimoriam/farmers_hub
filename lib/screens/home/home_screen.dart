@@ -713,15 +713,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           scrollDirection: Axis.horizontal,
                           onPageChanged: (index, reason) {
                             if (reason.name == "manual") {
-                              setState(() {
-                                _currentCarouselPage = index;
-                              });
+                              if (context.mounted) {
+                                setState(() {
+                                  _currentCarouselPage = index;
+                                });
+                              }
                             } else {
                               // Added for fixing the freeze bug on animation:
                               Future.delayed(const Duration(milliseconds: 600), () {
-                                setState(() {
-                                  _currentCarouselPage = index; // Update the current page index
-                                });
+                                if (context.mounted) {
+                                  setState(() {
+                                    _currentCarouselPage = index; // Update the current page index
+                                  });
+                                }
                               });
                             }
                           },

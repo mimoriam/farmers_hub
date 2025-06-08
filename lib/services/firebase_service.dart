@@ -77,19 +77,21 @@ class FirebaseService {
   }) async {
     try {
       await _firestore.collection("users").doc(user.uid).set({
-        // "address": address,
         "createdAt": FieldValue.serverTimestamp(),
         "email": user.email,
         "id": user.uid,
         "isEmailVerified": user.emailVerified ? true : false,
-        "is_admin": false,
+        "isAdmin": false,
         // "phoneInfo": {
           // "completeNumber": phone["completeNumber"],
           // "countryCode": phone["countryCode"],
           // "countryISOCode": phone["countryISOCode"],
         // },
+        "location": {
+          "city": "",
+          "province": "",
+        },
         "profileImage": "default_pfp.jpg",
-        // "signUpMode": signUpMode,
         "username": username,
       });
     } catch (e) {
@@ -112,5 +114,42 @@ class FirebaseService {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  // * POST CRUD:
+  Future<void> createPost({
+    required String title,
+    required String category,
+    required String gender,
+    required String averageWeight,
+    required int quantity,
+    required int age,
+    required int price,
+    required String city,
+    required String province,
+    required String country,
+    String? details,
+}) async {
+
+    await _firestore.collection("livestock").doc().set({
+      "sellerId": currentUser?.uid,
+      "username": currentUser?.displayName,
+      "title": title,
+      "category": category,
+      "gender": gender,
+      "averageWeight": averageWeight,
+      "quantity": quantity,
+      "age": age,
+      "price": price,
+      "likes": 0,
+      "views": 0,
+      "verifiedSeller": false,
+      "location": {
+        "city": city,
+        "province": province,
+        "country": country,
+      },
+      "details": details ?? "",
+    });
   }
 }

@@ -387,7 +387,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         //   ],
                         // ),
 
-                        const SizedBox(height: 42),
+                        const SizedBox(height: 18),
 
                         SizedBox(
                           width: double.infinity,
