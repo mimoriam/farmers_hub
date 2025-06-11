@@ -371,6 +371,81 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
+                      SizedBox(height: 18),
+
+                      Text(
+                        "Confirm Password",
+                        style: GoogleFonts.poppins(
+                          color: signUpTextColor,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+
+                      SizedBox(height: 8),
+
+                      FormBuilderTextField(
+                        name: 'password_confirm',
+                        maxLength: 16,
+                        obscureText: _obscureText,
+                        autovalidateMode: validateMode,
+                        validator: FormBuilderValidators.compose([
+                          FormBuilderValidators.required(),
+                          FormBuilderValidators.minLength(
+                            6,
+                            errorText: "Password must not be less than 6 characters",
+                          ),
+
+                          (val) {
+                            if (_formKey.currentState?.fields['password']?.value != val) {
+                              return 'Passwords do not match';
+                            }
+                            return null; // Return null if validation passes
+                          },
+                        ]),
+                        style: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        decoration: InputDecoration(
+                          counterText: "",
+                          hintText: "Confirm Your Password",
+                          prefixIcon: Icon(Icons.lock_outline, color: loginTextFieldIconColor),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureText ? Icons.visibility_off : Icons.visibility,
+                              color: loginTextFieldIconColor,
+                            ),
+                            onPressed: _togglePasswordVisibility,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          // border: OutlineInputBorder(
+                          //   borderRadius: BorderRadius.circular(8),
+                          //   borderSide: BorderSide.none,
+                          // ),
+                          // focusedErrorBorder: OutlineInputBorder(
+                          //   borderRadius: BorderRadius.circular(8),
+                          //   borderSide: BorderSide.none,
+                          // ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: textFieldBorderSideColor),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: textFieldBorderSideColor),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: textFieldBorderSideColor),
+                          ),
+                          focusedErrorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: textFieldBorderSideColor),
+                          ),
+                        ),
+                      ),
+
                       // SizedBox(height: 26),
                       //
                       // Text(

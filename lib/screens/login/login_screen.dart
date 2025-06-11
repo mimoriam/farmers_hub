@@ -267,34 +267,34 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         SizedBox(height: 12),
 
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: onboardingColor,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                            onPressed: () {
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
-                                );
-                              }
-                            },
-                            child: Text(
-                              "Phone Authentication",
-                              style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: double.infinity,
+                        //   height: 50,
+                        //   child: ElevatedButton(
+                        //     style: ElevatedButton.styleFrom(
+                        //       backgroundColor: onboardingColor,
+                        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        //     ),
+                        //     onPressed: () {
+                        //       if (context.mounted) {
+                        //         Navigator.push(
+                        //           context,
+                        //           MaterialPageRoute(builder: (context) => PhoneAuthScreen()),
+                        //         );
+                        //       }
+                        //     },
+                        //     child: Text(
+                        //       "Phone Authentication",
+                        //       style: GoogleFonts.montserrat(
+                        //         textStyle: TextStyle(
+                        //           fontSize: 16,
+                        //           fontWeight: FontWeight.w500,
+                        //           color: Colors.white,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
 
                         SizedBox(height: 20),
 
