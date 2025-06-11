@@ -82,15 +82,13 @@ class FirebaseService {
         "id": user.uid,
         "isEmailVerified": user.emailVerified ? true : false,
         "isAdmin": false,
-        // "phoneInfo": {
+        "phoneInfo": {
           // "completeNumber": phone["completeNumber"],
           // "countryCode": phone["countryCode"],
           // "countryISOCode": phone["countryISOCode"],
-        // },
-        "location": {
-          "city": "",
-          "province": "",
+          "completeNumber": "",
         },
+        "location": {"city": "", "province": ""},
         "profileImage": "default_pfp.jpg",
         "username": username,
       });
@@ -116,6 +114,33 @@ class FirebaseService {
     }
   }
 
+  // * PROFILE CRUD:
+  // *
+
+  Future<DocumentSnapshot?> getCurrentUserData() async {
+    // Ensure there is a logged-in user.
+    if (currentUser == null) return null;
+
+    try {
+      final userDoc = await _firestore.collection("users").doc(currentUser!.uid).get();
+      return userDoc;
+    } catch (e) {
+      return Future.error("Error fetching user data");
+    }
+  }
+
+  Future<void> updateUserProfile(Map<String, dynamic> data) async {
+    if (currentUser == null) return;
+
+    try {
+      await _firestore.collection("users").doc(currentUser!.uid).update(data);
+    } catch (e) {
+      print("Error updating user profile: $e");
+      // Optionally re-throw the error to handle it in the UI.
+      throw AuthException('Failed to update profile. Please try again.');
+    }
+  }
+
   // * POST CRUD:
   Future<void> createPost({
     required String title,
@@ -129,8 +154,7 @@ class FirebaseService {
     required String province,
     required String country,
     String? details,
-}) async {
-
+  }) async {
     await _firestore.collection("livestock").doc().set({
       "sellerId": currentUser?.uid,
       "username": currentUser?.displayName,
@@ -143,13 +167,21 @@ class FirebaseService {
       "price": price,
       "likes": 0,
       "views": 0,
+      "featured": false,
       "verifiedSeller": false,
-      "location": {
-        "city": city,
-        "province": province,
-        "country": country,
-      },
+      "location": {"city": city, "province": province, "country": country},
       "details": details ?? "",
     });
+  }
+
+  Future<List<QueryDocumentSnapshot>> getAllPostsByCurrentUser() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await _firestore.collection("livestock").where("sellerId", isEqualTo: currentUser?.uid).get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      return [];
+    }
   }
 }
