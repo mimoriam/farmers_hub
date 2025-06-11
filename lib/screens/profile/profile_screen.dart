@@ -4,15 +4,16 @@ import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
 import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
 import 'package:farmers_hub/screens/feedback/send_feedback_screen.dart';
-import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/services/theme_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -31,6 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: homebackgroundColor,
       floatingActionButton: FloatingActionButton(
@@ -503,6 +505,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Navigate to Post History Screen
           },
         ),
+
         _buildThemeModeCard(), // Custom card for theme mode
       ],
     );
@@ -606,6 +609,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildThemeChoiceButton(String label, String themeValue) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     bool isSelected = _selectedTheme == themeValue;
     // Color from image for selected button (a vibrant green)
     Color selectedColor = onboardingColor;
@@ -620,6 +625,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           print('Theme changed to: $_selectedTheme');
           // Here you would typically also update the app's theme globally
         });
+
+        themeNotifier.toggleTheme();
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
