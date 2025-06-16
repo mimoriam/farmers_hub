@@ -88,6 +88,7 @@ class FirebaseService {
           // "countryISOCode": phone["countryISOCode"],
           "completeNumber": "",
         },
+        "hasChats": [],
         "location": {"city": "", "province": ""},
         "profileImage": "default_pfp.jpg",
         "username": username,
@@ -115,8 +116,6 @@ class FirebaseService {
   }
 
   // * PROFILE CRUD:
-  // *
-
   Future<DocumentSnapshot?> getCurrentUserData() async {
     // Ensure there is a logged-in user.
     if (currentUser == null) return null;
@@ -150,10 +149,11 @@ class FirebaseService {
     required int quantity,
     required int age,
     required int price,
-    required String city,
-    required String province,
-    required String country,
+    String? city,
+    String? province,
+    String? country,
     String? details,
+    bool? featured,
   }) async {
     await _firestore.collection("livestock").doc().set({
       "sellerId": currentUser?.uid,
@@ -166,11 +166,13 @@ class FirebaseService {
       "age": age,
       "price": price,
       "likes": 0,
+      "likedByYou": false,
       "views": 0,
-      "featured": false,
+      "featured": featured ?? false,
       "verifiedSeller": false,
-      "location": {"city": city, "province": province, "country": country},
+      "location": {"city": city ?? "", "province": province ?? "", "country": country ?? ""},
       "details": details ?? "",
+      "createdAt": FieldValue.serverTimestamp(),
     });
   }
 
@@ -184,4 +186,38 @@ class FirebaseService {
       return [];
     }
   }
+
+  Future<List<QueryDocumentSnapshot>> getAllPostsByFeatured() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await _firestore.collection("livestock").where("featured", isEqualTo: true).get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<Map<String, dynamic>> getPostDetails(String postId) async {
+    try {
+      final DocumentSnapshot documentSnapshot = await _firestore.collection("livestock").doc(postId).get();
+
+      return documentSnapshot.data() as Map<String, dynamic>;
+    } catch (e) {
+      return {};
+    }
+  }
+
+  // Future<void> updatePostLikes(int liked, String postId) async {
+  //   try {
+  //     final docRef = await _firestore.collection("livestock").doc(postId).update({
+  //       "likedByYou":
+  //       "likes": liked
+  //     });
+  //   } catch (e) {
+  //     print("Error updating post: $e");
+  //     // Optionally re-throw the error to handle it in the UI.
+  //     throw AuthException('Failed to update post. Please try again.');
+  //   }
+  // }
 }

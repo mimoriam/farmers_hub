@@ -26,12 +26,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
+  String? selectedCity;
+
   String? selectedCategory;
   String? selectedGender;
 
   bool locationSelected = false;
 
   late PlaceDetails placeDetails;
+
+  bool featuredPost = false;
 
   bool _isLoading = false;
 
@@ -356,34 +360,37 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         // value: "Damascus",
                                         items:
                                             [
-                                                  'Damascus',
-                                                  'Aleppo',
-                                                  'Homs',
-                                                  'Hama',
-                                                  "Latakia",
-                                                  "Tartus",
-                                                  "Idlib",
-                                                  "Deir ez-Zor",
-                                                  "Al-Hasakah",
-                                                  "Raqqa",
-                                                  "Daraa",
-                                                  "As-Suwayda",
-                                                  "Quneitra",
-                                                  "Al-Mayadin",
-                                                  "Al-Bukamal",
-                                                  'Manbij',
-                                                  "Afrin",
-                                                  "Tell Abyad",
-                                                  "Ras al-Ayn",
-                                                  "Kobani",
-                                                ]
-                                                .map(
-                                                  (city) => DropdownMenuItem<String>(
-                                                    value: city,
-                                                    child: Text(city),
-                                                  ),
-                                                )
-                                                .toList(),
+                                              'Damascus',
+                                              'Aleppo',
+                                              'Homs',
+                                              'Hama',
+                                              "Latakia",
+                                              "Tartus",
+                                              "Idlib",
+                                              "Deir ez-Zor",
+                                              "Al-Hasakah",
+                                              "Raqqa",
+                                              "Daraa",
+                                              "As-Suwayda",
+                                              "Quneitra",
+                                              "Al-Mayadin",
+                                              "Al-Bukamal",
+                                              'Manbij',
+                                              "Afrin",
+                                              "Tell Abyad",
+                                              "Ras al-Ayn",
+                                              "Kobani",
+                                            ].map((city) {
+                                              return DropdownMenuItem<String>(
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedCity = city;
+                                                  });
+                                                },
+                                                value: city,
+                                                child: Text(city),
+                                              );
+                                            }).toList(),
                                         validator: (value) {
                                           if (value == null) {
                                             return 'City is required.';
@@ -701,112 +708,110 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 2),
+                      // const SizedBox(height: 2),
 
-                      Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(8.9),
-                        width: double.infinity,
-                        color: Colors.white,
-                        child: Text(
-                          'Location, Contact & Delivery Details',
-                          style: TextStyle(color: onboardingColor, fontSize: 16),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                      // Container(
+                      //   alignment: Alignment.center,
+                      //   padding: const EdgeInsets.all(8.9),
+                      //   width: double.infinity,
+                      //   color: Colors.white,
+                      //   child: Text(
+                      //     'Location, Contact & Delivery Details',
+                      //     style: TextStyle(color: onboardingColor, fontSize: 16),
+                      //     textAlign: TextAlign.center,
+                      //   ),
+                      // ),
 
-                      const SizedBox(height: 6),
-
+                      // const SizedBox(height: 6),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Location',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
+                            // const Text(
+                            //   'Location',
+                            //   style: TextStyle(
+                            //     fontSize: 18,
+                            //     fontWeight: FontWeight.bold,
+                            //     color: Colors.black87,
+                            //   ),
+                            // ),
+                            //
+                            // const SizedBox(height: 6),
 
-                            const SizedBox(height: 6),
-
-                            ElevatedButton.icon(
-                              icon: const Icon(Icons.location_on, color: Colors.white),
-                              label: const Text(
-                                'Select Location',
-                                style: TextStyle(fontSize: 16, color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: onboardingColor,
-                                minimumSize: const Size(double.infinity, 50), // Full width button
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12), // Rounded corners
-                                ),
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                              ),
-                              onPressed: _isLoading ? null : () async {
-                                setState(() {
-                                  _isLoading = true;
-                                  error = "";
-                                });
-
-                                try {
-                                  final position = await _locationService.getCurrentLocation();
-                                  print(position);
-
-                                  final place_details = await _locationService.getPlaceDetails(position);
-                                  print(place_details);
-
-                                  if (context.mounted) {
-                                    setState(() {
-                                      placeDetails = place_details;
-                                      locationSelected = true;
-                                    });
-                                  }
-                                } catch (e) {
-                                  if (e.toString().contains("Location services are disabled")) {
-                                    if (context.mounted) {
-                                      await showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder:
-                                            (ctx) => AlertDialog(
-                                              title: Text("Location Services Disabled"),
-                                              content: Text("Please enable location services in settings."),
-                                              backgroundColor: Colors.white,
-                                              actions: [
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(ctx).pop();
-                                                    Geolocator.openLocationSettings();
-                                                    // setState(() {});
-                                                  },
-                                                  child: Text("Open Settings"),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(ctx).pop();
-                                                  },
-                                                  child: Text("Cancel"),
-                                                ),
-                                              ],
-                                            ),
-                                      );
-                                    }
-                                  }
-                                } finally {
-                                  setState(() {
-                                    _isLoading = false;
-                                  });
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 10),
-
+                            // ElevatedButton.icon(
+                            //   icon: const Icon(Icons.location_on, color: Colors.white),
+                            //   label: const Text(
+                            //     'Select Location',
+                            //     style: TextStyle(fontSize: 16, color: Colors.white),
+                            //   ),
+                            //   style: ElevatedButton.styleFrom(
+                            //     backgroundColor: onboardingColor,
+                            //     minimumSize: const Size(double.infinity, 50), // Full width button
+                            //     shape: RoundedRectangleBorder(
+                            //       borderRadius: BorderRadius.circular(12), // Rounded corners
+                            //     ),
+                            //     padding: const EdgeInsets.symmetric(vertical: 15),
+                            //   ),
+                            //   onPressed: _isLoading ? null : () async {
+                            //     setState(() {
+                            //       _isLoading = true;
+                            //       error = "";
+                            //     });
+                            //
+                            //     try {
+                            //       final position = await _locationService.getCurrentLocation();
+                            //       print(position);
+                            //
+                            //       final place_details = await _locationService.getPlaceDetails(position);
+                            //       print(place_details);
+                            //
+                            //       if (context.mounted) {
+                            //         setState(() {
+                            //           placeDetails = place_details;
+                            //           locationSelected = true;
+                            //         });
+                            //       }
+                            //     } catch (e) {
+                            //       if (e.toString().contains("Location services are disabled")) {
+                            //         if (context.mounted) {
+                            //           await showDialog(
+                            //             context: context,
+                            //             barrierDismissible: false,
+                            //             builder:
+                            //                 (ctx) => AlertDialog(
+                            //                   title: Text("Location Services Disabled"),
+                            //                   content: Text("Please enable location services in settings."),
+                            //                   backgroundColor: Colors.white,
+                            //                   actions: [
+                            //                     TextButton(
+                            //                       onPressed: () {
+                            //                         Navigator.of(ctx).pop();
+                            //                         Geolocator.openLocationSettings();
+                            //                         // setState(() {});
+                            //                       },
+                            //                       child: Text("Open Settings"),
+                            //                     ),
+                            //                     TextButton(
+                            //                       onPressed: () {
+                            //                         Navigator.of(ctx).pop();
+                            //                       },
+                            //                       child: Text("Cancel"),
+                            //                     ),
+                            //                   ],
+                            //                 ),
+                            //           );
+                            //         }
+                            //       }
+                            //     } finally {
+                            //       setState(() {
+                            //         _isLoading = false;
+                            //       });
+                            //     }
+                            //   },
+                            // ),
+                            // const SizedBox(height: 10),
                             Card(
                               color: Colors.white,
                               elevation: 1.0, // Subtle shadow
@@ -864,7 +869,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 15),
                               ),
                               onPressed: () async {
-                                if (_formKey.currentState!.validate() && locationSelected) {
+                                // if (_formKey.currentState!.validate() && locationSelected) {
+                                if (_formKey.currentState!.validate()) {
+                                  print(selectedCity);
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
                                     category: selectedCategory!,
@@ -874,9 +881,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     age: int.parse(_formKey.currentState?.fields['age']?.value),
                                     price: int.parse(_formKey.currentState?.fields['price']?.value),
                                     details: _formKey.currentState?.fields['add_details']?.value,
-                                    city: placeDetails.city!,
-                                    province: placeDetails.province!,
-                                    country: placeDetails.country!,
+                                    featured: true,
+                                    city: selectedCity,
+                                    // city: placeDetails.city!,
+                                    // province: placeDetails.province!,
+                                    // country: placeDetails.country!,
                                   );
 
                                   _formKey.currentState?.reset();
@@ -888,7 +897,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   if (!locationSelected) {
                                     setState(() {
                                       error = "Location not selected";
-                                      
+
                                       _scrollController.animateTo(
                                         _scrollController.position.minScrollExtent,
                                         curve: Curves.easeOut,

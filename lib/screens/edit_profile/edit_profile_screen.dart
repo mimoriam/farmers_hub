@@ -189,8 +189,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           FormBuilderTextField(
                             name: 'address',
                             decoration: _buildInputDecoration('Enter Address'),
-                            initialValue:
-                                location["city"].isEmpty ? "" : "${location["city"]} ${location["province"]}",
+                            // initialValue:
+                            //     location["city"].isEmpty ? "" : "${location["city"]} ${location["province"]}",
+                            initialValue: location["city"].isEmpty ? "" : "${location["city"]}",
                             validator: FormBuilderValidators.required(errorText: 'Address is required.'),
                           ),
                           const SizedBox(height: 14),

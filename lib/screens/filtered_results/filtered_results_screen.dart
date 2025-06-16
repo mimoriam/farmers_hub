@@ -201,11 +201,11 @@ class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        if (context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen()));
-        }
-      },
+      // onTap: () {
+      //   if (context.mounted) {
+      //     Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen(postId: "1")));
+      //   }
+      // },
       child: Container(
         // width: 170,
         // height: 200,

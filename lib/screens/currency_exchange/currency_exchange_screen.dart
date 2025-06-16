@@ -172,7 +172,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'Syria (SY)', // Title and subtitle
+                            'Syria', // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600, // Text color when not selected
                               fontSize: 16,
@@ -237,7 +237,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'US Dollar (USD)', // Title and subtitle
+                            'US Dollar', // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600, // Text color when not selected
                               fontSize: 16,

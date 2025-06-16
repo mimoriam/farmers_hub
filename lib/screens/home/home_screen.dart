@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
@@ -279,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
 
       {
-        "image_url": "images/backgrounds/cow.png",
+        "image_url": "images/backgrounds/goat.png",
         "price": "430,000",
         "location": "Mirpur Mathelo",
         "likes": 12,
@@ -328,7 +329,11 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPostScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPostScreen())).then((
+                  _,
+                ) {
+                  setState(() {});
+                });
               }
             },
             backgroundColor: onboardingColor,
@@ -366,8 +371,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
+                    final user = firebaseService.currentUser;
                     if (context.mounted) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ChatHome()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                      ).then((_) {
+                        setState(() {});
+                      });
                     }
                   },
                   child: Column(
@@ -405,7 +416,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 GestureDetector(
                   onTap: () {
                     if (context.mounted) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                      ).then((_) {
+                        setState(() {});
+                      });
                     }
                   },
                   child: Column(
@@ -711,59 +727,59 @@ class _HomeScreenState extends State<HomeScreen> {
                           autoPlayAnimationDuration: Duration(milliseconds: 1000),
                           autoPlayCurve: Curves.fastOutSlowIn,
                           scrollDirection: Axis.horizontal,
-                          onPageChanged: (index, reason) {
-                            if (reason.name == "manual") {
-                              if (context.mounted) {
-                                setState(() {
-                                  _currentCarouselPage = index;
-                                });
-                              }
-                            } else {
-                              // Added for fixing the freeze bug on animation:
-                              Future.delayed(const Duration(milliseconds: 600), () {
-                                if (context.mounted) {
-                                  setState(() {
-                                    _currentCarouselPage = index; // Update the current page index
-                                  });
-                                }
-                              });
-                            }
-                          },
+                          // onPageChanged: (index, reason) {
+                          //   if (reason.name == "manual") {
+                          //     if (context.mounted) {
+                          //       setState(() {
+                          //         _currentCarouselPage = index;
+                          //       });
+                          //     }
+                          //   } else {
+                          //     // Added for fixing the freeze bug on animation:
+                          //     Future.delayed(const Duration(milliseconds: 600), () {
+                          //       if (context.mounted) {
+                          //         setState(() {
+                          //           _currentCarouselPage = index; // Update the current page index
+                          //         });
+                          //       }
+                          //     });
+                          //   }
+                          // },
                         ),
                       ),
 
                       const SizedBox(height: 4),
-
-                      StatefulBuilder(
-                        builder: (BuildContext context, StateSetter setStateDots) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children:
-                                imgList.asMap().entries.map((entry) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      // Optional: Allow tapping dots to change carousel page
-                                      // _carouselController.animateToPage(entry.key);
-                                    },
-                                    child: Container(
-                                      width: _currentCarouselPage == entry.key ? 26 : 14,
-                                      height: 6.0,
-                                      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                                      decoration: ShapeDecoration(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(20),
-                                        ),
-                                        color:
-                                            _currentCarouselPage == entry.key
-                                                ? onboardingColor
-                                                : carouselGrey,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                          );
-                        },
-                      ),
+                      //
+                      // StatefulBuilder(
+                      //   builder: (BuildContext context, StateSetter setStateDots) {
+                      //     return Row(
+                      //       mainAxisAlignment: MainAxisAlignment.center,
+                      //       children:
+                      //           imgList.asMap().entries.map((entry) {
+                      //             return GestureDetector(
+                      //               onTap: () {
+                      //                 // Optional: Allow tapping dots to change carousel page
+                      //                 // _carouselController.animateToPage(entry.key);
+                      //               },
+                      //               child: Container(
+                      //                 width: _currentCarouselPage == entry.key ? 26 : 14,
+                      //                 height: 6.0,
+                      //                 margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+                      //                 decoration: ShapeDecoration(
+                      //                   shape: RoundedRectangleBorder(
+                      //                     borderRadius: BorderRadius.circular(20),
+                      //                   ),
+                      //                   color:
+                      //                       _currentCarouselPage == entry.key
+                      //                           ? onboardingColor
+                      //                           : carouselGrey,
+                      //                 ),
+                      //               ),
+                      //             );
+                      //           }).toList(),
+                      //     );
+                      //   },
+                      // ),
                     ],
                   ),
 
@@ -1011,30 +1027,54 @@ class _HomeScreenState extends State<HomeScreen> {
                     padding: const EdgeInsets.only(left: 10),
                     child: SizedBox(
                       height: 240,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const DetailsScreen()),
-                            );
+                      child: FutureBuilder(
+                        future: firebaseService.getAllPostsByFeatured(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(child: CircularProgressIndicator(color: onboardingColor));
                           }
+
+                          if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                            return const Center(child: Text("Failed to load user data."));
+                          }
+
+                          final featuredData = snapshot.data;
+
+                          if (featuredData!.isEmpty) {
+                            return const Center(child: Text("Failed to load user data."));
+                          }
+
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: featuredData.length > 5 ? 5 : featuredData.length,
+                            itemBuilder: (context, index) {
+                              // final post = popularPostsData[index];
+                              final post = featuredData[index].data() as Map<String, dynamic>;
+                              return GestureDetector(
+                                onTap: () {
+                                  if (context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) =>
+                                                DetailsScreen(postId: featuredData[index].id.toString()),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: PostCard(
+                                  imageUrl: popularPostsData[index]['image_url'],
+                                  price: post['price'].toString(),
+                                  location: post['location']["city"],
+                                  likes: post['likes'],
+                                  postedAgo: "92 Months Ago",
+                                  views: post['views'],
+                                ),
+                              );
+                            },
+                          );
                         },
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: popularPostsData.length,
-                          itemBuilder: (context, index) {
-                            final post = popularPostsData[index];
-                            return PostCard(
-                              imageUrl: post['image_url']!,
-                              price: post['price']!,
-                              location: post['location']!,
-                              likes: post['likes']!,
-                              postedAgo: post['posted_ago']!,
-                              views: post['views']!,
-                            );
-                          },
-                        ),
                       ),
                     ),
                   ),

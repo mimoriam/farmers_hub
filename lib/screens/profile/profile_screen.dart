@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -28,11 +30,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final firebaseService = FirebaseService();
   String _selectedTheme = 'Light';
 
-  final List<String> _languages = ['English', 'Español', 'Français', 'Deutsch', '日本語', '中文', '한국어'];
+  late String selectedLanguage;
+
+  final FirebaseService _firebaseService = FirebaseService();
+
+  Future<void> _getSharedPrefsData() async {
+    final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+    final lang = await asyncPrefs.getString("language");
+
+    setState(() {
+      selectedLanguage = lang!;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getSharedPrefsData();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: homebackgroundColor,
       floatingActionButton: FloatingActionButton(
@@ -68,7 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             GestureDetector(
               onTap: () {
                 if (context.mounted) {
-                  Navigator.pop(context);
+                  Navigator.of(context).pop();
                 }
               },
               child: Column(
@@ -89,10 +107,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             GestureDetector(
               onTap: () {
+                final user = firebaseService.currentUser;
                 if (context.mounted) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const ChatHome()),
+                    MaterialPageRoute(builder: (context) => ChatHome(user: user)),
                   );
                 }
               },
@@ -301,11 +320,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+
+            FutureBuilder<DocumentSnapshot?>(
+              future: _firebaseService.getCurrentUserData(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                }
+
+                if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+                  return const Center(child: Text("Failed to load user data."));
+                }
+
+                final userData = snapshot.data!.data() as Map<String, dynamic>?;
+
+                final username = userData?['username'] ?? '';
+                final location = userData?["location"]["city"] ?? "";
+                final phoneNumber = userData?["phoneInfo"]["completeNumber"] ?? "";
+
+                return Column(
+                  children: [
+                    _buildInfoRow('Name', username),
+                    _buildInfoRow('Phone Number', phoneNumber),
+                    _buildInfoRow('Location', location),
+                    _buildInfoRow('Language', selectedLanguage),
+                  ],
+                );
+              },
+            ),
             // SizedBox(height: 25),
-            _buildInfoRow('Name', 'John Doe'),
-            _buildInfoRow('Phone Number', '1234567890'),
-            _buildInfoRow('Location', 'New York'),
-            _buildInfoRow('Language', 'English'),
           ],
         ),
       ),
@@ -333,7 +376,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: 'Edit Profile',
           onTap: () {
             if (context.mounted) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const EditProfileScreen()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EditProfileScreen()),
+              ).then((_) {
+                setState(() {});
+              });
             }
           },
         ),
@@ -388,10 +436,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   // No explicit border for dropdown, styling via DropdownButton properties
                   child: DropdownButtonFormField2<String>(
                     items:
-                        [
-                          'English',
-                          'Arabic',
-                        ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+                        ['English', 'Arabic']
+                            .map(
+                              (lang) => DropdownMenuItem<String>(
+                                onTap: () async {
+                                  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+                                  await asyncPrefs.setString("language", lang);
+                                  if (context.mounted) {
+                                    setState(() {
+                                      selectedLanguage = lang;
+                                    });
+                                  }
+                                },
+                                value: lang,
+                                child: Text(lang),
+                              ),
+                            )
+                            .toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
                       enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -469,8 +530,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: DropdownButtonFormField2<String>(
                     items:
                         [
-                          'Syria (SY)',
-                          'US Dollar (USD)',
+                          'Syria',
+                          'US Dollar',
                         ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
@@ -486,7 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       offset: const Offset(0, 0),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                     ),
-                    value: "US Dollar (USD)",
+                    value: "US Dollar",
                     onChanged: (value) {
                       setState(() {});
                     },
@@ -506,7 +567,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           },
         ),
 
-        _buildThemeModeCard(), // Custom card for theme mode
+        // _buildThemeModeCard(), // Custom card for theme mode
       ],
     );
   }

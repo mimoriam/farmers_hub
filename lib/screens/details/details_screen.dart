@@ -1,12 +1,16 @@
+import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class DetailsScreen extends StatefulWidget {
-  const DetailsScreen({super.key});
+  final String postId;
+
+  const DetailsScreen({super.key, required this.postId});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -30,40 +34,72 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildImageSection(),
+      body: FutureBuilder(
+        future: firebaseService.getPostDetails(widget.postId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(color: onboardingColor));
+          }
 
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildTitleAndActions(),
-                    const SizedBox(height: 8),
+          if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+            return const Center(child: Text("Failed to load user data."));
+          }
 
-                    _buildEngagementStats(),
-                    const SizedBox(height: 16),
+          final postDetails = snapshot.data;
 
-                    _buildSellerInfo(),
-                    const SizedBox(height: 24),
+          print(postDetails!["likes"]);
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildImageSection(),
 
-                    _buildActionButtons(context),
-                    const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildTitleAndActions(
+                          title: postDetails["title"],
+                          price: postDetails["price"].toString(),
+                          location: postDetails["location"],
+                        ),
+                        const SizedBox(height: 8),
 
-                    _buildVerifiedSellerBadge(),
-                    const SizedBox(height: 16),
+                        _buildEngagementStats(
+                          likes: postDetails["likes"].toString(),
+                          views: postDetails["views"].toString(),
+                          dated:
+                              DateFormat('MMMM d, yyyy').format(postDetails["createdAt"].toDate()).toString(),
+                        ),
+                        const SizedBox(height: 16),
 
-                    _buildDetailsSection(),
-                  ],
-                ),
+                        _buildSellerInfo(username: postDetails["username"]),
+                        const SizedBox(height: 24),
+
+                        _buildActionButtons(context, username: postDetails["username"]),
+                        const SizedBox(height: 18),
+
+                        _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
+                        const SizedBox(height: 16),
+
+                        _buildDetailsSection(
+                          category: postDetails["category"],
+                          gender: postDetails["gender"],
+                          averageWeight: postDetails["averageWeight"],
+                          age: postDetails["age"].toString(),
+                          phoneNumber: "12321323",
+                          details: postDetails["details"],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -92,14 +128,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildTitleAndActions() {
+  Widget _buildTitleAndActions({required String title, required String price, required Map location}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Healthy female cow along with her calf, available for sale.',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-        ),
+        // const Text(
+        //   'Healthy female cow along with her calf, available for sale.',
+        //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        // ),
+        Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,12 +144,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Rs. 330,000',
+                Text(
+                  price,
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
                 ),
                 const SizedBox(height: 4),
-                Text('Mirpur Mathelo, PK', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
               ],
             ),
             Row(
@@ -140,23 +177,27 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildEngagementStats() {
+  Widget _buildEngagementStats({required String likes, required String views, required String dated}) {
     return Row(
       children: [
         Icon(Icons.favorite, color: Colors.red[400], size: 16),
         const SizedBox(width: 4),
-        const Text('Likes 4', style: TextStyle(fontSize: 12, color: Colors.grey)),
+
+        Text(likes, style: TextStyle(fontSize: 12, color: Colors.grey)),
         const SizedBox(width: 16),
+
         Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
         const SizedBox(width: 4),
-        const Text('Views: 275', style: TextStyle(fontSize: 12, color: Colors.grey)),
+
+        Text(views, style: TextStyle(fontSize: 12, color: Colors.grey)),
         const Spacer(),
-        Text('2 months ago', style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+
+        Text(dated, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
       ],
     );
   }
 
-  Widget _buildSellerInfo() {
+  Widget _buildSellerInfo({required String username}) {
     return Row(
       children: [
         const CircleAvatar(
@@ -165,27 +206,34 @@ class _DetailsScreenState extends State<DetailsScreen> {
           child: Text('M', style: TextStyle(fontSize: 24, color: Colors.white)),
         ),
         const SizedBox(width: 12),
-        const Text(
-          'Loreum ipsum', // Placeholder name
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
+        Text(username, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
       ],
     );
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, {required String username}) {
     return Row(
       children: [
         Expanded(
           child: ElevatedButton.icon(
             icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-            label: const Text('Chat', style: TextStyle(color: Colors.white)),
-            onPressed: () async {
-              // Handle Chat action
-
-              var a = await firebaseService.getAllPostsByCurrentUser();
-              print(a[0].data());
-            },
+            label: Text(
+              firebaseService.currentUser?.displayName == username ? "Can't chat with yourself" : 'Chat',
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed:
+                firebaseService.currentUser?.displayName == username
+                    ? null
+                    : () {
+                      // Handle Chat action
+                      final user = firebaseService.currentUser;
+                      if (context.mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                        );
+                      }
+                    },
             style: ElevatedButton.styleFrom(
               backgroundColor: onboardingColor,
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -198,33 +246,47 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildVerifiedSellerBadge() {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(color: Colors.yellow[700], borderRadius: BorderRadius.circular(8)),
-        child: const Text(
-          'Verified Seller',
-          style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 12),
+  Widget _buildVerifiedSellerBadge({required bool verifiedSeller}) {
+    if (!verifiedSeller) {
+      return Container();
+    } else {
+      return Align(
+        alignment: Alignment.centerLeft,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(color: Colors.yellow[700], borderRadius: BorderRadius.circular(8)),
+          child: Text(
+            'Verified Seller',
+            style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 12),
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 
-  Widget _buildDetailsSection() {
+  Widget _buildDetailsSection({
+    required String category,
+    required String gender,
+    required String averageWeight,
+    required String age,
+    required String phoneNumber,
+    required String details,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDetailRow('Category:', 'Cow'),
-        _buildDetailRow('Gender:', 'Female'),
-        _buildDetailRow('Average Weight (in kg):', '300.00'),
-        _buildDetailRow('Age (in years):', '62.0'), // Note: unusual age
-        _buildDetailRow('Phone Number:', '+92 123456789'),
+        _buildDetailRow('Category:', category),
+        _buildDetailRow('Gender:', gender),
+        _buildDetailRow('Average Weight (in kg):', averageWeight),
+        _buildDetailRow('Age (in years):', age), // Note: unusual age
+        _buildDetailRow('Phone Number:', phoneNumber),
+
         const SizedBox(height: 8),
-        const Text('Additional Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+
+        Text('Additional Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         // Add Text widget here if there is additional info text
+        Text(details),
         // Text('Some additional details about the cow and calf...'),
       ],
     );
