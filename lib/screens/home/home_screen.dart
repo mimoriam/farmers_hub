@@ -341,9 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((
-                  _,
-                ) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((_) {
                   setState(() {});
                 });
               }
@@ -626,7 +624,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 builder:
                                                     (context) => AddPostScreen(location: _selectedLocation),
                                               ),
-                                            );
+                                            ).then((_) {
+                                              setState(() {});
+                                            });
                                           }
                                         },
                                 style: ElevatedButton.styleFrom(

@@ -84,18 +84,18 @@ class _ChatHomeState extends State<ChatHome> {
         }
 
         if (snapshot.hasData) {
-            snapshot.data?.map((user) {
-              print(user);
-              messages.add(
-                MessageItem(
-                  avatarUrl:
-                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                  name: user["username"],
-                  lastMessage: 'Hi its available',
-                  time: '12:00 PM',
-                ),
-              );
-            });
+          snapshot.data?.map((user) {
+            print(user);
+            messages.add(
+              MessageItem(
+                avatarUrl:
+                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                name: user["username"],
+                lastMessage: 'Hi its available',
+                time: '12:00 PM',
+              ),
+            );
+          });
 
           return ListView(
             shrinkWrap: true,
@@ -113,21 +113,39 @@ class _ChatHomeState extends State<ChatHome> {
     // Return all users except current user
     // print(widget.user.uid);
     if (userData["email"] != widget.user.email) {
-      return GestureDetector(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder:
-                  (context) => ChatScreen(
-                    receiverId: userData["id"],
-                    receiverEmail: userData['email'],
-                    user: widget.user,
-                  ),
-            ),
-          );
-        },
-        child: Center(child: Text(userData['email'])),
+      // return GestureDetector(
+      // onTap: () {
+      //   Navigator.of(context).push(
+      //     MaterialPageRoute(
+      //       builder:
+      //           (context) => ChatScreen(
+      //             receiverId: userData["id"],
+      //             receiverEmail: userData['email'],
+      //             user: widget.user,
+      //           ),
+      //     ),
+      //   );
+      // },
+      // child: Center(child: ElevatedButton(
+      return Center(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: onboardingColor),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder:
+                    (context) => ChatScreen(
+                      receiverId: userData["id"],
+                      receiverEmail: userData['email'],
+                      user: widget.user,
+                    ),
+              ),
+            );
+          },
+          child: Text(userData['email'], style: TextStyle(color: Colors.white)),
+        ),
       );
+      // );
     } else {
       return Container();
     }
@@ -208,10 +226,7 @@ class _ChatHomeState extends State<ChatHome> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()),
-            );
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
           }
         },
         backgroundColor: onboardingColor,

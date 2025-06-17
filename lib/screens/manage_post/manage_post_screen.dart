@@ -144,7 +144,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
 
                                       // Sold Button
                                       _buildSoldButton(hasBeenSold: post["hasBeenSold"]),
-                                      const SizedBox(height: 12),
+                                      const SizedBox(height: 8),
 
                                       // Bottom Section: Timestamp and Action Buttons
                                       _buildBottomSection(
@@ -186,13 +186,13 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           // ),
           child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: 14),
         // Car Details
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(price, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+              Text(price, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
 
               const SizedBox(height: 8),
               _buildDetailRow('Category:', category),
@@ -210,24 +210,34 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Row(
       children: [
         Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-        const SizedBox(width: 5),
-        Text(value, style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500)),
+
+        const SizedBox(width: 3),
+
+        Expanded(
+          child: Text(
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            value,
+            style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500),
+          ),
+        ),
       ],
     );
   }
 
   /// Builds the section for location, likes, and views.
   Widget _buildStatsSection({required Map location, required String likes, required String views}) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildIconTextRow(Icons.location_on, location["city"]),
-        const SizedBox(height: 8),
+        const SizedBox(width: 8),
 
         _buildIconTextRow(Icons.favorite, likes, iconColor: Colors.red),
-        const SizedBox(height: 8),
+        const SizedBox(width: 12),
 
         _buildIconTextRow(Icons.visibility, views, iconColor: Colors.green),
+        const SizedBox(width: 8),
       ],
     );
   }
@@ -236,8 +246,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Row(
       children: [
         Icon(icon, color: iconColor, size: 20),
-        const SizedBox(width: 8),
-        Text(text, style: const TextStyle(fontSize: 14, color: Colors.black54)),
+
+        const SizedBox(width: 4),
+
+        Text(text, style: const TextStyle(fontSize: 16, color: Colors.black54)),
       ],
     );
   }

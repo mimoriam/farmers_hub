@@ -939,7 +939,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     price: int.parse(_formKey.currentState?.fields['price']?.value),
                                     details: _formKey.currentState?.fields['add_details']?.value,
                                     featured: true,
-                                    city: widget.location!.isNotEmpty ? widget.location : selectedCity,
+                                    city: widget.location ?? selectedCity,
                                     village: _formKey.currentState?.fields['village']?.value,
                                     // city: selectedCity,
                                     // city: placeDetails.city!,
