@@ -1,4 +1,5 @@
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/services/chat_service.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
@@ -224,9 +225,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
             onPressed:
                 firebaseService.currentUser?.displayName == username
                     ? null
-                    : () {
+                    : () async {
                       // Handle Chat action
+
+                      final ChatService _chatService = ChatService(user: firebaseService.currentUser);
                       final user = firebaseService.currentUser;
+
+                      await _chatService.addUserForChat(username: username);
+
                       if (context.mounted) {
                         Navigator.push(
                           context,

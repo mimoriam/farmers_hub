@@ -8,6 +8,31 @@ class ChatService {
 
   ChatService({required this.user});
 
+  Future<List> getUsersIdForChat() async {
+    final doc = await _firestore.collection("users").doc(uid).get();
+
+    final userData = doc.data();
+
+    return userData!["hasChats"];
+  }
+
+  Stream<List<Map<String, dynamic>>> getUsersStreamForChatBasedOnIds(List users) {
+    // Firestore's 'whereIn' query cannot handle an empty list.
+    // If the list is empty, we return a stream containing an empty list of users.
+    if (users.isEmpty) {
+      return Stream.value([]);
+    }
+
+    return _firestore.collection("users").where(FieldPath.documentId, whereIn: users).snapshots().map((
+      snapshot,
+    ) {
+      return snapshot.docs.map((doc) {
+        final user = doc.data();
+        return user;
+      }).toList();
+    });
+  }
+
   Stream<List<Map<String, dynamic>>> getUsersStream() {
     return _firestore.collection("users").snapshots().map((snapshot) {
       return snapshot.docs.map((doc) {
@@ -15,6 +40,30 @@ class ChatService {
 
         return user;
       }).toList();
+    });
+  }
+
+  Future<void> addUserForChat({required String username}) async {
+    final userDoc = await _firestore.collection("users").doc(uid).get();
+
+    final user = userDoc.data();
+
+    final secondUserDoc =
+    await _firestore.collection("users").where("username", isEqualTo: username).limit(1).get();
+
+    final secondUser = secondUserDoc.docs.first;
+
+    // Update logged in user
+    await _firestore.collection("users").doc(uid).update({
+      // "hasChats": FieldValue.arrayUnion([username]),
+      "hasChats": FieldValue.arrayUnion([secondUser.id]),
+    });
+
+    // Update other user
+
+    await _firestore.collection("users").doc(secondUser.id).update({
+      // "hasChats": FieldValue.arrayUnion([user!["username"]]),
+      "hasChats": FieldValue.arrayUnion([uid]),
     });
   }
 

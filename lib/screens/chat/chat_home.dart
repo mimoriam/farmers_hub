@@ -44,15 +44,43 @@ class _ChatHomeState extends State<ChatHome> {
 
   late final ChatService _chatService;
 
+  late List userIds;
+
+  bool _isLoading = true;
+
+  Future<List> _getUserIds() async {
+    return await _chatService.getUsersIdForChat();
+  }
+
   @override
   void initState() {
     super.initState();
     _chatService = ChatService(user: widget.user);
+
+    () async {
+      final ids = await _getUserIds();
+
+      print(ids);
+
+      // await Future.delayed(const Duration(seconds: 2));
+      if (context.mounted) {
+        setState(() {
+          userIds = ids;
+          _isLoading = false;
+        });
+      }
+    }();
   }
 
   Widget _buildUserList() {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     return StreamBuilder(
-      stream: _chatService.getUsersStream(),
+      // stream: _chatService.getUsersStream(),
+      stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -72,7 +100,7 @@ class _ChatHomeState extends State<ChatHome> {
 
   Widget _buildUserItemList(Map<String, dynamic> userData, BuildContext context) {
     // Return all users except current user
-    print(widget.user.uid);
+    // print(widget.user.uid);
     if (userData["email"] != widget.user.email) {
       return GestureDetector(
         onTap: () {
