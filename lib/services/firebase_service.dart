@@ -149,6 +149,7 @@ class FirebaseService {
     required int quantity,
     required int age,
     required int price,
+    String? village,
     String? city,
     String? province,
     String? country,
@@ -170,10 +171,28 @@ class FirebaseService {
       "views": 0,
       "featured": featured ?? false,
       "verifiedSeller": false,
-      "location": {"city": city ?? "", "province": province ?? "", "country": country ?? ""},
+      "location": {
+        "city": city ?? "",
+        "province": province ?? "",
+        "country": country ?? "",
+        "village": village ?? "",
+      },
+      "hasBeenSold": false,
       "details": details ?? "",
       "createdAt": FieldValue.serverTimestamp(),
     });
+  }
+
+  Future<void> markPostAsSold(String postId) async {
+    try {
+      await _firestore.collection("livestock").doc(postId).update({"hasBeenSold": true});
+    } catch (e) {}
+  }
+
+  Future<void> deletePostById(String postId) async {
+    try {
+      await _firestore.collection("livestock").doc(postId).delete();
+    } catch (e) {}
   }
 
   Future<List<QueryDocumentSnapshot>> getAllPostsByCurrentUser() async {

@@ -146,7 +146,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         ),
 
                         Text(
-                          'Results (100)',
+                          'Results',
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -160,23 +160,27 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      // Important to make GridView work inside SingleChildScrollView
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2, // Number of columns
-                        crossAxisSpacing: 10.0, // Horizontal space between cards
-                        mainAxisSpacing: 14.0, // Vertical space between cards
-                        childAspectRatio: 0.78, // Adjust to fit content (width / height)
-                      ),
-                      itemCount: popularPostsData.length,
-                      itemBuilder: (context, index) {
-                        return ProductCard(postData: popularPostsData[index]);
-                      },
-                    ),
+                    child: Center(child: Text("No results")),
                   ),
 
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //   child: GridView.builder(
+                  //     shrinkWrap: true,
+                  //     // Important to make GridView work inside SingleChildScrollView
+                  //     physics: const NeverScrollableScrollPhysics(),
+                  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  //       crossAxisCount: 2, // Number of columns
+                  //       crossAxisSpacing: 10.0, // Horizontal space between cards
+                  //       mainAxisSpacing: 14.0, // Vertical space between cards
+                  //       childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                  //     ),
+                  //     itemCount: popularPostsData.length,
+                  //     itemBuilder: (context, index) {
+                  //       return ProductCard(postData: popularPostsData[index]);
+                  //     },
+                  //   ),
+                  // ),
                   const SizedBox(height: 42),
                 ],
               ),

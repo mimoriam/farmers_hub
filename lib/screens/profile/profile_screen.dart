@@ -6,6 +6,7 @@ import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.d
 import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
 import 'package:farmers_hub/screens/feedback/send_feedback_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
+import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/theme_service.dart';
 import 'package:flutter/material.dart';
@@ -58,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           if (context.mounted) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AddPostScreen()),
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
             );
           }
         },
@@ -478,20 +479,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        SizedBox(height: 4),
+        SizedBox(height: 8),
 
-        _buildSettingItemCard(
-          icon: Icons.currency_exchange,
-          title: 'Currency',
-          onTap: () {
-            if (context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
-              );
-            }
-          },
-        ),
+        // _buildSettingItemCard(
+        //   icon: Icons.currency_exchange,
+        //   title: 'Currency',
+        //   onTap: () {
+        //     if (context.mounted) {
+        //       Navigator.push(
+        //         context,
+        //         MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
+        //       );
+        //     }
+        //   },
+        // ),
+
         Container(
           // Decoration for the card-like appearance
           decoration: BoxDecoration(
@@ -525,16 +527,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               // Right side: Language Dropdown
               Expanded(
                 child: Container(
-                  padding: EdgeInsets.only(left: 50, right: 0, top: 2, bottom: 2),
+                  padding: EdgeInsets.only(left: 90, right: 0, top: 2, bottom: 2),
                   // No explicit border for dropdown, styling via DropdownButton properties
                   child: DropdownButtonFormField2<String>(
                     items:
                         [
                           'Syria',
-                          'US Dollar',
+                          'USDollar',
                         ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
                     decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
+                      contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
                       enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                       focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     ),
@@ -547,7 +549,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       offset: const Offset(0, 0),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                     ),
-                    value: "US Dollar",
+                    value: "USDollar",
                     onChanged: (value) {
                       setState(() {});
                     },
@@ -558,12 +560,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
+        SizedBox(height: 4),
+
         _buildSettingItemCard(
           icon: Icons.history_outlined, // Clock/history icon
           title: 'Post History',
           onTap: () {
-            print('Post History tapped');
-            // Navigate to Post History Screen
+            if (context.mounted) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManagePostScreen()));
+            }
           },
         ),
 

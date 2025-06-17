@@ -73,14 +73,14 @@ class _ChatHomeState extends State<ChatHome> {
 
   Widget _buildUserList() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: onboardingColor));
     }
     return StreamBuilder(
       // stream: _chatService.getUsersStream(),
       stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator(color: onboardingColor));
         }
 
         if (snapshot.hasData) {
@@ -210,7 +210,7 @@ class _ChatHomeState extends State<ChatHome> {
           if (context.mounted) {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const AddPostScreen()),
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
             );
           }
         },

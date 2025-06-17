@@ -1,3 +1,4 @@
+import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -17,9 +18,7 @@ class AuthGate extends StatelessWidget {
       stream: firebaseService.authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
         }
         if (snapshot.hasData) {
           // TODO: Check if user has completed registration properly and do not return him to Home if not

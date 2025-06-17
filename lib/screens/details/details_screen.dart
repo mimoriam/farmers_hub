@@ -1,4 +1,5 @@
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         _buildSellerInfo(username: postDetails["username"]),
                         const SizedBox(height: 24),
 
-                        _buildActionButtons(context, username: postDetails["username"]),
+                        _buildActionButtons(
+                          context,
+                          username: postDetails["username"],
+                          postUserId: postDetails["sellerId"],
+                        ),
                         const SizedBox(height: 18),
 
                         _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
@@ -212,42 +217,79 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, {required String username}) {
-    return Row(
+  Widget _buildActionButtons(BuildContext context, {required String username, required String postUserId}) {
+    return Column(
       children: [
-        Expanded(
-          child: ElevatedButton.icon(
-            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-            label: Text(
-              firebaseService.currentUser?.displayName == username ? "Can't chat with yourself" : 'Chat',
-              style: TextStyle(color: Colors.white),
-            ),
-            onPressed:
-                firebaseService.currentUser?.displayName == username
-                    ? null
-                    : () async {
+        firebaseService.currentUser!.uid == postUserId
+            ? Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
+                    label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
                       // Handle Chat action
 
-                      final ChatService _chatService = ChatService(user: firebaseService.currentUser);
-                      final user = firebaseService.currentUser;
-
-                      await _chatService.addUserForChat(username: username);
-
                       if (context.mounted) {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                          MaterialPageRoute(builder: (context) => ManagePostScreen()),
                         );
+                        //     .then((_) {
+                        //   setState(() {});
+                        // });
                       }
                     },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: onboardingColor,
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: onboardingColor,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ),
+              ],
+            )
+            : Container(),
+
+        SizedBox(height: 4),
+
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                label: Text(
+                  firebaseService.currentUser?.displayName == username ? "Can't chat with yourself" : 'Chat',
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed:
+                    firebaseService.currentUser?.displayName == username
+                        ? null
+                        : () async {
+                          // Handle Chat action
+
+                          final ChatService _chatService = ChatService(user: firebaseService.currentUser);
+                          final user = firebaseService.currentUser;
+
+                          await _chatService.addUserForChat(username: username);
+
+                          if (context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                            );
+                          }
+                        },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: onboardingColor,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
             ),
-          ),
+            // const SizedBox(width: 10),
+          ],
         ),
-        // const SizedBox(width: 10),
       ],
     );
   }

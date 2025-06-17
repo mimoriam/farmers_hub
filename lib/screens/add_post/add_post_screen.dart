@@ -10,7 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class AddPostScreen extends StatefulWidget {
-  const AddPostScreen({super.key});
+
+  String? location;
+
+  AddPostScreen({super.key, this.location});
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -194,7 +197,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   height: 260, // Fixed height for the container.
                                   color: Colors.white, // Background color of the container.
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 24, right: 24, top: 56, bottom: 24),
+                                    padding: const EdgeInsets.only(left: 10, right: 10, top: 56, bottom: 10),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       // Center the content vertically.
@@ -336,6 +339,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             vertical: 0,
                                             horizontal: 6,
                                           ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
                                           errorBorder: _errorInputBorder,
                                           enabledBorder: _inputBorder,
                                           focusedBorder: OutlineInputBorder(
@@ -347,6 +354,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           // Using IconStyleData for icon properties
                                           iconEnabledColor: onboardingTextColor,
                                         ),
+
+                                        value: widget.location ?? "Damascus",
+
+                                        // value: widget.location != null ? widget.location : "Damascus",
 
                                         dropdownStyleData: DropdownStyleData(
                                           maxHeight: 160,
@@ -385,6 +396,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                 onTap: () {
                                                   setState(() {
                                                     selectedCity = city;
+                                                    // widget.location = null;
                                                   });
                                                 },
                                                 value: city,
@@ -422,6 +434,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           //   borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
                                           //   borderRadius: BorderRadius.circular(8),
                                           // ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
                                           enabledBorder: _inputBorder,
                                           errorBorder: _errorInputBorder,
                                           focusedBorder: OutlineInputBorder(
@@ -522,6 +538,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             vertical: 0,
                                             horizontal: 6,
                                           ),
+                                          border: OutlineInputBorder(
+                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderRadius: BorderRadius.circular(12),
+                                          ),
                                           enabledBorder: _inputBorder,
                                           errorBorder: _errorInputBorder,
                                           focusedBorder: OutlineInputBorder(
@@ -598,8 +618,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'avg_weight',
+                                      maxLength: 4,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
+                                        counterText: "",
                                         hintText: 'Enter Average Weight in kilograms',
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
@@ -619,6 +641,36 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                         FormBuilderValidators.numeric(errorText: 'Must be a number.'),
                                         FormBuilderValidators.min(0, errorText: 'Weight cannot be negative.'),
+                                        FormBuilderValidators.max(10000, errorText: 'Weight cannot exceed.'),
+                                      ]),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    Text("Village", style: _labelStyle),
+                                    const SizedBox(height: 8),
+
+                                    FormBuilderTextField(
+                                      name: 'village',
+                                      autovalidateMode: validateMode,
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter Village',
+                                        border: _inputBorder,
+                                        enabledBorder: _inputBorder,
+                                        focusedBorder: _focusedInputBorder,
+                                        errorBorder: _errorInputBorder,
+                                        focusedErrorBorder: _focusedInputBorder,
+                                        contentPadding: _contentPadding,
+                                        // The image shows a dropdown arrow, this is a stylistic choice.
+                                        // If it's a free text field, suffixIcon is decorative.
+                                        // If it's a dropdown, use FormBuilderDropdown.
+                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                      ),
+                                      // keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(
+                                          errorText: 'Village is required.',
+                                        ),
                                       ]),
                                     ),
 
@@ -629,8 +681,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'quantity',
+                                      maxLength: 4,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
+                                        counterText: "",
                                         hintText: 'Enter Quantity',
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
@@ -657,8 +711,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'age',
+                                      maxLength: 3,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
+                                        counterText: "",
                                         hintText: 'Enter age in years',
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
@@ -672,6 +728,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         FormBuilderValidators.required(errorText: 'Age is required.'),
                                         FormBuilderValidators.numeric(errorText: 'Must be a number.'),
                                         FormBuilderValidators.min(0, errorText: 'Age cannot be negative.'),
+                                        FormBuilderValidators.max(999, errorText: 'Age cannot exceed.'),
                                       ]),
                                     ),
 
@@ -882,7 +939,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     price: int.parse(_formKey.currentState?.fields['price']?.value),
                                     details: _formKey.currentState?.fields['add_details']?.value,
                                     featured: true,
-                                    city: selectedCity,
+                                    city: widget.location!.isNotEmpty ? widget.location : selectedCity,
+                                    village: _formKey.currentState?.fields['village']?.value,
+                                    // city: selectedCity,
                                     // city: placeDetails.city!,
                                     // province: placeDetails.province!,
                                     // country: placeDetails.country!,

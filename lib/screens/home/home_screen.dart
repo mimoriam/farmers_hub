@@ -21,6 +21,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:intl/intl.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -150,33 +151,38 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
 
-  String _selectedLocation = 'English';
+  String _selectedLocation = '';
 
-  void _openCountryPicker() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Select Country"),
-          content: SizedBox(
-            height: 300, // Limit height to avoid overflow
-            child: CountryCodePicker(
-              onChanged: (countryCode) {
-                setState(() {
-                  _selectedLocation = countryCode.name ?? countryCode.code!;
-                });
-                Navigator.of(context).pop(); // Close alert on selection
-              },
-              showCountryOnly: true,
-              showOnlyCountryWhenClosed: true,
-              showDropDownButton: true,
-              alignLeft: true,
-            ),
-          ),
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
   }
+
+  // void _openCountryPicker() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: const Text("Select Country"),
+  //         content: SizedBox(
+  //           height: 300, // Limit height to avoid overflow
+  //           child: CountryCodePicker(
+  //             onChanged: (countryCode) {
+  //               setState(() {
+  //                 _selectedLocation = countryCode.name ?? countryCode.code!;
+  //               });
+  //               Navigator.of(context).pop(); // Close alert on selection
+  //             },
+  //             showCountryOnly: true,
+  //             showOnlyCountryWhenClosed: true,
+  //             showDropDownButton: true,
+  //             alignLeft: true,
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   int _currentCarouselPage = 0; // To keep track of the current carousel page
 
@@ -250,6 +256,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
+
+    final DateTime now = DateTime.now();
+
+    final String formattedDate = DateFormat('MMMM d, y').format(now);
+
+    final String formattedDay = DateFormat('EEEE').format(now);
 
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
@@ -329,7 +341,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const AddPostScreen())).then((
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((
                   _,
                 ) {
                   setState(() {});
@@ -603,12 +615,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: EdgeInsets.only(top: 4, bottom: 10),
                               child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed:
+                                    _selectedLocation.isEmpty
+                                        ? null
+                                        : () {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) => AddPostScreen(location: _selectedLocation),
+                                              ),
+                                            );
+                                          }
+                                        },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                                 ),
                                 child: Text(
                                   "Go",
@@ -848,7 +873,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        'April 22, 2025',
+                                        // 'April 22, 2025',
+                                        formattedDate,
                                         style: GoogleFonts.poppins(
                                           fontSize: 13.6,
                                           fontWeight: FontWeight.w500,
@@ -856,7 +882,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Text(
-                                        'Tuesday',
+                                        // 'Tuesday',
+                                        formattedDay,
                                         style: GoogleFonts.poppins(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400,
@@ -1041,7 +1068,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           final featuredData = snapshot.data;
 
                           if (featuredData!.isEmpty) {
-                            return const Center(child: Text("Failed to load user data."));
+                            return const Center(child: Text("No featured posts to view."));
                           }
 
                           return ListView.builder(
@@ -1061,6 +1088,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 DetailsScreen(postId: featuredData[index].id.toString()),
                                       ),
                                     );
+                                    //     .then((_) {
+                                    //   setState(() {});
+                                    // });
                                   }
                                 },
                                 child: PostCard(

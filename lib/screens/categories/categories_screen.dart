@@ -1,3 +1,4 @@
+import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -17,50 +18,60 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final validateMode = AutovalidateMode.onUserInteraction;
 
   Widget _buildCategoryItem(BuildContext context, String name, String imageUrl) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-        side: BorderSide(color: categoriesBorderColor, width: 1),
-      ),
-      color: Colors.white,
-      child: InkWell(
-        // onTap: () {
-        //   // TODO: Implement navigation or action for category item
-        // },
-        borderRadius: BorderRadius.circular(10.0),
-        child: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0), // Space between image and text
-                  // Use Image.network here to dynamically load from DB
-                  child: Image.asset(
-                    imageUrl,
-                    fit: BoxFit.contain, // Use contain to see the whole placeholder image
-                    // Error handling for image loading
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
-                    },
+    return GestureDetector(
+      onTap: () {
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FilteredResultsScreen()),
+          );
+        }
+      },
+      child: Card(
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          side: BorderSide(color: categoriesBorderColor, width: 1),
+        ),
+        color: Colors.white,
+        child: InkWell(
+          // onTap: () {
+          //   // TODO: Implement navigation or action for category item
+          // },
+          borderRadius: BorderRadius.circular(10.0),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0), // Space between image and text
+                    // Use Image.network here to dynamically load from DB
+                    child: Image.asset(
+                      imageUrl,
+                      fit: BoxFit.contain, // Use contain to see the whole placeholder image
+                      // Error handling for image loading
+                      errorBuilder: (context, error, stackTrace) {
+                        return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              Text(
-                name,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  color: categoriesTextColor,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  height: 1.54,
+                Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: categoriesTextColor,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w400,
+                    height: 1.54,
+                  ),
+                  overflow: TextOverflow.ellipsis, // Handle long text
                 ),
-                overflow: TextOverflow.ellipsis, // Handle long text
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

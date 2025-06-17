@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:farmers_hub/services/chat_service.dart';
 
+import '../../utils/constants.dart';
+
 class ChatScreen extends StatefulWidget {
   final String receiverId;
   final String receiverEmail;
@@ -53,7 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
       stream: _chatService.getMessages(widget.receiverId, senderId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
         }
 
         if (snapshot.hasData) {
@@ -93,20 +95,20 @@ class _ChatScreenState extends State<ChatScreen> {
                     //                 // ),
                     MediaQuery.of(context).viewInsets.bottom == 0.0
                         ? Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: Container(
-                          // margin: const EdgeInsets.only(bottom: 8.0),
-                          width: 135,
-                          height: 5,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.circular(2.5),
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 16.0),
+                            child: Container(
+                              // margin: const EdgeInsets.only(bottom: 8.0),
+                              width: 135,
+                              height: 5,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(2.5),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )
+                        )
                         : Container(),
                   ],
                 ),
