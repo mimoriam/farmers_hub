@@ -185,7 +185,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             ),
                             initialValue: initialName,
                             // readOnly: true,
-                            enabled: false,
+                            // enabled: false,
                             validator: FormBuilderValidators.compose([
                               FormBuilderValidators.required(
                                 errorText: 'Name is required.',

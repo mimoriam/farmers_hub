@@ -90,7 +90,8 @@ class _ChatHomeState extends State<ChatHome> {
               MessageItem(
                 avatarUrl:
                     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                name: user["username"],
+                // name: user["username"],
+                name: "AAA",
                 lastMessage: 'Hi its available',
                 time: '12:00 PM',
               ),

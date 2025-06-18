@@ -37,7 +37,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
 
       body: FutureBuilder(
-        future: firebaseService.getPostDetails(widget.postId),
+        // future: firebaseService.getPostDetails(widget.postId),
+        future: firebaseService.getPostAndSellerDetails(widget.postId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator(color: onboardingColor));
@@ -47,7 +48,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return const Center(child: Text("Failed to load user data."));
           }
 
-          final postDetails = snapshot.data;
+          // final postDetails = snapshot.data;
+          final postDetails = snapshot.data!['post'];
+          final sellerData = snapshot.data!['seller'];
+          final sellerUsername = sellerData["username"];
+
+          print(sellerUsername);
 
           print(postDetails!["likes"]);
           return SafeArea(
@@ -77,12 +83,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                         const SizedBox(height: 16),
 
-                        _buildSellerInfo(username: postDetails["username"]),
+                        // _buildSellerInfo(username: postDetails["username"]),
+                        _buildSellerInfo(username: sellerUsername),
                         const SizedBox(height: 24),
 
                         _buildActionButtons(
                           context,
-                          username: postDetails["username"],
+                          // username: postDetails["username"],
+                          username: sellerUsername,
                           postUserId: postDetails["sellerId"],
                         ),
                         const SizedBox(height: 18),
@@ -93,7 +101,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         _buildDetailsSection(
                           category: postDetails["category"],
                           gender: postDetails["gender"],
-                          averageWeight: postDetails["averageWeight"],
+                          averageWeight: postDetails["averageWeight"].toString(),
                           age: postDetails["age"].toString(),
                           phoneNumber: "12321323",
                           details: postDetails["details"],

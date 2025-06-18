@@ -16,6 +16,9 @@ class FirebaseService {
   // Get current user
   User? get currentUser => _auth.currentUser;
 
+  final userCollection = "users";
+  final postCollection = "posts";
+
   // Email/Password Registration
   Future<UserCredential> registerWithEmail({required String email, required String password}) async {
     try {
@@ -76,7 +79,7 @@ class FirebaseService {
     // required String signUpMode,
   }) async {
     try {
-      await _firestore.collection("users").doc(user.uid).set({
+      await _firestore.collection(userCollection).doc(user.uid).set({
         "createdAt": FieldValue.serverTimestamp(),
         "email": user.email,
         "id": user.uid,
@@ -100,7 +103,7 @@ class FirebaseService {
 
   Future<bool> checkIfUserDataExistsForSocialLogin({required User user}) async {
     try {
-      final doc = await _firestore.collection("users").doc(user.uid).get();
+      final doc = await _firestore.collection(userCollection).doc(user.uid).get();
       return doc.exists;
     } catch (e) {
       return false;
@@ -121,7 +124,16 @@ class FirebaseService {
     if (currentUser == null) return null;
 
     try {
-      final userDoc = await _firestore.collection("users").doc(currentUser!.uid).get();
+      final userDoc = await _firestore.collection(userCollection).doc(currentUser!.uid).get();
+      return userDoc;
+    } catch (e) {
+      return Future.error("Error fetching user data");
+    }
+  }
+
+  Future<DocumentSnapshot?> getUserDataById({required String uid}) async {
+    try {
+      final userDoc = await _firestore.collection(userCollection).doc(uid).get();
       return userDoc;
     } catch (e) {
       return Future.error("Error fetching user data");
@@ -132,7 +144,10 @@ class FirebaseService {
     if (currentUser == null) return;
 
     try {
-      await _firestore.collection("users").doc(currentUser!.uid).update(data);
+      await currentUser!.updateDisplayName(data["username"]);
+      await _firestore.collection(userCollection).doc(currentUser!.uid).update(data);
+
+      await currentUser!.reload();
     } catch (e) {
       print("Error updating user profile: $e");
       // Optionally re-throw the error to handle it in the UI.
@@ -158,7 +173,7 @@ class FirebaseService {
   }) async {
     await _firestore.collection("livestock").doc().set({
       "sellerId": currentUser?.uid,
-      "username": currentUser?.displayName,
+      // "username": currentUser?.displayName,
       "title": title,
       "category": category,
       "gender": gender,
@@ -185,7 +200,8 @@ class FirebaseService {
 
   Future<void> markPostAsSold(String postId) async {
     try {
-      await _firestore.collection("livestock").doc(postId).update({"hasBeenSold": true});
+      // Make it so when the ad has been sold, the featured flag is also removed
+      await _firestore.collection("livestock").doc(postId).update({"hasBeenSold": true, "featured": false});
     } catch (e) {}
   }
 
@@ -224,6 +240,33 @@ class FirebaseService {
       return documentSnapshot.data() as Map<String, dynamic>;
     } catch (e) {
       return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> getPostAndSellerDetails(String postId) async {
+    try {
+      // Step 1: Fetch the post details
+      final Map<String, dynamic> postData = await getPostDetails(postId);
+
+      if (postData.isNotEmpty) {
+        final String sellerId = postData['sellerId'];
+
+        // Step 2: Fetch the seller's data using the sellerId
+        final DocumentSnapshot? sellerSnapshot = await getUserDataById(uid: sellerId);
+        final Map<String, dynamic>? sellerData = sellerSnapshot?.data() as Map<String, dynamic>?;
+
+        // Step 3: Return a combined map with both post and seller data
+        return {
+          'post': postData,
+          'seller': sellerData,
+        };
+      } else {
+        // Handle cases where post is empty or has no sellerId
+        throw Exception("Post not found or seller ID is missing.");
+      }
+    } catch (e) {
+      // Propagate the error to be caught by the FutureBuilder
+      rethrow;
     }
   }
 

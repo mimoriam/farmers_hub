@@ -299,6 +299,24 @@ class _HomeScreenState extends State<HomeScreen> {
         "posted_ago": "02 Months Ago",
         "views": 301,
       },
+
+      {
+        "image_url": "images/backgrounds/grains.jpg",
+        "price": "430,000",
+        "location": "Mirpur Mathelo",
+        "likes": 12,
+        "posted_ago": "02 Months Ago",
+        "views": 301,
+      },
+
+      {
+        "image_url": "images/backgrounds/pomegranates.jpg",
+        "price": "430,000",
+        "location": "Mirpur Mathelo",
+        "likes": 12,
+        "posted_ago": "02 Months Ago",
+        "views": 301,
+      },
     ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(

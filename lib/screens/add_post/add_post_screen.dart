@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/location_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -370,39 +371,39 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                            [
-                                              'Damascus',
-                                              'Aleppo',
-                                              'Homs',
-                                              'Hama',
-                                              "Latakia",
-                                              "Tartus",
-                                              "Idlib",
-                                              "Deir ez-Zor",
-                                              "Al-Hasakah",
-                                              "Raqqa",
-                                              "Daraa",
-                                              "As-Suwayda",
-                                              "Quneitra",
-                                              "Al-Mayadin",
-                                              "Al-Bukamal",
-                                              'Manbij',
-                                              "Afrin",
-                                              "Tell Abyad",
-                                              "Ras al-Ayn",
-                                              "Kobani",
-                                            ].map((city) {
-                                              return DropdownMenuItem<String>(
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedCity = city;
-                                                    // widget.location = null;
-                                                  });
-                                                },
-                                                value: city,
-                                                child: Text(city),
-                                              );
-                                            }).toList(),
+                                        [
+                                          'Damascus',
+                                          'Aleppo',
+                                          'Homs',
+                                          'Hama',
+                                          "Latakia",
+                                          "Tartus",
+                                          "Idlib",
+                                          "Deir ez-Zor",
+                                          "Al-Hasakah",
+                                          "Raqqa",
+                                          "Daraa",
+                                          "As-Suwayda",
+                                          "Quneitra",
+                                          "Al-Mayadin",
+                                          "Al-Bukamal",
+                                          'Manbij',
+                                          "Afrin",
+                                          "Tell Abyad",
+                                          "Ras al-Ayn",
+                                          "Kobani",
+                                        ].map((city) {
+                                          return DropdownMenuItem<String>(
+                                            onTap: () {
+                                              setState(() {
+                                                selectedCity = city;
+                                                // widget.location = null;
+                                              });
+                                            },
+                                            value: city,
+                                            child: Text(city),
+                                          );
+                                        }).toList(),
                                         validator: (value) {
                                           if (value == null) {
                                             return 'City is required.';
@@ -461,28 +462,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                            [
-                                                  'Fruits',
-                                                  'Vegetables',
-                                                  'Olive Oil',
-                                                  "Live Stock",
-                                                  'Grains & Seeds',
-                                                  "Fertilizers",
-                                                  "Tools & Equipments",
-                                                  "Land Services",
-                                                  "Delivery",
-                                                  "Worker Services",
-                                                  "Pesticides",
-                                                  "Animal Feed",
-                                                  "Others",
-                                                ]
-                                                .map(
-                                                  (lang) => DropdownMenuItem<String>(
-                                                    value: lang,
-                                                    child: Text(lang),
-                                                  ),
-                                                )
-                                                .toList(),
+                                        [
+                                          'Fruits',
+                                          'Vegetables',
+                                          'Olive Oil',
+                                          "Live Stock",
+                                          'Grains & Seeds',
+                                          "Fertilizers",
+                                          "Tools & Equipments",
+                                          "Land Services",
+                                          "Delivery",
+                                          "Worker Services",
+                                          "Pesticides",
+                                          "Animal Feed",
+                                          "Others",
+                                        ]
+                                            .map(
+                                              (lang) =>
+                                              DropdownMenuItem<String>(
+                                                value: lang,
+                                                child: Text(lang),
+                                              ),
+                                        )
+                                            .toList(),
                                         value: selectedCategory,
                                         validator: (String? value) {
                                           if (value == null) {
@@ -565,14 +567,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                            ['Male', 'Female']
-                                                .map(
-                                                  (gender) => DropdownMenuItem<String>(
-                                                    value: gender,
-                                                    child: Text(gender),
-                                                  ),
-                                                )
-                                                .toList(),
+                                        ['Male', 'Female']
+                                            .map(
+                                              (gender) =>
+                                              DropdownMenuItem<String>(
+                                                value: gender,
+                                                child: Text(gender),
+                                              ),
+                                        )
+                                            .toList(),
                                         value: selectedGender,
                                         validator: (String? value) {
                                           if (value == null) {
@@ -928,7 +931,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               onPressed: () async {
                                 // if (_formKey.currentState!.validate() && locationSelected) {
                                 if (_formKey.currentState!.validate()) {
-                                  print(selectedCity);
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
                                     category: selectedCategory!,
@@ -952,6 +954,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     locationSelected = false;
                                     error = "";
                                   });
+
+                                  if (context.mounted) {
+                                    Navigator.pushReplacement(
+                                        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                  }
                                 } else {
                                   if (!locationSelected) {
                                     setState(() {

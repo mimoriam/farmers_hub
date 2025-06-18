@@ -31,7 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final firebaseService = FirebaseService();
   String _selectedTheme = 'Light';
 
-  late String selectedLanguage;
+  String selectedLanguage = "English";
 
   final FirebaseService _firebaseService = FirebaseService();
 
@@ -47,7 +47,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    _getSharedPrefsData();
+    _getSharedPrefsData().then((_) {});
   }
 
   @override
@@ -57,10 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()),
-            );
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
           }
         },
         backgroundColor: onboardingColor,
@@ -493,7 +490,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //     }
         //   },
         // ),
-
         Container(
           // Decoration for the card-like appearance
           decoration: BoxDecoration(
