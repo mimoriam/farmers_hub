@@ -25,6 +25,25 @@ class DetailsScreen extends StatefulWidget {
 class _DetailsScreenState extends State<DetailsScreen> {
   final firebaseService = FirebaseService();
 
+  // A set to keep track of viewed post IDs for the current session
+  static final Set<String> _sessionViewedPosts = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _incrementViewCountIfFirstTime();
+  }
+
+  void _incrementViewCountIfFirstTime() {
+    // Only increment view count if the post hasn't been viewed in this session.
+    // .add() returns true if the value was added (i.e., it wasn't already in the set).
+    if (_sessionViewedPosts.add(widget.postId)) {
+      firebaseService.incrementViewCount(postId: widget.postId);
+    }
+
+    print(_sessionViewedPosts);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
