@@ -142,15 +142,10 @@ class FirebaseService {
 
   Future<DocumentSnapshot?> getUserDataByEmail({required String email}) async {
     try {
-
-      final querySnapshot = await _firestore
-          .collection(userCollection)
-          .where('email', isEqualTo: email)
-          .limit(1)
-          .get();
+      final querySnapshot =
+          await _firestore.collection(userCollection).where('email', isEqualTo: email).limit(1).get();
 
       return querySnapshot.docs.first;
-
     } catch (e) {
       return Future.error("Error fetching user data");
     }
@@ -187,7 +182,7 @@ class FirebaseService {
     String? details,
     bool? featured,
   }) async {
-    await _firestore.collection("livestock").doc().set({
+    await _firestore.collection(postCollection).doc().set({
       "sellerId": currentUser?.uid,
       // "username": currentUser?.displayName,
       "title": title,
@@ -199,7 +194,7 @@ class FirebaseService {
       "price": price,
       "currency": "USD",
       "likes": 0,
-      "likedByYou": false,
+      "likedBy": [],
       "views": 0,
       "featured": featured ?? false,
       "verifiedSeller": false,
@@ -218,20 +213,23 @@ class FirebaseService {
   Future<void> markPostAsSold(String postId) async {
     try {
       // Make it so when the ad has been sold, the featured flag is also removed
-      await _firestore.collection("livestock").doc(postId).update({"hasBeenSold": true, "featured": false});
+      await _firestore.collection(postCollection).doc(postId).update({
+        "hasBeenSold": true,
+        "featured": false,
+      });
     } catch (e) {}
   }
 
   Future<void> deletePostById(String postId) async {
     try {
-      await _firestore.collection("livestock").doc(postId).delete();
+      await _firestore.collection(postCollection).doc(postId).delete();
     } catch (e) {}
   }
 
   Future<List<QueryDocumentSnapshot>> getAllPostsByCurrentUser() async {
     try {
       final QuerySnapshot querySnapshot =
-          await _firestore.collection("livestock").where("sellerId", isEqualTo: currentUser?.uid).get();
+          await _firestore.collection(postCollection).where("sellerId", isEqualTo: currentUser?.uid).get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -242,7 +240,7 @@ class FirebaseService {
   Future<List<QueryDocumentSnapshot>> getAllPostsByFeatured() async {
     try {
       final QuerySnapshot querySnapshot =
-          await _firestore.collection("livestock").where("featured", isEqualTo: true).get();
+          await _firestore.collection(postCollection).where("featured", isEqualTo: true).get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -252,7 +250,7 @@ class FirebaseService {
 
   Future<Map<String, dynamic>> getPostDetails(String postId) async {
     try {
-      final DocumentSnapshot documentSnapshot = await _firestore.collection("livestock").doc(postId).get();
+      final DocumentSnapshot documentSnapshot = await _firestore.collection(postCollection).doc(postId).get();
 
       return documentSnapshot.data() as Map<String, dynamic>;
     } catch (e) {
@@ -273,10 +271,7 @@ class FirebaseService {
         final Map<String, dynamic>? sellerData = sellerSnapshot?.data() as Map<String, dynamic>?;
 
         // Step 3: Return a combined map with both post and seller data
-        return {
-          'post': postData,
-          'seller': sellerData,
-        };
+        return {'post': postData, 'seller': sellerData};
       } else {
         // Handle cases where post is empty or has no sellerId
         throw Exception("Post not found or seller ID is missing.");
@@ -287,16 +282,50 @@ class FirebaseService {
     }
   }
 
-  // Future<void> updatePostLikes(int liked, String postId) async {
-  //   try {
-  //     final docRef = await _firestore.collection("livestock").doc(postId).update({
-  //       "likedByYou":
-  //       "likes": liked
-  //     });
-  //   } catch (e) {
-  //     print("Error updating post: $e");
-  //     // Optionally re-throw the error to handle it in the UI.
-  //     throw AuthException('Failed to update post. Please try again.');
-  //   }
-  // }
+  Future<void> updatePostLikes({required String postId, required bool like}) async {
+    final postRef = _firestore.collection(postCollection).doc(postId);
+    final userId = currentUser!.uid;
+
+    try {
+      await _firestore.runTransaction((transaction) async {
+        final postSnapshot = await transaction.get(postRef);
+        if (!postSnapshot.exists) {
+          throw Exception("Post does not exist!");
+        }
+
+        final postData = postSnapshot.data() as Map<String, dynamic>;
+        final List<dynamic> likedBy = postData['likedBy'] ?? [];
+
+        if (like) {
+          // Like the post
+          if (likedBy.contains(userId)) {
+            return;
+          }
+          transaction.update(postRef, {
+            'likes': FieldValue.increment(1),
+            'likedBy': FieldValue.arrayUnion([userId]),
+          });
+        } else {
+          // Unlike the post
+          if (!likedBy.contains(userId)) {
+            return;
+          }
+          transaction.update(postRef, {
+            'likes': FieldValue.increment(-1),
+            'likedBy': FieldValue.arrayRemove([userId]),
+          });
+        }
+      });
+    } catch (e) {}
+  }
+
+  Future<void> incrementViewCount({required String postId}) async {
+    final postRef = _firestore.collection(postCollection).doc(postId);
+    try {
+      await postRef.update({'views': FieldValue.increment(1)});
+    } catch (e) {
+      print("Error incrementing view count: $e");
+      // Don't throw an error to the user for this, as it's a background task.
+    }
+  }
 }

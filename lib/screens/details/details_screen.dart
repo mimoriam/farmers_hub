@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
@@ -39,82 +40,105 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
       ),
 
-      body: FutureBuilder(
-        // future: firebaseService.getPostDetails(widget.postId),
-        future: firebaseService.getPostAndSellerDetails(widget.postId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: onboardingColor));
-          }
+      body: StreamBuilder<DocumentSnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection(FirebaseService().postCollection)
+              .doc(widget.postId)
+              .snapshots(),
+          builder: (context, postSnapshot) {
+            if (postSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                  child: CircularProgressIndicator(color: onboardingColor));
+            }
 
-          if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text("Failed to load user data."));
-          }
+            if (postSnapshot.hasError || !postSnapshot.hasData || !postSnapshot.data!.exists) {
+              return const Center(child: Text("Post not found or has been deleted."));
+            }
 
-          // final postDetails = snapshot.data;
-          final postDetails = snapshot.data!['post'];
-          final sellerData = snapshot.data!['seller'];
-          final sellerUsername = sellerData["username"];
+          return FutureBuilder<Map<String, dynamic>?>(
+            // future: firebaseService.getPostDetails(widget.postId),
+            future: firebaseService.getPostAndSellerDetails(widget.postId),
+            builder: (context, sellerSnapshot) {
+              if (sellerSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator(color: onboardingColor));
+              }
+          
+              if (sellerSnapshot.hasError || !sellerSnapshot.hasData || sellerSnapshot.data == null) {
+                return const Center(child: Text("Failed to load user data."));
+              }
+          
+              // final postDetails = snapshot.data;
+              final postDetails = sellerSnapshot.data!['post'];
+              final sellerData = sellerSnapshot.data!['seller'];
+              final sellerUsername = sellerData["username"];
 
-          print(postDetails!["price"]);
-          return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildImageSection(),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildTitleAndActions(
-                          title: postDetails["title"],
-                          price: postDetails["price"].toString(),
-                          location: postDetails["location"],
+              final currentUserId = firebaseService.currentUser?.uid;
+              final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
+              final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
+          
+              return SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildImageSection(),
+          
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildTitleAndActions(
+                              title: postDetails["title"],
+                              price: postDetails["price"].toString(),
+                              location: postDetails["location"],
+                              isLiked: isLiked,
+                              onLike:
+                                  () => firebaseService.updatePostLikes(postId: widget.postId, like: !isLiked),
+                            ),
+                            const SizedBox(height: 8),
+          
+                            _buildEngagementStats(
+                              likes: postDetails["likes"].toString(),
+                              views: postDetails["views"].toString(),
+                              dated:
+                                  DateFormat('MMMM d, yyyy').format(postDetails["createdAt"].toDate()).toString(),
+                            ),
+                            const SizedBox(height: 16),
+          
+                            // _buildSellerInfo(username: postDetails["username"]),
+                            _buildSellerInfo(username: sellerUsername),
+                            const SizedBox(height: 24),
+          
+                            _buildActionButtons(
+                              context,
+                              // username: postDetails["username"],
+                              username: sellerUsername,
+                              postUserId: postDetails["sellerId"],
+                            ),
+                            const SizedBox(height: 18),
+          
+                            _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
+                            const SizedBox(height: 16),
+          
+                            _buildDetailsSection(
+                              category: postDetails["category"],
+                              gender: postDetails["gender"],
+                              averageWeight: postDetails["averageWeight"].toString(),
+                              age: postDetails["age"].toString(),
+                              phoneNumber: "12321323",
+                              details: postDetails["details"],
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-
-                        _buildEngagementStats(
-                          likes: postDetails["likes"].toString(),
-                          views: postDetails["views"].toString(),
-                          dated:
-                              DateFormat('MMMM d, yyyy').format(postDetails["createdAt"].toDate()).toString(),
-                        ),
-                        const SizedBox(height: 16),
-
-                        // _buildSellerInfo(username: postDetails["username"]),
-                        _buildSellerInfo(username: sellerUsername),
-                        const SizedBox(height: 24),
-
-                        _buildActionButtons(
-                          context,
-                          // username: postDetails["username"],
-                          username: sellerUsername,
-                          postUserId: postDetails["sellerId"],
-                        ),
-                        const SizedBox(height: 18),
-
-                        _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
-                        const SizedBox(height: 16),
-
-                        _buildDetailsSection(
-                          category: postDetails["category"],
-                          gender: postDetails["gender"],
-                          averageWeight: postDetails["averageWeight"].toString(),
-                          age: postDetails["age"].toString(),
-                          phoneNumber: "12321323",
-                          details: postDetails["details"],
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
-        },
+        }
       ),
     );
   }
@@ -143,7 +167,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildTitleAndActions({required String title, required String price, required Map location}) {
+  Widget _buildTitleAndActions({
+    required String title,
+    required String price,
+    required Map location,
+    required bool isLiked,
+    required VoidCallback onLike,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -187,11 +217,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   color: Colors.grey[700],
                 ),
                 IconButton(
-                  icon: const Icon(Icons.favorite_border_outlined),
+                  icon: Icon(
+                    isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                    color: isLiked ? Colors.red : Colors.grey[700],
+                  ),
                   // icon: Icon(Icons.favorite, color: Colors.red), // For liked state
-                  onPressed: () {
-                    // Handle favorite action
-                  },
+                  onPressed: onLike,
                   color: Colors.grey[700],
                 ),
               ],

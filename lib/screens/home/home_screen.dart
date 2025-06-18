@@ -1098,6 +1098,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemBuilder: (context, index) {
                               // final post = popularPostsData[index];
                               final post = featuredData[index].data() as Map<String, dynamic>;
+
+                              final currentUserId = firebaseService.currentUser?.uid;
+                              final List<dynamic> likedBy = post['likedBy'] ?? [];
+                              final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
+
                               return GestureDetector(
                                 onTap: () {
                                   if (context.mounted) {
@@ -1108,10 +1113,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                             (context) =>
                                                 DetailsScreen(postId: featuredData[index].id.toString()),
                                       ),
-                                    );
-                                    //     .then((_) {
-                                    //   setState(() {});
-                                    // });
+                                    ).then((_) {
+                                      setState(() {});
+                                    });
                                   }
                                 },
                                 child: PostCard(
@@ -1119,6 +1123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   price: post['price'].toString(),
                                   location: post['location']["city"],
                                   likes: post['likes'],
+                                  isLiked: isLiked,
                                   postedAgo: "92 Months Ago",
                                   views: post['views'],
                                 ),
@@ -1225,6 +1230,8 @@ class PostCard extends StatelessWidget {
   final String price;
   final String location;
   final int likes;
+
+  final bool isLiked;
   final String postedAgo;
   final int views;
 
@@ -1234,6 +1241,7 @@ class PostCard extends StatelessWidget {
     required this.price,
     required this.location,
     required this.likes,
+    required this.isLiked,
     required this.postedAgo,
     required this.views,
   });
@@ -1273,7 +1281,11 @@ class PostCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
-                    child: Icon(Icons.favorite_border_outlined, color: Colors.grey, size: 18),
+                    child: Icon(
+                      isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                      color: isLiked ? Colors.red : Colors.grey,
+                      size: 18,
+                    ),
                   ),
                 ),
               ],
