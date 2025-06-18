@@ -10,7 +10,6 @@ import 'dart:math' as math;
 import 'package:farmers_hub/utils/constants.dart';
 
 import 'package:farmers_hub/services/firebase_service.dart';
-import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/categories/categories_screen.dart';
 import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
@@ -20,8 +19,30 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
-import 'package:country_code_picker/country_code_picker.dart';
 import 'package:intl/intl.dart';
+
+// Helper function to format the timestamp
+String formatTimeAgo(Timestamp timestamp) {
+  final now = DateTime.now();
+  final postTime = timestamp.toDate();
+  final difference = now.difference(postTime);
+
+  if (difference.inSeconds < 60) {
+    return '${difference.inSeconds} seconds ago';
+  } else if (difference.inMinutes < 60) {
+    return '${difference.inMinutes} minutes ago';
+  } else if (difference.inHours < 24) {
+    return '${difference.inHours} hours ago';
+  } else if (difference.inDays < 30) {
+    return '${difference.inDays} days ago';
+  } else if (difference.inDays < 365) {
+    final months = (difference.inDays / 30).floor();
+    return '$months months ago';
+  } else {
+    final years = (difference.inDays / 365).floor();
+    return '$years years ago';
+  }
+}
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -258,9 +279,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
 
     final DateTime now = DateTime.now();
-
     final String formattedDate = DateFormat('MMMM d, y').format(now);
-
     final String formattedDay = DateFormat('EEEE').format(now);
 
     final List<Map<String, String>> categories = [
@@ -1124,7 +1143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   location: post['location']["city"],
                                   likes: post['likes'],
                                   isLiked: isLiked,
-                                  postedAgo: "92 Months Ago",
+                                  postedAgo: formatTimeAgo(post['createdAt']),
                                   views: post['views'],
                                 ),
                               );
@@ -1298,7 +1317,7 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Rs: $price',
+                  '\$$price',
                   style: GoogleFonts.poppins(
                     color: onboardingColor,
                     fontSize: 13,

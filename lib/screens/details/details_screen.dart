@@ -40,8 +40,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
     if (_sessionViewedPosts.add(widget.postId)) {
       firebaseService.incrementViewCount(postId: widget.postId);
     }
-
-    print(_sessionViewedPosts);
   }
 
   @override
