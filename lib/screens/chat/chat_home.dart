@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 
 class MessageItem {
   final String avatarUrl;
@@ -175,7 +177,7 @@ class _ChatHomeState extends State<ChatHome> {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator(color: onboardingColor));
     }
-    return StreamBuilder(
+    return StreamBuilder<List<Map<String, dynamic>>>(
       // stream: _chatService.getUsersStream(),
       stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
       builder: (context, snapshot) {
@@ -217,27 +219,78 @@ class _ChatHomeState extends State<ChatHome> {
             itemBuilder: (context, index) {
               final message = messages[index];
 
-              return MessageListItem(
-                avatarUrl: message.avatarUrl,
-                name: message.name,
-                lastMessage: message.lastMessage,
-                time: message.time,
-                date: message.date,
-                unreadCount: message.unreadCount,
-                onTap: () {
-                  if (context.mounted) {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder:
-                            (context) => ChatScreen(
-                              receiverId: message.id,
-                              receiverEmail: message.email,
-                              user: widget.user,
-                            ),
-                      ),
-                    );
+              final useR = users[index];
+              final otherUserId = useR['id'];
+
+              return StreamBuilder<QuerySnapshot>(
+                  // stream: _chatService.getLastMessage(message.id, widget.user.uid),
+                  stream: _chatService.getLastMessage(widget.user.uid, otherUserId),
+                builder: (context,  messageSnapshot) {
+                  String lastMessage = 'No messages yet';
+                  String time = '';
+
+                  if (messageSnapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator(color: onboardingColor));
                   }
-                },
+
+                  if (messageSnapshot.hasError) {
+                    // Always good to handle errors
+                    return Center(child: Text("Something went wrong: ${snapshot.error}"));
+                  }
+
+                  if (messageSnapshot.hasData && messageSnapshot.data!.docs.isNotEmpty) {
+                    final messageData = messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
+                    lastMessage = messageData['message'];
+
+                    // Format the timestamp
+                    final timestamp = messageData['timestamp'] as Timestamp;
+                    final dateTime = timestamp.toDate();
+                    time = DateFormat('h:mm a').format(dateTime);
+                  }
+
+                  return StreamBuilder<int>(
+                      stream: _chatService.getUnreadMessageCount(otherUserId),
+                      builder: (context, unreadCountSnapshot) {
+
+                        if (unreadCountSnapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator(color: onboardingColor));
+                        }
+
+                        if (unreadCountSnapshot.hasError) {
+                          // Always good to handle errors
+                          return Center(child: Text("Something went wrong: ${snapshot.error}"));
+                        }
+
+                        print(unreadCountSnapshot.data);
+                        final unreadCount = unreadCountSnapshot.data ?? 0;
+
+                      return MessageListItem(
+                        avatarUrl: message.avatarUrl,
+                        name: message.name,
+                        // lastMessage: message.lastMessage,
+                        lastMessage: lastMessage,
+                        // time: message.time,
+                        time: time,
+                        date: message.date,
+                        unreadCount: unreadCount,
+                        onTap: () {
+                          if (context.mounted) {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => ChatScreen(
+                                      receiverId: message.id,
+                                      receiverEmail: message.email,
+                                      user: widget.user,
+                                    ),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }
+                  );
+                }
               );
             },
           );

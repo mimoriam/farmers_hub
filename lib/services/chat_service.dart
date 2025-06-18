@@ -49,7 +49,7 @@ class ChatService {
     final user = userDoc.data();
 
     final secondUserDoc =
-    await _firestore.collection("users").where("username", isEqualTo: username).limit(1).get();
+        await _firestore.collection("users").where("username", isEqualTo: username).limit(1).get();
 
     final secondUser = secondUserDoc.docs.first;
 
@@ -67,7 +67,7 @@ class ChatService {
     });
   }
 
-  Future<QuerySnapshot> getLastMessage(String userId, otherUserId) async {
+  Stream<QuerySnapshot> getLastMessage(String userId, otherUserId) {
     List<String> ids = [userId, otherUserId];
     ids.sort();
 
@@ -77,8 +77,9 @@ class ChatService {
         .collection("chat_rooms")
         .doc(chatRoomId)
         .collection("messages")
-        .orderBy("timestamp", descending: false)
-        .get();
+        .orderBy("timestamp", descending: true)
+        .limit(1)
+        .snapshots();
   }
 
   Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
@@ -107,6 +108,7 @@ class ChatService {
       "receiverId": receiverId,
       "message": message,
       "timestamp": timestamp,
+      "readBy": [currentUserId],
     };
 
     List<String> ids = [currentUserId, receiverId];
@@ -116,5 +118,49 @@ class ChatService {
     print(chatRoomId);
 
     await _firestore.collection("chat_rooms").doc(chatRoomId).collection("messages").add(newMessage);
+  }
+
+  Future<void> markMessagesAsRead(String chatRoomId) async {
+    final querySnapshot =
+        await _firestore
+            .collection("chat_rooms")
+            .doc(chatRoomId)
+            .collection("messages")
+            .where('receiverId', isEqualTo: uid)
+            .get();
+
+    for (var doc in querySnapshot.docs) {
+      // Add the current user's ID to the readBy list if it's not already there
+      await doc.reference.update({
+        'readBy': FieldValue.arrayUnion([uid]),
+      });
+    }
+  }
+
+  Stream<int> getUnreadMessageCount(String otherUserId) {
+    List<String> ids = [uid!, otherUserId];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+
+    return _firestore
+        .collection("chat_rooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .where('receiverId', isEqualTo: uid)
+        .where(
+          'readBy',
+          whereNotIn: [
+            [uid],
+          ],
+        )
+        .snapshots()
+        .map(
+          (snapshot) =>
+              snapshot.docs.where((doc) {
+                final data = doc.data();
+                // Additional client-side check to ensure the user's ID is not in the readBy list
+                return !(data['readBy'] as List).contains(uid);
+              }).length,
+        );
   }
 }

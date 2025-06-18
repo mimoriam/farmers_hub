@@ -34,6 +34,12 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _chatService = ChatService(user: widget.user);
 
+    List<String> ids = [widget.user.uid, widget.receiverId];
+    ids.sort();
+    String chatRoomId = ids.join('_');
+
+    _chatService.markMessagesAsRead(chatRoomId);
+
     // Delay the scroll to ensure the list has rendered
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   _scrollToBottom();
