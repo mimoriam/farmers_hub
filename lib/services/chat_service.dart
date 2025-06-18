@@ -67,6 +67,20 @@ class ChatService {
     });
   }
 
+  Future<QuerySnapshot> getLastMessage(String userId, otherUserId) async {
+    List<String> ids = [userId, otherUserId];
+    ids.sort();
+
+    String chatRoomId = ids.join('_');
+
+    return _firestore
+        .collection("chat_rooms")
+        .doc(chatRoomId)
+        .collection("messages")
+        .orderBy("timestamp", descending: false)
+        .get();
+  }
+
   Stream<QuerySnapshot> getMessages(String userId, otherUserId) {
     List<String> ids = [userId, otherUserId];
     ids.sort();
