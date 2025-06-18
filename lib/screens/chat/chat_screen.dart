@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:farmers_hub/services/chat_service.dart';
@@ -20,6 +21,8 @@ class _ChatScreenState extends State<ChatScreen> {
   late final ChatService _chatService;
   final _formKey = GlobalKey<FormBuilderState>();
   final ScrollController _controller = ScrollController();
+
+  final FirebaseService _firebaseService = FirebaseService();
 
   void _scrollDown() {
     _controller.animateTo(
@@ -70,56 +73,74 @@ class _ChatScreenState extends State<ChatScreen> {
           //   _scrollToBottom();
           // });
 
-          return SafeArea(
-            child: Scaffold(
-              appBar: AppBar(title: Text(widget.receiverEmail)),
-              floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-              floatingActionButton: Padding(
-                padding: const EdgeInsets.only(bottom: 100),
-                child: FloatingActionButton.small(
-                  backgroundColor: Colors.green,
-                  onPressed: _scrollDown,
-                  child: Icon(Icons.arrow_downward, color: Colors.black),
-                ),
-              ),
-              body: FormBuilder(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: ListView(
-                        controller: _controller,
-                        children: snapshot.data!.docs.map((doc) => _buildMessageItemList(doc)).toList(),
-                      ),
+          return FutureBuilder(
+            future: _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
+            builder: (context, userDataSnapshot) {
+              if (userDataSnapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator(color: onboardingColor));
+              }
+
+              if (userDataSnapshot.hasError || !userDataSnapshot.hasData || userDataSnapshot.data == null) {
+                return const Center(child: Text("Failed to load user data."));
+              }
+
+              final userData = userDataSnapshot.data!.data() as Map<String, dynamic>?;
+
+              final initialName = userData?['username'] ?? '';
+
+              return SafeArea(
+                child: Scaffold(
+                  // appBar: AppBar(title: Text(widget.receiverEmail)),
+                  appBar: AppBar(title: Text(initialName)),
+                  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                  floatingActionButton: Padding(
+                    padding: const EdgeInsets.only(bottom: 100),
+                    child: FloatingActionButton.small(
+                      backgroundColor: Colors.green,
+                      onPressed: _scrollDown,
+                      child: Icon(Icons.arrow_downward, color: Colors.black),
                     ),
-                    _buildUserInput(),
-                    // ElevatedButton(
-                    //                 //   onPressed: () async {
-                    //                 //     sendMessageToDB();
-                    //                 //   },
-                    //                 //   child: Text("ENTER"),
-                    //                 // ),
-                    MediaQuery.of(context).viewInsets.bottom == 0.0
-                        ? Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Container(
-                              // margin: const EdgeInsets.only(bottom: 8.0),
-                              width: 135,
-                              height: 5,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(2.5),
-                              ),
-                            ),
+                  ),
+                  body: FormBuilder(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            controller: _controller,
+                            children: snapshot.data!.docs.map((doc) => _buildMessageItemList(doc)).toList(),
                           ),
-                        )
-                        : Container(),
-                  ],
+                        ),
+                        _buildUserInput(),
+                        // ElevatedButton(
+                        //                 //   onPressed: () async {
+                        //                 //     sendMessageToDB();
+                        //                 //   },
+                        //                 //   child: Text("ENTER"),
+                        //                 // ),
+                        MediaQuery.of(context).viewInsets.bottom == 0.0
+                            ? Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: Container(
+                                  // margin: const EdgeInsets.only(bottom: 8.0),
+                                  width: 135,
+                                  height: 5,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey,
+                                    borderRadius: BorderRadius.circular(2.5),
+                                  ),
+                                ),
+                              ),
+                            )
+                            : Container(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ); // User is signed in
         } else {
           return Container();

@@ -358,7 +358,8 @@ class _ChatHomeState extends State<ChatHome> {
         color: Colors.white,
         elevation: 0,
         // Shadow for the BottomAppBar
-        clipBehavior: Clip.antiAlias,
+        // clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.none,
 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

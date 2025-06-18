@@ -140,6 +140,22 @@ class FirebaseService {
     }
   }
 
+  Future<DocumentSnapshot?> getUserDataByEmail({required String email}) async {
+    try {
+
+      final querySnapshot = await _firestore
+          .collection(userCollection)
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
+
+      return querySnapshot.docs.first;
+
+    } catch (e) {
+      return Future.error("Error fetching user data");
+    }
+  }
+
   Future<void> updateUserProfile(Map<String, dynamic> data) async {
     if (currentUser == null) return;
 
