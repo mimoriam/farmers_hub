@@ -14,7 +14,11 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 class MessageItem {
   final String avatarUrl;
+
+  final String id;
   final String name;
+
+  final String email;
   final String lastMessage;
   final String time;
   final String? date; // Nullable for items without a date
@@ -22,7 +26,9 @@ class MessageItem {
 
   MessageItem({
     required this.avatarUrl,
+    required this.id,
     required this.name,
+    required this.email,
     required this.lastMessage,
     required this.time,
     this.date,
@@ -71,7 +77,101 @@ class _ChatHomeState extends State<ChatHome> {
     }();
   }
 
-  Widget _buildUserList() {
+  // Widget _buildUserList() {
+  //   if (_isLoading) {
+  //     return const Center(child: CircularProgressIndicator(color: onboardingColor));
+  //   }
+  //   return StreamBuilder(
+  //     // stream: _chatService.getUsersStream(),
+  //     stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
+  //     builder: (context, snapshot) {
+  //       if (snapshot.connectionState == ConnectionState.waiting) {
+  //         return Center(child: CircularProgressIndicator(color: onboardingColor));
+  //       }
+  //
+  //       if (snapshot.hasError) {
+  //         // Always good to handle errors
+  //         return Center(child: Text("Something went wrong: ${snapshot.error}"));
+  //       }
+  //
+  //       if (snapshot.hasData) {
+  //         final users = snapshot.data!;
+  //         // snapshot.data?.map((user) {
+  //         // });
+  //
+  //         users.forEach((user) {
+  //           // Check if user isn't being duplicated and added to list
+  //           if (!(messages.any((item) => item.name == user["username"]))) {
+  //             messages.add(
+  //               MessageItem(
+  //                 avatarUrl:
+  //                     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+  //                 // name: user["username"],
+  //                 id: "${user["id"]}",
+  //                 name: "${user["username"]}",
+  //                 lastMessage: 'Hi its available',
+  //                 time: '12:00 PM',
+  //               ),
+  //             );
+  //           }
+  //         });
+  //
+  //         print(messages.length);
+  //         return ListView(
+  //           shrinkWrap: true,
+  //           children:
+  //               snapshot.data!.map<Widget>((userData) => _buildUserItemList(userData, context)).toList(),
+  //         ); // User is signed in
+  //       } else {
+  //         return Container();
+  //       }
+  //     },
+  //   );
+  // }
+  //
+  // Widget _buildUserItemList(Map<String, dynamic> userData, BuildContext context) {
+  //   // Return all users except current user
+  //   // print(widget.user.uid);
+  //   if (userData["email"] != widget.user.email) {
+  //     // return GestureDetector(
+  //     // onTap: () {
+  //     //   Navigator.of(context).push(
+  //     //     MaterialPageRoute(
+  //     //       builder:
+  //     //           (context) => ChatScreen(
+  //     //             receiverId: userData["id"],
+  //     //             receiverEmail: userData['email'],
+  //     //             user: widget.user,
+  //     //           ),
+  //     //     ),
+  //     //   );
+  //     // },
+  //     // child: Center(child: ElevatedButton(
+  //     return Center(
+  //       child: ElevatedButton(
+  //         style: ElevatedButton.styleFrom(backgroundColor: onboardingColor),
+  //         onPressed: () {
+  //           Navigator.of(context).push(
+  //             MaterialPageRoute(
+  //               builder:
+  //                   (context) => ChatScreen(
+  //                     receiverId: userData["id"],
+  //                     receiverEmail: userData['email'],
+  //                     user: widget.user,
+  //                   ),
+  //             ),
+  //           );
+  //         },
+  //         child: Text(userData['email'], style: TextStyle(color: Colors.white)),
+  //       ),
+  //     );
+  //     // );
+  //   } else {
+  //     return Container();
+  //   }
+  // }
+
+  Widget _buildUserList2() {
     if (_isLoading) {
       return const Center(child: CircularProgressIndicator(color: onboardingColor));
     }
@@ -83,73 +183,69 @@ class _ChatHomeState extends State<ChatHome> {
           return Center(child: CircularProgressIndicator(color: onboardingColor));
         }
 
+        if (snapshot.hasError) {
+          // Always good to handle errors
+          return Center(child: Text("Something went wrong: ${snapshot.error}"));
+        }
+
         if (snapshot.hasData) {
-          snapshot.data?.map((user) {
-            print(user);
-            messages.add(
-              MessageItem(
-                avatarUrl:
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                // name: user["username"],
-                name: "AAA",
-                lastMessage: 'Hi its available',
-                time: '12:00 PM',
-              ),
-            );
+          final users = snapshot.data!;
+          // snapshot.data?.map((user) {
+          // });
+
+          users.forEach((user) {
+            // Check if user isn't being duplicated and added to list
+            if (!(messages.any((item) => item.name == user["username"]))) {
+              messages.add(
+                MessageItem(
+                  avatarUrl:
+                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                  // name: user["username"],
+                  id: "${user["id"]}",
+                  name: "${user["username"]}",
+                  email: "${user["email"]}",
+                  lastMessage: 'Hi its available',
+                  time: '12:00 PM',
+                ),
+              );
+            }
           });
 
-          return ListView(
+          return ListView.builder(
             shrinkWrap: true,
-            children:
-                snapshot.data!.map<Widget>((userData) => _buildUserItemList(userData, context)).toList(),
-          ); // User is signed in
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              final message = messages[index];
+
+              return MessageListItem(
+                avatarUrl: message.avatarUrl,
+                name: message.name,
+                lastMessage: message.lastMessage,
+                time: message.time,
+                date: message.date,
+                unreadCount: message.unreadCount,
+                onTap: () {
+                  if (context.mounted) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder:
+                            (context) => ChatScreen(
+                              receiverId: message.id,
+                              receiverEmail: message.email,
+                              user: widget.user,
+                            ),
+                      ),
+                    );
+                  }
+                },
+              );
+            },
+          );
         } else {
           return Container();
         }
       },
     );
-  }
-
-  Widget _buildUserItemList(Map<String, dynamic> userData, BuildContext context) {
-    // Return all users except current user
-    // print(widget.user.uid);
-    if (userData["email"] != widget.user.email) {
-      // return GestureDetector(
-      // onTap: () {
-      //   Navigator.of(context).push(
-      //     MaterialPageRoute(
-      //       builder:
-      //           (context) => ChatScreen(
-      //             receiverId: userData["id"],
-      //             receiverEmail: userData['email'],
-      //             user: widget.user,
-      //           ),
-      //     ),
-      //   );
-      // },
-      // child: Center(child: ElevatedButton(
-      return Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: onboardingColor),
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder:
-                    (context) => ChatScreen(
-                      receiverId: userData["id"],
-                      receiverEmail: userData['email'],
-                      user: widget.user,
-                    ),
-              ),
-            );
-          },
-          child: Text(userData['email'], style: TextStyle(color: Colors.white)),
-        ),
-      );
-      // );
-    } else {
-      return Container();
-    }
   }
 
   // Sample data - replace with your actual data source
@@ -168,42 +264,6 @@ class _ChatHomeState extends State<ChatHome> {
     //       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
     //   // Placeholder
     //   name: 'Angel',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   date: '12 07 2025',
-    // ),
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Kristin',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   date: '12 07 2025',
-    // ),
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Soham',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   date: '12 07 2025',
-    // ),
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Arlene',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   date: '12 07 2025',
-    // ),
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1521119989659-a83eee488004?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Eduardo',
     //   lastMessage: 'Hi its available',
     //   time: '12:00 PM',
     //   date: '12 07 2025',
@@ -376,42 +436,33 @@ class _ChatHomeState extends State<ChatHome> {
                   ),
                 ),
 
-                _buildUserList(),
+                _buildUserList2(),
+                // ListView.builder(
+                //   shrinkWrap: true,
+                //   itemCount: messages.length,
+                //   itemBuilder: (context, index) {
+                //     final message = messages[index];
+                //
+                //     return MessageListItem(
+                //       avatarUrl: message.avatarUrl,
+                //       name: message.name,
+                //       lastMessage: message.lastMessage,
+                //       time: message.time,
+                //       date: message.date,
+                //       unreadCount: message.unreadCount,
+                //       onTap: () {
+                //         // Handle tap on message item, e.g., navigate to chat screen
+                //         print('Tapped on ${message.name}');
+                //       },
+                //     );
+                //   },
+                // ),
               ],
             ),
           ),
         ),
       ),
     );
-    //
-    //
-    //               ListView.builder(
-    //                 shrinkWrap: true,
-    //                 itemCount: messages.length,
-    //                 itemBuilder: (context, index) {
-    //                   final message = messages[index];
-    //
-    //                   return MessageListItem(
-    //                     avatarUrl: message.avatarUrl,
-    //                     name: message.name,
-    //                     lastMessage: message.lastMessage,
-    //                     time: message.time,
-    //                     date: message.date,
-    //                     unreadCount: message.unreadCount,
-    //                     onTap: () {
-    //                       // Handle tap on message item, e.g., navigate to chat screen
-    //                       print('Tapped on ${message.name}');
-    //                     },
-    //                   );
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }
 

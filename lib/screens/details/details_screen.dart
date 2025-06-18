@@ -56,9 +56,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           final sellerData = snapshot.data!['seller'];
           final sellerUsername = sellerData["username"];
 
-          print(sellerUsername);
-
-          print(postDetails!["likes"]);
+          print(postDetails!["price"]);
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
