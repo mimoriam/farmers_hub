@@ -39,9 +39,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
     final lang = await asyncPrefs.getString("language");
 
-    setState(() {
-      selectedLanguage = lang!;
-    });
+    if (context.mounted) {
+      setState(() {
+        selectedLanguage = lang ?? 'English';
+      });
+    }
   }
 
   @override
@@ -437,15 +439,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ['English', 'Arabic']
                             .map(
                               (lang) => DropdownMenuItem<String>(
-                                onTap: () async {
-                                  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
-                                  await asyncPrefs.setString("language", lang);
-                                  if (context.mounted) {
-                                    setState(() {
-                                      selectedLanguage = lang;
-                                    });
-                                  }
-                                },
+                                // onTap: () async {
+                                //   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+                                //   await asyncPrefs.setString("language", lang);
+                                //   if (context.mounted) {
+                                //     setState(() {
+                                //       selectedLanguage = lang;
+                                //     });
+                                //   }
+                                // },
                                 value: lang,
                                 child: Text(lang),
                               ),
@@ -465,9 +467,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       offset: const Offset(0, 0),
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                     ),
-                    value: "English",
-                    onChanged: (value) {
-                      setState(() {});
+                    value: selectedLanguage,
+                    onChanged: (value) async {
+                      if (value != null) {
+                        final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+                        await asyncPrefs.setString("language", value);
+
+                        setState(() {
+                          selectedLanguage = value;
+                        });
+                      }
                     },
                   ),
                 ),
