@@ -328,4 +328,23 @@ class FirebaseService {
       // Don't throw an error to the user for this, as it's a background task.
     }
   }
+
+  Future<List<QueryDocumentSnapshot>> searchPosts(String query) async {
+    try {
+      if (query.isEmpty) {
+        return [];
+      }
+
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where('title', isGreaterThanOrEqualTo: query)
+          .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+          .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      print("Error searching posts: $e");
+      return [];
+    }
+  }
 }
