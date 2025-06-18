@@ -181,6 +181,7 @@ class FirebaseService {
       "quantity": quantity,
       "age": age,
       "price": price,
+      "currency": "USD",
       "likes": 0,
       "likedByYou": false,
       "views": 0,

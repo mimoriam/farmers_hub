@@ -11,7 +11,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class AddPostScreen extends StatefulWidget {
-
   String? location;
 
   AddPostScreen({super.key, this.location});
@@ -359,7 +358,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         value: widget.location ?? "Damascus",
 
                                         // value: widget.location != null ? widget.location : "Damascus",
-
                                         dropdownStyleData: DropdownStyleData(
                                           maxHeight: 160,
                                           offset: const Offset(0, -10),
@@ -371,39 +369,42 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                        [
-                                          'Damascus',
-                                          'Aleppo',
-                                          'Homs',
-                                          'Hama',
-                                          "Latakia",
-                                          "Tartus",
-                                          "Idlib",
-                                          "Deir ez-Zor",
-                                          "Al-Hasakah",
-                                          "Raqqa",
-                                          "Daraa",
-                                          "As-Suwayda",
-                                          "Quneitra",
-                                          "Al-Mayadin",
-                                          "Al-Bukamal",
-                                          'Manbij',
-                                          "Afrin",
-                                          "Tell Abyad",
-                                          "Ras al-Ayn",
-                                          "Kobani",
-                                        ].map((city) {
-                                          return DropdownMenuItem<String>(
-                                            onTap: () {
-                                              setState(() {
-                                                selectedCity = city;
-                                                // widget.location = null;
-                                              });
-                                            },
-                                            value: city,
-                                            child: Text(city),
-                                          );
-                                        }).toList(),
+                                            [
+                                              'Damascus',
+                                              'Aleppo',
+                                              'Homs',
+                                              'Hama',
+                                              "Latakia",
+                                              "Tartus",
+                                              "Baniyas",
+                                              "Idlib",
+                                              "Deir ez-Zor",
+                                              "Al-Hasakah",
+                                              "Qamishli",
+                                              "Raqqa",
+                                              "Daraa",
+                                              "As-Suwayda",
+                                              "Quneitra",
+                                              "Al-Mayadin",
+                                              "Al-Bukamal",
+                                              "Rif Dimashq",
+                                              "Afrin",
+                                              'Manbij',
+                                              "Tell Abyad",
+                                              "Ras al-Ayn",
+                                              "Kobani",
+                                            ].map((city) {
+                                              return DropdownMenuItem<String>(
+                                                onTap: () {
+                                                  setState(() {
+                                                    selectedCity = city;
+                                                    // widget.location = null;
+                                                  });
+                                                },
+                                                value: city,
+                                                child: Text(city),
+                                              );
+                                            }).toList(),
                                         validator: (value) {
                                           if (value == null) {
                                             return 'City is required.';
@@ -414,7 +415,32 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                     ),
 
-                                    const SizedBox(height: 2),
+                                    Text("Village", style: _labelStyle),
+                                    const SizedBox(height: 8),
+
+                                    FormBuilderTextField(
+                                      name: 'village',
+                                      autovalidateMode: validateMode,
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter Village',
+                                        border: _inputBorder,
+                                        enabledBorder: _inputBorder,
+                                        focusedBorder: _focusedInputBorder,
+                                        errorBorder: _errorInputBorder,
+                                        focusedErrorBorder: _focusedInputBorder,
+                                        contentPadding: _contentPadding,
+                                        // The image shows a dropdown arrow, this is a stylistic choice.
+                                        // If it's a free text field, suffixIcon is decorative.
+                                        // If it's a dropdown, use FormBuilderDropdown.
+                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                      ),
+                                      // keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                      validator: FormBuilderValidators.compose([
+                                        FormBuilderValidators.required(errorText: 'Village is required.'),
+                                      ]),
+                                    ),
+
+                                    const SizedBox(height: 8),
 
                                     Text("Category", style: _labelStyle),
                                     const SizedBox(height: 8),
@@ -462,29 +488,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                        [
-                                          'Fruits',
-                                          'Vegetables',
-                                          'Olive Oil',
-                                          "Live Stock",
-                                          'Grains & Seeds',
-                                          "Fertilizers",
-                                          "Tools & Equipments",
-                                          "Land Services",
-                                          "Delivery",
-                                          "Worker Services",
-                                          "Pesticides",
-                                          "Animal Feed",
-                                          "Others",
-                                        ]
-                                            .map(
-                                              (lang) =>
-                                              DropdownMenuItem<String>(
-                                                value: lang,
-                                                child: Text(lang),
-                                              ),
-                                        )
-                                            .toList(),
+                                            [
+                                                  'Fruits',
+                                                  'Vegetables',
+                                                  'Olive Oil',
+                                                  "Live Stock",
+                                                  'Grains & Seeds',
+                                                  "Fertilizers",
+                                                  "Tools & Equipments",
+                                                  "Land Services",
+                                                  "Delivery",
+                                                  "Worker Services",
+                                                  "Pesticides",
+                                                  "Animal Feed",
+                                                  "Others",
+                                                ]
+                                                .map(
+                                                  (lang) => DropdownMenuItem<String>(
+                                                    value: lang,
+                                                    child: Text(lang),
+                                                  ),
+                                                )
+                                                .toList(),
                                         value: selectedCategory,
                                         validator: (String? value) {
                                           if (value == null) {
@@ -523,7 +548,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   ),
                                     //   separator: const SizedBox(height: 3), // Spacing between options
                                     // ),
-                                    const SizedBox(height: 2),
+                                    // const SizedBox(height: 2),
                                     Text("Gender", style: _labelStyle),
 
                                     const SizedBox(height: 8),
@@ -567,15 +592,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                        ['Male', 'Female']
-                                            .map(
-                                              (gender) =>
-                                              DropdownMenuItem<String>(
-                                                value: gender,
-                                                child: Text(gender),
-                                              ),
-                                        )
-                                            .toList(),
+                                            ['Male', 'Female']
+                                                .map(
+                                                  (gender) => DropdownMenuItem<String>(
+                                                    value: gender,
+                                                    child: Text(gender),
+                                                  ),
+                                                )
+                                                .toList(),
                                         value: selectedGender,
                                         validator: (String? value) {
                                           if (value == null) {
@@ -613,7 +637,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   ),
                                     //   separator: const SizedBox(width: 16), // Spacing between options
                                     // ),
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: 2),
 
                                     // Average Weight (in kgs)
                                     Text("Average Weight (in kgs)", style: _labelStyle),
@@ -645,35 +669,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         FormBuilderValidators.numeric(errorText: 'Must be a number.'),
                                         FormBuilderValidators.min(0, errorText: 'Weight cannot be negative.'),
                                         FormBuilderValidators.max(10000, errorText: 'Weight cannot exceed.'),
-                                      ]),
-                                    ),
-
-                                    const SizedBox(height: 8),
-
-                                    Text("Village", style: _labelStyle),
-                                    const SizedBox(height: 8),
-
-                                    FormBuilderTextField(
-                                      name: 'village',
-                                      autovalidateMode: validateMode,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter Village',
-                                        border: _inputBorder,
-                                        enabledBorder: _inputBorder,
-                                        focusedBorder: _focusedInputBorder,
-                                        errorBorder: _errorInputBorder,
-                                        focusedErrorBorder: _focusedInputBorder,
-                                        contentPadding: _contentPadding,
-                                        // The image shows a dropdown arrow, this is a stylistic choice.
-                                        // If it's a free text field, suffixIcon is decorative.
-                                        // If it's a dropdown, use FormBuilderDropdown.
-                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
-                                      ),
-                                      // keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(
-                                          errorText: 'Village is required.',
-                                        ),
                                       ]),
                                     ),
 
@@ -957,7 +952,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                   if (context.mounted) {
                                     Navigator.pushReplacement(
-                                        context, MaterialPageRoute(builder: (context) => HomeScreen()));
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomeScreen()),
+                                    );
                                   }
                                 } else {
                                   if (!locationSelected) {

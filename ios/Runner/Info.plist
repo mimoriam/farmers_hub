@@ -13,6 +13,8 @@
 		<key>LSApplicationQueriesSchemes</key>
         <array>
           <string>mailto</string>
+          <string>sms</string>
+          <string>tel</string>
         </array>
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>We need your location to show your position on the map and provide relevant features.</string>

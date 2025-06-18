@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
@@ -8,6 +10,7 @@ import 'package:farmers_hub/utils/constants.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String postId;
@@ -295,6 +298,50 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 ),
               ),
             ),
+
+            SizedBox(width: 6),
+
+            firebaseService.currentUser?.displayName == username
+                ? Container()
+                : Expanded(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                    label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
+                    onPressed: () async {
+                      final String whatsapp = "+1-14821421408214";
+                      final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
+                      final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+
+                      if (Platform.isIOS) {
+                        if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+                          await launchUrl(Uri.parse(whatsappIoSURL));
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
+                          }
+                        }
+                      } else {
+                        // Android
+                        if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+                          await launchUrl(Uri.parse(whatsappURlAndroid));
+                        } else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(
+                              context,
+                            ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
+                          }
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: onboardingColor,
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ),
             // const SizedBox(width: 10),
           ],
         ),
