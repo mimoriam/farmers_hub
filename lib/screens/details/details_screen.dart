@@ -16,7 +16,9 @@ import 'package:url_launcher/url_launcher.dart';
 class DetailsScreen extends StatefulWidget {
   final String postId;
 
-  const DetailsScreen({super.key, required this.postId});
+  final bool didComeFromManagedPosts;
+
+  const DetailsScreen({super.key, required this.postId, required this.didComeFromManagedPosts});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -58,19 +60,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
       ),
 
       body: StreamBuilder<DocumentSnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection(FirebaseService().postCollection)
-              .doc(widget.postId)
-              .snapshots(),
-          builder: (context, postSnapshot) {
-            if (postSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                  child: CircularProgressIndicator(color: onboardingColor));
-            }
+        stream:
+            FirebaseFirestore.instance
+                .collection(FirebaseService().postCollection)
+                .doc(widget.postId)
+                .snapshots(),
+        builder: (context, postSnapshot) {
+          if (postSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator(color: onboardingColor));
+          }
 
-            if (postSnapshot.hasError || !postSnapshot.hasData || !postSnapshot.data!.exists) {
-              return const Center(child: Text("Post not found or has been deleted."));
-            }
+          if (postSnapshot.hasError || !postSnapshot.hasData || !postSnapshot.data!.exists) {
+            return const Center(child: Text("Post not found or has been deleted."));
+          }
 
           return FutureBuilder<Map<String, dynamic>?>(
             // future: firebaseService.getPostDetails(widget.postId),
@@ -79,11 +81,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
               if (sellerSnapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator(color: onboardingColor));
               }
-          
+
               if (sellerSnapshot.hasError || !sellerSnapshot.hasData || sellerSnapshot.data == null) {
                 return const Center(child: Text("Failed to load user data."));
               }
-          
+
               // final postDetails = snapshot.data;
               final postDetails = sellerSnapshot.data!['post'];
               final sellerData = sellerSnapshot.data!['seller'];
@@ -92,14 +94,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
               final currentUserId = firebaseService.currentUser?.uid;
               final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
               final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
-          
+
               return SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildImageSection(),
-          
+
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                         child: Column(
@@ -111,22 +113,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               location: postDetails["location"],
                               isLiked: isLiked,
                               onLike:
-                                  () => firebaseService.updatePostLikes(postId: widget.postId, like: !isLiked),
+                                  () =>
+                                      firebaseService.updatePostLikes(postId: widget.postId, like: !isLiked),
                             ),
                             const SizedBox(height: 8),
-          
+
                             _buildEngagementStats(
                               likes: postDetails["likes"].toString(),
                               views: postDetails["views"].toString(),
                               dated:
-                                  DateFormat('MMMM d, yyyy').format(postDetails["createdAt"].toDate()).toString(),
+                                  DateFormat(
+                                    'MMMM d, yyyy',
+                                  ).format(postDetails["createdAt"].toDate()).toString(),
                             ),
                             const SizedBox(height: 16),
-          
+
                             // _buildSellerInfo(username: postDetails["username"]),
                             _buildSellerInfo(username: sellerUsername),
                             const SizedBox(height: 24),
-          
+
                             _buildActionButtons(
                               context,
                               // username: postDetails["username"],
@@ -134,10 +139,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               postUserId: postDetails["sellerId"],
                             ),
                             const SizedBox(height: 18),
-          
+
                             _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
                             const SizedBox(height: 16),
-          
+
                             _buildDetailsSection(
                               category: postDetails["category"],
                               gender: postDetails["gender"],
@@ -155,7 +160,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               );
             },
           );
-        }
+        },
       ),
     );
   }
@@ -288,34 +293,36 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Column(
       children: [
         firebaseService.currentUser!.uid == postUserId
-            ? Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
-                    label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
-                    onPressed: () async {
-                      // Handle Chat action
+            ? widget.didComeFromManagedPosts
+                ? Container()
+                : Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
+                        label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
+                        onPressed: () async {
+                          // Handle Chat action
 
-                      if (context.mounted) {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => ManagePostScreen()),
-                        );
-                        //     .then((_) {
-                        //   setState(() {});
-                        // });
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: onboardingColor,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          if (context.mounted) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => ManagePostScreen()),
+                            );
+                            //     .then((_) {
+                            //   setState(() {});
+                            // });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: onboardingColor,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            )
+                  ],
+                )
             : Container(),
 
         SizedBox(height: 4),

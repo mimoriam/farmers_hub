@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
@@ -103,56 +104,76 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                           final post = postData[index].data() as Map<String, dynamic>;
                           final postId = postData[index].id;
 
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Center(
-                              child: Container(
-                                width: 340, // Set a fixed width for the card
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(20.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 5), // changes position of shadow
-                                    ),
-                                  ],
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min, // To make the column wrap its content
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      // Top Section: Image and Details
-                                      _buildTopSection(
-                                        price: post["price"].toString(),
-                                        category: post["category"],
-                                        year: post["age"].toString(),
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => DetailsScreen(
+                                              postId: postId.toString(),
+                                              didComeFromManagedPosts: true,
+                                            ),
                                       ),
-                                      const SizedBox(height: 12),
-
-                                      // Middle Section: Location, Likes, Views
-                                      _buildStatsSection(
-                                        location: post["location"],
-                                        likes: post["likes"].toString(),
-                                        views: post["views"].toString(),
-                                      ),
-                                      const SizedBox(height: 12),
-
-                                      // Sold Button
-                                      _buildSoldButton(hasBeenSold: post["hasBeenSold"]),
-                                      const SizedBox(height: 8),
-
-                                      // Bottom Section: Timestamp and Action Buttons
-                                      _buildBottomSection(
-                                        createdAt: post["createdAt"],
-                                        postId: postId.toString(),
-                                        hasBeenSold: post["hasBeenSold"],
+                                    ).then((_) {
+                                      if (mounted) {
+                                        setState(() {});
+                                      }
+                                    });
+                                  }
+                                },
+                                child: Container(
+                                  // width: 350, // Set a fixed width for the card
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 5), // changes position of shadow
                                       ),
                                     ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min, // To make the column wrap its content
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Top Section: Image and Details
+                                        _buildTopSection(
+                                          price: post["price"].toString(),
+                                          category: post["category"],
+                                          year: post["age"].toString(),
+                                        ),
+                                        const SizedBox(height: 12),
+
+                                        // Middle Section: Location, Likes, Views
+                                        _buildStatsSection(
+                                          location: post["location"],
+                                          likes: post["likes"].toString(),
+                                          views: post["views"].toString(),
+                                        ),
+                                        const SizedBox(height: 12),
+
+                                        // Sold Button
+                                        _buildSoldButton(hasBeenSold: post["hasBeenSold"]),
+                                        const SizedBox(height: 8),
+
+                                        // Bottom Section: Timestamp and Action Buttons
+                                        _buildBottomSection(
+                                          createdAt: post["createdAt"],
+                                          postId: postId.toString(),
+                                          hasBeenSold: post["hasBeenSold"],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

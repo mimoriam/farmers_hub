@@ -380,7 +380,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 context,
                 MaterialPageRoute(builder: (context) => const EditProfileScreen()),
               ).then((_) {
-                setState(() {});
+                if (mounted) {
+                  setState(() {});
+                }
               });
             }
           },

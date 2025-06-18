@@ -27,9 +27,7 @@ String formatTimeAgo(Timestamp timestamp) {
   final postTime = timestamp.toDate();
   final difference = now.difference(postTime);
 
-  if (difference.inSeconds < 60) {
-    return '${difference.inSeconds} seconds ago';
-  } else if (difference.inMinutes < 60) {
+  if (difference.inMinutes < 60) {
     return '${difference.inMinutes} minutes ago';
   } else if (difference.inHours < 24) {
     return '${difference.inHours} hours ago';
@@ -379,7 +377,9 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               if (context.mounted) {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((_) {
-                  setState(() {});
+                  if (mounted) {
+                    setState(() {});
+                  }
                 });
               }
             },
@@ -424,7 +424,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(builder: (context) => ChatHome(user: user)),
                       ).then((_) {
-                        setState(() {});
+                        if (mounted) {
+                          setState(() {});
+                        }
                       });
                     }
                   },
@@ -467,7 +469,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         context,
                         MaterialPageRoute(builder: (context) => const ProfileScreen()),
                       ).then((_) {
-                        setState(() {});
+                        if (mounted) {
+                          setState(() {});
+                        }
                       });
                     }
                   },
@@ -665,7 +669,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     (context) => AddPostScreen(location: _selectedLocation),
                                               ),
                                             ).then((_) {
-                                              setState(() {});
+                                              if (mounted) {
+                                                setState(() {});
+                                              }
                                             });
                                           }
                                         },
@@ -1129,11 +1135,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder:
-                                            (context) =>
-                                                DetailsScreen(postId: featuredData[index].id.toString()),
+                                            (context) => DetailsScreen(
+                                              postId: featuredData[index].id.toString(),
+                                              didComeFromManagedPosts: false,
+                                            ),
                                       ),
                                     ).then((_) {
-                                      setState(() {});
+                                      if (mounted) {
+                                        setState(() {});
+                                      }
                                     });
                                   }
                                 },
