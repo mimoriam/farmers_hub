@@ -161,11 +161,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  price,
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
+                Row(
+                  children: [
+                    Text(
+                      "\$",
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
+                    ),
+                    Text(
+                      price,
+                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
+                    ),
+                  ],
                 ),
+
                 const SizedBox(height: 4),
+
                 Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
               ],
             ),
