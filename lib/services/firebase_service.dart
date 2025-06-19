@@ -347,4 +347,18 @@ class FirebaseService {
       return [];
     }
   }
+
+  Future<List<QueryDocumentSnapshot>> getFavoritedPosts() async {
+    try {
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("likedBy", arrayContains: currentUser!.uid)
+          .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      print("Error fetching favorited posts: $e");
+      return [];
+    }
+  }
 }

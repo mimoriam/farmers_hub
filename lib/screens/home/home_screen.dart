@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
+import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/location_service.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart';
+import 'package:dio_smart_retry/dio_smart_retry.dart';
 
 // Helper function to format the timestamp
 String formatTimeAgo(Timestamp timestamp) {
@@ -179,16 +182,43 @@ class _HomeScreenState extends State<HomeScreen> {
   String _locationMessage = "Fetching location...";
   bool _isLoadingLocation = true;
 
+  String dynamicWeather = "...";
+
+  String dynamicWeatherCondition = "...";
+
   late final AppLifecycleListener _listener;
 
   Future<void> _fetchLocation() async {
     try {
+      final dio = Dio();
+
+      dio.interceptors.add(
+        RetryInterceptor(
+          dio: dio,
+          retries: 3, // retry count (optional)
+          retryDelays: const [
+            // set delays between retries (optional)
+            Duration(seconds: 1), // wait 1 sec before first retry
+            Duration(seconds: 2), // wait 2 sec before second retry
+            Duration(seconds: 2), // wait 2 sec before third retry
+          ],
+        ),
+      );
+
       final position = await _locationService.getCurrentLocation();
       final placeDetails = await _locationService.getPlaceDetails(position);
+
+      // Get weather here:
+      final response = await dio.get(
+        'http://api.weatherapi.com/v1/current'
+        '.json?key=fc92781c4f99431e853225822251906&q=${placeDetails.city}&aqi=no',
+      );
 
       if (mounted) {
         setState(() {
           _locationMessage = "${placeDetails.city}, ${placeDetails.country}";
+          dynamicWeather = response.data["current"]["temp_c"].toInt().toString();
+          dynamicWeatherCondition = response.data["current"]["condition"]["text"].toString();
           _isLoadingLocation = false;
         });
       }
@@ -243,9 +273,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _fetchLocation();
 
-    _listener = AppLifecycleListener(
-      onStateChange: _onStateChanged,
-    );
+    _listener = AppLifecycleListener(onStateChange: _onStateChanged);
   }
 
   @override
@@ -524,20 +552,34 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(width: 6),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
-                    Text(
-                      'Favorites',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                        color: onboardingColor,
+                GestureDetector(
+                  onTap: () {
+                    if (context.mounted) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                      ).then((_) {
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      });
+                    }
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                      Text(
+                        'Favorites',
+                        style: GoogleFonts.montserrat(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                          color: onboardingColor,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
@@ -969,7 +1011,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '32°C',
+                                          // '32°C',
+                                          _isLoadingLocation ? "..." : "$dynamicWeather°C",
                                           style: GoogleFonts.montserrat(
                                             fontSize: 17.6,
                                             fontWeight: FontWeight.w600,
@@ -977,7 +1020,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         Text(
-                                          'Clear Sky',
+                                          // 'Clear Sky',
+                                          _isLoadingLocation ? "..." : dynamicWeatherCondition,
                                           style: GoogleFonts.poppins(
                                             fontSize: 13.6,
                                             fontWeight: FontWeight.w400,
@@ -1200,11 +1244,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             itemCount: featuredData.length > 5 ? 5 : featuredData.length,
                             itemBuilder: (context, index) {
                               // final post = popularPostsData[index];
-                              final post = featuredData[index].data() as Map<String, dynamic>;
 
+                              final post = featuredData[index].data() as Map<String, dynamic>;
                               final currentUserId = firebaseService.currentUser?.uid;
                               final List<dynamic> likedBy = post['likedBy'] ?? [];
                               final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
+
+                              final createdAtTimestamp = post['createdAt'] as Timestamp?;
+                              final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
 
                               return GestureDetector(
                                 onTap: () {
@@ -1231,7 +1278,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   location: post['location']["city"],
                                   likes: post['likes'],
                                   isLiked: isLiked,
-                                  postedAgo: formatTimeAgo(post['createdAt']),
+                                  // postedAgo: formatTimeAgo(post['createdAt']),
+                                  postedAgo: postedAgoText,
                                   views: post['views'],
                                 ),
                               );

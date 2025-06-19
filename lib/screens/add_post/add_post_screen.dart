@@ -29,7 +29,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   final ScrollController _scrollController = ScrollController();
 
-  String? selectedCity;
+  String selectedCity = "Damascus";
 
   String? selectedCategory;
   String? selectedGender;
@@ -355,7 +355,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           iconEnabledColor: onboardingTextColor,
                                         ),
 
-                                        value: widget.location ?? "Damascus",
+                                        value: widget.location ?? selectedCity,
 
                                         // value: widget.location != null ? widget.location : "Damascus",
                                         dropdownStyleData: DropdownStyleData(
@@ -925,6 +925,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               ),
                               onPressed: () async {
                                 // if (_formKey.currentState!.validate() && locationSelected) {
+
                                 if (_formKey.currentState!.validate()) {
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
