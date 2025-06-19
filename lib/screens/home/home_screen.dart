@@ -27,7 +27,9 @@ String formatTimeAgo(Timestamp timestamp) {
   final postTime = timestamp.toDate();
   final difference = now.difference(postTime);
 
-  if (difference.inMinutes < 60) {
+  if (difference.inSeconds < 60) {
+    return 'now';
+  } else if (difference.inMinutes < 60) {
     return '${difference.inMinutes} minutes ago';
   } else if (difference.inHours < 24) {
     return '${difference.inHours} hours ago';
