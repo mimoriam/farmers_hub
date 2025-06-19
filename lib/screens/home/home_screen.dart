@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
+import 'package:farmers_hub/services/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -16,6 +17,7 @@ import 'package:farmers_hub/screens/chat/chat_home.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -171,12 +173,85 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
+  final LocationService _locationService = LocationService();
 
   String _selectedLocation = '';
+  String _locationMessage = "Fetching location...";
+  bool _isLoadingLocation = true;
+
+  late final AppLifecycleListener _listener;
+
+  Future<void> _fetchLocation() async {
+    try {
+      final position = await _locationService.getCurrentLocation();
+      final placeDetails = await _locationService.getPlaceDetails(position);
+
+      if (mounted) {
+        setState(() {
+          _locationMessage = "${placeDetails.city}, ${placeDetails.country}";
+          _isLoadingLocation = false;
+        });
+      }
+    } catch (e) {
+      print(e.toString());
+      if (mounted) {
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder:
+              (ctx) => AlertDialog(
+                title: Text("Location Services Disabled"),
+                content: Text("Please enable location services in settings."),
+                backgroundColor: Colors.white,
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Geolocator.openLocationSettings();
+                      if (mounted) {
+                        setState(() {});
+                      }
+                    },
+                    child: Text("Open Settings"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text("Cancel"),
+                  ),
+                ],
+              ),
+        );
+      }
+    } finally {
+      setState(() {
+        // _locationMessage = "Could not fetch location";
+        _isLoadingLocation = false;
+      });
+    }
+  }
+
+  void _onStateChanged(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _fetchLocation();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _fetchLocation();
+
+    _listener = AppLifecycleListener(
+      onStateChange: _onStateChanged,
+    );
+  }
+
+  @override
+  void dispose() {
+    _listener.dispose();
+    super.dispose();
   }
 
   // void _openCountryPicker() {
@@ -519,7 +594,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           TextSpan(
-                            text: 'City, Country',
+                            // text: 'City, Country',
+                            text: _isLoadingLocation ? 'Loading...' : _locationMessage,
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontSize: 14,
