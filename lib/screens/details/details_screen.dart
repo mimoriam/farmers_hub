@@ -141,7 +141,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const SizedBox(height: 18),
 
                             _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 4),
 
                             _buildDetailsSection(
                               category: postDetails["category"],
@@ -327,77 +327,37 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
         SizedBox(height: 4),
 
-        Row(
-          children: [
-            Expanded(
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-                label: Text(
-                  firebaseService.currentUser?.displayName == username ? "Can't chat with yourself" : 'Chat',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed:
-                    firebaseService.currentUser?.displayName == username
-                        ? null
-                        : () async {
-                          // Handle Chat action
-
-                          final ChatService _chatService = ChatService(user: firebaseService.currentUser);
-                          final user = firebaseService.currentUser;
-
-                          await _chatService.addUserForChat(username: username);
-
-                          if (context.mounted) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => ChatHome(user: user)),
-                            );
-                          }
-                        },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: onboardingColor,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                ),
-              ),
-            ),
-
-            SizedBox(width: 6),
-
-            firebaseService.currentUser?.displayName == username
-                ? Container()
-                : Expanded(
+        firebaseService.currentUser!.uid == postUserId
+            ? Container()
+            : Row(
+              children: [
+                Expanded(
                   child: ElevatedButton.icon(
                     icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-                    label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
-                    onPressed: () async {
-                      final String whatsapp = "+1-14821421408214";
-                      final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
-                      final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+                    label: Text(
+                      firebaseService.currentUser?.displayName == username
+                          ? "Can't chat with yourself"
+                          : 'Chat',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed:
+                        firebaseService.currentUser?.displayName == username
+                            ? null
+                            : () async {
+                              // Handle Chat action
 
-                      if (Platform.isIOS) {
-                        if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
-                          await launchUrl(Uri.parse(whatsappIoSURL));
-                        } else {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
-                          }
-                        }
-                      } else {
-                        // Android
-                        if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
-                          await launchUrl(Uri.parse(whatsappURlAndroid));
-                        } else {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(
-                              context,
-                            ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
-                          }
-                        }
-                      }
-                    },
+                              final ChatService _chatService = ChatService(user: firebaseService.currentUser);
+                              final user = firebaseService.currentUser;
+
+                              await _chatService.addUserForChat(username: username);
+
+                              if (context.mounted) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                                );
+                              }
+                            },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: onboardingColor,
                       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -405,9 +365,53 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                   ),
                 ),
-            // const SizedBox(width: 10),
-          ],
-        ),
+
+                SizedBox(width: 6),
+
+                firebaseService.currentUser?.displayName == username
+                    ? Container()
+                    : Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                        label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
+                        onPressed: () async {
+                          final String whatsapp = "+1-14821421408214";
+                          final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
+                          final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+
+                          if (Platform.isIOS) {
+                            if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+                              await launchUrl(Uri.parse(whatsappIoSURL));
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
+                              }
+                            }
+                          } else {
+                            // Android
+                            if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+                              await launchUrl(Uri.parse(whatsappURlAndroid));
+                            } else {
+                              if (context.mounted) {
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
+                              }
+                            }
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: onboardingColor,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                    ),
+                // const SizedBox(width: 10),
+              ],
+            ),
       ],
     );
   }

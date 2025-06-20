@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
   String searchQuery;
+
   FilteredResultsScreen({super.key, this.searchQuery = ""});
 
   @override
@@ -53,12 +54,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 500), () async {
-
       if (query != null && query.isNotEmpty) {
         print({query});
         await _performSearch(query);
-
-
       } else if (mounted) {
         setState(() {
           _searchResults = [];
@@ -75,7 +73,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     if (widget.searchQuery.isNotEmpty) {
       _performSearch(widget.searchQuery);
     }
-
   }
 
   @override
@@ -225,11 +222,12 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     ),
                   ),
 
-                  _searchResults.isEmpty ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Center(child: Text("No results")),
-                  ) : Container(),
-
+                  _searchResults.isEmpty
+                      ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Center(child: Text("No results")),
+                      )
+                      : Container(),
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -245,13 +243,15 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       ),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
-
                         final postData = _searchResults[index].data() as Map<String, dynamic>;
                         final postId = _searchResults[index].id;
 
-
                         // return ProductCard(postData: popularPostsData[index]);
-                        return ProductCard(postData: postData, postId: postId);
+                        return ProductCard(
+                          postData: postData,
+                          postId: postId,
+                          firebaseService: firebaseService,
+                        );
                       },
                     ),
                   ),
@@ -270,7 +270,9 @@ class ProductCard extends StatefulWidget {
   final Map<String, dynamic> postData;
   final String postId;
 
-  const ProductCard({super.key, required this.postData, required this.postId});
+  final FirebaseService firebaseService;
+
+  const ProductCard({super.key, required this.postData, required this.postId, required this.firebaseService});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -285,15 +287,28 @@ class _ProductCardState extends State<ProductCard> {
     final likes = widget.postData['likes']?.toString() ?? '0';
     final views = widget.postData['views']?.toString() ?? '0';
 
+    final currentUserId = widget.firebaseService.currentUser?.uid;
+    final List<dynamic> likedBy = widget.postData['likedBy'] ?? [];
+    final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
+
     final createdAtTimestamp = widget.postData['createdAt'] as Timestamp?;
     final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
 
     return GestureDetector(
-      // onTap: () {
-      //   if (context.mounted) {
-      //     Navigator.push(context, MaterialPageRoute(builder: (context) => const DetailsScreen(postId: "1")));
-      //   }
-      // },
+      onTap: () {
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
+            ),
+          ).then((_) {
+            if (mounted) {
+              setState(() {});
+            }
+          });
+        }
+      },
       child: Container(
         // width: 170,
         // height: 200,
@@ -332,7 +347,12 @@ class _ProductCardState extends State<ProductCard> {
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
-                      child: Icon(Icons.favorite_border_outlined, color: Colors.grey, size: 18),
+
+                      child: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                        color: isLiked ? Colors.red : Colors.grey,
+                        size: 18,
+                      ),
                     ),
                   ),
                 ],
