@@ -26,6 +26,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -167,42 +168,54 @@ class _HomeScreenState extends State<HomeScreen> {
   late final AppLifecycleListener _listener;
 
   Future<void> _fetchLocation() async {
+    setState(() {
+      _isLoadingLocation = true;
+      _locationMessage = "Fetching location...";
+    });
+
+    String finalCity;
+
     try {
-      final dio = Dio();
+      final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
 
-      dio.interceptors.add(
-        RetryInterceptor(
-          dio: dio,
-          retries: 3, // retry count (optional)
-          retryDelays: const [
-            // set delays between retries (optional)
-            Duration(seconds: 1), // wait 1 sec before first retry
-            Duration(seconds: 2), // wait 2 sec before second retry
-            Duration(seconds: 2), // wait 2 sec before third retry
-          ],
-        ),
-      );
+      final city = await asyncPrefs.getString("city");
+      final country = await asyncPrefs.getString("country");
 
-      final position = await _locationService.getCurrentLocation();
-      final placeDetails = await _locationService.getPlaceDetails(position);
+      if (city != null && country != null && city.isNotEmpty) {
+        // 1. Use cached location if available
+        finalCity = city;
+        if (mounted) {
+          setState(() {
+            _locationMessage = "$city, $country";
+          });
+        }
+      } else {
+        // 2. Fetch new location if not cached
+        final position = await _locationService.getCurrentLocation();
+        final placeDetails = await _locationService.getPlaceDetails(position);
+        finalCity = placeDetails.city ?? "Unknown";
 
-      // Get weather here:
-      final response = await dio.get(
-        'http://api.weatherapi.com/v1/current'
-        '.json?key=fc92781c4f99431e853225822251906&q=${placeDetails.city}&aqi=no',
-      );
+        // Save the new location
+        // await asyncPrefs.setString("city", finalCity);
+        // await asyncPrefs.setString("country", placeDetails.country ?? "Unknown");
 
+        if (mounted) {
+          setState(() {
+            _locationMessage = "$finalCity, ${placeDetails.country}";
+          });
+        }
+      }
+
+      // 3. Fetch weather for the determined city
+      await _fetchWeather(finalCity);
+    } catch (e) {
+      // if (e.toString().contains("Location services are disabled")) {
       if (mounted) {
         setState(() {
-          _locationMessage = "${placeDetails.city}, ${placeDetails.country}";
-          dynamicWeather = response.data["current"]["temp_c"].toInt().toString();
-          dynamicWeatherCondition = response.data["current"]["condition"]["text"].toString();
-          _isLoadingLocation = false;
+          _locationMessage = "Could not get location";
         });
-      }
-    } catch (e) {
-      print(e.toString());
-      if (mounted) {
+
+        if (e.toString().contains("denied") || e.toString().contains("disabled")) {
         await showDialog(
           context: context,
           barrierDismissible: false,
@@ -231,12 +244,55 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
         );
+        }
       }
     } finally {
-      setState(() {
-        // _locationMessage = "Could not fetch location";
-        _isLoadingLocation = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingLocation = false;
+        });
+      }
+    }
+  }
+
+  Future<void> _fetchWeather(String city) async {
+    if (city.isEmpty) return;
+
+    try {
+      final dio = Dio();
+
+      dio.interceptors.add(
+        RetryInterceptor(
+          dio: dio,
+          retries: 2, // retry count (optional)
+          retryDelays: const [
+            // set delays between retries (optional)
+            Duration(seconds: 2), // wait 1 sec before first retry
+            Duration(seconds: 4), // wait 2 sec before second retry
+          ],
+        ),
+      );
+
+      // Get weather here:
+      final response = await dio.get(
+        'http://api.weatherapi.com/v1/current'
+            '.json?key=fc92781c4f99431e853225822251906&q=$city&aqi=no',
+      );
+
+      if (mounted && response.statusCode == 200) {
+        setState(() {
+          dynamicWeather = response.data["current"]["temp_c"].toInt().toString();
+          dynamicWeatherCondition = response.data["current"]["condition"]["text"].toString();
+        });
+      }
+    } catch (e) {
+      print("Failed to fetch weather: $e");
+      if (mounted) {
+        setState(() {
+          dynamicWeather = "N/A";
+          dynamicWeatherCondition = "Unavailable";
+        });
+      }
     }
   }
 
@@ -249,8 +305,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _fetchLocation();
 
+    _fetchLocation();
     _listener = AppLifecycleListener(onStateChange: _onStateChanged);
   }
 
@@ -479,7 +535,8 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
             elevation: 0,
             // Shadow for the BottomAppBar
-            clipBehavior: Clip.antiAlias,
+            // clipBehavior: Clip.antiAlias,
+            clipBehavior: Clip.none,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               // Children are the navigation items
@@ -1229,7 +1286,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
 
                               final createdAtTimestamp = post['createdAt'] as Timestamp?;
-                              final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
+                              final postedAgoText =
+                                  createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
 
                               return GestureDetector(
                                 onTap: () {

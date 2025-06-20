@@ -327,6 +327,7 @@ class _ChatHomeState extends State<ChatHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: homebackgroundColor,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // leading: BackButton(color: Colors.white),
         backgroundColor: onboardingColor,

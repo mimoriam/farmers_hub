@@ -5,6 +5,7 @@ import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -41,6 +42,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
     // .add() returns true if the value was added (i.e., it wasn't already in the set).
     if (_sessionViewedPosts.add(widget.postId)) {
       firebaseService.incrementViewCount(postId: widget.postId);
+    }
+  }
+
+  // --- NEW FUNCTION TO HANDLE PHONE CALLS ---
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri launchUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunchUrl(launchUri)) {
+      await launchUrl(launchUri);
+    } else {
+      // Show an error message if the device can't handle the request
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text("Could not launch the dialer for $phoneNumber")));
+      }
     }
   }
 
@@ -121,10 +137,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             _buildEngagementStats(
                               likes: postDetails["likes"].toString(),
                               views: postDetails["views"].toString(),
-                              dated:
-                                  DateFormat(
-                                    'MMMM d, yyyy',
-                                  ).format(postDetails["createdAt"].toDate()).toString(),
+                              dated: postDetails["createdAt"],
+                              // dated:
+                              //     DateFormat(
+                              //       'MMMM d, yyyy',
+                              //     ).format(postDetails["createdAt"].toDate()).toString(),
                             ),
                             const SizedBox(height: 16),
 
@@ -255,22 +272,50 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildEngagementStats({required String likes, required String views, required String dated}) {
-    return Row(
+  Widget _buildEngagementStats({required String likes, required String views, required Timestamp dated}) {
+    final currentUserId = firebaseService.currentUser?.uid;
+    final postedAgoText = formatTimeAgo(dated);
+
+    // CHANGED this from Row to Column
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Icon(Icons.favorite, color: Colors.red[400], size: 16),
-        const SizedBox(width: 4),
+        Row(
+          children: [
+            Icon(Icons.favorite, color: Colors.red[400], size: 16),
+            const SizedBox(width: 4),
 
-        Text(likes, style: TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(width: 16),
+            Text("Likes:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+            const SizedBox(width: 1),
+            Text(likes, style: TextStyle(fontSize: 13, color: Colors.grey)),
+          ],
+        ),
 
-        Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
-        const SizedBox(width: 4),
+        const SizedBox(height: 8),
 
-        Text(views, style: TextStyle(fontSize: 12, color: Colors.grey)),
-        const Spacer(),
+        Row(
+          children: [
+            Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
+            const SizedBox(width: 4),
 
-        Text(dated, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+            Text("Views:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+            const SizedBox(width: 1),
+            Text(views, style: TextStyle(fontSize: 13, color: Colors.grey)),
+          ],
+        ),
+
+        const SizedBox(height: 4),
+
+        // const Spacer(),
+        Row(
+          children: [
+            Icon(Icons.history_outlined, color: Colors.grey[600], size: 16),
+            const SizedBox(width: 4),
+
+            Text(postedAgoText.toString(), style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+          ],
+        ),
       ],
     );
   }
@@ -449,7 +494,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         _buildDetailRow('Gender:', gender),
         _buildDetailRow('Average Weight (in kg):', averageWeight),
         _buildDetailRow('Age (in years):', age), // Note: unusual age
-        _buildDetailRow('Phone Number:', phoneNumber),
+        _buildDetailRow('Phone Number:', phoneNumber, phoneBlue: true),
 
         const SizedBox(height: 8),
 
@@ -462,14 +507,32 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildDetailRow(String title, String value) {
+  Widget _buildDetailRow(String title, String value, {bool? phoneBlue = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: TextStyle(fontSize: 14, color: Colors.grey[700])),
-          Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+          Text(title, style: TextStyle(fontSize: 15, color: Colors.grey[700])),
+          GestureDetector(
+            onTap:
+                phoneBlue == true
+                    ? () {
+                      _makePhoneCall(value);
+                    }
+                    : null,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
+                color: phoneBlue == true ? Colors.blue : null,
+                decoration: phoneBlue == true ? TextDecoration.underline : null,
+                decorationColor: phoneBlue == true ? Colors.blue : null,
+                decorationThickness: 2,
+              ),
+            ),
+          ),
         ],
       ),
     );

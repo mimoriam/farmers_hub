@@ -80,7 +80,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 24),
+                        SizedBox(height: 10),
 
                         Text(
                           "Please enter your contact details to continue",
@@ -91,7 +91,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 18),
+                        SizedBox(height: 16),
 
                         Divider(height: 2),
 
@@ -101,7 +101,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                             style: const TextStyle(color: Colors.red),
                           ),
 
-                        SizedBox(height: 16),
+                        SizedBox(height: 14),
 
                         Text(
                           "Enter Your Name",
@@ -387,7 +387,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         //   ],
                         // ),
 
-                        const SizedBox(height: 18),
+                        const SizedBox(height: 14),
 
                         SizedBox(
                           width: double.infinity,

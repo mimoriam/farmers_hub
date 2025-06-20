@@ -48,13 +48,13 @@ class _LoginScreenState extends State<LoginScreen> {
               GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   child: FormBuilder(
                     key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 10),
+                        // SizedBox(height: 10),
 
                         Text(
                           "Login to YOUR CROP",
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // style: TextStyle(fontSize: 16, color: Colors.black87),
                         ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
 
                         Divider(height: 2),
 
@@ -77,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             style: const TextStyle(color: Colors.red),
                           ),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
 
                         Text(
                           "Email Address",
@@ -130,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 22),
+                        SizedBox(height: 16),
 
                         Text(
                           "Password",
@@ -296,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         //   ),
                         // ),
 
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -345,7 +345,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                         ),
 
-                        SizedBox(height: 24),
+                        SizedBox(height: 16),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

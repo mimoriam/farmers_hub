@@ -64,7 +64,10 @@ class _ChatScreenState extends State<ChatScreen> {
       stream: _chatService.getMessages(widget.receiverId, senderId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
+          return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(child: CircularProgressIndicator(color: onboardingColor)),
+          );
         }
 
         if (snapshot.hasData) {
@@ -77,11 +80,17 @@ class _ChatScreenState extends State<ChatScreen> {
             future: _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
             builder: (context, userDataSnapshot) {
               if (userDataSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: const Center(child: CircularProgressIndicator(color: onboardingColor)),
+                );
               }
 
               if (userDataSnapshot.hasError || !userDataSnapshot.hasData || userDataSnapshot.data == null) {
-                return const Center(child: Text("Failed to load user data."));
+                return Scaffold(
+                  backgroundColor: Colors.white,
+                  body: const Center(child: Text("Failed to load user data.")),
+                );
               }
 
               final userData = userDataSnapshot.data!.data() as Map<String, dynamic>?;
@@ -90,6 +99,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
               return SafeArea(
                 child: Scaffold(
+                  backgroundColor: Colors.white,
                   // appBar: AppBar(title: Text(widget.receiverEmail)),
                   appBar: AppBar(title: Text(initialName)),
                   floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

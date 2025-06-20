@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:farmers_hub/utils/constants.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -21,10 +22,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => FilteredResultsScreen()),
-          );
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen()));
         }
       },
       child: Card(
@@ -98,9 +96,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     ];
 
     final List<Map<String, String>> popularCategories = [
-      {'name': 'Apples', 'image': 'images/categories/apples.png'},
-      {'name': 'Cheese', 'image': 'images/categories/rice.jpg'},
-      {'name': 'Pomegranates', 'image': 'images/categories/tomatoes.jpg'},
+      {'name': 'Apples', 'image': 'images/icons/apple.svg', "semanticsLabel": "Apple"},
+      {'name': 'Cheese', 'image': 'images/icons/cheese.svg', "semanticsLabel": "Cheese"},
+      {'name': 'Pomegranates', 'image': 'images/icons/pomegranate.svg', "semanticsLabel": "Pomegranate"},
     ];
 
     return Scaffold(
@@ -125,6 +123,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // SvgPicture.asset(
+                  //   "images/icons/apple.svg",
+                  //   colorFilter: ColorFilter.mode(onboardingColor, BlendMode.srcIn),
+                  //   width: 100,
+                  //   height: 100,
+                  // ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
                     child: FormBuilderTextField(
@@ -207,6 +211,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           ),
                         ),
 
+                        // SvgPicture.asset(
+                        //   "images/icons/apple.svg",
+                        //   width: 200,
+                        //   height: 200,
+                        // ),
+
                         SizedBox(
                           height: 130.0,
                           child: ListView.builder(
@@ -245,11 +255,18 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       children: [
                                         Padding(
                                           padding: const EdgeInsets.only(bottom: 9),
-                                          child: Container(
+                                          child: SizedBox(
                                             width: 48,
                                             height: 46,
 
-                                            child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                            // child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                            child: SvgPicture.asset(
+                                              category['image']!,
+                                              semanticsLabel: category["semanticsLabel"],
+                                              width: 20,
+                                              height: 20,
+                                              placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+                                            ),
                                           ),
                                         ),
                                         Text(

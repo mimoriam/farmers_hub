@@ -58,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 24),
+                      SizedBox(height: 10),
 
                       Text(
                         "Please enter your contact details to continue",
@@ -69,7 +69,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
 
-                      SizedBox(height: 18),
+                      SizedBox(height: 14),
 
                       Divider(height: 2),
 
@@ -79,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           style: const TextStyle(color: Colors.red),
                         ),
 
-                      SizedBox(height: 16),
+                      SizedBox(height: 12),
 
                       Text(
                         "Enter Your Name",
@@ -517,7 +517,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       //   ],
                       // ),
 
-                      const SizedBox(height: 42),
+                      const SizedBox(height: 32),
 
                       SizedBox(
                         width: double.infinity,

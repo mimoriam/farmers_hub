@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
       // useImmersiveMode: true,
       asyncNavigationCallback: () async {
         // Get shared-prefs data here
-        await Future.delayed(const Duration(seconds: 3));
+        await Future.delayed(const Duration(seconds: 2));
 
         final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
         final String? lang = await asyncPrefs.getString('language');
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SvgPicture.asset(
-              "images/icons/splash_white.svg",
+                "images/icons/splash_white.svg",
               semanticsLabel: 'Your Crop icon',
               width: 90,
               height: 104,
