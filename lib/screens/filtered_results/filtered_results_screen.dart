@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -8,7 +13,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
-  const FilteredResultsScreen({super.key});
+  String searchQuery;
+  FilteredResultsScreen({super.key, this.searchQuery = ""});
 
   @override
   State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
@@ -17,6 +23,66 @@ class FilteredResultsScreen extends StatefulWidget {
 class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final validateMode = AutovalidateMode.onUserInteraction;
+
+  final FirebaseService firebaseService = FirebaseService();
+
+  List<QueryDocumentSnapshot> _searchResults = [];
+  bool _isLoading = false;
+  bool _hasSearched = false;
+
+  Timer? _debounce;
+
+  Future<void> _performSearch(String query) async {
+    if (!mounted) return;
+    setState(() {
+      _isLoading = true;
+      _hasSearched = true;
+    });
+
+    final results = await firebaseService.searchPosts(query);
+
+    if (mounted) {
+      setState(() {
+        _searchResults = results;
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _onSearchChanged(String? query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () async {
+
+      if (query != null && query.isNotEmpty) {
+        print({query});
+        await _performSearch(query);
+
+
+      } else if (mounted) {
+        setState(() {
+          _searchResults = [];
+          _hasSearched = false; // Reset to initial state if search is cleared
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // If the screen is opened with an initial search query, perform the search
+    if (widget.searchQuery.isNotEmpty) {
+      _performSearch(widget.searchQuery);
+    }
+
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,6 +172,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
                       ),
+                      onChanged: _onSearchChanged,
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(
@@ -115,10 +182,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          onPressed: null,
-                        ),
+                        // suffixIcon: IconButton(
+                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                        //   onPressed: null,
+                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -146,7 +213,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         ),
 
                         Text(
-                          'Results',
+                          'Results (${_searchResults.length})',
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -158,29 +225,36 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     ),
                   ),
 
-                  Padding(
+                  _searchResults.isEmpty ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Center(child: Text("No results")),
-                  ),
+                  ) : Container(),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  //   child: GridView.builder(
-                  //     shrinkWrap: true,
-                  //     // Important to make GridView work inside SingleChildScrollView
-                  //     physics: const NeverScrollableScrollPhysics(),
-                  //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  //       crossAxisCount: 2, // Number of columns
-                  //       crossAxisSpacing: 10.0, // Horizontal space between cards
-                  //       mainAxisSpacing: 14.0, // Vertical space between cards
-                  //       childAspectRatio: 0.78, // Adjust to fit content (width / height)
-                  //     ),
-                  //     itemCount: popularPostsData.length,
-                  //     itemBuilder: (context, index) {
-                  //       return ProductCard(postData: popularPostsData[index]);
-                  //     },
-                  //   ),
-                  // ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: GridView.builder(
+                      shrinkWrap: true,
+                      // Important to make GridView work inside SingleChildScrollView
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of columns
+                        crossAxisSpacing: 10.0, // Horizontal space between cards
+                        mainAxisSpacing: 14.0, // Vertical space between cards
+                        childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                      ),
+                      itemCount: _searchResults.length,
+                      itemBuilder: (context, index) {
+
+                        final postData = _searchResults[index].data() as Map<String, dynamic>;
+                        final postId = _searchResults[index].id;
+
+
+                        // return ProductCard(postData: popularPostsData[index]);
+                        return ProductCard(postData: postData, postId: postId);
+                      },
+                    ),
+                  ),
                   const SizedBox(height: 42),
                 ],
               ),
@@ -194,8 +268,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
 class ProductCard extends StatefulWidget {
   final Map<String, dynamic> postData;
+  final String postId;
 
-  const ProductCard({super.key, required this.postData});
+  const ProductCard({super.key, required this.postData, required this.postId});
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -204,6 +279,15 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
+    final location = widget.postData['location'] as Map<String, dynamic>? ?? {};
+    final city = location['city'] as String? ?? 'N/A';
+    final price = widget.postData['price']?.toString() ?? '0';
+    final likes = widget.postData['likes']?.toString() ?? '0';
+    final views = widget.postData['views']?.toString() ?? '0';
+
+    final createdAtTimestamp = widget.postData['createdAt'] as Timestamp?;
+    final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
+
     return GestureDetector(
       // onTap: () {
       //   if (context.mounted) {
@@ -236,7 +320,7 @@ class _ProductCardState extends State<ProductCard> {
                       bottomRight: Radius.circular(12.0),
                     ),
                     child: Image.asset(
-                      widget.postData['image_url'],
+                      "images/backgrounds/cow_2.png",
                       height: 120,
                       width: double.infinity,
                       fit: BoxFit.cover,
@@ -263,7 +347,7 @@ class _ProductCardState extends State<ProductCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Rs: ${widget.postData['price']}',
+                    '\$$price',
                     style: GoogleFonts.poppins(
                       color: onboardingColor,
                       fontSize: 13,
@@ -277,7 +361,8 @@ class _ProductCardState extends State<ProductCard> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
-                          widget.postData['location'],
+                          // widget.postData['location'],
+                          city,
                           style: GoogleFonts.poppins(
                             color: popularPostsLocationTextColor,
                             fontSize: 12,
@@ -290,7 +375,8 @@ class _ProductCardState extends State<ProductCard> {
                       Icon(Icons.favorite, size: 16, color: Colors.redAccent),
                       const SizedBox(width: 4),
                       Text(
-                        widget.postData['likes'].toString(),
+                        // widget.postData['likes'].toString(),
+                        likes,
                         style: GoogleFonts.poppins(
                           color: popularPostsLocationTextColor,
                           fontSize: 12,
@@ -305,7 +391,8 @@ class _ProductCardState extends State<ProductCard> {
                       const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),
                       const SizedBox(width: 4),
                       Text(
-                        widget.postData['posted_ago'],
+                        // widget.postData['createdAt'].toString(),
+                        postedAgoText,
                         style: GoogleFonts.poppins(
                           color: popularPostsLocationTextColor,
                           fontSize: 12,
@@ -317,7 +404,8 @@ class _ProductCardState extends State<ProductCard> {
                       const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
                       const SizedBox(width: 4),
                       Text(
-                        widget.postData['views'].toString(),
+                        // widget.postData['views'].toString(),
+                        views,
                         style: GoogleFonts.poppins(
                           color: popularPostsLocationTextColor,
                           fontSize: 12,

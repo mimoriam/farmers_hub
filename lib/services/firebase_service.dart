@@ -19,6 +19,20 @@ class FirebaseService {
   final userCollection = "users";
   final postCollection = "posts";
 
+  // Helper function to generate keywords from a title
+  List<String> _generateKeywords(String title) {
+    final List<String> keywords = [];
+    // Make sure to handle multiple spaces and remove empty strings
+    final List<String> words = title.toLowerCase().split(' ').where((s) => s.isNotEmpty).toList();
+
+    for (final word in words) {
+      for (int i = 1; i <= word.length; i++) {
+        keywords.add(word.substring(0, i));
+      }
+    }
+    return keywords;
+  }
+
   // Email/Password Registration
   Future<UserCredential> registerWithEmail({required String email, required String password}) async {
     try {
@@ -182,10 +196,14 @@ class FirebaseService {
     String? details,
     bool? featured,
   }) async {
+
+    final List<String> keywords = _generateKeywords(title);
+
     await _firestore.collection(postCollection).doc().set({
       "sellerId": currentUser?.uid,
       // "username": currentUser?.displayName,
       "title": title,
+      "searchKeywords": keywords,
       "category": category,
       "gender": gender,
       "averageWeight": averageWeight,
@@ -335,10 +353,10 @@ class FirebaseService {
         return [];
       }
 
+      final String lowerCaseQuery = query.toLowerCase();
       final QuerySnapshot querySnapshot = await _firestore
           .collection(postCollection)
-          .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThanOrEqualTo: '$query\uf8ff')
+          .where('searchKeywords', arrayContains: lowerCaseQuery)
           .get();
 
       return querySnapshot.docs;

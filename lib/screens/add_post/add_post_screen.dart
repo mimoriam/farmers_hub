@@ -4,6 +4,7 @@ import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/location_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:geolocator/geolocator.dart';
@@ -208,7 +209,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           child: Center(
                                             child: Icon(
                                               Icons.image_outlined,
-                                              size: 50,
+                                              size: 36,
                                               color: onboardingColor,
                                             ),
                                           ),
@@ -290,6 +291,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       maxLength: 120,
                                       maxLines: 2,
                                       autovalidateMode: validateMode,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9 ]*$')),
+                                      ],
                                       // buildCounter:
                                       //     (
                                       //       context, {
@@ -302,27 +306,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         hintText: 'Type here',
                                         hintStyle: TextStyle(color: loginTextFieldIconColor),
                                         counterText: "",
-                                        counter: const Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'Max 120 Characters',
-                                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                                          ),
-                                        ),
+                                        // counter: const Align(
+                                        //   alignment: Alignment.centerRight,
+                                        //   child: Text(
+                                        //     'Max 120 Characters',
+                                        //     style: TextStyle(color: Colors.grey, fontSize: 12),
+                                        //   ),
+                                        // ),
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,
                                         errorBorder: _errorInputBorder,
                                         focusedErrorBorder: _focusedInputBorder,
                                         contentPadding: _contentPadding,
-                                        helperText: 'Max 120 Characters',
-                                        helperStyle: TextStyle(color: Colors.grey[600]),
+                                        // helperText: 'Max 120 Characters',
+                                        // helperStyle: TextStyle(color: Colors.grey[600]),
                                       ),
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(errorText: 'Post title is required.'),
                                         FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
+
+                                    const SizedBox(height: 8),
 
                                     Text("City", style: _labelStyle),
                                     const SizedBox(height: 8),
@@ -420,9 +426,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'village',
+                                      maxLength: 120,
                                       autovalidateMode: validateMode,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9 ]*$')),
+                                      ],
                                       decoration: InputDecoration(
                                         hintText: 'Enter Village',
+                                        counterText: "",
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,
@@ -645,7 +656,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'avg_weight',
-                                      maxLength: 4,
+                                      maxLength: 3,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         counterText: "",
@@ -679,7 +690,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'quantity',
-                                      maxLength: 4,
+                                      maxLength: 3,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         counterText: "",
@@ -709,7 +720,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'age',
-                                      maxLength: 3,
+                                      maxLength: 2,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         counterText: "",
@@ -737,9 +748,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     FormBuilderTextField(
                                       name: 'price',
+                                      maxLength: 6,
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         hintText: 'Enter Your Price',
+                                        counterText: "",
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,

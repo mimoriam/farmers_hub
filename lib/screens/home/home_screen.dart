@@ -5,6 +5,7 @@ import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/location_service.dart';
+import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:math' as math;
@@ -25,29 +26,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
-
-// Helper function to format the timestamp
-String formatTimeAgo(Timestamp timestamp) {
-  final now = DateTime.now();
-  final postTime = timestamp.toDate();
-  final difference = now.difference(postTime);
-
-  if (difference.inSeconds < 60) {
-    return 'now';
-  } else if (difference.inMinutes < 60) {
-    return '${difference.inMinutes} minutes ago';
-  } else if (difference.inHours < 24) {
-    return '${difference.inHours} hours ago';
-  } else if (difference.inDays < 30) {
-    return '${difference.inDays} days ago';
-  } else if (difference.inDays < 365) {
-    final months = (difference.inDays / 30).floor();
-    return '$months months ago';
-  } else {
-    final years = (difference.inDays / 365).floor();
-    return '$years years ago';
-  }
-}
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -323,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const FilteredResultsScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen()));
         }
       },
       child: Card(
@@ -843,7 +821,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
-                          MaterialPageRoute(builder: (context) => const FilteredResultsScreen()),
+                          MaterialPageRoute(builder: (context) => FilteredResultsScreen()),
                         );
                       }
                     },
