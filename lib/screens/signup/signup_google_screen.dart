@@ -199,79 +199,79 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           ),
                         ),
 
-                        SizedBox(height: 18),
+                        SizedBox(height: 14),
 
-                        // Text(
-                        //   "Enter Phone Number",
-                        //   style: GoogleFonts.poppins(
-                        //     color: signUpTextColor,
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                        //
-                        // SizedBox(height: 12),
-                        //
-                        // IntlPhoneField(
-                        //   showCountryFlag: false,
-                        //   // dropdownTextStyle: TextStyle(fontWeight: FontWeight.w500),
-                        //   dropdownTextStyle: GoogleFonts.poppins(
-                        //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //   ),
-                        //   style: GoogleFonts.poppins(
-                        //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //   ),
-                        //   pickerDialogStyle: PickerDialogStyle(backgroundColor: scaffoldBackgroundColor),
-                        //   decoration: InputDecoration(
-                        //     hintText: 'Enter Phone Number',
-                        //     filled: true,
-                        //     fillColor: Colors.white,
-                        //     counterText: "",
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     enabledBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     focusedErrorBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //   ),
-                        //   initialCountryCode: 'US',
-                        //   onChanged: (phone) {
-                        //     try {
-                        //       bool isValid = phone.isValidNumber();
-                        //
-                        //       setState(() {
-                        //         isPhoneValidated = isValid;
-                        //
-                        //         if (isValid == true) {
-                        //           phoneInfo.addAll({
-                        //             "countryISOCode": phone.countryISOCode,
-                        //             "countryCode": phone.countryCode,
-                        //             "completeNumber": phone.completeNumber,
-                        //           });
-                        //         } else {
-                        //           phoneInfo.clear();
-                        //         }
-                        //       });
-                        //     } catch (e) {
-                        //       setState(() {
-                        //         isPhoneValidated = false;
-                        //         phoneInfo.clear();
-                        //       });
-                        //     }
-                        //   },
-                        // ),
-                        //
-                        // SizedBox(height: 26),
+                        Text(
+                          "Enter Phone Number",
+                          style: GoogleFonts.poppins(
+                            color: signUpTextColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+
+                        SizedBox(height: 8),
+
+                        IntlPhoneField(
+                          showCountryFlag: false,
+                          // dropdownTextStyle: TextStyle(fontWeight: FontWeight.w500),
+                          dropdownTextStyle: GoogleFonts.poppins(
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          style: GoogleFonts.poppins(
+                            textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                          ),
+                          pickerDialogStyle: PickerDialogStyle(backgroundColor: scaffoldBackgroundColor),
+                          decoration: InputDecoration(
+                            hintText: 'Enter Phone Number',
+                            filled: true,
+                            fillColor: Colors.white,
+                            counterText: "",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: textFieldBorderSideColor),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: textFieldBorderSideColor),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: textFieldBorderSideColor),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: textFieldBorderSideColor),
+                            ),
+                          ),
+                          initialCountryCode: 'US',
+                          onChanged: (phone) {
+                            try {
+                              bool isValid = phone.isValidNumber();
+
+                              setState(() {
+                                isPhoneValidated = isValid;
+
+                                if (isValid == true) {
+                                  phoneInfo.addAll({
+                                    "countryISOCode": phone.countryISOCode,
+                                    "countryCode": phone.countryCode,
+                                    "completeNumber": phone.completeNumber,
+                                  });
+                                } else {
+                                  phoneInfo.clear();
+                                }
+                              });
+                            } catch (e) {
+                              setState(() {
+                                isPhoneValidated = false;
+                                phoneInfo.clear();
+                              });
+                            }
+                          },
+                        ),
+
+                        SizedBox(height: 10),
 
                         // Text(
                         //   "Enter Your Address",
@@ -386,7 +386,6 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         //     ),
                         //   ],
                         // ),
-
                         const SizedBox(height: 14),
 
                         SizedBox(
@@ -398,8 +397,8 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                             ),
                             onPressed:
-                                // isPhoneValidated ?
-                                    () async {
+                                isPhoneValidated
+                                    ? () async {
                                       if (_formKey.currentState!.validate()) {
                                         setState(() {
                                           error = '';
@@ -408,7 +407,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                                           await firebaseService.saveUserDataOnRegister(
                                             user: widget.user.user!,
                                             username: _formKey.currentState?.fields['username']?.value,
-                                            // phone: phoneInfo,
+                                            phone: phoneInfo,
                                             // address: _formKey.currentState?.fields['address']?.value,
                                             // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
                                           );
@@ -426,8 +425,8 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                                           });
                                         }
                                       }
-                                    },
-                                    // : null,
+                                    }
+                                    : null,
                             child: Text(
                               "Signup",
                               style: GoogleFonts.poppins(

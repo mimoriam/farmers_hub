@@ -88,7 +88,7 @@ class FirebaseService {
   Future<void> saveUserDataOnRegister({
     required User user,
     required String username,
-    // required Map<String, String> phone,
+    required Map<String, String> phone,
     // required String address,
     // required String signUpMode,
   }) async {
@@ -100,16 +100,18 @@ class FirebaseService {
         "isEmailVerified": user.emailVerified ? true : false,
         "isAdmin": false,
         "phoneInfo": {
-          // "completeNumber": phone["completeNumber"],
-          // "countryCode": phone["countryCode"],
-          // "countryISOCode": phone["countryISOCode"],
-          "completeNumber": "",
+          "completeNumber": phone["completeNumber"],
+          "countryCode": phone["countryCode"],
+          "countryISOCode": phone["countryISOCode"],
+          // "completeNumber": "",
         },
         "hasChats": [],
         "location": {"city": "", "province": ""},
         "profileImage": "default_pfp.jpg",
         "username": username,
       });
+
+      await currentUser!.updateDisplayName(username);
     } catch (e) {
       print(e);
     }

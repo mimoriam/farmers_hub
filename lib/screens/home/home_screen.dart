@@ -206,7 +206,15 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       }
 
-      // 3. Fetch weather for the determined city
+      // 3. Update user profile:
+      final Map<String, dynamic> updatedData = {
+        // 'username': firebaseService.currentUser!.displayName,
+        'location': {"city": finalCity},
+      };
+
+      await _saveLocationToProfile(updatedData);
+
+      // 4. Fetch weather for the determined city
       await _fetchWeather(finalCity);
     } catch (e) {
       // if (e.toString().contains("Location services are disabled")) {
@@ -216,34 +224,34 @@ class _HomeScreenState extends State<HomeScreen> {
         });
 
         if (e.toString().contains("denied") || e.toString().contains("disabled")) {
-        await showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder:
-              (ctx) => AlertDialog(
-                title: Text("Location Services Disabled"),
-                content: Text("Please enable location services in settings."),
-                backgroundColor: Colors.white,
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                      Geolocator.openLocationSettings();
-                      if (mounted) {
-                        setState(() {});
-                      }
-                    },
-                    child: Text("Open Settings"),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                    child: Text("Cancel"),
-                  ),
-                ],
-              ),
-        );
+          await showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder:
+                (ctx) => AlertDialog(
+                  title: Text("Location Services Disabled"),
+                  content: Text("Please enable location services in settings."),
+                  backgroundColor: Colors.white,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        Geolocator.openLocationSettings();
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                      child: Text("Open Settings"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Text("Cancel"),
+                    ),
+                  ],
+                ),
+          );
         }
       }
     } finally {
@@ -253,6 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
         });
       }
     }
+  }
+
+  Future<void> _saveLocationToProfile(updatedData) async {
+    await firebaseService.updateUserProfile(updatedData);
   }
 
   Future<void> _fetchWeather(String city) async {
@@ -276,7 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
       // Get weather here:
       final response = await dio.get(
         'http://api.weatherapi.com/v1/current'
-            '.json?key=fc92781c4f99431e853225822251906&q=$city&aqi=no',
+        '.json?key=fc92781c4f99431e853225822251906&q=$city&aqi=no',
       );
 
       if (mounted && response.statusCode == 200) {
