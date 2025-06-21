@@ -223,13 +223,15 @@ class FirebaseService {
     String? details,
     bool? featured,
   }) async {
-    final List<String> keywords = _generateKeywords(title);
+    final List<String> keywordsTitle = _generateKeywords(title);
+    final List<String> keywordsCategory = _generateKeywords(category);
 
     await _firestore.collection(postCollection).doc().set({
       "sellerId": currentUser?.uid,
       // "username": currentUser?.displayName,
       "title": title,
-      "searchKeywords": keywords,
+      "searchTitleKeywords": keywordsTitle,
+      "searchCategoryKeywords": keywordsCategory,
       "category": category,
       "gender": gender,
       "averageWeight": averageWeight,
@@ -373,18 +375,28 @@ class FirebaseService {
     }
   }
 
-  Future<List<QueryDocumentSnapshot>> searchPosts(String query) async {
+  Future<List<QueryDocumentSnapshot>> searchPosts(String query, {bool isCategorySearch = false}) async {
     try {
       if (query.isEmpty) {
         return [];
       }
 
       final String lowerCaseQuery = query.toLowerCase();
-      final QuerySnapshot querySnapshot =
-          await _firestore
-              .collection(postCollection)
-              .where('searchKeywords', arrayContains: lowerCaseQuery)
-              .get();
+      QuerySnapshot querySnapshot;
+
+      if (isCategorySearch) {
+        querySnapshot =
+            await _firestore
+                .collection(postCollection)
+                .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
+                .get();
+      } else {
+        querySnapshot =
+            await _firestore
+                .collection(postCollection)
+                .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
+                .get();
+      }
 
       return querySnapshot.docs;
     } catch (e) {

@@ -21,6 +21,11 @@ class FilteredResultsScreen extends StatefulWidget {
   State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
 }
 
+enum SearchOption { title, category }
+
+// Enum for sort options
+enum SortOption { ascending, descending }
+
 class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final validateMode = AutovalidateMode.onUserInteraction;
@@ -30,7 +35,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   List<QueryDocumentSnapshot> _searchResults = [];
   bool _isLoading = false;
   bool _hasSearched = false;
-
   Timer? _debounce;
 
   Future<void> _performSearch(String query) async {
@@ -40,7 +44,13 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       _hasSearched = true;
     });
 
-    final results = await firebaseService.searchPosts(query);
+    var results;
+
+    if (_selectedSearchOption == SearchOption.title) {
+      results = await firebaseService.searchPosts(query);
+    } else if (_selectedSearchOption == SearchOption.category) {
+      results = await firebaseService.searchPosts(query, isCategorySearch: true);
+    }
 
     if (mounted) {
       setState(() {
@@ -55,7 +65,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
     _debounce = Timer(const Duration(milliseconds: 500), () async {
       if (query != null && query.isNotEmpty) {
-        print({query});
         await _performSearch(query);
       } else if (mounted) {
         setState(() {
@@ -79,6 +88,101 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   void dispose() {
     _debounce?.cancel();
     super.dispose();
+  }
+
+  SearchOption _selectedSearchOption = SearchOption.title;
+  SortOption _selectedSortOption = SortOption.ascending;
+
+  void _showOptionsDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // Use a StatefulWidget to manage the state within the dialog
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: scaffoldBackgroundColor,
+              // title: const Text('Search & Sort Options'),
+              content: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Text('Search by:', style: TextStyle(fontWeight: FontWeight.bold)),
+
+                  RadioListTile<SearchOption>(
+                    title: const Text('Title'),
+                    value: SearchOption.title,
+                    groupValue: _selectedSearchOption,
+                    activeColor: onboardingColor,
+                    onChanged: (SearchOption? value) {
+                      setState(() {
+                        if (mounted) {
+                          _selectedSearchOption = value!;
+                        }
+                      });
+                    },
+                  ),
+
+                  RadioListTile<SearchOption>(
+                    title: const Text('Category'),
+                    value: SearchOption.category,
+                    groupValue: _selectedSearchOption,
+                    activeColor: onboardingColor,
+                    onChanged: (SearchOption? value) {
+                      setState(() {
+                        if (mounted) {
+                          _selectedSearchOption = value!;
+                        }
+                      });
+                    },
+                  ),
+
+                  // // const Divider(),
+                  // const Text('Sort by:', style: TextStyle(fontWeight: FontWeight.bold)),
+                  //
+                  // RadioListTile<SortOption>(
+                  //   title: const Text('Ascending'),
+                  //   value: SortOption.ascending,
+                  //   groupValue: _selectedSortOption,
+                  //   activeColor: onboardingColor,
+                  //   onChanged: (SortOption? value) {
+                  //     setState(() {
+                  //       if (mounted) {
+                  //         _selectedSortOption = value!;
+                  //       }
+                  //     });
+                  //   },
+                  // ),
+                  //
+                  // RadioListTile<SortOption>(
+                  //   title: const Text('Descending'),
+                  //   value: SortOption.descending,
+                  //   groupValue: _selectedSortOption,
+                  //   activeColor: onboardingColor,
+                  //   onChanged: (SortOption? value) {
+                  //     setState(() {
+                  //       if (mounted) {
+                  //         _selectedSortOption = value!;
+                  //       }
+                  //     });
+                  //   },
+                  // ),
+                ],
+              ),
+              // actions: <Widget>[
+              //   TextButton(
+              //     child: const Text('Done'),
+              //     onPressed: () {
+              //       Navigator.of(context).pop();
+              //     },
+              //   ),
+              // ],
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -182,7 +286,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         suffixIcon: IconButton(
                           // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
                           icon: const Icon(Icons.sort_outlined, color: onboardingColor),
-                          onPressed: null,
+                          onPressed: _showOptionsDialog,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
