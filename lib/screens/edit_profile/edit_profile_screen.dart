@@ -210,6 +210,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           const SizedBox(height: 8),
                           FormBuilderTextField(
                             name: 'phone',
+                            enabled: false,
                             decoration: _buildInputDecoration(
                               'Enter Phone Number',
                             ),

@@ -62,10 +62,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          onPressed: null,
-                        ),
+                        // suffixIcon: IconButton(
+                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                        //   onPressed: null,
+                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),

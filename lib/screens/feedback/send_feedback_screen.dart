@@ -65,8 +65,8 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           color: Colors.black,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 21,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
 
@@ -106,7 +106,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                         SizedBox(height: 10),
 
                         RatingBar.builder(
-                          initialRating: 0,
+                          initialRating: 3,
                           itemCount: 3,
                           itemBuilder: (context, index) {
                             switch (index) {

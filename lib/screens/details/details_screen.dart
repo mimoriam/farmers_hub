@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/screens/details/details_user_posts_screen.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -148,7 +149,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const SizedBox(height: 16),
 
                             // _buildSellerInfo(username: postDetails["username"]),
-                            _buildSellerInfo(username: sellerUsername),
+                            _buildSellerInfo(username: sellerUsername, sellerData: sellerData),
                             const SizedBox(height: 24),
 
                             _buildActionButtons(
@@ -331,17 +332,27 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildSellerInfo({required String username}) {
-    return Row(
-      children: [
-        const CircleAvatar(
-          radius: 24,
-          backgroundColor: Colors.purple, // Color from the 'M'
-          child: Text('M', style: TextStyle(fontSize: 24, color: Colors.white)),
-        ),
-        const SizedBox(width: 12),
-        Text(username, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-      ],
+  Widget _buildSellerInfo({required String username, required sellerData}) {
+    return GestureDetector(
+      onTap: () {
+        if (context.mounted) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => DetailsUserPostsScreen(postSellerData: sellerData)),
+          );
+        }
+      },
+      child: Row(
+        children: [
+          const CircleAvatar(
+            radius: 24,
+            backgroundColor: Colors.purple, // Color from the 'M'
+            child: Text('M', style: TextStyle(fontSize: 24, color: Colors.white)),
+          ),
+          const SizedBox(width: 12),
+          Text(username, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        ],
+      ),
     );
   }
 

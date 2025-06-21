@@ -283,6 +283,17 @@ class FirebaseService {
     }
   }
 
+  Future<List<QueryDocumentSnapshot>> getAllPostsBySellerId(String sellerId) async {
+    try {
+      final QuerySnapshot querySnapshot =
+      await _firestore.collection(postCollection).where("sellerId", isEqualTo: sellerId).get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<QueryDocumentSnapshot>> getAllPostsByFeatured() async {
     try {
       final QuerySnapshot querySnapshot =

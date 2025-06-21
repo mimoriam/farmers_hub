@@ -921,7 +921,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         // FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
-                                    const SizedBox(height: 8),
+                                    const SizedBox(height: 2),
                                   ],
                                 ),
                               ),
