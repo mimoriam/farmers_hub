@@ -155,7 +155,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: Colors.white,
+                  color: selected == 1 ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -164,7 +164,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.payments, // The dollar icon
-                          color: Colors.grey.shade600, // Icon color when not selected
+                          color: selected == 1 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          // selected
                           size: 24,
                         ),
                         const SizedBox(width: 16.0),
@@ -174,7 +175,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Syria', // Title and subtitle
                             style: TextStyle(
-                              color: Colors.grey.shade600, // Text color when not selected
+                              color: selected == 1 ? Colors.white : Colors.grey.shade600, // Text color
+                              // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -188,12 +190,12 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 1 ? onboardingColor : Colors.transparent, // Fill color for
+                            color: selected == 1 ? Colors.white : Colors.transparent, // Fill color for
                             // unselected radio
-                            border: Border.all(
-                              color: Colors.grey.shade400, // Border color for unselected radio
-                              width: 2,
-                            ),
+                            // border: Border.all(
+                            //   color: Colors.grey.shade400, // Border color for unselected radio
+                            //   width: 2,
+                            // ),
                           ),
                           child: null, // No inner icon when not selected
                         ),
@@ -220,7 +222,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: Colors.white,
+                  // color: Colors.white,
+                  color: selected == 2 ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -229,7 +232,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.attach_money, // The dollar icon
-                          color: Colors.grey.shade600, // Icon color when not selected
+                          color: selected == 2 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          // selected
                           size: 24,
                         ),
                         const SizedBox(width: 16.0),
@@ -239,7 +243,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'US Dollar', // Title and subtitle
                             style: TextStyle(
-                              color: Colors.grey.shade600, // Text color when not selected
+                              color: selected == 2 ? Colors.white : Colors.grey.shade600,
+                              // Text color when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                             ),
@@ -253,12 +258,146 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 2 ? onboardingColor : Colors.transparent, // Fill color for
+                            color: selected == 2 ? Colors.white : Colors.transparent, // Fill color for
                             // unselected radio
-                            border: Border.all(
-                              color: Colors.grey.shade400, // Border color for unselected radio
-                              width: 2,
+                            // border: Border.all(
+                            //   color: Colors.grey.shade400, // Border color for unselected radio
+                            //   width: 2,
+                            // ),
+                          ),
+                          child: null, // No inner icon when not selected
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selected = 3;
+                  });
+                },
+                child: Card(
+                  elevation: 1.0,
+                  // Elevation for an unselected card
+                  margin: const EdgeInsets.symmetric(vertical: 1.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    side: BorderSide(
+                      color: Colors.grey.shade300, // Border color for an unselected card
+                      width: 1,
+                    ),
+                  ),
+                  color: selected == 3 ? onboardingColor : Colors.white,
+                  // Background color for an unselected card
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        // Icon part for US Dollar
+                        Icon(
+                          Icons.euro, // The dollar icon
+                          color: selected == 3 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          // selected
+                          size: 24,
+                        ),
+                        const SizedBox(width: 16.0),
+
+                        // Text part
+                        Expanded(
+                          child: Text(
+                            'Euro', // Title and subtitle
+                            style: TextStyle(
+                              color: selected == 3 ? Colors.white : Colors.grey.shade600, // Text color
+                              // when not selected
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
                             ),
+                          ),
+                        ),
+                        const SizedBox(width: 16.0),
+
+                        // Radio button part (custom look for unselected state)
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: selected == 3 ? Colors.white : Colors.transparent, // Fill color for
+                            // unselected radio
+                            // border: Border.all(
+                            //   color: Colors.grey.shade400, // Border color for unselected radio
+                            //   width: 2,
+                            // ),
+                          ),
+                          child: null, // No inner icon when not selected
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selected = 4;
+                  });
+                },
+                child: Card(
+                  elevation: 1.0,
+                  // Elevation for an unselected card
+                  margin: const EdgeInsets.symmetric(vertical: 1.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    side: BorderSide(
+                      color: Colors.grey.shade300, // Border color for an unselected card
+                      width: 1,
+                    ),
+                  ),
+                  color: selected == 4 ? onboardingColor : Colors.white,
+                  // Background color for an unselected card
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      children: [
+                        // Icon part for US Dollar
+                        Icon(
+                          Icons.currency_lira, // The dollar icon
+                          color: selected == 4 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          // selected
+                          size: 24,
+                        ),
+                        const SizedBox(width: 16.0),
+
+                        // Text part
+                        Expanded(
+                          child: Text(
+                            'Lira', // Title and subtitle
+                            style: TextStyle(
+                              color: selected == 4 ? Colors.white : Colors.grey.shade600, // Text color
+                              // when not selected
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16.0),
+
+                        // Radio button part (custom look for unselected state)
+                        Container(
+                          width: 24,
+                          height: 24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: selected == 4 ? Colors.white : Colors.transparent, // Fill color for
+                            // unselected radio
+                            // border: Border.all(
+                            //   color: Colors.grey.shade400, // Border color for unselected radio
+                            //   width: 2,
+                            // ),
                           ),
                           child: null, // No inner icon when not selected
                         ),

@@ -389,7 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         _buildSettingItemCard(
           icon: Icons.verified_user_outlined, // Shield/verified icon
-          title: 'Account Verification Information',
+          title: 'Account Verification',
           onTap: () {
             // Navigate to Account Verification Screen
           },
@@ -487,87 +487,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        SizedBox(height: 8),
+        SizedBox(height: 4),
 
-        // _buildSettingItemCard(
-        //   icon: Icons.currency_exchange,
-        //   title: 'Currency',
-        //   onTap: () {
-        //     if (context.mounted) {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
-        //       );
-        //     }
-        //   },
-        // ),
-        Container(
-          // Decoration for the card-like appearance
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.0), // Rounded corners
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
-                spreadRadius: 1,
-                blurRadius: 5,
-                offset: Offset(0, 2), // Subtle shadow
-              ),
-            ],
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Inner padding
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items to start and end
-            children: <Widget>[
-              // Left side: Icon and Label
-              Row(
-                children: <Widget>[
-                  Icon(Icons.currency_exchange, color: Colors.grey[600], size: 24.0),
-                  SizedBox(width: 12.0), // Spacing between icon and text
-                  Text(
-                    'Currency',
-                    style: TextStyle(fontSize: 16.0, color: Colors.grey[700], fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-
-              // Right side: Language Dropdown
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.only(left: 90, right: 0, top: 2, bottom: 2),
-                  // No explicit border for dropdown, styling via DropdownButton properties
-                  child: DropdownButtonFormField2<String>(
-                    items:
-                        [
-                          'Syria',
-                          'USDollar',
-                        ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
-                      enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                      focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                    ),
-                    iconStyleData: IconStyleData(
-                      // Using IconStyleData for icon properties
-                      iconEnabledColor: onboardingTextColor,
-                    ),
-
-                    dropdownStyleData: DropdownStyleData(
-                      offset: const Offset(0, 0),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
-                    ),
-                    value: "USDollar",
-                    onChanged: (value) {
-                      setState(() {});
-                    },
-                  ),
-                ),
-              ),
-            ],
-          ),
+        _buildSettingItemCard(
+          icon: Icons.currency_exchange,
+          title: 'Currency',
+          onTap: () {
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
+              );
+            }
+          },
         ),
 
-        SizedBox(height: 4),
+        // Currecy Dropdown
+        // Container(
+        //   // Decoration for the card-like appearance
+        //   decoration: BoxDecoration(
+        //     color: Colors.white,
+        //     borderRadius: BorderRadius.circular(12.0), // Rounded corners
+        //     boxShadow: [
+        //       BoxShadow(
+        //         color: Colors.grey.withOpacity(0.1),
+        //         spreadRadius: 1,
+        //         blurRadius: 5,
+        //         offset: Offset(0, 2), // Subtle shadow
+        //       ),
+        //     ],
+        //   ),
+        //   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // Inner padding
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align items to start and end
+        //     children: <Widget>[
+        //       // Left side: Icon and Label
+        //       Row(
+        //         children: <Widget>[
+        //           Icon(Icons.currency_exchange, color: Colors.grey[600], size: 24.0),
+        //           SizedBox(width: 12.0), // Spacing between icon and text
+        //           Text(
+        //             'Currency',
+        //             style: TextStyle(fontSize: 16.0, color: Colors.grey[700], fontWeight: FontWeight.w500),
+        //           ),
+        //         ],
+        //       ),
+        //
+        //       // Right side: Language Dropdown
+        //       Expanded(
+        //         child: Container(
+        //           padding: EdgeInsets.only(left: 90, right: 0, top: 2, bottom: 2),
+        //           // No explicit border for dropdown, styling via DropdownButton properties
+        //           child: DropdownButtonFormField2<String>(
+        //             items:
+        //                 [
+        //                   'Syria',
+        //                   'USDollar',
+        //                 ].map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang))).toList(),
+        //             decoration: InputDecoration(
+        //               contentPadding: const EdgeInsets.symmetric(vertical: 1, horizontal: 2),
+        //               enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        //               focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+        //             ),
+        //             iconStyleData: IconStyleData(
+        //               // Using IconStyleData for icon properties
+        //               iconEnabledColor: onboardingTextColor,
+        //             ),
+        //
+        //             dropdownStyleData: DropdownStyleData(
+        //               offset: const Offset(0, 0),
+        //               decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+        //             ),
+        //             value: "USDollar",
+        //             onChanged: (value) {
+        //               setState(() {});
+        //             },
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+
+        // SizedBox(height: 4),
 
         _buildSettingItemCard(
           icon: Icons.history_outlined, // Clock/history icon

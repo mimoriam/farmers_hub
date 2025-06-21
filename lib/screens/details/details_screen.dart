@@ -106,6 +106,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               final postDetails = sellerSnapshot.data!['post'];
               final sellerData = sellerSnapshot.data!['seller'];
               final sellerUsername = sellerData["username"];
+              final sellerNumber = sellerData["phoneInfo"];
 
               final currentUserId = firebaseService.currentUser?.uid;
               final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
@@ -165,7 +166,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               gender: postDetails["gender"],
                               averageWeight: postDetails["averageWeight"].toString(),
                               age: postDetails["age"].toString(),
-                              phoneNumber: "12321323",
+                              // phoneNumber: "12321323",
+                              phoneNumber: sellerNumber["completeNumber"],
                               details: postDetails["details"],
                             ),
                           ],

@@ -96,9 +96,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     ];
 
     final List<Map<String, String>> popularCategories = [
-      {'name': 'Apples', 'image': 'images/icons/apple.svg', "semanticsLabel": "Apple"},
-      {'name': 'Cheese', 'image': 'images/icons/cheese.svg', "semanticsLabel": "Cheese"},
-      {'name': 'Pomegranates', 'image': 'images/icons/pomegranate.svg', "semanticsLabel": "Pomegranate"},
+      {'name': 'Apples', 'image': 'images/categories/apples.png'},
+      {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png', },
+      {'name': 'Pomegranates', 'image': 'images/categories/iv_pomegranate.png'},
     ];
 
     return Scaffold(
@@ -145,10 +145,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          onPressed: null,
-                        ),
+                        // suffixIcon: IconButton(
+                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                        //   onPressed: null,
+                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -259,14 +259,14 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             width: 48,
                                             height: 46,
 
-                                            // child: Image.asset(category['image']!, fit: BoxFit.contain),
-                                            child: SvgPicture.asset(
-                                              category['image']!,
-                                              semanticsLabel: category["semanticsLabel"],
-                                              width: 20,
-                                              height: 20,
-                                              placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
-                                            ),
+                                            child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                            // child: SvgPicture.asset(
+                                            //   category['image']!,
+                                            //   semanticsLabel: category["semanticsLabel"],
+                                            //   width: 20,
+                                            //   height: 20,
+                                            //   placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+                                            // ),
                                           ),
                                         ),
                                         Text(
