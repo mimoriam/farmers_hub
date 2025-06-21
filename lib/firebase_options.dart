@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBPKjhpvomWPxDRqLNRu-u6Itilrw38K6A',
+    apiKey: 'AIzaSyC8hlcQlBdfFqthBcaVlWqgFiZG7bydVn4',
     appId: '1:993215867881:android:2030d353cbf8c52b4cb978',
     messagingSenderId: '993215867881',
     projectId: 'farmers-hub-9b6c3',
@@ -58,13 +58,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB2gSJ4xZ0J7NqfIQOl6ojjHrP7-2XMSWs',
+    apiKey: 'AIzaSyA0Rhn3299pKoawDd6v8D2yl4cIPkL9UD8',
     appId: '1:993215867881:ios:8d2aed9b99f84d764cb978',
     messagingSenderId: '993215867881',
     projectId: 'farmers-hub-9b6c3',
     storageBucket: 'farmers-hub-9b6c3.firebasestorage.app',
-    androidClientId: '993215867881-eb19qo72fm1qtapltemseh29t2meja24.apps.googleusercontent.com',
-    iosClientId: '993215867881-582afiboqi4sqjj91da33v0pl22kp231.apps.googleusercontent.com',
     iosBundleId: 'com.farmers.hub.farmersHub',
   );
 

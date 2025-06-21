@@ -529,10 +529,7 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddPostScreen()),
-                ).then((_) {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((_) {
                   if (mounted) {
                     setState(() {});
                   }
@@ -838,9 +835,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder:
-                                                    (context) => AddPostScreen(
-                                                      location: _selectedLocation,
-                                                    ),
+                                                    (context) => AddPostScreen(location: _selectedLocation),
                                               ),
                                             ).then((_) {
                                               if (mounted) {
@@ -1330,6 +1325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: PostCard(
                                   imageUrl: popularPostsData[index]['image_url'],
                                   price: post['price'].toString(),
+                                  currency: post["currency"].toString(),
                                   location: post['location']["city"],
                                   likes: post['likes'],
                                   isLiked: isLiked,
@@ -1438,6 +1434,8 @@ class _HomeScreenState extends State<HomeScreen> {
 class PostCard extends StatelessWidget {
   final String imageUrl;
   final String price;
+
+  final String currency;
   final String location;
   final int likes;
 
@@ -1449,6 +1447,7 @@ class PostCard extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.price,
+    required this.currency,
     required this.location,
     required this.likes,
     required this.isLiked,
@@ -1503,12 +1502,18 @@ class PostCard extends StatelessWidget {
           ),
           Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Divider(color: dividerColor)),
           Padding(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 6),
+            padding: const EdgeInsets.only(left: 10, right: 10, top: 1, bottom: 6),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '\$$price',
+                  currency == "usd"
+                      ? "\$$price"
+                      : currency == "euro"
+                      ? "€$price"
+                      : currency == "lira"
+                      ? "₺$price"
+                      : "(SYP)",
                   style: GoogleFonts.poppins(
                     color: onboardingColor,
                     fontSize: 13,

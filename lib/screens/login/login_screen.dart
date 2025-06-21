@@ -55,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // SizedBox(height: 10),
-
                         Text(
                           "Login to YOUR CROP",
                           textAlign: TextAlign.center,
@@ -295,7 +294,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         //     ),
                         //   ),
                         // ),
-
                         SizedBox(height: 10),
 
                         Row(
@@ -361,6 +359,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               buttonType: ButtonType.google,
                               onPressed: () async {
                                 try {
+                                  // final user = await firebaseService.signInWithGoogle();
                                   final user = await firebaseService.signInWithGoogle();
                                   if (user.additionalUserInfo?.isNewUser ?? false) {
                                     if (context.mounted) {
@@ -440,7 +439,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         //     ),
                         //   ],
                         // ),
-
                         SizedBox(height: 50),
                       ],
                     ),
