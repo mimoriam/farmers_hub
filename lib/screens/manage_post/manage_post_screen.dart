@@ -248,16 +248,16 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
 
   /// Builds the section for location, likes, and views.
   Widget _buildStatsSection({required Map location, required String likes, required String views}) {
-    return Row(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildIconTextRow(Icons.location_on, location["city"]),
         const SizedBox(width: 8),
 
-        _buildIconTextRow(Icons.favorite, likes, iconColor: Colors.red),
+        _buildIconTextRow(Icons.favorite, "$likes likes", iconColor: Colors.red),
         const SizedBox(width: 12),
 
-        _buildIconTextRow(Icons.visibility, views, iconColor: Colors.green),
+        _buildIconTextRow(Icons.visibility, "$views views", iconColor: Colors.green),
         const SizedBox(width: 8),
       ],
     );
