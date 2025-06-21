@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:farmers_hub/utils/auth_exceptions.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+enum currencyType { syria, usd, euro, lira }
+
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -95,10 +97,12 @@ class FirebaseService {
     try {
       await _firestore.collection(userCollection).doc(user.uid).set({
         "createdAt": FieldValue.serverTimestamp(),
+        "lastSeenAt": FieldValue.serverTimestamp(),
         "email": user.email,
         "id": user.uid,
         "isEmailVerified": user.emailVerified ? true : false,
         "isAdmin": false,
+        "defaultCurrency": currencyType.usd.name.toLowerCase(),
         "phoneInfo": {
           "completeNumber": phone["completeNumber"],
           "countryCode": phone["countryCode"],
@@ -114,6 +118,26 @@ class FirebaseService {
       await currentUser!.updateDisplayName(username);
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<void> updateCurrency(String currency) async {
+    try {
+      await _firestore.collection(userCollection).doc(currentUser!.uid).update({
+        "defaultCurrency": currency.toLowerCase(),
+      });
+    } catch (e) {
+      print("Error updating currency");
+    }
+  }
+
+  Future<void> updateLastSeenAs() async {
+    try {
+      await _firestore.collection(userCollection).doc(currentUser!.uid).update({
+        "lastSeenAt": FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      print("Error updating Last Seen As");
     }
   }
 
@@ -191,6 +215,7 @@ class FirebaseService {
     required int quantity,
     required int age,
     required int price,
+    required String currency,
     String? village,
     String? city,
     String? province,
@@ -198,7 +223,6 @@ class FirebaseService {
     String? details,
     bool? featured,
   }) async {
-
     final List<String> keywords = _generateKeywords(title);
 
     await _firestore.collection(postCollection).doc().set({
@@ -212,7 +236,7 @@ class FirebaseService {
       "quantity": quantity,
       "age": age,
       "price": price,
-      "currency": "USD",
+      "currency": currency,
       "likes": 0,
       "likedBy": [],
       "views": 0,
@@ -356,10 +380,11 @@ class FirebaseService {
       }
 
       final String lowerCaseQuery = query.toLowerCase();
-      final QuerySnapshot querySnapshot = await _firestore
-          .collection(postCollection)
-          .where('searchKeywords', arrayContains: lowerCaseQuery)
-          .get();
+      final QuerySnapshot querySnapshot =
+          await _firestore
+              .collection(postCollection)
+              .where('searchKeywords', arrayContains: lowerCaseQuery)
+              .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -370,10 +395,8 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getFavoritedPosts() async {
     try {
-      final QuerySnapshot querySnapshot = await _firestore
-          .collection(postCollection)
-          .where("likedBy", arrayContains: currentUser!.uid)
-          .get();
+      final QuerySnapshot querySnapshot =
+          await _firestore.collection(postCollection).where("likedBy", arrayContains: currentUser!.uid).get();
 
       return querySnapshot.docs;
     } catch (e) {

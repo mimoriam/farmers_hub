@@ -223,9 +223,9 @@ class _ChatHomeState extends State<ChatHome> {
               final otherUserId = useR['id'];
 
               return StreamBuilder<QuerySnapshot>(
-                  // stream: _chatService.getLastMessage(message.id, widget.user.uid),
-                  stream: _chatService.getLastMessage(widget.user.uid, otherUserId),
-                builder: (context,  messageSnapshot) {
+                // stream: _chatService.getLastMessage(message.id, widget.user.uid),
+                stream: _chatService.getLastMessage(widget.user.uid, otherUserId),
+                builder: (context, messageSnapshot) {
                   String lastMessage = 'No messages yet';
                   String time = '';
 
@@ -249,20 +249,19 @@ class _ChatHomeState extends State<ChatHome> {
                   }
 
                   return StreamBuilder<int>(
-                      stream: _chatService.getUnreadMessageCount(otherUserId),
-                      builder: (context, unreadCountSnapshot) {
+                    stream: _chatService.getUnreadMessageCount(otherUserId),
+                    builder: (context, unreadCountSnapshot) {
+                      if (unreadCountSnapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator(color: onboardingColor));
+                      }
 
-                        if (unreadCountSnapshot.connectionState == ConnectionState.waiting) {
-                          return Center(child: CircularProgressIndicator(color: onboardingColor));
-                        }
+                      if (unreadCountSnapshot.hasError) {
+                        // Always good to handle errors
+                        return Center(child: Text("Something went wrong: ${snapshot.error}"));
+                      }
 
-                        if (unreadCountSnapshot.hasError) {
-                          // Always good to handle errors
-                          return Center(child: Text("Something went wrong: ${snapshot.error}"));
-                        }
-
-                        print(unreadCountSnapshot.data);
-                        final unreadCount = unreadCountSnapshot.data ?? 0;
+                      print(unreadCountSnapshot.data);
+                      final unreadCount = unreadCountSnapshot.data ?? 0;
 
                       return MessageListItem(
                         avatarUrl: message.avatarUrl,
@@ -288,9 +287,9 @@ class _ChatHomeState extends State<ChatHome> {
                           }
                         },
                       );
-                    }
+                    },
                   );
-                }
+                },
               );
             },
           );

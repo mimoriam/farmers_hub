@@ -59,7 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
+            );
           }
         },
         backgroundColor: onboardingColor,
@@ -570,7 +573,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // ),
 
         // SizedBox(height: 4),
-
         _buildSettingItemCard(
           icon: Icons.history_outlined, // Clock/history icon
           title: 'Post History',

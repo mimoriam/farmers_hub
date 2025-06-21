@@ -1,4 +1,5 @@
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,6 +13,7 @@ class CurrencyExchangeScreen extends StatefulWidget {
 }
 
 class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
+  final FirebaseService _firebaseService = FirebaseService();
   int selected = 0;
 
   @override
@@ -139,10 +141,14 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selected = 1;
-                  });
+                onTap: () async {
+                  if (mounted) {
+                    setState(() {
+                      selected = 1;
+                    });
+
+                    await _firebaseService.updateCurrency(currencyType.syria.name);
+                  }
                 },
                 child: Card(
                   elevation: 1.0,
@@ -206,10 +212,14 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
               ),
 
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selected = 2;
-                  });
+                onTap: () async {
+                  if (mounted) {
+                    setState(() {
+                      selected = 2;
+                    });
+
+                    await _firebaseService.updateCurrency(currencyType.usd.name);
+                  }
                 },
                 child: Card(
                   elevation: 1.0,
@@ -274,10 +284,14 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
               ),
 
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selected = 3;
-                  });
+                onTap: () async {
+                  if (mounted) {
+                    setState(() {
+                      selected = 3;
+                    });
+
+                    await _firebaseService.updateCurrency(currencyType.euro.name);
+                  }
                 },
                 child: Card(
                   elevation: 1.0,
@@ -340,11 +354,17 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                 ),
               ),
 
+              SizedBox(height: 8),
+
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selected = 4;
-                  });
+                onTap: () async {
+                  if (mounted) {
+                    setState(() {
+                      selected = 4;
+                    });
+
+                    await _firebaseService.updateCurrency(currencyType.lira.name);
+                  }
                 },
                 child: Card(
                   elevation: 1.0,

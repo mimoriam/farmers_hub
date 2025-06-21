@@ -259,6 +259,8 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _isLoadingLocation = false;
         });
+
+        await firebaseService.updateLastSeenAs();
       }
     }
   }
@@ -527,7 +529,10 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((_) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPostScreen()),
+                ).then((_) {
                   if (mounted) {
                     setState(() {});
                   }
@@ -833,7 +838,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               MaterialPageRoute(
                                                 builder:
-                                                    (context) => AddPostScreen(location: _selectedLocation),
+                                                    (context) => AddPostScreen(
+                                                      location: _selectedLocation,
+                                                    ),
                                               ),
                                             ).then((_) {
                                               if (mounted) {

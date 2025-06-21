@@ -12,9 +12,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
 
 class AddPostScreen extends StatefulWidget {
-  String? location;
+  final String? location;
 
-  AddPostScreen({super.key, this.location});
+  const AddPostScreen({super.key, this.location});
 
   @override
   State<AddPostScreen> createState() => _AddPostScreenState();
@@ -940,10 +940,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 // if (_formKey.currentState!.validate() && locationSelected) {
 
                                 if (_formKey.currentState!.validate()) {
+                                 final doc = await firebaseService.getCurrentUserData();
+                                 final userData = doc?.data() as Map<String, dynamic>?;
+
+                                 final currency = userData?["defaultCurrency"] ?? "usd";
+
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
                                     category: selectedCategory!,
                                     gender: selectedGender!,
+                                    currency: currency,
                                     averageWeight: _formKey.currentState?.fields['avg_weight']?.value,
                                     quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
                                     age: int.parse(_formKey.currentState?.fields['age']?.value),

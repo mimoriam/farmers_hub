@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:farmers_hub/services/chat_service.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../../utils/constants.dart';
 
@@ -96,22 +99,49 @@ class _ChatScreenState extends State<ChatScreen> {
               final userData = userDataSnapshot.data!.data() as Map<String, dynamic>?;
 
               final initialName = userData?['username'] ?? '';
+              final lastSeenAtTimestamp = userData?['lastSeenAt'] as Timestamp;
+              final String formattedDateTime = DateFormat('MMM d, y ~ h:mm a').format(lastSeenAtTimestamp
+                  .toDate());
 
-              return SafeArea(
-                child: Scaffold(
-                  backgroundColor: Colors.white,
-                  // appBar: AppBar(title: Text(widget.receiverEmail)),
-                  appBar: AppBar(title: Text(initialName)),
-                  floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-                  floatingActionButton: Padding(
-                    padding: const EdgeInsets.only(bottom: 100),
-                    child: FloatingActionButton.small(
-                      backgroundColor: Colors.green,
-                      onPressed: _scrollDown,
-                      child: Icon(Icons.arrow_downward, color: Colors.black),
-                    ),
+              return Scaffold(
+                backgroundColor: homebackgroundColor,
+                // appBar: AppBar(title: Text(widget.receiverEmail)),
+                appBar: AppBar(
+                  leading: BackButton(color: Colors.white),
+                  backgroundColor: onboardingColor,
+                  elevation: 0,
+                  title: Row(
+                    children: [
+                      const CircleAvatar(
+                        backgroundImage: NetworkImage(
+                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                        ),
+                      ),
+                      const SizedBox(width: 12.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            initialName,
+                            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                          ),
+                          Text(formattedDateTime, style: TextStyle(color: Colors.white, fontSize: 14)),
+                        ],
+                      ),
+                    ],
                   ),
-                  body: FormBuilder(
+                ),
+                // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+                // floatingActionButton: Padding(
+                //   padding: const EdgeInsets.only(bottom: 100),
+                //   child: FloatingActionButton.small(
+                //     backgroundColor: Colors.green,
+                //     onPressed: _scrollDown,
+                //     child: Icon(Icons.arrow_downward, color: Colors.black),
+                //   ),
+                // ),
+                body: SafeArea(
+                  child: FormBuilder(
                     key: _formKey,
                     child: Column(
                       children: [
@@ -128,23 +158,23 @@ class _ChatScreenState extends State<ChatScreen> {
                         //                 //   },
                         //                 //   child: Text("ENTER"),
                         //                 // ),
-                        MediaQuery.of(context).viewInsets.bottom == 0.0
-                            ? Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 16.0),
-                                child: Container(
-                                  // margin: const EdgeInsets.only(bottom: 8.0),
-                                  width: 135,
-                                  height: 5,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius: BorderRadius.circular(2.5),
-                                  ),
-                                ),
-                              ),
-                            )
-                            : Container(),
+                        // MediaQuery.of(context).viewInsets.bottom == 0.0
+                        //     ? Align(
+                        //       alignment: Alignment.bottomCenter,
+                        //       child: Padding(
+                        //         padding: const EdgeInsets.only(bottom: 16.0),
+                        //         child: Container(
+                        //           // margin: const EdgeInsets.only(bottom: 8.0),
+                        //           width: 135,
+                        //           height: 5,
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.grey,
+                        //             borderRadius: BorderRadius.circular(2.5),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     )
+                        //     : Container(),
                       ],
                     ),
                   ),
@@ -166,19 +196,59 @@ class _ChatScreenState extends State<ChatScreen> {
     // Own messages at right:
     // return Container(alignment: alignment, child: Text(data["message"]));
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
+    final Timestamp timestamp = data['timestamp'] as Timestamp;
+    final String formattedTime = DateFormat('h:mm a').format(timestamp.toDate());
+
     return Container(
       alignment: alignment,
       child: Column(
         crossAxisAlignment: isCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: isCurrentUser ? Colors.green : Colors.grey.shade500,
-              borderRadius: BorderRadius.circular(12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            children: [
+              // if (!isCurrentUser)
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
+                child: CircleAvatar(
+                  radius: 19,
+                  backgroundImage: NetworkImage(
+                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                  ),
+                ),
+              ),
+              Flexible(
+                child: Container(
+                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.all(14),
+                  margin:
+                      isCurrentUser
+                          ? const EdgeInsets.symmetric(vertical: 4, horizontal: 10)
+                          : const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+                  child: Text(data["message"]),
+                ),
+              ),
+
+              // Container(
+              //   decoration: BoxDecoration(
+              //     // color: isCurrentUser ? Colors.green : Colors.grey.shade500,
+              //     color: Colors.white,
+              //     borderRadius: BorderRadius.circular(12),
+              //   ),
+              //   padding: const EdgeInsets.all(16),
+              //   margin: const EdgeInsets.symmetric(vertical: 3, horizontal: 25),
+              //   child: Text(data["message"]),
+              // ),
+            ],
+          ),
+
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Text(
+              formattedTime,
+              style: const TextStyle(fontSize: 11, color: Colors.grey),
             ),
-            padding: const EdgeInsets.all(16),
-            margin: const EdgeInsets.symmetric(vertical: 2.5, horizontal: 25),
-            child: Text(data["message"]),
           ),
         ],
       ),
@@ -187,23 +257,36 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildUserInput() {
     return Padding(
-      padding: EdgeInsets.only(bottom: 30, left: 20),
+      padding: EdgeInsets.only(bottom: 20, left: 10),
       child: Row(
         children: [
           Expanded(
             child: FormBuilderTextField(
               name: "message",
+              style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
               decoration: InputDecoration(
-                labelText: "Type a message",
-                enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
-                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey)),
+                hintText: "Type your message...",
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: textFieldBorderSideColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: textFieldBorderSideColor),
+                ),
               ),
             ),
           ),
           const SizedBox(width: 10),
           Container(
-            decoration: BoxDecoration(color: Colors.green, shape: BoxShape.circle),
-            margin: EdgeInsets.only(right: 25),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(11),
+            ),
+            margin: EdgeInsets.only(right: 10),
             child: IconButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
@@ -212,7 +295,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   // FocusScope.of(context).unfocus();
                 }
               },
-              icon: Icon(Icons.arrow_upward, color: Colors.white),
+              icon: Icon(Icons.arrow_outward, color: Colors.grey),
             ),
           ),
         ],

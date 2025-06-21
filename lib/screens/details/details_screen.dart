@@ -125,6 +125,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildTitleAndActions(
+                              currency: postDetails["currency"].toString().toLowerCase(),
                               title: postDetails["title"],
                               price: postDetails["price"].toString(),
                               location: postDetails["location"],
@@ -155,6 +156,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               // username: postDetails["username"],
                               username: sellerUsername,
                               postUserId: postDetails["sellerId"],
+                              phoneNumber: sellerNumber["completeNumber"],
                             ),
                             const SizedBox(height: 18),
 
@@ -209,6 +211,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildTitleAndActions({
+    required String currency,
     required String title,
     required String price,
     required Map location,
@@ -233,7 +236,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Row(
                   children: [
                     Text(
-                      "\$",
+                      currency == "usd"
+                          ? "\$"
+                          : currency == "euro"
+                          ? "€"
+                          : currency == "lira"
+                          ? "₺"
+                          : "(SYP)",
                       style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
                     ),
                     Text(
@@ -336,7 +345,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, {required String username, required String postUserId}) {
+  Widget _buildActionButtons(
+    BuildContext context, {
+    required String username,
+    required String postUserId,
+    required String phoneNumber,
+  }) {
     return Column(
       children: [
         firebaseService.currentUser!.uid == postUserId
@@ -422,7 +436,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
                         label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
                         onPressed: () async {
-                          final String whatsapp = "+1-14821421408214";
+                          // final String whatsapp = "+1-14821421408214";
+                          final String whatsapp = phoneNumber;
                           final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
                           final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
 
