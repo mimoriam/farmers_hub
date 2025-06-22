@@ -833,16 +833,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                           if (context.mounted) {
                                             Navigator.push(
                                               context,
+                                              // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
                                               MaterialPageRoute(
-                                                builder:
-                                                    (context) => AddPostScreen(location: _selectedLocation),
+                                                builder: (context) => FilteredResultsScreen(),
                                               ),
-                                            ).then((_) {
-                                              if (mounted) {
-                                                setState(() {});
-                                              }
-                                            });
+                                            );
                                           }
+                                          // if (context.mounted) {
+                                          //   Navigator.push(
+                                          //     context,
+                                          //     MaterialPageRoute(
+                                          //       builder:
+                                          //           (context) => AddPostScreen(location: _selectedLocation),
+                                          //     ),
+                                          //   ).then((_) {
+                                          //     if (mounted) {
+                                          //       setState(() {});
+                                          //     }
+                                          //   });
+                                          // }
                                         },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),

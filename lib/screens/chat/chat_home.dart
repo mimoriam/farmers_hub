@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_screen.dart';
+import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
@@ -403,20 +404,34 @@ class _ChatHomeState extends State<ChatHome> {
               ],
             ),
             const SizedBox(width: 6),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
-                Text(
-                  'Favorites',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: onboardingColor,
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                  ).then((_) {
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  });
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                  Text(
+                    'Favorites',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             GestureDetector(
               onTap: () {

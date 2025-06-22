@@ -4,6 +4,7 @@ import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
 import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
+import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/feedback/send_feedback_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
@@ -80,7 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Colors.white,
         elevation: 0,
         // Shadow for the BottomAppBar
-        clipBehavior: Clip.antiAlias,
+        // clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.none,
 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -135,20 +137,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             const SizedBox(width: 6),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
-                Text(
-                  'Favorites',
-                  style: GoogleFonts.montserrat(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: onboardingColor,
+
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FavoritesScreen()),
+                  ).then((_) {
+                    if (mounted) {
+                      setState(() {});
+                    }
+                  });
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                  Text(
+                    'Favorites',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             Column(
               mainAxisSize: MainAxisSize.min,
