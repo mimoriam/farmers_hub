@@ -362,38 +362,38 @@ class _LoginScreenState extends State<LoginScreen> {
                                 try {
                                   // final user = await firebaseService.signInWithGoogle();
                                   final user = await firebaseService.signInWithGoogle();
-                                  // if (user.additionalUserInfo?.isNewUser ?? false) {
-                                    // if (context.mounted) {
-                                    //   Navigator.pushReplacement(
-                                    //     context,
-                                    //     MaterialPageRoute(
-                                    //       builder: (context) => SignupGoogleScreen(user: user.user as User),
-                                    //     ),
-                                    //   );
-                                    // }
-                                  // } else {
-                                    // Feat: Check if user has completed registration properly
-                                  //   final userExists = await firebaseService
-                                  //       .checkIfUserDataExistsForSocialLogin(user: user.user!);
-                                  //
-                                  //   if (userExists) {
-                                  //     if (context.mounted) {
-                                  //       Navigator.pushReplacement(
-                                  //         context,
-                                  //         MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                  //       );
-                                  //     }
-                                  //   } else {
-                                  //     if (context.mounted) {
-                                  //       Navigator.pushReplacement(
-                                  //         context,
-                                  //         MaterialPageRoute(
-                                  //           builder: (context) => SignupGoogleScreen(user: user.user as User),
-                                  //         ),
-                                  //       );
-                                  //     }
-                                  //   }
-                                  // }
+                                  if (user.additionalUserInfo?.isNewUser ?? false) {
+                                    if (context.mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SignupGoogleScreen(user: user.user as User),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                   // Feat: Check if user has completed registration properly
+                                    final userExists = await firebaseService
+                                        .checkIfUserDataExistsForSocialLogin(user: user.user!);
+
+                                    if (userExists) {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                                        );
+                                      }
+                                    } else {
+                                      if (context.mounted) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => SignupGoogleScreen(user: user.user as User),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
                                 } catch (e) {
                                   debugPrint(e.toString());
                                 }
