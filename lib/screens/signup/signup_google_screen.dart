@@ -13,7 +13,7 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SignupGoogleScreen extends StatefulWidget {
-  final UserCredential user;
+  final User user;
 
   const SignupGoogleScreen({super.key, required this.user});
 
@@ -119,7 +119,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-                          initialValue: widget.user.user?.displayName,
+                          initialValue: widget.user.displayName,
                           enabled: false,
                           autovalidateMode: validateMode,
                           decoration: InputDecoration(
@@ -164,7 +164,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
-                          initialValue: widget.user.user?.email,
+                          initialValue: widget.user.email,
                           enabled: false,
                           autovalidateMode: validateMode,
                           decoration: InputDecoration(
@@ -405,7 +405,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                                         });
                                         try {
                                           await firebaseService.saveUserDataOnRegister(
-                                            user: widget.user.user!,
+                                            user: widget.user,
                                             username: _formKey.currentState?.fields['username']?.value,
                                             phone: phoneInfo,
                                             // address: _formKey.currentState?.fields['address']?.value,

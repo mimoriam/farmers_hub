@@ -27,6 +27,7 @@ import 'package:intl/intl.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -166,6 +167,112 @@ class _HomeScreenState extends State<HomeScreen> {
   String dynamicWeatherCondition = "...";
 
   late final AppLifecycleListener _listener;
+
+  // Future<void> _fetchLocation() async {
+  //   if (!mounted) return;
+  //   setState(() {
+  //     _isLoadingLocation = true;
+  //     _locationMessage = "Checking location...";
+  //   });
+  //
+  //   // 1. Check permission status
+  //   var permissionStatus = await Permission.location.status;
+  //
+  //   // 2. If permission is not granted, request it or guide the user to settings
+  //   if (!permissionStatus.isGranted) {
+  //     if (permissionStatus.isDenied) {
+  //       // Request permission for the first time
+  //       permissionStatus = await Permission.location.request();
+  //     } else if (permissionStatus.isPermanentlyDenied) {
+  //       // Guide user to app settings if permission is permanently denied
+  //       if (mounted) {
+  //         await showDialog(
+  //           context: context,
+  //           builder: (ctx) => AlertDialog(
+  //             title: const Text("Location Permission Required"),
+  //             content: const Text(
+  //                 "This app needs location access for weather and local content. Please grant permission in app settings."),
+  //             actions: [
+  //               TextButton(
+  //                   onPressed: () => Navigator.of(ctx).pop(),
+  //                   child: const Text("Cancel")),
+  //               TextButton(
+  //                   onPressed: () {
+  //                     openAppSettings();
+  //                     Navigator.of(ctx).pop();
+  //                   },
+  //                   child: const Text("Open Settings")),
+  //             ],
+  //           ),
+  //         );
+  //       }
+  //       setState(() {
+  //         _isLoadingLocation = false;
+  //         _locationMessage = "Permission denied.";
+  //       });
+  //       return;
+  //     }
+  //   }
+  //
+  //   // 3. If permission is granted, proceed to fetch location
+  //   if (permissionStatus.isGranted) {
+  //     // Check if location services are enabled on the device
+  //     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  //     if (!serviceEnabled) {
+  //       await Geolocator.openLocationSettings();
+  //       if (mounted) {
+  //         setState(() {
+  //           _isLoadingLocation = false;
+  //           _locationMessage = "Please enable location services.";
+  //         });
+  //       }
+  //       return;
+  //     }
+  //
+  //     // Now, safely get the location
+  //     try {
+  //       setState(() {
+  //         _locationMessage = "Fetching location...";
+  //       });
+  //
+  //       final position = await _locationService.getCurrentLocation();
+  //       final placeDetails = await _locationService.getPlaceDetails(position);
+  //       final finalCity = placeDetails.city ?? "Unknown";
+  //
+  //       // Update UI and save location data
+  //       if (mounted) {
+  //         setState(() {
+  //           _locationMessage = "$finalCity, ${placeDetails.country}";
+  //           _isLoadingLocation = false;
+  //         });
+  //       }
+  //       final Map<String, dynamic> updatedData = {
+  //         'location': {"city": finalCity}
+  //       };
+  //       await _saveLocationToProfile(updatedData);
+  //       await _fetchWeather(finalCity);
+  //
+  //     } catch (e) {
+  //       if (mounted) {
+  //         setState(() {
+  //           _isLoadingLocation = false;
+  //           _locationMessage = "Could not get location.";
+  //         });
+  //       }
+  //     }
+  //   } else {
+  //     // Handle case where permission is still not granted
+  //     if (mounted) {
+  //       setState(() {
+  //         _isLoadingLocation = false;
+  //         _locationMessage = "Location permission is required.";
+  //       });
+  //     }
+  //   }
+  //
+  //   // Always update last seen status
+  //   await firebaseService.updateLastSeenAs();
+  // }
 
   Future<void> _fetchLocation() async {
     setState(() {

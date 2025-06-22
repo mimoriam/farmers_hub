@@ -46,7 +46,7 @@ class LocationService {
     if (status.isPermanentlyDenied) {
       // User has permanently denied the permission.
       // We should guide them to the app settings.
-      openAppSettings();
+      // openAppSettings();
       return Future.error('Location permissions are permanently denied. Please enable them in app settings.');
     }
 
