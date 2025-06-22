@@ -156,7 +156,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
-  final LocationService _locationService = LocationService();
+  // final LocationService _locationService = LocationService();
+  late LocationService _locationService;
 
   String _selectedLocation = '';
   String _locationMessage = "Fetching location...";
@@ -426,6 +427,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    _locationService = LocationService();
 
     _fetchLocation();
     _listener = AppLifecycleListener(onStateChange: _onStateChanged);
