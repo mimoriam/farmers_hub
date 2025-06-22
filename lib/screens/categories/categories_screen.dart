@@ -246,6 +246,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                           MaterialPageRoute(
                                             builder:
                                                 (context) => FilteredResultsScreen(
+                                                  // TODO: Handle when Category has spaces in them
                                                   searchQuery: category["name"]!.toLowerCase(),
                                                   selectedSearchOption: SearchOption.category,
                                                 ),

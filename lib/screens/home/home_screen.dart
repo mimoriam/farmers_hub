@@ -482,7 +482,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen(
+            searchQuery: name.split(' ')[0].toLowerCase(),
+            selectedSearchOption: SearchOption.category,
+          )));
         }
       },
       child: Card(
