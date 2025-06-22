@@ -15,13 +15,15 @@ import 'package:google_fonts/google_fonts.dart';
 class FilteredResultsScreen extends StatefulWidget {
   String searchQuery;
 
-  FilteredResultsScreen({super.key, this.searchQuery = ""});
+  SearchOption selectedSearchOption;
+
+  FilteredResultsScreen({super.key, this.searchQuery = "", this.selectedSearchOption = SearchOption.title});
 
   @override
   State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
 }
 
-enum SearchOption { title, category }
+enum SearchOption { title, category, village }
 
 // Enum for sort options
 enum SortOption { ascending, descending }
@@ -48,9 +50,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
     var results;
 
-    if (_selectedSearchOption == SearchOption.title) {
+    if (widget.selectedSearchOption == SearchOption.title) {
       results = await firebaseService.searchPosts(query);
-    } else if (_selectedSearchOption == SearchOption.category) {
+    } else if (widget.selectedSearchOption == SearchOption.category) {
       results = await firebaseService.searchPosts(query, isCategorySearch: true);
     }
 
@@ -92,7 +94,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     super.dispose();
   }
 
-  SearchOption _selectedSearchOption = SearchOption.title;
+  // SearchOption _selectedSearchOption = SearchOption.title;
   SortOption _selectedSortOption = SortOption.ascending;
 
   void _showOptionsDialog() {
@@ -115,12 +117,12 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   RadioListTile<SearchOption>(
                     title: const Text('Title'),
                     value: SearchOption.title,
-                    groupValue: _selectedSearchOption,
+                    groupValue: widget.selectedSearchOption,
                     activeColor: onboardingColor,
                     onChanged: (SearchOption? value) {
                       setState(() {
                         if (mounted) {
-                          _selectedSearchOption = value!;
+                          widget.selectedSearchOption = value!;
                         }
                       });
                     },
@@ -129,12 +131,12 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   RadioListTile<SearchOption>(
                     title: const Text('Category'),
                     value: SearchOption.category,
-                    groupValue: _selectedSearchOption,
+                    groupValue: widget.selectedSearchOption,
                     activeColor: onboardingColor,
                     onChanged: (SearchOption? value) {
                       setState(() {
                         if (mounted) {
-                          _selectedSearchOption = value!;
+                          widget.selectedSearchOption = value!;
                         }
                       });
                     },
@@ -189,6 +191,14 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // List<String> q = widget.searchQuery.split(' ');
+    // String qs = widget.searchQuery;
+    //
+    // if (q[1] == "&") {
+    //   setState(() {
+    //     widget.searchQuery = q[0];
+    //   });
+    // }
     final List<Map<String, dynamic>> popularPostsData = const [
       {
         "image_url": "images/backgrounds/cow_2.png",
@@ -278,6 +288,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
                       ),
                       onChanged: _onSearchChanged,
+                      initialValue: widget.searchQuery.isEmpty ? "" : widget.searchQuery,
+                      // initialValue: qs.isEmpty ? "" : widget.searchQuery,
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(
@@ -327,13 +339,15 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                _selectedChip = SearchOption.title;
-                                _selectedSearchOption = SearchOption.title;
-                                _formKey.currentState?.reset();
+                                widget.selectedSearchOption = SearchOption.title;
+                                widget.searchQuery = "";
+                                _formKey.currentState?.patchValue({
+                                  "search": "",
+                                });
                               });
                             }
                           },
-                          selected: _selectedChip == SearchOption.title,
+                          selected: widget.selectedSearchOption == SearchOption.title,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
@@ -352,13 +366,16 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                _selectedChip = SearchOption.category;
-                                _selectedSearchOption = SearchOption.category;
-                                _formKey.currentState?.reset();
+                                widget.selectedSearchOption = SearchOption.category;
+                                widget.searchQuery = "";
+                                // _formKey.currentState?.reset();
+                                _formKey.currentState?.patchValue({
+                                  "search": "",
+                                });
                               });
                             }
                           },
-                          selected: _selectedChip == SearchOption.category,
+                          selected: widget.selectedSearchOption == SearchOption.category,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(

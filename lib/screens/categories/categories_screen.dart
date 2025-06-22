@@ -22,7 +22,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen()));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => FilteredResultsScreen(
+                    searchQuery: name.split(' ')[0].toLowerCase(),
+                    selectedSearchOption: SearchOption.category,
+                  ),
+            ),
+          );
         }
       },
       child: Card(
@@ -97,7 +106,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
     final List<Map<String, String>> popularCategories = [
       {'name': 'Apples', 'image': 'images/categories/apples.png'},
-      {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png', },
+      {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
       {'name': 'Pomegranates', 'image': 'images/categories/iv_pomegranate.png'},
     ];
 
@@ -216,7 +225,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         //   width: 200,
                         //   height: 200,
                         // ),
-
                         SizedBox(
                           height: 130.0,
                           child: ListView.builder(
@@ -230,55 +238,71 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 20),
-                                  child: Container(
-                                    width: 128,
-                                    height: 102,
-                                    padding: const EdgeInsets.all(12),
-                                    decoration: ShapeDecoration(
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        side: BorderSide(width: 0.2, color: const Color(0xFFFF9800)),
-                                        borderRadius: BorderRadius.circular(8),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) => FilteredResultsScreen(
+                                                  searchQuery: category["name"]!.toLowerCase(),
+                                                  selectedSearchOption: SearchOption.category,
+                                                ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    child: Container(
+                                      width: 128,
+                                      height: 102,
+                                      padding: const EdgeInsets.all(12),
+                                      decoration: ShapeDecoration(
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(width: 0.2, color: const Color(0xFFFF9800)),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        shadows: [
+                                          BoxShadow(
+                                            color: Color(0x0C000000),
+                                            blurRadius: 2,
+                                            offset: Offset(0, 1),
+                                            spreadRadius: 0,
+                                          ),
+                                        ],
                                       ),
-                                      shadows: [
-                                        BoxShadow(
-                                          color: Color(0x0C000000),
-                                          blurRadius: 2,
-                                          offset: Offset(0, 1),
-                                          spreadRadius: 0,
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(bottom: 9),
-                                          child: SizedBox(
-                                            width: 48,
-                                            height: 46,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(bottom: 9),
+                                            child: SizedBox(
+                                              width: 48,
+                                              height: 46,
 
-                                            child: Image.asset(category['image']!, fit: BoxFit.contain),
-                                            // child: SvgPicture.asset(
-                                            //   category['image']!,
-                                            //   semanticsLabel: category["semanticsLabel"],
-                                            //   width: 20,
-                                            //   height: 20,
-                                            //   placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
-                                            // ),
+                                              child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                              // child: SvgPicture.asset(
+                                              //   category['image']!,
+                                              //   semanticsLabel: category["semanticsLabel"],
+                                              //   width: 20,
+                                              //   height: 20,
+                                              //   placeholderBuilder: (BuildContext context) => const CircularProgressIndicator(),
+                                              // ),
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          category["name"]!,
-                                          style: TextStyle(
-                                            color: const Color(0xFF505050),
-                                            fontSize: 13.69,
-                                            fontWeight: FontWeight.w400,
-                                            height: 1.43,
+                                          Text(
+                                            category["name"]!,
+                                            style: TextStyle(
+                                              color: const Color(0xFF505050),
+                                              fontSize: 13.69,
+                                              fontWeight: FontWeight.w400,
+                                              height: 1.43,
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
