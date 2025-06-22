@@ -59,6 +59,7 @@ dependencies:
   dio: ^5.8.0+1
   dio_smart_retry: ^7.0.1
   flutter_launcher_icons: ^0.14.4
+  tap_debouncer: ^2.2.0
 
   # Firebase:
   firebase_core: ^3.14.0

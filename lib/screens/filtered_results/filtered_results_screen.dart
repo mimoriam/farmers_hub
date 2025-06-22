@@ -37,6 +37,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   bool _hasSearched = false;
   Timer? _debounce;
 
+  SearchOption _selectedChip = SearchOption.title;
+
   Future<void> _performSearch(String query) async {
     if (!mounted) return;
     setState(() {
@@ -243,6 +245,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       },
     ];
 
+    bool selectedTitle = true;
+
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
@@ -267,7 +271,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 14),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
@@ -284,9 +288,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
                         suffixIcon: IconButton(
-                          // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          icon: const Icon(Icons.sort_outlined, color: onboardingColor),
-                          onPressed: _showOptionsDialog,
+                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                          // icon: const Icon(Icons.sort_outlined, color: onboardingColor),
+                          onPressed: () {},
+                          // onPressed: _showOptionsDialog,
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -297,6 +302,75 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
                         ),
                       ),
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 4),
+                    child: Row(
+                      children: [
+                        Chip(
+                          backgroundColor: onboardingColor,
+                          label: Text(
+                            "Filters (1)",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 6),
+
+                        FilterChip(
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              setState(() {
+                                _selectedChip = SearchOption.title;
+                                _selectedSearchOption = SearchOption.title;
+                                _formKey.currentState?.reset();
+                              });
+                            }
+                          },
+                          selected: _selectedChip == SearchOption.title,
+                          selectedColor: onboardingColor,
+                          backgroundColor: Colors.grey[300],
+                          label: Text(
+                            "Title",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 8),
+
+                        FilterChip(
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              setState(() {
+                                _selectedChip = SearchOption.category;
+                                _selectedSearchOption = SearchOption.category;
+                                _formKey.currentState?.reset();
+                              });
+                            }
+                          },
+                          selected: _selectedChip == SearchOption.category,
+                          selectedColor: onboardingColor,
+                          backgroundColor: Colors.grey[300],
+                          label: Text(
+                            "Category",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
