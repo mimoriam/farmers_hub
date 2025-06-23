@@ -216,8 +216,8 @@ class FirebaseService {
     required int age,
     required int price,
     required String currency,
+    required String city,
     String? village,
-    String? city,
     String? province,
     String? country,
     String? details,
@@ -245,7 +245,7 @@ class FirebaseService {
       "featured": featured ?? false,
       "verifiedSeller": false,
       "location": {
-        "city": city ?? "",
+        "city": city,
         "province": province ?? "",
         "country": country ?? "",
         "village": village ?? "",
@@ -412,6 +412,28 @@ class FirebaseService {
       return querySnapshot.docs;
     } catch (e) {
       print("Error searching posts: $e");
+      return [];
+    }
+  }
+
+  Future<List<QueryDocumentSnapshot>> searchPostsByCity(String query) async {
+    try {
+      if (query.isEmpty) {
+        return [];
+      }
+
+      // final String lowerCaseQuery = query.toLowerCase();
+      QuerySnapshot querySnapshot;
+
+        querySnapshot =
+        await _firestore
+            .collection(postCollection)
+            .where('location.city', isEqualTo: query)
+            .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      print("Error searching posts for city: $e");
       return [];
     }
   }

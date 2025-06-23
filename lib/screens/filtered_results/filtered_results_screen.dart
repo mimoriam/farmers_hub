@@ -48,12 +48,16 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       _hasSearched = true;
     });
 
+    print(query);
+
     var results;
 
     if (widget.selectedSearchOption == SearchOption.title) {
       results = await firebaseService.searchPosts(query);
     } else if (widget.selectedSearchOption == SearchOption.category) {
       results = await firebaseService.searchPosts(query, isCategorySearch: true);
+    } else if (widget.selectedSearchOption == SearchOption.village) {
+      results = await firebaseService.searchPostsByCity(query);
     }
 
     if (mounted) {
@@ -323,6 +327,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       children: [
                         Chip(
                           backgroundColor: onboardingColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
                           label: Text(
                             "Filters (1)",
                             style: GoogleFonts.poppins(
@@ -347,6 +354,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               });
                             }
                           },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
                           selected: widget.selectedSearchOption == SearchOption.title,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
@@ -375,6 +385,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               });
                             }
                           },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
                           selected: widget.selectedSearchOption == SearchOption.category,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],

@@ -145,6 +145,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
                       ),
+                      onChanged: (String? query) {
+                      },
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(

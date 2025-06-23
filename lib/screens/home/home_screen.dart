@@ -938,7 +938,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Row(
                           children: [
                             Padding(
-                              padding: EdgeInsets.only(top: 4, bottom: 10),
+                              padding: EdgeInsets.only(top: 4, bottom: 7),
                               child: ElevatedButton(
                                 onPressed:
                                     _selectedLocation.isEmpty
@@ -949,7 +949,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
                                               MaterialPageRoute(
-                                                builder: (context) => FilteredResultsScreen(),
+                                                builder: (context) => FilteredResultsScreen(
+                                                  searchQuery: _selectedLocation,
+                                                  selectedSearchOption: SearchOption.village,
+                                                ),
                                               ),
                                             );
                                           }
@@ -971,7 +974,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                                  padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+                                  elevation: 0,
                                 ),
                                 child: Text(
                                   "Go",
@@ -986,17 +990,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(width: 10),
 
                             Padding(
-                              padding: const EdgeInsets.only(bottom: 6),
+                              padding: const EdgeInsets.only(bottom: 3),
                               child: IconButton(
                                 onPressed: () {},
                                 icon: const Icon(Icons.notifications_none_outlined),
                                 style: IconButton.styleFrom(
                                   elevation: 0,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
                                 ),
-                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 19),
+                                // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
+                                  top: 12,
+                                  bottom: 13
+                                ),
                                 // padding: EdgeInsets.only(left: 19, right: 19, top: 12, bottom: ),
                               ),
                             ),
