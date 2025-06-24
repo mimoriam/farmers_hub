@@ -160,11 +160,11 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                           likes: post["likes"].toString(),
                                           views: post["views"].toString(),
                                         ),
-                                        const SizedBox(height: 12),
+                                        const SizedBox(height: 4),
 
                                         // Sold Button
                                         _buildSoldButton(hasBeenSold: post["hasBeenSold"]),
-                                        const SizedBox(height: 8),
+                                        const SizedBox(height: 4),
 
                                         // Bottom Section: Timestamp and Action Buttons
                                         _buildBottomSection(
@@ -251,14 +251,16 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildIconTextRow(Icons.location_on, location["city"]),
-        const SizedBox(width: 8),
-
-        _buildIconTextRow(Icons.favorite, "$likes likes", iconColor: Colors.red),
-        const SizedBox(width: 12),
-
-        _buildIconTextRow(Icons.visibility, "$views views", iconColor: Colors.green),
-        const SizedBox(width: 8),
+        Row(
+          children: [
+            _buildIconTextRow(Icons.location_on, location["city"]),
+            const SizedBox(width: 8),
+            _buildIconTextRow(Icons.favorite, "$likes likes", iconColor: Colors.red),
+            const SizedBox(width: 12),
+            _buildIconTextRow(Icons.visibility, "$views views", iconColor: Colors.green),
+          ],
+        ),
+        // const SizedBox(width: 8),
       ],
     );
   }
@@ -280,9 +282,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return MaterialButton(
       onPressed: () {},
       color: hasBeenSold ? onboardingColor : Colors.grey,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+        padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [

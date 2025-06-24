@@ -295,29 +295,33 @@ class _DetailsScreenState extends State<DetailsScreen> {
       children: [
         Row(
           children: [
-            Icon(Icons.favorite, color: Colors.red[400], size: 16),
-            const SizedBox(width: 4),
+            Row(
+              children: [
+                Icon(Icons.favorite, color: Colors.red[400], size: 16),
+                const SizedBox(width: 4),
 
-            Text("Likes:", style: TextStyle(fontSize: 13, color: Colors.grey)),
-            const SizedBox(width: 1),
-            Text(likes, style: TextStyle(fontSize: 13, color: Colors.grey)),
+                Text("Likes:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                const SizedBox(width: 1),
+                Text(likes, style: TextStyle(fontSize: 13, color: Colors.grey)),
+              ],
+            ),
+
+            const SizedBox(width: 12),
+
+            Row(
+              children: [
+                Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
+                const SizedBox(width: 4),
+
+                Text("Views:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                const SizedBox(width: 1),
+                Text(views, style: TextStyle(fontSize: 13, color: Colors.grey)),
+              ],
+            ),
           ],
         ),
 
         const SizedBox(height: 8),
-
-        Row(
-          children: [
-            Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
-            const SizedBox(width: 4),
-
-            Text("Views:", style: TextStyle(fontSize: 13, color: Colors.grey)),
-            const SizedBox(width: 1),
-            Text(views, style: TextStyle(fontSize: 13, color: Colors.grey)),
-          ],
-        ),
-
-        const SizedBox(height: 4),
 
         // const Spacer(),
         Row(

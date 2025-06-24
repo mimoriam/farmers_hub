@@ -940,10 +940,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 // if (_formKey.currentState!.validate() && locationSelected) {
 
                                 if (_formKey.currentState!.validate()) {
-                                 final doc = await firebaseService.getCurrentUserData();
-                                 final userData = doc?.data() as Map<String, dynamic>?;
+                                  final doc = await firebaseService.getCurrentUserData();
+                                  final userData = doc?.data() as Map<String, dynamic>?;
 
-                                 final currency = userData?["defaultCurrency"] ?? "usd";
+                                  final currency = userData?["defaultCurrency"] ?? "usd";
 
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,

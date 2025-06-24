@@ -55,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // SizedBox(height: 10),
+                        SizedBox(height: 6),
                         Text(
                           "Login to YOUR CROP",
                           textAlign: TextAlign.center,

@@ -204,7 +204,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: const EdgeInsets.only(left: 4),
                   child: Text(
                     'Profile Settings',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
@@ -215,7 +215,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildProfileInfoCard(),
 
                 // SizedBox(height: 1),
-                _buildSettingsList(),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: _buildSettingsList(),
+                ),
 
                 // SizedBox(height: 1),
                 ListView(
@@ -315,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Card(
       elevation: 3.0,
       shadowColor: Colors.grey.withOpacity(0.2),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       color: Colors.white,
       child: Padding(
         // padding: const EdgeInsets.all(16.0),

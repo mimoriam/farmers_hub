@@ -206,7 +206,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                         ),
-                        pickerDialogStyle: PickerDialogStyle(backgroundColor: scaffoldBackgroundColor),
+                        pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Enter Phone Number',
                           filled: true,
