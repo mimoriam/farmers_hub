@@ -14,6 +14,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class MessageItem {
   final String avatarUrl;
@@ -176,14 +177,102 @@ class _ChatHomeState extends State<ChatHome> {
 
   Widget _buildUserList2() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: onboardingColor));
+      // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+      return Center(
+        child: Skeletonizer(
+          ignorePointers: true,
+          child: Column(
+            children: [
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+
+              ListTile(
+                leading: CircleAvatar(child: Icon(Icons.person)),
+                title: Text('User Name'),
+                subtitle: Text('Last message...'),
+              ),
+            ],
+          ),
+        ),
+      );
     }
     return StreamBuilder<List<Map<String, dynamic>>>(
       // stream: _chatService.getUsersStream(),
       stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(color: onboardingColor));
+          // return Center(child: CircularProgressIndicator(color: onboardingColor));
+          return Center(
+            child: Skeletonizer(
+              ignorePointers: true,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+
+                  ListTile(
+                    leading: CircleAvatar(child: Icon(Icons.person)),
+                    title: Text('User Name'),
+                    subtitle: Text('Last message...'),
+                  ),
+                ],
+              ),
+            ),
+          );
         }
 
         if (snapshot.hasError) {
@@ -231,7 +320,51 @@ class _ChatHomeState extends State<ChatHome> {
                   String time = '';
 
                   if (messageSnapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator(color: onboardingColor));
+                    // return Center(child: CircularProgressIndicator(color: onboardingColor));
+                    return Center(
+                      child: Skeletonizer(
+                          ignorePointers: true,
+                        child: Column(
+                          children: [
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+
+                            ListTile(
+                              leading: CircleAvatar(child: Icon(Icons.person)),
+                              title: Text('User Name'),
+                              subtitle: Text('Last message...'),
+                            ),
+                          ],
+                        )
+                      ),
+                    );
                   }
 
                   if (messageSnapshot.hasError) {
@@ -253,7 +386,52 @@ class _ChatHomeState extends State<ChatHome> {
                     stream: _chatService.getUnreadMessageCount(otherUserId),
                     builder: (context, unreadCountSnapshot) {
                       if (unreadCountSnapshot.connectionState == ConnectionState.waiting) {
-                        return Center(child: CircularProgressIndicator(color: onboardingColor));
+                        // return Center(child: CircularProgressIndicator(color: onboardingColor));
+
+                        return Center(
+                          child: Skeletonizer(
+                              ignorePointers: true,
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+
+                                  ListTile(
+                                    leading: CircleAvatar(child: Icon(Icons.person)),
+                                    title: Text('User Name'),
+                                    subtitle: Text('Last message...'),
+                                  ),
+                                ],
+                              )
+                          ),
+                        );
                       }
 
                       if (unreadCountSnapshot.hasError) {

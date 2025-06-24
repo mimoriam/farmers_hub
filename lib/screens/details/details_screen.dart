@@ -13,6 +13,8 @@ import 'package:farmers_hub/utils/constants.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DetailsScreen extends StatefulWidget {
@@ -84,7 +86,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 .snapshots(),
         builder: (context, postSnapshot) {
           if (postSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(color: onboardingColor));
+            // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+            return Container();
           }
 
           if (postSnapshot.hasError || !postSnapshot.hasData || !postSnapshot.data!.exists) {
@@ -96,7 +99,75 @@ class _DetailsScreenState extends State<DetailsScreen> {
             future: firebaseService.getPostAndSellerDetails(widget.postId),
             builder: (context, sellerSnapshot) {
               if (sellerSnapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                return Skeletonizer(
+                  ignoreContainers: true,
+                  ignorePointers: true,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildImageSection(),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildTitleAndActions(
+                                currency: "",
+                                title: "",
+                                price: "",
+                                location: {"city": "Wew lad"},
+                                isLiked: true,
+                                onLike:
+                                    () => firebaseService.updatePostLikes(postId: widget.postId, like: !true),
+                              ),
+                              const SizedBox(height: 8),
+
+                              _buildEngagementStats(
+                                likes: "",
+                                views: "",
+                                dated: Timestamp.fromDate(DateTime.now()),
+                                // dated:
+                                //     DateFormat(
+                                //       'MMMM d, yyyy',
+                                //     ).format(postDetails["createdAt"].toDate()).toString(),
+                              ),
+                              const SizedBox(height: 16),
+
+                              // _buildSellerInfo(username: postDetails["username"]),
+                              _buildSellerInfo(username: "", sellerData: ""),
+                              const SizedBox(height: 24),
+
+                              _buildActionButtons(
+                                context,
+                                // username: postDetails["username"],
+                                username: "",
+                                postUserId: "",
+                                phoneNumber: "",
+                              ),
+                              const SizedBox(height: 18),
+
+                              _buildVerifiedSellerBadge(verifiedSeller: false),
+                              const SizedBox(height: 4),
+
+                              _buildDetailsSection(
+                                category: "",
+                                gender: "",
+                                averageWeight: "",
+                                age: "",
+                                // phoneNumber: "12321323",
+                                phoneNumber: "",
+                                details: "",
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
               }
 
               if (sellerSnapshot.hasError || !sellerSnapshot.hasData || sellerSnapshot.data == null) {
@@ -407,39 +478,45 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ? Container()
             : Row(
               children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-                    label: Text(
+                TapDebouncer(
+                  cooldown: const Duration(milliseconds: 2000),
+                  onTap:
                       firebaseService.currentUser?.displayName == username
-                          ? "Can't chat with yourself"
-                          : 'Chat',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed:
-                        firebaseService.currentUser?.displayName == username
-                            ? null
-                            : () async {
-                              // Handle Chat action
+                          ? null
+                          : () async {
+                            // Handle Chat action
 
-                              final ChatService _chatService = ChatService(user: firebaseService.currentUser);
-                              final user = firebaseService.currentUser;
+                            final ChatService _chatService = ChatService(user: firebaseService.currentUser);
+                            final user = firebaseService.currentUser;
 
-                              await _chatService.addUserForChat(username: username);
+                            await _chatService.addUserForChat(username: username);
 
-                              if (context.mounted) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => ChatHome(user: user)),
-                                );
-                              }
-                            },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: onboardingColor,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                  ),
+                            if (context.mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                              );
+                            }
+                          },
+                  builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                    return Expanded(
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                        label: Text(
+                          firebaseService.currentUser?.displayName == username
+                              ? "Can't chat with yourself"
+                              : 'Chat',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        onPressed: onTap,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: onboardingColor,
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                      ),
+                    );
+                  },
                 ),
 
                 SizedBox(width: 6),

@@ -8,6 +8,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ManagePostScreen extends StatefulWidget {
   const ManagePostScreen({super.key});
@@ -82,7 +83,77 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                     future: firebaseService.getAllPostsByCurrentUser(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                        // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                        return Skeletonizer(
+                          ignoreContainers: true,
+                          child: Column(
+                            children: [
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+
+                              Card(
+                                child: ListTile(
+                                  leading: Icon(Icons.image, size: 50),
+                                  title: Text("Your Post Title"),
+                                  subtitle: Text("Post details..."),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
                       }
 
                       if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {

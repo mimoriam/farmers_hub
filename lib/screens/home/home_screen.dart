@@ -28,6 +28,7 @@ import 'package:dio/dio.dart';
 import 'package:dio_smart_retry/dio_smart_retry.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -156,6 +157,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
+
   // final LocationService _locationService = LocationService();
   late LocationService _locationService;
 
@@ -339,28 +341,28 @@ class _HomeScreenState extends State<HomeScreen> {
             barrierDismissible: false,
             builder:
                 (ctx) => AlertDialog(
-              title: Text("Location Services Disabled"),
-              content: Text("Please enable location services in settings."),
-              backgroundColor: Colors.white,
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    Geolocator.openLocationSettings();
-                    if (mounted) {
-                      setState(() {});
-                    }
-                  },
-                  child: Text("Open Settings"),
+                  title: Text("Location Services Disabled"),
+                  content: Text("Please enable location services in settings."),
+                  backgroundColor: Colors.white,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                        Geolocator.openLocationSettings();
+                        if (mounted) {
+                          setState(() {});
+                        }
+                      },
+                      child: Text("Open Settings"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(ctx).pop();
+                      },
+                      child: Text("Cancel"),
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                  },
-                  child: Text("Cancel"),
-                ),
-              ],
-            ),
           );
         }
       }
@@ -482,10 +484,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FilteredResultsScreen(
-            searchQuery: name.split(' ')[0].toLowerCase(),
-            selectedSearchOption: SearchOption.category,
-          )));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => FilteredResultsScreen(
+                    searchQuery: name.split(' ')[0].toLowerCase(),
+                    selectedSearchOption: SearchOption.category,
+                  ),
+            ),
+          );
         }
       },
       child: Card(
@@ -949,10 +957,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               context,
                                               // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
                                               MaterialPageRoute(
-                                                builder: (context) => FilteredResultsScreen(
-                                                  searchQuery: _selectedLocation,
-                                                  selectedSearchOption: SearchOption.village,
-                                                ),
+                                                builder:
+                                                    (context) => FilteredResultsScreen(
+                                                      searchQuery: _selectedLocation,
+                                                      selectedSearchOption: SearchOption.village,
+                                                    ),
                                               ),
                                             );
                                           }
@@ -1001,12 +1010,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   foregroundColor: Colors.white,
                                 ),
                                 // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  right: 20,
-                                  top: 12,
-                                  bottom: 13
-                                ),
+                                padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 13),
                                 // padding: EdgeInsets.only(left: 19, right: 19, top: 12, bottom: ),
                               ),
                             ),
@@ -1408,7 +1412,31 @@ class _HomeScreenState extends State<HomeScreen> {
                         future: firebaseService.getAllPostsByFeatured(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                            // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                            return Skeletonizer(
+                              // ignoreContainers: true,
+                              ignorePointers: true,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: 5,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {},
+                                    child: PostCard(
+                                      imageUrl: popularPostsData[index]['image_url'],
+                                      price: "",
+                                      currency: "",
+                                      location: "",
+                                      likes: 1,
+                                      isLiked: true,
+                                      // postedAgo: formatTimeAgo(post['createdAt']),
+                                      postedAgo: "",
+                                      views: 1,
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
                           }
 
                           if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {

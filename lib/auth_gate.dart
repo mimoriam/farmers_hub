@@ -7,6 +7,7 @@ import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -19,7 +20,19 @@ class AuthGate extends StatelessWidget {
       stream: firebaseService.authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
+          // return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
+
+          return const Scaffold(
+            body: Center(
+              child: Skeletonizer(
+                ignorePointers: true,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [CircularProgressIndicator(), SizedBox(height: 10), Text("Loading...")],
+                ),
+              ),
+            ),
+          );
         }
         if (snapshot.hasData) {
           // TODO: Check if user has completed registration properly and do not return him to Home if not
@@ -27,7 +40,18 @@ class AuthGate extends StatelessWidget {
             future: firebaseService.checkIfUserDataExistsForSocialLogin(user: snapshot.data!),
             builder: (context, userExistsSnapshot) {
               if (userExistsSnapshot.connectionState == ConnectionState.waiting) {
-                return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
+                // return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
+                return const Scaffold(
+                  body: Center(
+                    child: Skeletonizer(
+                      ignorePointers: true,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [CircularProgressIndicator(), SizedBox(height: 10), Text("Loading...")],
+                      ),
+                    ),
+                  ),
+                );
               }
               if (userExistsSnapshot.hasData && userExistsSnapshot.data == true) {
                 // User data exists in Firestore, proceed to home screen.

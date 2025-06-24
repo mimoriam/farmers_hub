@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
 
@@ -34,7 +36,29 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           future: firebaseService.getFavoritedPosts(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator(color: onboardingColor));
+              // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+              return Skeletonizer(
+                ignoreContainers: true,
+                ignorePointers: true,
+                child: Column(
+                  children: [
+                    Card(
+                      child: ListTile(
+                        leading: Icon(Icons.image, size: 50),
+                        title: Text("Favorite Post Title"),
+                        subtitle: Text("Post details..."),
+                      ),
+                    ),
+                    Card(
+                      child: ListTile(
+                        leading: Icon(Icons.image, size: 50),
+                        title: Text("Favorite Post Title"),
+                        subtitle: Text("Post details..."),
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             if (snapshot.hasError) {
@@ -62,10 +86,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailsScreen(
-                                postId: postId.toString(),
-                                didComeFromManagedPosts: false,
-                              ),
+                              builder:
+                                  (context) => DetailsScreen(
+                                    postId: postId.toString(),
+                                    didComeFromManagedPosts: false,
+                                  ),
                             ),
                           ).then((_) => setState(() {}));
                         }

@@ -18,6 +18,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -60,10 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()),
-            );
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
           }
         },
         backgroundColor: onboardingColor,
@@ -215,10 +213,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _buildProfileInfoCard(),
 
                 // SizedBox(height: 1),
-                Padding(
-                  padding: const EdgeInsets.only(left: 4),
-                  child: _buildSettingsList(),
-                ),
+                Padding(padding: const EdgeInsets.only(left: 4), child: _buildSettingsList()),
 
                 // SizedBox(height: 1),
                 ListView(
@@ -348,7 +343,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
               future: _firebaseService.getCurrentUserData(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                  // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                  return Skeletonizer(
+                    // ignoreContainers: true,
+                    ignorePointers: true,
+                    child: Column(
+                      children: [
+                        _buildInfoRow('Name', ""),
+                        _buildInfoRow('Phone Number', ""),
+                        _buildInfoRow('Location', ""),
+                        _buildInfoRow('Language', ""),
+                      ],
+                    ),
+                  );
                 }
 
                 if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
@@ -384,6 +391,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Skeleton.keep(child: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 16))),
           Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 16)),
           Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87)),
         ],

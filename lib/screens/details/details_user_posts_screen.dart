@@ -8,6 +8,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class DetailsUserPostsScreen extends StatefulWidget {
   final postSellerData;
@@ -47,7 +48,69 @@ class _DetailsUserPostsScreenState extends State<DetailsUserPostsScreen> {
                 future: firebaseService.getAllPostsBySellerId(widget.postSellerData["id"]),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                    // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+                    return Skeletonizer(
+                      ignoreContainers: true,
+                      child: ListView.builder(
+                        itemCount: 4,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (BuildContext context, int index) {
+                          return Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 12, right: 12, top: 12),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Container(
+                                  // width: 350, // Set a fixed width for the card
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20.0),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 5), // changes position of shadow
+                                      ),
+                                    ],
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min, // To make the column wrap its content
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Top Section: Image and Details
+                                        _buildTopSection(price: "", category: "", year: ""),
+                                        const SizedBox(height: 12),
+
+                                        // Middle Section: Location, Likes, Views
+                                        _buildStatsSection(location: {"city": "Meh"}, likes: "", views: ""),
+
+                                        const SizedBox(height: 4),
+
+                                        // Sold Button
+                                        _buildSoldButton(hasBeenSold: true),
+                                        const SizedBox(height: 4),
+
+                                        // Bottom Section: Timestamp and Action Buttons
+                                        _buildBottomSection(
+                                          createdAt: Timestamp.fromDate(DateTime.now()),
+                                          postId: "",
+                                          hasBeenSold: true,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
                   }
 
                   if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
@@ -277,20 +340,19 @@ class _DetailsUserPostsScreenState extends State<DetailsUserPostsScreen> {
         // Action buttons
         !hasBeenSold
             ? Row(
-          children: [
-            // _buildActionButton(Icons.delete_outline, Colors.red, action: "Delete", postId: postId),
+              children: [
+                // _buildActionButton(Icons.delete_outline, Colors.red, action: "Delete", postId: postId),
+                const SizedBox(width: 14),
 
-            const SizedBox(width: 14),
-
-            // _buildActionButton(
-            //   Icons.edit,
-            //   onboardingColor,
-            //   action: "Edit",
-            //   postId: postId,
-            //   hasBeenSold: hasBeenSold,
-            // ),
-          ],
-        )
+                // _buildActionButton(
+                //   Icons.edit,
+                //   onboardingColor,
+                //   action: "Edit",
+                //   postId: postId,
+                //   hasBeenSold: hasBeenSold,
+                // ),
+              ],
+            )
             : Row(children: []),
       ],
     );

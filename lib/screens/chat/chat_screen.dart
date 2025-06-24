@@ -6,6 +6,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:farmers_hub/services/chat_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../utils/constants.dart';
 
@@ -67,9 +68,96 @@ class _ChatScreenState extends State<ChatScreen> {
       stream: _chatService.getMessages(widget.receiverId, senderId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Center(child: CircularProgressIndicator(color: onboardingColor)),
+          // return const Scaffold(
+          //   backgroundColor: Colors.white,
+          //   body: Center(child: CircularProgressIndicator(color: onboardingColor)),
+          // );
+
+          return Scaffold(
+            backgroundColor: homebackgroundColor,
+            appBar: AppBar(
+              leading: BackButton(color: Colors.white),
+              backgroundColor: onboardingColor,
+              elevation: 0,
+              title: Skeletonizer(
+                ignorePointers: true,
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                      ),
+                    ),
+                    const SizedBox(width: 12.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "initialName",
+                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                        ),
+                        Text("Time", style: TextStyle(color: Colors.white, fontSize: 14)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            body: Center(
+              child: Skeletonizer(
+                ignorePointers: true,
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: CircleAvatar(child: Icon(Icons.person)),
+                      title: Text('User Name'),
+                      subtitle: Text('Last message...'),
+                    ),
+
+                    Expanded(child: SizedBox()),
+
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20, left: 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              decoration: InputDecoration(
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: textFieldBorderSideColor),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(color: textFieldBorderSideColor),
+                                ),
+                                hintText: "Type your message...",
+                                filled: true,
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.rectangle,
+                              borderRadius: BorderRadius.circular(11),
+                            ),
+                            margin: EdgeInsets.only(right: 10),
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.arrow_outward, color: Colors.grey),
+                            )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         }
 
@@ -83,9 +171,96 @@ class _ChatScreenState extends State<ChatScreen> {
             future: _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
             builder: (context, userDataSnapshot) {
               if (userDataSnapshot.connectionState == ConnectionState.waiting) {
+                // return Scaffold(
+                //   backgroundColor: Colors.white,
+                //   body: const Center(child: CircularProgressIndicator(color: onboardingColor)),
+                // );
+
                 return Scaffold(
-                  backgroundColor: Colors.white,
-                  body: const Center(child: CircularProgressIndicator(color: onboardingColor)),
+                  backgroundColor: homebackgroundColor,
+                  appBar: AppBar(
+                    leading: BackButton(color: Colors.white),
+                    backgroundColor: onboardingColor,
+                    elevation: 0,
+                    title: Skeletonizer(
+                      ignorePointers: true,
+                      child: Row(
+                        children: [
+                          const CircleAvatar(
+                            backgroundImage: NetworkImage(
+                              'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                            ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "initialName",
+                                style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                              ),
+                              Text("Time", style: TextStyle(color: Colors.white, fontSize: 14)),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  body: Center(
+                    child: Skeletonizer(
+                      ignorePointers: true,
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: CircleAvatar(child: Icon(Icons.person)),
+                            title: Text('User Name'),
+                            subtitle: Text('Last message...'),
+                          ),
+
+                          Expanded(child: SizedBox()),
+
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 20, left: 10),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(color: textFieldBorderSideColor),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(color: textFieldBorderSideColor),
+                                      ),
+                                      hintText: "Type your message...",
+                                      filled: true,
+                                      fillColor: Colors.white,
+                                    ),
+                                  ),
+                                ),
+
+                                const SizedBox(width: 10),
+
+                                Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(11),
+                                    ),
+                                    margin: EdgeInsets.only(right: 10),
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.arrow_outward, color: Colors.grey),
+                                    )),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 );
               }
 
@@ -100,8 +275,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
               final initialName = userData?['username'] ?? '';
               final lastSeenAtTimestamp = userData?['lastSeenAt'] as Timestamp;
-              final String formattedDateTime = DateFormat('MMM d, y ~ h:mm a').format(lastSeenAtTimestamp
-                  .toDate());
+              final String formattedDateTime = DateFormat(
+                'MMM d, y ~ h:mm a',
+              ).format(lastSeenAtTimestamp.toDate());
 
               return Scaffold(
                 backgroundColor: homebackgroundColor,
@@ -245,10 +421,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              formattedTime,
-              style: const TextStyle(fontSize: 11, color: Colors.grey),
-            ),
+            child: Text(formattedTime, style: const TextStyle(fontSize: 11, color: Colors.grey)),
           ),
         ],
       ),
