@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/services/speech_service.dart';
 import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +12,8 @@ import 'package:farmers_hub/screens/details/details_screen.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class FilteredResultsScreen extends StatefulWidget {
   String searchQuery;
@@ -33,6 +36,16 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   final validateMode = AutovalidateMode.onUserInteraction;
 
   final FirebaseService firebaseService = FirebaseService();
+
+  final SpeechService _speechService = SpeechService();
+
+  String _recognizedText = 'Initializing speech recognition...';
+  bool _isListening = false;
+  bool _isInitialized = false;
+  bool _isInitializing = true;
+  String _errorMessage = '';
+  List<LocaleName> _availableLocales = [];
+  String? _selectedLocale;
 
   List<QueryDocumentSnapshot> _searchResults = [];
   bool _isLoading = false;
@@ -86,16 +99,188 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   @override
   void initState() {
     super.initState();
+
+    _initializeSpeech();
     // If the screen is opened with an initial search query, perform the search
     if (widget.searchQuery.isNotEmpty) {
       _performSearch(widget.searchQuery);
     }
   }
 
+  Future<void> _initializeSpeech() async {
+    setState(() {
+      _isInitializing = true;
+      _recognizedText = 'Initializing speech recognition...';
+    });
+
+    // Set up callbacks before initialization
+    _speechService.onSpeechResult = (text) {
+      setState(() {
+        _recognizedText = text.isEmpty ? 'Listening...' : text;
+      });
+    };
+
+    _speechService.onError = (error) {
+      setState(() {
+        _errorMessage = error;
+      });
+    };
+
+    _speechService.onListeningStateChanged = (isListening) {
+      setState(() {
+        _isListening = isListening;
+        if (isListening) {
+          _recognizedText = 'Listening...';
+          _errorMessage = '';
+        }
+      });
+    };
+
+    _speechService.onLocalesLoaded = (locales) {
+      setState(() {
+        _availableLocales = locales;
+        _selectedLocale = _speechService.currentLocale;
+      });
+    };
+
+    // Check availability first
+    bool available = await _speechService.checkAvailability();
+    if (!available) {
+      setState(() {
+        _isInitializing = false;
+        _isInitialized = false;
+        _errorMessage =
+            'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
+        _recognizedText = 'Speech recognition unavailable';
+      });
+      return;
+    }
+
+    // Initialize the service
+    bool initialized = await _speechService.initialize();
+
+    setState(() {
+      _isInitializing = false;
+      _isInitialized = initialized;
+
+      if (initialized) {
+        _recognizedText = 'Ready! Press the microphone to start speaking...';
+        _errorMessage = '';
+        _availableLocales = _speechService.availableLocales;
+        _selectedLocale = _speechService.currentLocale;
+      } else {
+        _errorMessage = _speechService.errorMessage;
+        _recognizedText = 'Failed to initialize speech recognition';
+      }
+    });
+  }
+
+  void _clearText() {
+    setState(() {
+      _recognizedText = 'Ready! Press the microphone to start speaking...';
+      _errorMessage = '';
+    });
+  }
+
+  void _showRetryDialog() {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Speech Recognition Issue'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Speech recognition is not working. This might be because:'),
+                const SizedBox(height: 10),
+                const Text('• Google app is not installed or updated'),
+                const Text('• Speech services are disabled'),
+                const Text('• Microphone permissions not granted'),
+                const Text('• No default voice input app selected'),
+                const SizedBox(height: 10),
+                const Text('Would you like to try reinitializing?'),
+              ],
+            ),
+            actions: [
+              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _initializeSpeech();
+                },
+                child: const Text('Retry'),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _showLocaleDialog() {
+    if (_availableLocales.isEmpty) return;
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Select Language'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: _availableLocales.length,
+                itemBuilder: (context, index) {
+                  final locale = _availableLocales[index];
+                  return ListTile(
+                    title: Text(locale.name),
+                    subtitle: Text(locale.localeId),
+                    leading: Radio<String>(
+                      value: locale.localeId,
+                      groupValue: _selectedLocale,
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedLocale = value;
+                        });
+                        _speechService.setLocale(value!);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+          ),
+    );
+  }
+
   @override
   void dispose() {
+    _speechService.dispose();
     _debounce?.cancel();
     super.dispose();
+  }
+
+  void _toggleListening() async {
+    if (!_isInitialized) {
+      _showRetryDialog();
+      return;
+    }
+
+    if (_isListening) {
+      await _speechService.stopListening();
+    } else {
+      setState(() {
+        _recognizedText = 'Starting to listen...';
+        _errorMessage = '';
+      });
+
+      await _speechService.startListening(
+        localeId: _selectedLocale,
+        listenFor: const Duration(seconds: 30),
+        pauseFor: const Duration(seconds: 2),
+      );
+    }
   }
 
   // SearchOption _selectedSearchOption = SearchOption.title;
@@ -284,6 +469,35 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Text(
+                  //   _isInitialized
+                  //       ? (_isListening ? 'Listening...' : 'Ready to listen')
+                  //       : 'Speech recognition unavailable',
+                  //   style: TextStyle(
+                  //     fontWeight: FontWeight.bold,
+                  //     color:
+                  //         _isInitialized
+                  //             ? (_isListening ? Colors.green.shade700 : Colors.blue.shade700)
+                  //             : Colors.red.shade700,
+                  //   ),
+                  // ),
+                  //
+                  // Text(_recognizedText),
+                  //
+                  // if (_errorMessage.isNotEmpty)
+                  //   Container(
+                  //     padding: const EdgeInsets.all(12),
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.red.shade100,
+                  //       borderRadius: BorderRadius.circular(8),
+                  //       border: Border.all(color: Colors.red.shade300),
+                  //     ),
+                  //     child: Text(
+                  //       _errorMessage,
+                  //       style: TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.w500),
+                  //     ),
+                  //   ),
+
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 14),
                     child: FormBuilderTextField(
@@ -304,9 +518,15 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
                         suffixIcon: IconButton(
-                          icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                          // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                          icon: Icon(
+                            _isListening ? Icons.mic_outlined : Icons.mic_none,
+                            color: _isInitialized ? (_isListening ? Colors.green : Colors.blue) : Colors.red,
+
+                            // color: onboardingColor,
+                          ),
                           // icon: const Icon(Icons.sort_outlined, color: onboardingColor),
-                          onPressed: () {},
+                          onPressed: _isInitializing ? null : _toggleListening,
                           // onPressed: _showOptionsDialog,
                         ),
                         enabledBorder: OutlineInputBorder(
@@ -327,9 +547,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       children: [
                         Chip(
                           backgroundColor: onboardingColor,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                           label: Text(
                             "Filters (1)",
                             style: GoogleFonts.poppins(
@@ -348,15 +566,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               setState(() {
                                 widget.selectedSearchOption = SearchOption.title;
                                 widget.searchQuery = "";
-                                _formKey.currentState?.patchValue({
-                                  "search": "",
-                                });
+                                _formKey.currentState?.patchValue({"search": ""});
                               });
                             }
                           },
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                           selected: widget.selectedSearchOption == SearchOption.title,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
@@ -379,15 +593,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                                 widget.selectedSearchOption = SearchOption.category;
                                 widget.searchQuery = "";
                                 // _formKey.currentState?.reset();
-                                _formKey.currentState?.patchValue({
-                                  "search": "",
-                                });
+                                _formKey.currentState?.patchValue({"search": ""});
                               });
                             }
                           },
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                           selected: widget.selectedSearchOption == SearchOption.category,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],

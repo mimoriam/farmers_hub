@@ -158,7 +158,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final firebaseService = FirebaseService();
 
-  // final LocationService _locationService = LocationService();
   late LocationService _locationService;
 
   String _selectedLocation = '';

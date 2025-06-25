@@ -343,24 +343,6 @@ class _ChatHomeState extends State<ChatHome> {
                               title: Text('User Name'),
                               subtitle: Text('Last message...'),
                             ),
-
-                            ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
-                              subtitle: Text('Last message...'),
-                            ),
-
-                            ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
-                              subtitle: Text('Last message...'),
-                            ),
-
-                            ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
-                              subtitle: Text('Last message...'),
-                            ),
                           ],
                         )
                       ),
@@ -393,24 +375,6 @@ class _ChatHomeState extends State<ChatHome> {
                               ignorePointers: true,
                               child: Column(
                                 children: [
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
-
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
-
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
-
                                   ListTile(
                                     leading: CircleAvatar(child: Icon(Icons.person)),
                                     title: Text('User Name'),

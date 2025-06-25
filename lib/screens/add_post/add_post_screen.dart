@@ -107,6 +107,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 // padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                 child: FormBuilder(
                   key: _formKey,
+                  // IMPORTANT to remove all references from dynamic field when delete
+                  clearValueOnUnregister: true,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -417,7 +419,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           }
                                           return null;
                                         },
-                                        onChanged: (String? value) {},
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            locationSelected = true;
+                                          });
+                                        },
                                       ),
                                     ),
 
@@ -506,8 +512,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                   "Live Stock",
                                                   'Grains & Seeds',
                                                   "Fertilizers",
-                                                  "Tools & Equipments",
+                                                  "Tools",
                                                   "Land Services",
+                                                  "Equipments",
                                                   "Delivery",
                                                   "Worker Services",
                                                   "Pesticides",
@@ -560,71 +567,209 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   separator: const SizedBox(height: 3), // Spacing between options
                                     // ),
                                     // const SizedBox(height: 2),
-                                    Text("Gender", style: _labelStyle),
+                                    selectedCategory == null
+                                        ? Container()
+                                        : Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            selectedCategory == "Live Stock" ||
+                                                    selectedCategory == "Worker Services"
+                                                ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Gender", style: _labelStyle),
 
-                                    const SizedBox(height: 8),
+                                                    const SizedBox(height: 8),
 
-                                    Padding(
-                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-                                      padding: const EdgeInsets.only(right: 0, left: 0, bottom: 10),
-                                      child: DropdownButtonFormField2<String>(
-                                        autovalidateMode: validateMode,
-                                        decoration: InputDecoration(
-                                          labelText: "Select a Gender",
-                                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                                          contentPadding: const EdgeInsets.symmetric(
-                                            vertical: 0,
-                                            horizontal: 6,
-                                          ),
-                                          border: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          enabledBorder: _inputBorder,
-                                          errorBorder: _errorInputBorder,
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                        ),
-                                        iconStyleData: IconStyleData(
-                                          // Using IconStyleData for icon properties
-                                          iconEnabledColor: onboardingTextColor,
-                                        ),
+                                                    Padding(
+                                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                                      padding: const EdgeInsets.only(
+                                                        right: 0,
+                                                        left: 0,
+                                                        bottom: 10,
+                                                      ),
+                                                      child: DropdownButtonFormField2<String>(
+                                                        autovalidateMode: validateMode,
+                                                        decoration: InputDecoration(
+                                                          labelText: "Select a Gender",
+                                                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                                                          contentPadding: const EdgeInsets.symmetric(
+                                                            vertical: 0,
+                                                            horizontal: 6,
+                                                          ),
+                                                          border: OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                              color: onboardingTextColor,
+                                                              width: 1.0,
+                                                            ),
+                                                            borderRadius: BorderRadius.circular(12),
+                                                          ),
+                                                          enabledBorder: _inputBorder,
+                                                          errorBorder: _errorInputBorder,
+                                                          focusedBorder: OutlineInputBorder(
+                                                            borderSide: BorderSide(
+                                                              color: onboardingTextColor,
+                                                              width: 1.0,
+                                                            ),
+                                                            borderRadius: BorderRadius.circular(12),
+                                                          ),
+                                                        ),
+                                                        iconStyleData: IconStyleData(
+                                                          // Using IconStyleData for icon properties
+                                                          iconEnabledColor: onboardingTextColor,
+                                                        ),
 
-                                        dropdownStyleData: DropdownStyleData(
-                                          maxHeight: 160,
-                                          offset: const Offset(0, -10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12),
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                                        dropdownStyleData: DropdownStyleData(
+                                                          maxHeight: 160,
+                                                          offset: const Offset(0, -10),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(12),
+                                                            color: Colors.white,
+                                                          ),
+                                                        ),
 
-                                        // value: "Damascus",
-                                        items:
-                                            ['Male', 'Female']
-                                                .map(
-                                                  (gender) => DropdownMenuItem<String>(
-                                                    value: gender,
-                                                    child: Text(gender),
-                                                  ),
+                                                        // value: "Damascus",
+                                                        items:
+                                                            ['Male', 'Female']
+                                                                .map(
+                                                                  (gender) => DropdownMenuItem<String>(
+                                                                    value: gender,
+                                                                    child: Text(gender),
+                                                                  ),
+                                                                )
+                                                                .toList(),
+                                                        value: selectedGender,
+                                                        validator: (String? value) {
+                                                          if (value == null) {
+                                                            return 'Gender is required.';
+                                                          }
+                                                          return null;
+                                                        },
+                                                        onChanged: (String? value) {
+                                                          setState(() {
+                                                            selectedGender = value;
+                                                          });
+                                                        },
+                                                      ),
+                                                    ),
+
+                                                    const SizedBox(height: 2),
+                                                  ],
                                                 )
-                                                .toList(),
-                                        value: selectedGender,
-                                        validator: (String? value) {
-                                          if (value == null) {
-                                            return 'Gender is required.';
-                                          }
-                                          return null;
-                                        },
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            selectedGender = value;
-                                          });
-                                        },
-                                      ),
-                                    ),
+                                                : Container(),
+
+                                            // Average Weight (in kgs)
+                                            selectedCategory == "Fruits" ||
+                                                    selectedCategory == "Vegetables" ||
+                                                    selectedCategory == "Olive Oil" ||
+                                                    selectedCategory == "Grains & Seeds" ||
+                                                    selectedCategory == "Fertilizers" ||
+                                                    selectedCategory == "Tools" ||
+                                                    selectedCategory == "Land Services" ||
+                                                    selectedCategory == "Equipments" ||
+                                                    selectedCategory == "Delivery" ||
+                                                    selectedCategory == "Pesticides" ||
+                                                    selectedCategory == "Animal Feed" ||
+                                                    selectedCategory == "Others"
+                                                ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Average Weight (in kgs)", style: _labelStyle),
+
+                                                    const SizedBox(height: 8),
+
+                                                    FormBuilderTextField(
+                                                      name: 'avg_weight',
+                                                      maxLength: 3,
+                                                      autovalidateMode: validateMode,
+                                                      decoration: InputDecoration(
+                                                        counterText: "",
+                                                        hintText: 'Enter Average Weight in kilograms',
+                                                        border: _inputBorder,
+                                                        enabledBorder: _inputBorder,
+                                                        focusedBorder: _focusedInputBorder,
+                                                        errorBorder: _errorInputBorder,
+                                                        focusedErrorBorder: _focusedInputBorder,
+                                                        contentPadding: _contentPadding,
+                                                        // The image shows a dropdown arrow, this is a stylistic choice.
+                                                        // If it's a free text field, suffixIcon is decorative.
+                                                        // If it's a dropdown, use FormBuilderDropdown.
+                                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                                      ),
+                                                      keyboardType: const TextInputType.numberWithOptions(
+                                                        decimal: true,
+                                                      ),
+                                                      validator: FormBuilderValidators.compose([
+                                                        FormBuilderValidators.required(
+                                                          errorText: 'Average weight is required.',
+                                                        ),
+                                                        FormBuilderValidators.numeric(
+                                                          errorText: 'Must be a number.',
+                                                        ),
+                                                        FormBuilderValidators.min(
+                                                          0,
+                                                          errorText: 'Weight cannot be negative.',
+                                                        ),
+                                                        FormBuilderValidators.max(
+                                                          10000,
+                                                          errorText: 'Weight cannot exceed.',
+                                                        ),
+                                                      ]),
+                                                    ),
+
+                                                    const SizedBox(height: 10),
+                                                  ],
+                                                )
+                                                : Container(),
+
+                                            selectedCategory == "Live Stock" ||
+                                                    selectedCategory == "Worker Services"
+                                                ? Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("Age (in years)", style: _labelStyle),
+
+                                                    const SizedBox(height: 8),
+
+                                                    FormBuilderTextField(
+                                                      name: 'age',
+                                                      maxLength: 2,
+                                                      autovalidateMode: validateMode,
+                                                      decoration: InputDecoration(
+                                                        counterText: "",
+                                                        hintText: 'Enter age in years',
+                                                        border: _inputBorder,
+                                                        enabledBorder: _inputBorder,
+                                                        focusedBorder: _focusedInputBorder,
+                                                        errorBorder: _errorInputBorder,
+                                                        focusedErrorBorder: _focusedInputBorder,
+                                                        contentPadding: _contentPadding,
+                                                      ),
+                                                      keyboardType: TextInputType.number,
+                                                      validator: FormBuilderValidators.compose([
+                                                        FormBuilderValidators.required(
+                                                          errorText: 'Age is required.',
+                                                        ),
+                                                        FormBuilderValidators.numeric(
+                                                          errorText: 'Must be a number.',
+                                                        ),
+                                                        FormBuilderValidators.min(
+                                                          0,
+                                                          errorText: 'Age cannot be negative.',
+                                                        ),
+                                                        FormBuilderValidators.max(
+                                                          999,
+                                                          errorText: 'Age cannot exceed.',
+                                                        ),
+                                                      ]),
+                                                    ),
+
+                                                    const SizedBox(height: 10),
+                                                  ],
+                                                )
+                                                : Container(),
+                                          ],
+                                        ),
 
                                     // FormBuilderRadioGroup<String>(
                                     //   name: 'gender',
@@ -648,43 +793,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   ),
                                     //   separator: const SizedBox(width: 16), // Spacing between options
                                     // ),
-                                    const SizedBox(height: 2),
-
-                                    // Average Weight (in kgs)
-                                    Text("Average Weight (in kgs)", style: _labelStyle),
-                                    const SizedBox(height: 8),
-
-                                    FormBuilderTextField(
-                                      name: 'avg_weight',
-                                      maxLength: 3,
-                                      autovalidateMode: validateMode,
-                                      decoration: InputDecoration(
-                                        counterText: "",
-                                        hintText: 'Enter Average Weight in kilograms',
-                                        border: _inputBorder,
-                                        enabledBorder: _inputBorder,
-                                        focusedBorder: _focusedInputBorder,
-                                        errorBorder: _errorInputBorder,
-                                        focusedErrorBorder: _focusedInputBorder,
-                                        contentPadding: _contentPadding,
-                                        // The image shows a dropdown arrow, this is a stylistic choice.
-                                        // If it's a free text field, suffixIcon is decorative.
-                                        // If it's a dropdown, use FormBuilderDropdown.
-                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
-                                      ),
-                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(
-                                          errorText: 'Average weight is required.',
-                                        ),
-                                        FormBuilderValidators.numeric(errorText: 'Must be a number.'),
-                                        FormBuilderValidators.min(0, errorText: 'Weight cannot be negative.'),
-                                        FormBuilderValidators.max(10000, errorText: 'Weight cannot exceed.'),
-                                      ]),
-                                    ),
-
-                                    const SizedBox(height: 10),
-
                                     Text("Quantity", style: _labelStyle),
                                     const SizedBox(height: 8),
 
@@ -713,34 +821,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                       ]),
                                     ),
-                                    const SizedBox(height: 10),
-
-                                    Text("Age (in years)", style: _labelStyle),
-                                    const SizedBox(height: 8),
-
-                                    FormBuilderTextField(
-                                      name: 'age',
-                                      maxLength: 2,
-                                      autovalidateMode: validateMode,
-                                      decoration: InputDecoration(
-                                        counterText: "",
-                                        hintText: 'Enter age in years',
-                                        border: _inputBorder,
-                                        enabledBorder: _inputBorder,
-                                        focusedBorder: _focusedInputBorder,
-                                        errorBorder: _errorInputBorder,
-                                        focusedErrorBorder: _focusedInputBorder,
-                                        contentPadding: _contentPadding,
-                                      ),
-                                      keyboardType: TextInputType.number,
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(errorText: 'Age is required.'),
-                                        FormBuilderValidators.numeric(errorText: 'Must be a number.'),
-                                        FormBuilderValidators.min(0, errorText: 'Age cannot be negative.'),
-                                        FormBuilderValidators.max(999, errorText: 'Age cannot exceed.'),
-                                      ]),
-                                    ),
-
                                     const SizedBox(height: 10),
 
                                     Text("Price", style: _labelStyle),
@@ -939,7 +1019,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               onPressed: () async {
                                 // if (_formKey.currentState!.validate() && locationSelected) {
 
-                                if (_formKey.currentState!.validate()) {
+                                if (_formKey.currentState!.validate() && selectedCategory != null) {
                                   final doc = await firebaseService.getCurrentUserData();
                                   final userData = doc?.data() as Map<String, dynamic>?;
 
@@ -948,11 +1028,24 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
                                     category: selectedCategory!,
-                                    gender: selectedGender!,
+                                    gender:
+                                        selectedCategory == "Live Stock" ||
+                                                selectedCategory == "Worker Services"
+                                            ? selectedGender
+                                            : "",
                                     currency: currency,
-                                    averageWeight: _formKey.currentState?.fields['avg_weight']?.value,
+                                    averageWeight:
+                                        selectedCategory != "Live Stock" ||
+                                                selectedCategory != "Worker Services"
+                                            ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                            : "",
                                     quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
-                                    age: int.parse(_formKey.currentState?.fields['age']?.value),
+                                    // age: int.parse(_formKey.currentState?.fields['age']?.value),
+                                    age:
+                                        selectedCategory == "Live Stock" ||
+                                                selectedCategory == "Worker Services"
+                                            ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                            : 0,
                                     price: int.parse(_formKey.currentState?.fields['price']?.value),
                                     details: _formKey.currentState?.fields['add_details']?.value,
                                     featured: true,
@@ -976,19 +1069,20 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       MaterialPageRoute(builder: (context) => HomeScreen()),
                                     );
                                   }
-                                } else {
-                                  if (!locationSelected) {
-                                    setState(() {
-                                      error = "Location not selected";
-
-                                      _scrollController.animateTo(
-                                        _scrollController.position.minScrollExtent,
-                                        curve: Curves.easeOut,
-                                        duration: const Duration(milliseconds: 300),
-                                      );
-                                    });
-                                  }
                                 }
+                                // } else {
+                                // if (!locationSelected) {
+                                //   setState(() {
+                                //     error = "Location not selected";
+                                //
+                                //     _scrollController.animateTo(
+                                //       _scrollController.position.minScrollExtent,
+                                //       curve: Curves.easeOut,
+                                //       duration: const Duration(milliseconds: 300),
+                                //     );
+                                //   });
+                                // }
+                                // }
                               },
                               child: const Text(
                                 'Submit',

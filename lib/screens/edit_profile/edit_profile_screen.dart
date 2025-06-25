@@ -130,73 +130,42 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                       const SizedBox(height: 30),
 
-                      FormBuilder(
-                        key: _formKey,
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // --- DISPLAY NAME ---
-                            const Text(
-                              'Change Display Name',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            FormBuilderTextField(
-                              name: 'username',
-                              decoration: _buildInputDecoration('Enter Your Name'),
-                              // initialValue: initialName,
-                              // readOnly: true,
-                              // enabled: false,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(errorText: 'Name is required.'),
-                                FormBuilderValidators.minLength(
-                                  3,
-                                  errorText: 'Name must be at least 3 characters.',
-                                ),
-                              ]),
-                            ),
-                            const SizedBox(height: 14),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // --- DISPLAY NAME ---
+                          const Text(
+                            'Change Display Name',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            decoration: _buildInputDecoration('Enter Your Name'),
+                          ),
+                          const SizedBox(height: 14),
 
-                            // --- PHONE NUMBER ---
-                            const Text(
-                              'Enter Phone Number',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            FormBuilderTextField(
-                              name: 'phone',
-                              enabled: false,
-                              decoration: _buildInputDecoration('Enter Phone Number'),
-                              // initialValue:
-                              // phoneNumber["completeNumber"].isEmpty
-                              //     ? ""
-                              //     : "${phoneNumber["completeNumber"]}",
-                              keyboardType: TextInputType.phone,
-                              validator: FormBuilderValidators.compose([
-                                FormBuilderValidators.required(errorText: 'Phone number is required.'),
-                                FormBuilderValidators.numeric(errorText: 'Please enter a valid number.'),
-                              ]),
-                            ),
-                            const SizedBox(height: 14),
+                          // --- PHONE NUMBER ---
+                          const Text(
+                            'Enter Phone Number',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            decoration: _buildInputDecoration('Enter Your Name'),
+                          ),
+                          const SizedBox(height: 14),
 
-                            // --- ADDRESS ---
-                            const Text(
-                              'Change Your Address',
-                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            const SizedBox(height: 8),
-                            FormBuilderTextField(
-                              name: 'address',
-                              decoration: _buildInputDecoration('Enter Address'),
-                              // initialValue:
-                              //     location["city"].isEmpty ? "" : "${location["city"]} ${location["province"]}",
-                              // initialValue: location["city"].isEmpty ? "" : "${location["city"]}",
-                              validator: FormBuilderValidators.required(errorText: 'Address is required.'),
-                            ),
-                            const SizedBox(height: 14),
-                          ],
-                        ),
+                          // --- ADDRESS ---
+                          const Text(
+                            'Change Your Address',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            decoration: _buildInputDecoration('Enter Your Name'),
+                          ),
+                          const SizedBox(height: 14),
+                        ],
                       ),
 
                       const SizedBox(height: 10),

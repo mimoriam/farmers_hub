@@ -600,9 +600,38 @@ class _DetailsScreenState extends State<DetailsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDetailRow('Category:', category),
-        _buildDetailRow('Gender:', gender),
-        _buildDetailRow('Average Weight (in kg):', averageWeight),
-        _buildDetailRow('Age (in years):', age), // Note: unusual age
+        category == "Fruits" ||
+                category == "Vegetables" ||
+                category == "Olive Oil" ||
+                category == "Grains & Seeds" ||
+                category == "Fertilizers" ||
+                category == "Tools" ||
+                category == "Land Services" ||
+                category == "Equipments" ||
+                category == "Delivery" ||
+                category == "Pesticides" ||
+                category == "Animal Feed" ||
+                category == "Others"
+            ? Container()
+            : _buildDetailRow('Gender:', gender),
+
+        (averageWeight.isNotEmpty) ? _buildDetailRow('Average Weight (in kg):', averageWeight) : Container(),
+
+        category == "Fruits" ||
+                category == "Vegetables" ||
+                category == "Olive Oil" ||
+                category == "Grains & Seeds" ||
+                category == "Fertilizers" ||
+                category == "Tools" ||
+                category == "Land Services" ||
+                category == "Equipments" ||
+                category == "Delivery" ||
+                category == "Pesticides" ||
+                category == "Animal Feed" ||
+                category == "Others"
+            ? Container()
+            : _buildDetailRow('Age (in years):', age), // Note: unusual age
+
         _buildDetailRow('Phone Number:', phoneNumber, phoneBlue: true),
 
         const SizedBox(height: 8),

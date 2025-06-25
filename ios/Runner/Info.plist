@@ -16,6 +16,10 @@
           <string>sms</string>
           <string>tel</string>
         </array>
+        <key>NSSpeechRecognitionUsageDescription</key>
+        <string>This app uses speech recognition to allow you to search for products with your voice.</string>
+        <key>NSMicrophoneUsageDescription</key>
+        <string>This app requires microphone access to enable voice search.</string>
         <key>NSLocationWhenInUseUsageDescription</key>
         <string>We need your location to show your position on the map and provide relevant features.</string>
         <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>

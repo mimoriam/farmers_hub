@@ -210,10 +210,10 @@ class FirebaseService {
   Future<void> createPost({
     required String title,
     required String category,
-    required String gender,
+    required String? gender,
     required String averageWeight,
     required int quantity,
-    required int age,
+    required int? age,
     required int price,
     required String currency,
     required String city,

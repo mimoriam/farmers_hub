@@ -28,7 +28,9 @@ class AuthGate extends StatelessWidget {
                 ignorePointers: true,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [CircularProgressIndicator(), SizedBox(height: 10), Text("Loading...")],
+                  children: [
+                    // CircularProgressIndicator(),
+                    SizedBox(height: 10), Text("Loading...")],
                 ),
               ),
             ),
@@ -47,7 +49,9 @@ class AuthGate extends StatelessWidget {
                       ignorePointers: true,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: [CircularProgressIndicator(), SizedBox(height: 10), Text("Loading...")],
+                        children: [
+                          // CircularProgressIndicator(),
+                          SizedBox(height: 10), Text("Loading...")],
                       ),
                     ),
                   ),
