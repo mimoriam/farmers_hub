@@ -46,19 +46,53 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   bool _isLoading = false;
 
-  File? _image;
+  // File? _image;
+  List<File> _images = [];
   final picker = ImagePicker();
 
-  Future<void> _pickImage() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  // Future<void> _pickImage() async {
+  //   final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+  //
+  //   setState(() {
+  //     if (pickedFile != null) {
+  //       _image = File(pickedFile.path);
+  //       error = "";
+  //     } else {
+  //       print('No image selected.');
+  //     }
+  //   });
+  // }
 
-    setState(() {
+  Future<void> _pickImage() async {
+    final int remainingImages = 4 - _images.length;
+
+    // When only one spot is left, use pickImage to avoid the limit issue
+    if (remainingImages == 1) {
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
-        error = "";
-      } else {
-        print('No image selected.');
+        if (mounted) {
+          setState(() {
+            _images.add(File(pickedFile.path));
+          });
+        }
       }
+    } else {
+      // Otherwise, use pickMultiImage with the calculated limit
+      final pickedFiles = await picker.pickMultiImage(limit: remainingImages);
+
+      if (pickedFiles.isNotEmpty) {
+        if (mounted) {
+          setState(() {
+            _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)).toList());
+          });
+        }
+      }
+    }
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      _images.removeAt(index);
     });
   }
 
@@ -237,33 +271,36 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                         const SizedBox(height: 20),
                                         // This is the "Add Images" button.
-                                        SizedBox(
-                                          width: double.infinity,
-                                          // Make button take full width of its parent.
-                                          child: ElevatedButton.icon(
-                                            onPressed: _pickImage,
-                                            icon: const Icon(
-                                              Icons.add_photo_alternate_rounded,
-                                              color: Colors.white,
-                                            ),
-                                            label: const Text(
-                                              'Add Images',
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
+                                        _images.length >= 4
+                                            ? Container()
+                                            : SizedBox(
+                                              width: double.infinity,
+                                              // Make button take full width of its parent.
+                                              child: ElevatedButton.icon(
+                                                onPressed: _pickImage,
+                                                icon: const Icon(
+                                                  Icons.add_photo_alternate_rounded,
+                                                  color: Colors.white,
+                                                ),
+                                                label: const Text(
+                                                  'Add Images',
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor:
+                                                      onboardingColor, // Button background color.
+                                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(12),
+                                                  ),
+                                                  elevation: 2, // Adds a subtle shadow.
+                                                ),
                                               ),
                                             ),
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: onboardingColor, // Button background color.
-                                              padding: const EdgeInsets.symmetric(vertical: 16),
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(12),
-                                              ),
-                                              elevation: 2, // Adds a subtle shadow.
-                                            ),
-                                          ),
-                                        ),
                                       ],
                                     ),
                                   ),
@@ -273,38 +310,100 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                             SizedBox(height: 10),
 
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.info_outline, color: onboardingColor, size: 20),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Add up to 4 photos for more views!',
-                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                            _images.length >= 4
+                                ? Container()
+                                : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.info_outline, color: onboardingColor, size: 20),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Add up to 4 photos for more views!',
+                                      style: TextStyle(fontSize: 14, color: Colors.black),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
 
-                            SizedBox(height: 10),
-
+                            // SizedBox(height: 10),
                             error.isNotEmpty
                                 ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                 : Container(),
 
-                            _image == null
-                                ? Container()
-                                : Stack(
+                            error.isNotEmpty ? SizedBox(height: 10) : Container(),
+
+                            // _image == null
+                            //     ? Container()
+                            //     : Stack(
+                            //       children: [
+                            //         Image.file(_image!, fit: BoxFit.fill, width: 110, height: 120),
+                            //
+                            //         Positioned(
+                            //           top: 2,
+                            //           left: 2,
+                            //           child: GestureDetector(
+                            //             onTap: () {
+                            //               setState(() {
+                            //                 _image = null;
+                            //               });
+                            //             },
+                            //             child: Container(
+                            //               decoration: BoxDecoration(
+                            //                 color: Colors.white,
+                            //                 shape: BoxShape.rectangle,
+                            //                 borderRadius: BorderRadius.circular(8),
+                            //               ),
+                            //               child: Icon(Icons.close, color: Colors.grey, size: 20),
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ],
+                            //     ),
+
+                            // if (_images.isNotEmpty && _images.length < 4) ...[
+                            //   SizedBox(height: 10),
+                            //   Center(
+                            //     child: ElevatedButton.icon(
+                            //       onPressed: _pickImage,
+                            //       icon: Icon(Icons.add, color: Colors.white),
+                            //       label: Text('Add More', style: TextStyle(color: Colors.white)),
+                            //       style: ElevatedButton.styleFrom(backgroundColor: onboardingColor),
+                            //     ),
+                            //   )
+                            // ],
+
+                            // _images.isEmpty
+                            //     ? Container() :
+                            //     ?
+                            GridView.builder(
+                              shrinkWrap: true,
+                              // Important to make GridView work inside SingleChildScrollView
+                              physics: const NeverScrollableScrollPhysics(),
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                              ),
+
+                              // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
+                              itemCount: _images.length,
+                              itemBuilder: (context, index) {
+                                return Stack(
                                   children: [
-                                    Image.file(_image!, fit: BoxFit.fill, width: 110, height: 120),
+                                    Image.file(_images[index], fit: BoxFit.fill, width: 110, height: 120),
 
                                     Positioned(
                                       top: 2,
                                       left: 2,
                                       child: GestureDetector(
+                                        // onTap: () => _removeImage(index),
                                         onTap: () {
-                                          setState(() {
-                                            _image = null;
-                                          });
+                                          _removeImage(index);
+                                          if (_images.length <= 4) {
+                                            setState(() {
+                                              error = '';
+                                            });
+                                          }
+                                          return;
                                         },
                                         child: Container(
                                           decoration: BoxDecoration(
@@ -317,7 +416,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                     ),
                                   ],
-                                ),
+                                );
+                              },
+                            ),
 
                             Card(
                               color: Colors.white,
@@ -1057,7 +1158,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             TapDebouncer(
                               cooldown: const Duration(milliseconds: 1000),
                               onTap: () async {
-                                if (_image == null) {
+                                if (_images.isEmpty) {
                                   setState(() {
                                     error = "Upload an image!";
 
@@ -1067,15 +1168,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       duration: const Duration(milliseconds: 300),
                                     );
                                   });
+
+                                  return;
                                 }
-                                // if (_formKey.currentState!.validate() && locationSelected) {
 
                                 if (_formKey.currentState!.validate() &&
                                     selectedCategory != null &&
-                                    _image != null) {
-                                  String? imageUrl;
-                                  if (_image != null) {
-                                    imageUrl = await firebaseService.uploadImage(_image!);
+                                    _images.isNotEmpty) {
+                                  List<String> imageUrls = [];
+
+                                  if (_images.isNotEmpty && _images.length <= 4) {
+                                    imageUrls = await firebaseService.uploadImages(_images);
+                                  } else {
+                                    setState(() {
+                                      error = "Can't upload more than 4 images!";
+
+                                      _scrollController.animateTo(
+                                        _scrollController.position.minScrollExtent,
+                                        curve: Curves.easeOut,
+                                        duration: const Duration(milliseconds: 300),
+                                      );
+                                    });
+
+                                    return;
                                   }
 
                                   final doc = await firebaseService.getCurrentUserData();
@@ -1085,7 +1200,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
-                                    imageUrl: imageUrl.toString(),
+                                    // imageUrl: imageUrl.toString(),
+                                    imageUrls: imageUrls,
                                     category: selectedCategory!,
                                     gender:
                                         selectedCategory == "Live Stock" ||
@@ -1120,7 +1236,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   setState(() {
                                     locationSelected = false;
                                     error = "";
-                                    _image = null;
+                                    // _image = null;
+                                    _images = [];
                                   });
 
                                   if (context.mounted) {

@@ -52,6 +52,19 @@ class FirebaseService {
     }
   }
 
+  Future<List<String>> uploadImages(List<File> images) async {
+    List<String> imageUrls = [];
+
+    for (File image in images) {
+      String? imageUrl = await uploadImage(image); // Reusing the single upload logic
+
+      if (imageUrl != null) {
+        imageUrls.add(imageUrl);
+      }
+    }
+    return imageUrls;
+  }
+
   // Helper function to generate keywords from a title
   List<String> _generateKeywords(String title) {
     final List<String> keywords = [];
@@ -248,7 +261,8 @@ class FirebaseService {
     required int price,
     required String currency,
     required String city,
-    required String imageUrl,
+    required List<String> imageUrls,
+    // required String imageUrl,
     String? village,
     String? province,
     String? country,
@@ -282,7 +296,8 @@ class FirebaseService {
         "country": country ?? "",
         "village": village ?? "",
       },
-      "imageUrl": imageUrl,
+      // "imageUrl": imageUrl,
+      "imageUrls": imageUrls,
       "hasBeenSold": false,
       "details": details ?? "",
       "createdAt": FieldValue.serverTimestamp(),
