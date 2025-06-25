@@ -52,6 +52,21 @@ class FirebaseService {
     }
   }
 
+  Future<void> deleteImageFromUrl(String imageUrl) async {
+    if (imageUrl.isEmpty) return;
+
+    try {
+      // Get a reference to the file from the download URL
+      Reference photoRef = _storage.refFromURL(imageUrl);
+      // Delete the file
+      await photoRef.delete();
+      print('Successfully deleted image from storage: $imageUrl');
+    } on FirebaseException catch (e) {
+      // Log the error but don't crash the app if the file doesn't exist
+      print('Error deleting image from storage: $e');
+    }
+  }
+
   Future<List<String>> uploadImages(List<File> images) async {
     List<String> imageUrls = [];
 
@@ -315,6 +330,7 @@ class FirebaseService {
     required int price,
     required String currency,
     required String city,
+    required List<String> imageUrls,
     String? village,
     String? province,
     String? country,
@@ -324,7 +340,8 @@ class FirebaseService {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
 
-    await _firestore.collection(postCollection).doc(postId).set({
+    // Note: createdAt, likes, views etc. are preserved by using update()
+    await _firestore.collection(postCollection).doc(postId).update({
       "sellerId": currentUser?.uid,
       // "username": currentUser?.displayName,
       "title": title,
@@ -337,9 +354,6 @@ class FirebaseService {
       "age": age,
       "price": price,
       "currency": currency,
-      "likes": 0,
-      "likedBy": [],
-      "views": 0,
       "featured": featured ?? false,
       "verifiedSeller": false,
       "location": {
@@ -348,9 +362,9 @@ class FirebaseService {
         "country": country ?? "",
         "village": village ?? "",
       },
+      "imageUrls": imageUrls,
       "hasBeenSold": false,
       "details": details ?? "",
-      "createdAt": FieldValue.serverTimestamp(),
     });
   }
 

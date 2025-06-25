@@ -392,8 +392,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     Image.file(_images[index], fit: BoxFit.fill, width: 110, height: 120),
 
                                     Positioned(
-                                      top: 2,
-                                      left: 2,
+                                      top: 4,
+                                      left: 4,
                                       child: GestureDetector(
                                         // onTap: () => _removeImage(index),
                                         onTap: () {
@@ -409,9 +409,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           decoration: BoxDecoration(
                                             color: Colors.white,
                                             shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.circular(8),
+                                            borderRadius: BorderRadius.circular(10),
                                           ),
-                                          child: Icon(Icons.close, color: Colors.grey, size: 20),
+                                          child: Icon(Icons.close, color: Colors.black, size: 20),
                                         ),
                                       ),
                                     ),

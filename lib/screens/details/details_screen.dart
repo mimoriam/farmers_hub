@@ -16,6 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String postId;
@@ -33,6 +34,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   // A set to keep track of viewed post IDs for the current session
   static final Set<String> _sessionViewedPosts = {};
+
+  int _currentCarouselPage = 0;
 
   @override
   void initState() {
@@ -107,7 +110,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildImageSection(),
+                        _buildImageSection([]),
 
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -185,12 +188,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
               final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
               final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
 
+              final List<String> imageUrls = List<String>.from(postDetails['imageUrls'] ?? []);
+
               return SafeArea(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildImageSection(),
+                      // _buildImageSection(),
+                      _buildImageSection(imageUrls),
 
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
@@ -260,27 +266,97 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildImageSection() {
-    return Stack(
-      children: [
-        // Placeholder for the image. Replace with Image.network or Image.asset
-        Container(
-          height: 250,
-          child: Image.asset("images/backgrounds/cow_2.png", width: double.infinity, fit: BoxFit.cover),
-        ),
-        Positioned(
-          bottom: 10,
-          right: 10,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
-              borderRadius: BorderRadius.circular(10),
+  // Widget _buildImageSection() {
+  //   return Stack(
+  //     children: [
+  //       // Placeholder for the image. Replace with Image.network or Image.asset
+  //       Container(
+  //         height: 250,
+  //         child: Image.asset("images/backgrounds/cow_2.png", width: double.infinity, fit: BoxFit.cover),
+  //       ),
+  //       Positioned(
+  //         bottom: 10,
+  //         right: 10,
+  //         child: Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+  //           decoration: BoxDecoration(
+  //             color: Colors.black.withOpacity(0.7),
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: const Text('1/4', style: TextStyle(color: Colors.white, fontSize: 12)),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _buildImageSection(List<String> imageUrls) {
+    if (imageUrls.isEmpty) {
+      return Container(
+        height: 300,
+        color: Colors.grey[300],
+        child: Icon(Icons.image_not_supported, size: 50, color: Colors.grey[600]),
+      );
+    }
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Stack(
+          children: [
+            CarouselSlider.builder(
+              itemCount: imageUrls.length,
+              itemBuilder: (context, index, realIndex) {
+                final imageUrl = imageUrls[index];
+                return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
+              },
+              options: CarouselOptions(
+                height: 300,
+                viewportFraction: 1.0,
+                enlargeCenterPage: false,
+                enlargeFactor: 1,
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _currentCarouselPage = index;
+                  });
+                },
+              ),
             ),
-            child: const Text('1/4', style: TextStyle(color: Colors.white, fontSize: 12)),
-          ),
-        ),
-      ],
+
+            Positioned(
+              bottom: 10,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '${_currentCarouselPage + 1}/${imageUrls.length}',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+              ),
+            ),
+            // if (imageUrls.length > 1)
+            //   Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children:
+            //         imageUrls.asMap().entries.map((entry) {
+            //           return Container(
+            //             width: 8.0,
+            //             height: 8.0,
+            //             margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+            //             decoration: BoxDecoration(
+            //               shape: BoxShape.circle,
+            //               color: (Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black)
+            //                   .withOpacity(_currentCarouselPage == entry.key ? 0.9 : 0.4),
+            //             ),
+            //           );
+            //         }).toList(),
+            //   ),
+          ],
+        );
+      },
     );
   }
 

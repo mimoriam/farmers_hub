@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -8,6 +10,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class EditPostScreen extends StatefulWidget {
   final String postId;
@@ -29,6 +33,80 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   String? selectedCategory;
   String? selectedGender;
+
+  List<dynamic> _imageUrls = [];
+  List<File> _newImages = [];
+
+  final List<String> _removedImageUrls = [];
+  final picker = ImagePicker();
+  bool _isLoadingImages = true;
+
+  Future<void> _loadPostImages() async {
+    final postDetails = await firebaseService.getPostDetails(widget.postId);
+    if (mounted) {
+      setState(() {
+        if (postDetails.containsKey('imageUrls')) {
+          _imageUrls = List<dynamic>.from(postDetails['imageUrls']);
+        }
+        _isLoadingImages = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPostImages();
+  }
+
+  Future<void> _pickImage() async {
+    final int totalImages = _imageUrls.length + _newImages.length;
+
+    if (totalImages >= 4) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('You can only have up to 4 images.')));
+      return;
+    }
+
+    final int remaining = 4 - totalImages;
+
+    if (remaining == 1) {
+      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        setState(() {
+          _newImages.add(File(pickedFile.path));
+        });
+      }
+    } else {
+      final pickedFiles = await picker.pickMultiImage(limit: remaining);
+      if (pickedFiles.isNotEmpty) {
+        setState(() {
+          _newImages.addAll(pickedFiles.map((file) => File(file.path)));
+        });
+      }
+    }
+
+    if (_imageUrls.length + _newImages.length <= 4) {
+      setState(() {
+        error = '';
+      });
+    }
+  }
+
+  // *** MODIFIED: Track URL before removing from UI ***
+  void _removeExistingImage(int index) {
+    setState(() {
+      _removedImageUrls.add(_imageUrls[index] as String);
+      _imageUrls.removeAt(index);
+    });
+  }
+
+  void _removeNewImage(int index) {
+    setState(() {
+      _newImages.removeAt(index);
+    });
+  }
 
   // Common style for input field borders
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
@@ -73,7 +151,121 @@ class _EditPostScreenState extends State<EditPostScreen> {
         future: firebaseService.getPostDetails(widget.postId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            // return Center(child: CircularProgressIndicator(color: onboardingColor,));
+            return Skeletonizer(
+              ignorePointers: true,
+              ignoreContainers: true,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    DottedBorder(
+                      options: RoundedRectDottedBorderOptions(
+                        radius: const Radius.circular(20),
+                        color: onboardingColor,
+                        strokeWidth: 1,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.all(Radius.circular(12)),
+                        child: Container(
+                          width: double.infinity,
+                          height: 340,
+                          color: Colors.white,
+                          child: GridView.builder(
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 2,
+                              mainAxisSpacing: 2,
+                            ),
+                            itemCount:
+                            _imageUrls.length +
+                                _newImages.length +
+                                ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index < _imageUrls.length) {
+                                return Stack(
+                                  children: [
+                                    Image.network(
+                                      _imageUrls[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      left: 4,
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(Icons.close, color: Colors.black, size: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else if (index < _imageUrls.length + _newImages.length) {
+                                final newImageIndex = index - _imageUrls.length;
+
+                                return Stack(
+                                  children: [
+                                    Image.file(
+                                      _newImages[newImageIndex],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
+                                    Positioned(
+                                      top: 4,
+                                      left: 4,
+                                      child: GestureDetector(
+                                        onTap: () {},
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: Icon(Icons.close, color: Colors.black, size: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return Center(
+                                  child: IconButton(
+                                    icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+                                    onPressed: _pickImage,
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    ListView.builder(
+                      itemCount: 4,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: ListTile(
+                            title: Text('Item number $index as title'),
+                            subtitle: const Text('Subtitle here'),
+                            trailing: const Icon(Icons.ac_unit),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
 
           if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
@@ -108,7 +300,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 12),
+                          // SizedBox(height: 2),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            child: _buildImagePickerSection(), // --- MODIFIED UI WIDGET ---
+                          ),
 
                           // Center(
                           //   child: Text(
@@ -123,7 +319,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                           // ),
                           // SizedBox(height: 6),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                             child: Column(
                               children: [
                                 // Container(
@@ -251,23 +447,27 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                 // ),
                                 //
                                 // SizedBox(height: 15),
+                                _imageUrls.length + _newImages.length >= 4
+                                    ? Container()
+                                    : Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.info_outline, color: onboardingColor, size: 20),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          'You can add up to 4 photos.',
+                                          style: TextStyle(fontSize: 14, color: Colors.black),
+                                        ),
+                                      ],
+                                    ),
 
-                                // Row(
-                                //   mainAxisAlignment: MainAxisAlignment.center,
-                                //   children: [
-                                //     Icon(Icons.info_outline, color: onboardingColor, size: 20),
-                                //     SizedBox(width: 8),
-                                //     Text(
-                                //       'Add up to 4 photos for more views!',
-                                //       style: TextStyle(fontSize: 14, color: Colors.black),
-                                //     ),
-                                //   ],
-                                // ),
-                                //
-                                // SizedBox(height: 15),
+                                SizedBox(height: 4),
+
                                 error.isNotEmpty
                                     ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                     : Container(),
+
+                                error.isNotEmpty ? SizedBox(height: 10) : Container(),
 
                                 Card(
                                   color: Colors.white,
@@ -639,7 +839,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                                             // value: "Damascus",
                                                             items:
-                                                                ['Male', 'Female',]
+                                                                ['Male', 'Female']
                                                                     .map(
                                                                       (gender) => DropdownMenuItem<String>(
                                                                         value: gender,
@@ -1041,18 +1241,39 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                     padding: const EdgeInsets.symmetric(vertical: 15),
                                   ),
                                   onPressed: () async {
-                                    print(postCategory);
+                                    if (_imageUrls.isEmpty && _newImages.isEmpty) {
+                                      setState(() {
+                                        error = "Upload an image!";
+
+                                        _scrollController.animateTo(
+                                          _scrollController.position.minScrollExtent,
+                                          curve: Curves.easeOut,
+                                          duration: const Duration(milliseconds: 300),
+                                        );
+                                      });
+                                    }
                                     // if (_formKey.currentState!.validate() && locationSelected) {
 
-                                    if (_formKey.currentState!.validate() && postCategory != null) {
+                                    if (_formKey.currentState!.validate() &&
+                                        postCategory != null &&
+                                        (_imageUrls.isNotEmpty || _newImages.isNotEmpty)) {
                                       final doc = await firebaseService.getCurrentUserData();
                                       final userData = doc?.data() as Map<String, dynamic>?;
 
                                       final currency = userData?["defaultCurrency"] ?? "usd";
 
+                                      List<String> newImageUrls = await firebaseService.uploadImages(
+                                        _newImages,
+                                      );
+                                      List<String> finalImageUrls = [
+                                        ..._imageUrls.cast<String>(),
+                                        ...newImageUrls,
+                                      ];
+
                                       firebaseService.editPost(
                                         postId: widget.postId,
                                         title: _formKey.currentState?.fields['title']?.value,
+                                        imageUrls: finalImageUrls,
                                         category: postCategory,
                                         gender:
                                             postCategory == "Live Stock" || postCategory == "Worker Services"
@@ -1079,6 +1300,10 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         // province: placeDetails.province!,
                                         // country: placeDetails.country!,
                                       );
+
+                                      for (String urlToDelete in _removedImageUrls) {
+                                        await firebaseService.deleteImageFromUrl(urlToDelete);
+                                      }
 
                                       _formKey.currentState?.reset();
                                       setState(() {
@@ -1128,6 +1353,119 @@ class _EditPostScreenState extends State<EditPostScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildImagePickerSection() {
+    return Column(
+      children: [
+        // if (_isLoadingImages)
+        // Center(child: CircularProgressIndicator(color: Colors.red,))
+        //   Center(child: Skeletonizer(
+        //     ignorePointers: true,
+        //     child: Column(
+        //       mainAxisAlignment: MainAxisAlignment.center,
+        //       children: [
+        //         // CircularProgressIndicator(),
+        //         SizedBox(height: 10), Text("Loading...")],
+        //     ),
+        //   ),)
+        // else
+        Skeletonizer(
+          ignorePointers: true,
+          enabled: _isLoadingImages,
+          child: DottedBorder(
+            options: RoundedRectDottedBorderOptions(
+              radius: const Radius.circular(20),
+              color: onboardingColor,
+              strokeWidth: 1,
+            ),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(12)),
+              child: Container(
+                width: double.infinity,
+                height: 340,
+                color: Colors.white,
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2,
+                  ),
+                  itemCount:
+                      _imageUrls.length +
+                      _newImages.length +
+                      ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index < _imageUrls.length) {
+                      return Stack(
+                        children: [
+                          Image.network(
+                            _imageUrls[index],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          Positioned(
+                            top: 4,
+                            left: 4,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.close, color: Colors.black, size: 20),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else if (index < _imageUrls.length + _newImages.length) {
+                      final newImageIndex = index - _imageUrls.length;
+
+                      return Stack(
+                        children: [
+                          Image.file(
+                            _newImages[newImageIndex],
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                            height: double.infinity,
+                          ),
+                          Positioned(
+                            top: 4,
+                            left: 4,
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.rectangle,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(Icons.close, color: Colors.black, size: 20),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Center(
+                        child: IconButton(
+                          icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+                          onPressed: _pickImage,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
