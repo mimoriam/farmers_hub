@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as p;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 enum currencyType { syria, usd, euro, lira }
 
@@ -42,7 +44,19 @@ class FirebaseService {
       // 4. Create a reference and upload the file.
       Reference ref = _storage.ref().child('posts/${_auth.currentUser!.uid}/$fileName');
 
-      UploadTask uploadTask = ref.putFile(image);
+      // Compress the image
+      final Uint8List? compressedImage =
+      await FlutterImageCompress.compressWithFile(
+        image.absolute.path,
+        quality: 60,
+      );
+
+      if (compressedImage == null) {
+        return null;
+      }
+
+      // UploadTask uploadTask = ref.putFile(image);
+      UploadTask uploadTask = ref.putData(compressedImage);
       TaskSnapshot snapshot = await uploadTask;
 
       return await snapshot.ref.getDownloadURL();

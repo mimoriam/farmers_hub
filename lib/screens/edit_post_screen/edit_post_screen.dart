@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 
 class EditPostScreen extends StatefulWidget {
   final String postId;
@@ -177,7 +178,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                               mainAxisSpacing: 2,
                             ),
                             itemCount:
-                            _imageUrls.length +
+                                _imageUrls.length +
                                 _newImages.length +
                                 ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
                             itemBuilder: (context, index) {
@@ -1232,15 +1233,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                 const SizedBox(height: 16),
 
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: onboardingColor,
-                                    minimumSize: const Size(double.infinity, 33),
-                                    // Full width, slightly taller
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                    padding: const EdgeInsets.symmetric(vertical: 15),
-                                  ),
-                                  onPressed: () async {
+                                TapDebouncer(
+                                  cooldown: const Duration(milliseconds: 1000),
+                                  onTap: () async {
                                     if (_imageUrls.isEmpty && _newImages.isEmpty) {
                                       setState(() {
                                         error = "Upload an image!";
@@ -1333,10 +1328,25 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                     // }
                                     // }
                                   },
-                                  child: const Text(
-                                    'Edit',
-                                    style: TextStyle(fontSize: 18, color: Colors.white),
-                                  ),
+
+                                  builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                                    return ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: onboardingColor,
+                                        minimumSize: const Size(double.infinity, 33),
+                                        // Full width, slightly taller
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(vertical: 15),
+                                      ),
+                                      onPressed: onTap,
+                                      child: const Text(
+                                        'Edit',
+                                        style: TextStyle(fontSize: 18, color: Colors.white),
+                                      ),
+                                    );
+                                  },
                                 ),
 
                                 const SizedBox(height: 24),
@@ -1410,7 +1420,15 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             top: 4,
                             left: 4,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                _removeExistingImage(index);
+                                if (_imageUrls.length + _newImages.length <= 4) {
+                                  setState(() {
+                                    error = '';
+                                  });
+                                }
+                                return;
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
@@ -1438,7 +1456,15 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             top: 4,
                             left: 4,
                             child: GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                _removeNewImage(index);
+                                if (_imageUrls.length + _newImages.length <= 4) {
+                                  setState(() {
+                                    error = '';
+                                  });
+                                }
+                                return;
+                              },
                               child: Container(
                                 decoration: BoxDecoration(
                                   color: Colors.white,
