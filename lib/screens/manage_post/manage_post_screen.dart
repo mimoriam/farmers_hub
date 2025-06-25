@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
+import 'package:farmers_hub/screens/edit_post_screen/edit_post_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
@@ -431,10 +432,17 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           }
 
           if (action == "Edit") {
-            await firebaseService.markPostAsSold(postId);
+            // await firebaseService.markPostAsSold(postId);
 
-            if (context.mounted) {
-              setState(() {});
+            if (mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditPostScreen(postId: postId)),
+              ).then((_) {
+                if (mounted) {
+                  setState(() {});
+                }
+              });
             }
           }
         },

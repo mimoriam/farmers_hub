@@ -256,6 +256,56 @@ class FirebaseService {
     });
   }
 
+  Future<void> editPost({
+    required String postId,
+    required String title,
+    required String category,
+    required String? gender,
+    required String averageWeight,
+    required int quantity,
+    required int? age,
+    required int price,
+    required String currency,
+    required String city,
+    String? village,
+    String? province,
+    String? country,
+    String? details,
+    bool? featured,
+  }) async {
+    final List<String> keywordsTitle = _generateKeywords(title);
+    final List<String> keywordsCategory = _generateKeywords(category);
+
+    await _firestore.collection(postCollection).doc(postId).set({
+      "sellerId": currentUser?.uid,
+      // "username": currentUser?.displayName,
+      "title": title,
+      "searchTitleKeywords": keywordsTitle,
+      "searchCategoryKeywords": keywordsCategory,
+      "category": category,
+      "gender": gender,
+      "averageWeight": averageWeight,
+      "quantity": quantity,
+      "age": age,
+      "price": price,
+      "currency": currency,
+      "likes": 0,
+      "likedBy": [],
+      "views": 0,
+      "featured": featured ?? false,
+      "verifiedSeller": false,
+      "location": {
+        "city": city,
+        "province": province ?? "",
+        "country": country ?? "",
+        "village": village ?? "",
+      },
+      "hasBeenSold": false,
+      "details": details ?? "",
+      "createdAt": FieldValue.serverTimestamp(),
+    });
+  }
+
   Future<void> markPostAsSold(String postId) async {
     try {
       // Make it so when the ad has been sold, the featured flag is also removed
