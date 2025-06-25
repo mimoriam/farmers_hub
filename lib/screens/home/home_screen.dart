@@ -1423,6 +1423,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {},
                                     child: PostCard(
                                       imageUrl: popularPostsData[index]['image_url'],
+                                      debug: true,
                                       price: "",
                                       currency: "",
                                       location: "",
@@ -1463,6 +1464,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               final postedAgoText =
                                   createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
 
+                              final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
+
                               return GestureDetector(
                                 onTap: () {
                                   if (context.mounted) {
@@ -1482,8 +1485,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                     });
                                   }
                                 },
+
                                 child: PostCard(
-                                  imageUrl: popularPostsData[index]['image_url'],
+                                  // imageUrl: popularPostsData[index]['image_url'],
+                                  imageUrl: imageUrls.first,
+                                  debug: false,
                                   price: post['price'].toString(),
                                   currency: post["currency"].toString(),
                                   location: post['location']["city"],
@@ -1603,9 +1609,13 @@ class PostCard extends StatelessWidget {
   final String postedAgo;
   final int views;
 
+  final bool debug;
+
   const PostCard({
     super.key,
     required this.imageUrl,
+    required this.debug,
+    // required this.imageUrls,
     required this.price,
     required this.currency,
     required this.location,
@@ -1642,7 +1652,10 @@ class PostCard extends StatelessWidget {
                     bottomLeft: Radius.circular(12.0),
                     bottomRight: Radius.circular(12.0),
                   ),
-                  child: Image.asset(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
+                  child:
+                      debug
+                          ? Image.asset(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover)
+                          : Image.network(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
                 ),
                 Positioned(
                   top: 8,

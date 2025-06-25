@@ -1252,6 +1252,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                     if (_formKey.currentState!.validate() &&
                                         postCategory != null &&
                                         (_imageUrls.isNotEmpty || _newImages.isNotEmpty)) {
+                                      if ((_imageUrls.length + _newImages.length >= 5)) {
+                                        setState(() {
+                                          error = "Can't upload more than 4 images!";
+
+                                          _scrollController.animateTo(
+                                            _scrollController.position.minScrollExtent,
+                                            curve: Curves.easeOut,
+                                            duration: const Duration(milliseconds: 300),
+                                          );
+                                        });
+
+                                        return;
+                                      }
+
                                       final doc = await firebaseService.getCurrentUserData();
                                       final userData = doc?.data() as Map<String, dynamic>?;
 
@@ -1260,6 +1274,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       List<String> newImageUrls = await firebaseService.uploadImages(
                                         _newImages,
                                       );
+
                                       List<String> finalImageUrls = [
                                         ..._imageUrls.cast<String>(),
                                         ...newImageUrls,
@@ -1457,7 +1472,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                             left: 4,
                             child: GestureDetector(
                               onTap: () {
-                                _removeNewImage(index);
+                                _removeNewImage(newImageIndex);
                                 if (_imageUrls.length + _newImages.length <= 4) {
                                   setState(() {
                                     error = '';
