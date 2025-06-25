@@ -1,26 +1,51 @@
 {
   "project_info": {
-    "project_number": "993215867881",
-    "project_id": "farmers-hub-9b6c3",
-    "storage_bucket": "farmers-hub-9b6c3.firebasestorage.app"
+    "project_number": "992806521648",
+    "project_id": "mahsolek-8417b",
+    "storage_bucket": "mahsolek-8417b.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:993215867881:android:2030d353cbf8c52b4cb978",
+        "mobilesdk_app_id": "1:992806521648:android:2258fecefcdde1b63296f5",
         "android_client_info": {
           "package_name": "com.farmers.hub.farmers_hub"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "992806521648-nio3dgm4rosqmo1274jsq643ehfi99l3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.farmers.hub.farmers_hub",
+            "certificate_hash": "563b4e585348bba45568a5ce952849d024ceb84d"
+          }
+        },
+        {
+          "client_id": "992806521648-bvhonc2puf7ue52bfsvpqfnlpnul51e2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyC8hlcQlBdfFqthBcaVlWqgFiZG7bydVn4"
+          "current_key": "AIzaSyA2GTwPCQDhmnJroOla_8OcDMh8mIDZ0Ss"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992806521648-bvhonc2puf7ue52bfsvpqfnlpnul51e2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "992806521648-uef5klr6udvjek42po3f7s0libv0hf0o.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.farmers.hub.farmersHub"
+              }
+            }
+          ]
         }
       }
     }

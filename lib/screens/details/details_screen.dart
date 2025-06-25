@@ -157,6 +157,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 gender: "",
                                 averageWeight: "",
                                 age: "",
+                                quantity: "",
                                 // phoneNumber: "12321323",
                                 phoneNumber: "",
                                 details: "",
@@ -240,6 +241,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               gender: postDetails["gender"],
                               averageWeight: postDetails["averageWeight"].toString(),
                               age: postDetails["age"].toString(),
+                              quantity: postDetails["quantity"].toString(),
                               // phoneNumber: "12321323",
                               phoneNumber: sellerNumber["completeNumber"],
                               details: postDetails["details"],
@@ -590,6 +592,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
   Widget _buildDetailsSection({
     required String category,
+    required String quantity,
     required String gender,
     required String averageWeight,
     required String age,
@@ -600,9 +603,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildDetailRow('Category:', category),
+
+        _buildDetailRow('Quantity:', quantity),
+
         category == "Fruits" ||
                 category == "Vegetables" ||
-                category == "Olive Oil" ||
+                category == "Olive & Oil" ||
                 category == "Grains & Seeds" ||
                 category == "Fertilizers" ||
                 category == "Tools" ||
@@ -619,7 +625,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
         category == "Fruits" ||
                 category == "Vegetables" ||
-                category == "Olive Oil" ||
+                category == "Olive & Oil" ||
                 category == "Grains & Seeds" ||
                 category == "Fertilizers" ||
                 category == "Tools" ||

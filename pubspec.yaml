@@ -62,12 +62,15 @@ dependencies:
   tap_debouncer: ^2.2.0
   skeletonizer: ^1.4.3
   speech_to_text: ^7.1.0
+  image_picker: ^1.1.2
+  path: ^1.9.1
 
   # Firebase:
   firebase_core: ^3.14.0
   firebase_auth: ^5.6.0
   cloud_firestore: ^5.6.9
   google_sign_in: ^6.3.0
+  firebase_storage: ^12.4.7
 
 dev_dependencies:
   flutter_test:

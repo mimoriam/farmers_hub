@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -9,6 +11,8 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:dotted_border/dotted_border.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 
 class AddPostScreen extends StatefulWidget {
   final String? location;
@@ -41,6 +45,22 @@ class _AddPostScreenState extends State<AddPostScreen> {
   bool featuredPost = false;
 
   bool _isLoading = false;
+
+  File? _image;
+  final picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+        error = "";
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   // Common style for input field borders
   final OutlineInputBorder _inputBorder = OutlineInputBorder(
@@ -221,9 +241,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           width: double.infinity,
                                           // Make button take full width of its parent.
                                           child: ElevatedButton.icon(
-                                            onPressed: () {
-                                              // TODO: Implement image picking logic here.
-                                            },
+                                            onPressed: _pickImage,
                                             icon: const Icon(
                                               Icons.add_photo_alternate_rounded,
                                               color: Colors.white,
@@ -253,7 +271,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               ),
                             ),
 
-                            SizedBox(height: 15),
+                            SizedBox(height: 10),
 
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -267,11 +285,39 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               ],
                             ),
 
-                            SizedBox(height: 15),
+                            SizedBox(height: 10),
 
                             error.isNotEmpty
                                 ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                 : Container(),
+
+                            _image == null
+                                ? Container()
+                                : Stack(
+                                  children: [
+                                    Image.file(_image!, fit: BoxFit.fill, width: 110, height: 120),
+
+                                    Positioned(
+                                      top: 2,
+                                      left: 2,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _image = null;
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.rectangle,
+                                            borderRadius: BorderRadius.circular(8),
+                                          ),
+                                          child: Icon(Icons.close, color: Colors.grey, size: 20),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
 
                             Card(
                               color: Colors.white,
@@ -507,7 +553,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             [
                                                   'Fruits',
                                                   'Vegetables',
-                                                  'Olive Oil',
+                                                  'Olive & Oil',
                                                   "Live Stock",
                                                   'Grains & Seeds',
                                                   "Fertilizers",
@@ -660,7 +706,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             // Average Weight (in kgs)
                                             selectedCategory == "Fruits" ||
                                                     selectedCategory == "Vegetables" ||
-                                                    selectedCategory == "Olive Oil" ||
+                                                    selectedCategory == "Olive & Oil" ||
                                                     selectedCategory == "Grains & Seeds" ||
                                                     selectedCategory == "Fertilizers" ||
                                                     selectedCategory == "Tools" ||
@@ -1008,17 +1054,30 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                             const SizedBox(height: 16),
 
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: onboardingColor,
-                                minimumSize: const Size(double.infinity, 33), // Full width, slightly taller
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                              ),
-                              onPressed: () async {
+                            TapDebouncer(
+                              cooldown: const Duration(milliseconds: 1000),
+                              onTap: () async {
+                                if (_image == null) {
+                                  setState(() {
+                                    error = "Upload an image!";
+
+                                    _scrollController.animateTo(
+                                      _scrollController.position.minScrollExtent,
+                                      curve: Curves.easeOut,
+                                      duration: const Duration(milliseconds: 300),
+                                    );
+                                  });
+                                }
                                 // if (_formKey.currentState!.validate() && locationSelected) {
 
-                                if (_formKey.currentState!.validate() && selectedCategory != null) {
+                                if (_formKey.currentState!.validate() &&
+                                    selectedCategory != null &&
+                                    _image != null) {
+                                  String? imageUrl;
+                                  if (_image != null) {
+                                    imageUrl = await firebaseService.uploadImage(_image!);
+                                  }
+
                                   final doc = await firebaseService.getCurrentUserData();
                                   final userData = doc?.data() as Map<String, dynamic>?;
 
@@ -1026,6 +1085,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                   firebaseService.createPost(
                                     title: _formKey.currentState?.fields['title']?.value,
+                                    imageUrl: imageUrl.toString(),
                                     category: selectedCategory!,
                                     gender:
                                         selectedCategory == "Live Stock" ||
@@ -1060,6 +1120,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   setState(() {
                                     locationSelected = false;
                                     error = "";
+                                    _image = null;
                                   });
 
                                   if (context.mounted) {
@@ -1069,24 +1130,36 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     );
                                   }
                                 }
-                                // } else {
-                                // if (!locationSelected) {
-                                //   setState(() {
-                                //     error = "Location not selected";
-                                //
-                                //     _scrollController.animateTo(
-                                //       _scrollController.position.minScrollExtent,
-                                //       curve: Curves.easeOut,
-                                //       duration: const Duration(milliseconds: 300),
-                                //     );
-                                //   });
-                                // }
-                                // }
                               },
-                              child: const Text(
-                                'Submit',
-                                style: TextStyle(fontSize: 18, color: Colors.white),
-                              ),
+                              builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: onboardingColor,
+                                    minimumSize: const Size(double.infinity, 33),
+                                    // Full width, slightly taller
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    padding: const EdgeInsets.symmetric(vertical: 15),
+                                  ),
+                                  onPressed: onTap,
+                                  // } else {
+                                  // if (!locationSelected) {
+                                  //   setState(() {
+                                  //     error = "Location not selected";
+                                  //
+                                  //     _scrollController.animateTo(
+                                  //       _scrollController.position.minScrollExtent,
+                                  //       curve: Curves.easeOut,
+                                  //       duration: const Duration(milliseconds: 300),
+                                  //     );
+                                  //   });
+                                  // }
+                                  // }
+                                  child: const Text(
+                                    'Submit',
+                                    style: TextStyle(fontSize: 18, color: Colors.white),
+                                  ),
+                                );
+                              },
                             ),
 
                             const SizedBox(height: 24),

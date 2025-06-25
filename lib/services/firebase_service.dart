@@ -1,8 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:farmers_hub/utils/auth_exceptions.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as p;
 
 enum currencyType { syria, usd, euro, lira }
 
@@ -12,6 +17,8 @@ class FirebaseService {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
   // Stream for auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -20,6 +27,30 @@ class FirebaseService {
 
   final userCollection = "users";
   final postCollection = "posts";
+
+  Future<String?> uploadImage(File image) async {
+    try {
+      // 1. Get the original filename.
+      String originalFileName = p.basename(image.path);
+
+      // 2. Create a timestamp.
+      String timestamp = DateTime.now().millisecondsSinceEpoch.toString();
+
+      // 3. Combine them for a unique and readable filename.
+      String fileName = '${timestamp}_$originalFileName';
+
+      // 4. Create a reference and upload the file.
+      Reference ref = _storage.ref().child('posts/${_auth.currentUser!.uid}/$fileName');
+
+      UploadTask uploadTask = ref.putFile(image);
+      TaskSnapshot snapshot = await uploadTask;
+
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 
   // Helper function to generate keywords from a title
   List<String> _generateKeywords(String title) {
@@ -217,6 +248,7 @@ class FirebaseService {
     required int price,
     required String currency,
     required String city,
+    required String imageUrl,
     String? village,
     String? province,
     String? country,
@@ -250,6 +282,7 @@ class FirebaseService {
         "country": country ?? "",
         "village": village ?? "",
       },
+      "imageUrl": imageUrl,
       "hasBeenSold": false,
       "details": details ?? "",
       "createdAt": FieldValue.serverTimestamp(),
@@ -336,7 +369,7 @@ class FirebaseService {
   Future<List<QueryDocumentSnapshot>> getAllPostsBySellerId(String sellerId) async {
     try {
       final QuerySnapshot querySnapshot =
-      await _firestore.collection(postCollection).where("sellerId", isEqualTo: sellerId).get();
+          await _firestore.collection(postCollection).where("sellerId", isEqualTo: sellerId).get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -475,11 +508,8 @@ class FirebaseService {
       // final String lowerCaseQuery = query.toLowerCase();
       QuerySnapshot querySnapshot;
 
-        querySnapshot =
-        await _firestore
-            .collection(postCollection)
-            .where('location.city', isEqualTo: query)
-            .get();
+      querySnapshot =
+          await _firestore.collection(postCollection).where('location.city', isEqualTo: query).get();
 
       return querySnapshot.docs;
     } catch (e) {

@@ -512,7 +512,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 [
                                                       'Fruits',
                                                       'Vegetables',
-                                                      'Olive Oil',
+                                                      'Olive & Oil',
                                                       "Live Stock",
                                                       'Grains & Seeds',
                                                       "Fertilizers",
@@ -579,8 +579,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                             : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                postCategory == "Live Stock" ||
-                                                        postCategory == "Worker Services"
+                                                postCategory != "Live Stock" ||
+                                                        postCategory != "Worker Services"
                                                     ? Container()
                                                     : Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -639,7 +639,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                                             // value: "Damascus",
                                                             items:
-                                                                ['Male', 'Female']
+                                                                ['Male', 'Female',]
                                                                     .map(
                                                                       (gender) => DropdownMenuItem<String>(
                                                                         value: gender,
@@ -650,7 +650,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                                             // TODO AGAIN FIX
                                                             // value: selectedGender,
-                                                            value: postGender,
+                                                            value: postGender.isEmpty ? "" : postGender,
                                                             validator: (String? value) {
                                                               if (value == null) {
                                                                 return 'Gender is required.';
@@ -672,7 +672,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 // Average Weight (in kgs)
                                                 postCategory == "Fruits" ||
                                                         postCategory == "Vegetables" ||
-                                                        postCategory == "Olive Oil" ||
+                                                        postCategory == "Olive & Oil" ||
                                                         postCategory == "Grains & Seeds" ||
                                                         postCategory == "Fertilizers" ||
                                                         postCategory == "Tools" ||

@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyC8hlcQlBdfFqthBcaVlWqgFiZG7bydVn4',
-    appId: '1:993215867881:android:2030d353cbf8c52b4cb978',
-    messagingSenderId: '993215867881',
-    projectId: 'farmers-hub-9b6c3',
-    storageBucket: 'farmers-hub-9b6c3.firebasestorage.app',
+    apiKey: 'AIzaSyA2GTwPCQDhmnJroOla_8OcDMh8mIDZ0Ss',
+    appId: '1:992806521648:android:2258fecefcdde1b63296f5',
+    messagingSenderId: '992806521648',
+    projectId: 'mahsolek-8417b',
+    storageBucket: 'mahsolek-8417b.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyA0Rhn3299pKoawDd6v8D2yl4cIPkL9UD8',
-    appId: '1:993215867881:ios:8d2aed9b99f84d764cb978',
-    messagingSenderId: '993215867881',
-    projectId: 'farmers-hub-9b6c3',
-    storageBucket: 'farmers-hub-9b6c3.firebasestorage.app',
+    apiKey: 'AIzaSyBVZTLOaz1w0V-98xc9HHMctid8MsxXI_Q',
+    appId: '1:992806521648:ios:aefa471d5897cd893296f5',
+    messagingSenderId: '992806521648',
+    projectId: 'mahsolek-8417b',
+    storageBucket: 'mahsolek-8417b.firebasestorage.app',
+    androidClientId: '992806521648-nio3dgm4rosqmo1274jsq643ehfi99l3.apps.googleusercontent.com',
+    iosClientId: '992806521648-uef5klr6udvjek42po3f7s0libv0hf0o.apps.googleusercontent.com',
     iosBundleId: 'com.farmers.hub.farmersHub',
   );
 

@@ -557,7 +557,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
       {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
-      {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
+      {'name': 'Olive & Oil', 'image': 'images/categories/olive_oil.png'},
       {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
       {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
       {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
