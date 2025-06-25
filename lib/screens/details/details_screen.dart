@@ -17,6 +17,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:collection/collection.dart';
 
 class DetailsScreen extends StatefulWidget {
   final String postId;
@@ -303,12 +304,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
       builder: (BuildContext context, StateSetter setState) {
         return Stack(
           children: [
-            CarouselSlider.builder(
-              itemCount: imageUrls.length,
-              itemBuilder: (context, index, realIndex) {
-                final imageUrl = imageUrls[index];
-                return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
-              },
+            // CarouselSlider.builder(
+            //   itemCount: imageUrls.length,
+            //   itemBuilder: (context, index, realIndex) {
+            //     final imageUrl = imageUrls[index];
+            //     return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
+            //   },
+            CarouselSlider(
+              items:
+                  imageUrls.mapIndexed((index, element) {
+                    final imageUrl = imageUrls[index];
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
+                      },
+                    );
+                  }).toList(),
               options: CarouselOptions(
                 height: 300,
                 viewportFraction: 1.0,
