@@ -16,6 +16,24 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
   final FirebaseService _firebaseService = FirebaseService();
   int selected = 0;
 
+  String? _selectedCurrency;
+
+  Future<void> _fetchDefaultCurrency() async {
+    final userDoc = await _firebaseService.getCurrentUserData();
+    if (userDoc != null) {
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        _selectedCurrency = userData?['defaultCurrency'];
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDefaultCurrency();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,6 +163,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   if (mounted) {
                     setState(() {
                       selected = 1;
+                      _selectedCurrency = currencyType.syria.name;
                     });
 
                     await _firebaseService.updateCurrency(currencyType.syria.name);
@@ -161,7 +180,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: selected == 1 ? onboardingColor : Colors.white,
+                  // color: selected == 1 ? onboardingColor : Colors.white,
+                  color: selected == 1 || _selectedCurrency == "syria" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -170,7 +190,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.payments, // The dollar icon
-                          color: selected == 1 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          color:
+                              selected == 1 || _selectedCurrency == "syria"
+                                  ? Colors.white
+                                  : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -181,7 +204,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Syria', // Title and subtitle
                             style: TextStyle(
-                              color: selected == 1 ? Colors.white : Colors.grey.shade600, // Text color
+                              color:
+                                  selected == 1 || _selectedCurrency == "syria"
+                                      ? Colors.white
+                                      : Colors.grey.shade600, // Text color
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -196,7 +222,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 1 ? Colors.white : Colors.transparent, // Fill color for
+                            color:
+                                selected == 1 || _selectedCurrency == "syria"
+                                    ? Colors.white
+                                    : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
                             //   color: Colors.grey.shade400, // Border color for unselected radio
@@ -216,6 +245,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   if (mounted) {
                     setState(() {
                       selected = 2;
+                      _selectedCurrency = currencyType.usd.name;
                     });
 
                     await _firebaseService.updateCurrency(currencyType.usd.name);
@@ -233,7 +263,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                     ),
                   ),
                   // color: Colors.white,
-                  color: selected == 2 ? onboardingColor : Colors.white,
+                  color: selected == 2 || _selectedCurrency == "usd" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -242,7 +272,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.attach_money, // The dollar icon
-                          color: selected == 2 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          color:
+                              selected == 2 || _selectedCurrency == "usd"
+                                  ? Colors.white
+                                  : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -253,7 +286,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'US Dollar', // Title and subtitle
                             style: TextStyle(
-                              color: selected == 2 ? Colors.white : Colors.grey.shade600,
+                              color:
+                                  selected == 2 || _selectedCurrency == "usd"
+                                      ? Colors.white
+                                      : Colors.grey.shade600,
                               // Text color when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -268,7 +304,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 2 ? Colors.white : Colors.transparent, // Fill color for
+                            color:
+                                selected == 2 || _selectedCurrency == "usd"
+                                    ? Colors.white
+                                    : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
                             //   color: Colors.grey.shade400, // Border color for unselected radio
@@ -288,6 +327,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   if (mounted) {
                     setState(() {
                       selected = 3;
+                      _selectedCurrency = currencyType.euro.name;
                     });
 
                     await _firebaseService.updateCurrency(currencyType.euro.name);
@@ -304,7 +344,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: selected == 3 ? onboardingColor : Colors.white,
+                  color: selected == 3 || _selectedCurrency == "euro" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -313,7 +353,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.euro, // The dollar icon
-                          color: selected == 3 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          color:
+                              selected == 3 || _selectedCurrency == "euro"
+                                  ? Colors.white
+                                  : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -324,7 +367,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Euro', // Title and subtitle
                             style: TextStyle(
-                              color: selected == 3 ? Colors.white : Colors.grey.shade600, // Text color
+                              color:
+                                  selected == 3 || _selectedCurrency == "euro"
+                                      ? Colors.white
+                                      : Colors.grey.shade600, // Text color
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -339,7 +385,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 3 ? Colors.white : Colors.transparent, // Fill color for
+                            color:
+                                selected == 3 || _selectedCurrency == "euro"
+                                    ? Colors.white
+                                    : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
                             //   color: Colors.grey.shade400, // Border color for unselected radio
@@ -361,6 +410,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   if (mounted) {
                     setState(() {
                       selected = 4;
+                      _selectedCurrency = currencyType.lira.name;
                     });
 
                     await _firebaseService.updateCurrency(currencyType.lira.name);
@@ -377,7 +427,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: selected == 4 ? onboardingColor : Colors.white,
+                  color: selected == 4 || _selectedCurrency == "lira" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -386,7 +436,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.currency_lira, // The dollar icon
-                          color: selected == 4 ? Colors.white : Colors.grey.shade600, // Icon color when not
+                          color:
+                              selected == 4 || _selectedCurrency == "lira"
+                                  ? Colors.white
+                                  : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -397,7 +450,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Lira', // Title and subtitle
                             style: TextStyle(
-                              color: selected == 4 ? Colors.white : Colors.grey.shade600, // Text color
+                              color:
+                                  selected == 4 || _selectedCurrency == "lira"
+                                      ? Colors.white
+                                      : Colors.grey.shade600, // Text color
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -412,7 +468,10 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           height: 24,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: selected == 4 ? Colors.white : Colors.transparent, // Fill color for
+                            color:
+                                selected == 4 || _selectedCurrency == "lira"
+                                    ? Colors.white
+                                    : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
                             //   color: Colors.grey.shade400, // Border color for unselected radio

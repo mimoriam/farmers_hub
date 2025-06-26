@@ -14,6 +14,12 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tap_debouncer/tap_debouncer.dart';
 
+extension StringExtension on String {
+  String toCapitalize() {
+    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+  }
+}
+
 class AddPostScreen extends StatefulWidget {
   final String? location;
 
@@ -38,6 +44,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
   String? selectedCategory;
   String? selectedGender;
 
+  String? defaultCurrency;
+
   bool locationSelected = false;
 
   late PlaceDetails placeDetails;
@@ -49,6 +57,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
   // File? _image;
   List<File> _images = [];
   final picker = ImagePicker();
+
   Future<void> _pickImage() async {
     final int remainingImages = 4 - _images.length;
 
@@ -73,6 +82,22 @@ class _AddPostScreenState extends State<AddPostScreen> {
           });
         }
       }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDefaultCurrency();
+  }
+
+  Future<void> _fetchDefaultCurrency() async {
+    final userDoc = await firebaseService.getCurrentUserData();
+    if (userDoc != null) {
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        defaultCurrency = userData?['defaultCurrency'];
+      });
     }
   }
 
@@ -953,6 +978,56 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                       ]),
                                     ),
+                                    const SizedBox(height: 10),
+
+                                    Text("Currency", style: _labelStyle),
+                                    const SizedBox(height: 8),
+
+                                    Container(
+                                      padding: EdgeInsets.only(right: 0, top: 2, bottom: 2),
+                                      // No explicit border for dropdown, styling via DropdownButton properties
+                                      child: DropdownButtonFormField2<String>(
+                                        items:
+                                            ['Syria', "Usd", "Euro", "Lira"]
+                                                .map(
+                                                  (lang) => DropdownMenuItem<String>(
+                                                    value: lang,
+                                                    child: Text(lang),
+                                                  ),
+                                                )
+                                                .toList(),
+                                        decoration: InputDecoration(
+                                          contentPadding: const EdgeInsets.symmetric(
+                                            vertical: 1,
+                                            horizontal: 2,
+                                          ),
+                                          border: _inputBorder,
+                                          enabledBorder: _inputBorder,
+                                          focusedBorder: _focusedInputBorder,
+                                          errorBorder: _errorInputBorder,
+                                          focusedErrorBorder: _focusedInputBorder,
+                                        ),
+                                        iconStyleData: IconStyleData(
+                                          // Using IconStyleData for icon properties
+                                          iconEnabledColor: onboardingTextColor,
+                                        ),
+
+                                        dropdownStyleData: DropdownStyleData(
+                                          offset: const Offset(0, 0),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(16),
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        // value: "USD",
+                                        value: defaultCurrency?.toCapitalize() ?? "Usd",
+                                        onChanged: (value) async {
+                                          await firebaseService.updateCurrency(value!.toLowerCase());
+                                          setState(() {});
+                                        },
+                                      ),
+                                    ),
+
                                     const SizedBox(height: 10),
 
                                     Text("Price", style: _labelStyle),
