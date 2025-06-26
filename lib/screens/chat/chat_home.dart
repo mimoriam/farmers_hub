@@ -290,8 +290,9 @@ class _ChatHomeState extends State<ChatHome> {
             if (!(messages.any((item) => item.name == user["username"]))) {
               messages.add(
                 MessageItem(
-                  avatarUrl:
-                      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                  // avatarUrl:
+                  //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                  avatarUrl: user["profileImage"],
                   // name: user["username"],
                   id: "${user["id"]}",
                   name: "${user["username"]}",
@@ -323,7 +324,7 @@ class _ChatHomeState extends State<ChatHome> {
                     // return Center(child: CircularProgressIndicator(color: onboardingColor));
                     return Center(
                       child: Skeletonizer(
-                          ignorePointers: true,
+                        ignorePointers: true,
                         child: Column(
                           children: [
                             ListTile(
@@ -344,7 +345,7 @@ class _ChatHomeState extends State<ChatHome> {
                               subtitle: Text('Last message...'),
                             ),
                           ],
-                        )
+                        ),
                       ),
                     );
                   }
@@ -372,28 +373,28 @@ class _ChatHomeState extends State<ChatHome> {
 
                         return Center(
                           child: Skeletonizer(
-                              ignorePointers: true,
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
+                            ignorePointers: true,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  leading: CircleAvatar(child: Icon(Icons.person)),
+                                  title: Text('User Name'),
+                                  subtitle: Text('Last message...'),
+                                ),
 
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
+                                ListTile(
+                                  leading: CircleAvatar(child: Icon(Icons.person)),
+                                  title: Text('User Name'),
+                                  subtitle: Text('Last message...'),
+                                ),
 
-                                  ListTile(
-                                    leading: CircleAvatar(child: Icon(Icons.person)),
-                                    title: Text('User Name'),
-                                    subtitle: Text('Last message...'),
-                                  ),
-                                ],
-                              )
+                                ListTile(
+                                  leading: CircleAvatar(child: Icon(Icons.person)),
+                                  title: Text('User Name'),
+                                  subtitle: Text('Last message...'),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       }
@@ -706,11 +707,32 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CircleAvatar(
-              radius: 28,
-              backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage for URLs
-              // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-            ),
+            // Dynamic Circle Avatar background and text
+            // CircleAvatar(
+            //   radius: 28,
+            //   backgroundImage:
+            //   avatarUrl != "default_pfp.jpg" ? NetworkImage(avatarUrl) : null,
+            //   child: avatarUrl == "default_pfp.jpg"
+            //       ? Text(
+            //     name.isNotEmpty ? name[0].toUpperCase() : '?',
+            //     style: TextStyle(
+            //         fontSize: 24,
+            //         color: Colors.white,
+            //         fontWeight: FontWeight.bold),
+            //   )
+            //       : null,
+            // ),
+            avatarUrl == "default_pfp.jpg"
+                ? CircleAvatar(
+                  radius: 24,
+                  backgroundColor: Colors.deepOrange,
+                  child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                )
+                : CircleAvatar(
+                  radius: 28,
+                  backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage for URLs
+                  // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(

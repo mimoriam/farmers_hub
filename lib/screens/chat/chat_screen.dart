@@ -150,7 +150,8 @@ class _ChatScreenState extends State<ChatScreen> {
                             child: IconButton(
                               onPressed: () {},
                               icon: Icon(Icons.arrow_outward, color: Colors.grey),
-                            )),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -197,7 +198,11 @@ class _ChatScreenState extends State<ChatScreen> {
                             children: [
                               Text(
                                 "initialName",
-                                style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               Text("Time", style: TextStyle(color: Colors.white, fontSize: 14)),
                             ],
@@ -244,16 +249,17 @@ class _ChatScreenState extends State<ChatScreen> {
                                 const SizedBox(width: 10),
 
                                 Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.rectangle,
-                                      borderRadius: BorderRadius.circular(11),
-                                    ),
-                                    margin: EdgeInsets.only(right: 10),
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.arrow_outward, color: Colors.grey),
-                                    )),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(11),
+                                  ),
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(Icons.arrow_outward, color: Colors.grey),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -279,6 +285,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 'MMM d, y ~ h:mm a',
               ).format(lastSeenAtTimestamp.toDate());
 
+              final profileImageUrl = userData?['profileImage'];
+
               return Scaffold(
                 backgroundColor: homebackgroundColor,
                 // appBar: AppBar(title: Text(widget.receiverEmail)),
@@ -288,11 +296,22 @@ class _ChatScreenState extends State<ChatScreen> {
                   elevation: 0,
                   title: Row(
                     children: [
-                      const CircleAvatar(
-                        backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                        ),
-                      ),
+                      // const CircleAvatar(
+                      //   backgroundImage: NetworkImage(
+                      //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                      //   ),
+                      // ),
+                      profileImageUrl == "default_pfp.jpg"
+                          ? CircleAvatar(
+                            radius: 20,
+                            backgroundColor: Colors.deepOrange,
+                            child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                          )
+                          : CircleAvatar(
+                            radius: 22,
+                            backgroundImage: NetworkImage(profileImageUrl), // Use NetworkImage for URLs
+                            // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                          ),
                       const SizedBox(width: 12.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -324,7 +343,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         Expanded(
                           child: ListView(
                             controller: _controller,
-                            children: snapshot.data!.docs.map((doc) => _buildMessageItemList(doc)).toList(),
+                            children:
+                                snapshot.data!.docs
+                                    .map((doc) => _buildMessageItemList(doc, userData?['profileImage']))
+                                    .toList(),
                           ),
                         ),
                         _buildUserInput(),
@@ -365,7 +387,7 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageItemList(DocumentSnapshot doc) {
+  Widget _buildMessageItemList(DocumentSnapshot doc, String? profileImageUrl) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     bool isCurrentUser = data["senderId"] == widget.user.uid;
@@ -385,14 +407,26 @@ class _ChatScreenState extends State<ChatScreen> {
             mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
               // if (!isCurrentUser)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                child: CircleAvatar(
-                  radius: 19,
-                  backgroundImage: NetworkImage(
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                  ),
-                ),
+                child:
+                    profileImageUrl == "default_pfp.jpg"
+                        ? CircleAvatar(
+                          radius: 22,
+                          backgroundColor: Colors.deepOrange,
+                          child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                        )
+                        : CircleAvatar(
+                          radius: 24,
+                          backgroundImage: NetworkImage(profileImageUrl!), // Use NetworkImage for URLs
+                          // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                        ),
+                // child: CircleAvatar(
+                //   radius: 19,
+                //   backgroundImage: NetworkImage(
+                //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+                //   ),
+                // ),
               ),
               Flexible(
                 child: Container(
