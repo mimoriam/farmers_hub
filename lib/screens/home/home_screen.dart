@@ -1497,7 +1497,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                             return Skeletonizer(
-                              ignoreContainers: true,
+                              effect: ShimmerEffect(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                              ),
+                              // ignoreContainers: true,
                               ignorePointers: true,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -1594,7 +1598,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 14),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 30),
                     child: Container(
                       width: 360,
                       padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),

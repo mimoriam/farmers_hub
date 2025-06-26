@@ -723,7 +723,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   _searchResults.isEmpty
                       ? Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Center(child: Text("No results")),
+                        child: SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Container(alignment: Alignment.center, child: Text("No results")),
+                        ),
                       )
                       : Container(),
 
@@ -760,7 +763,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         // A GridView item defaults to a square aspect ratio (1.0).
                         // A full-width square will be very tall. Adjust this ratio to make
                         // your items look more like list items (wider than they are tall).
-                        childAspectRatio: 2, // Example: Item is 3x wider than it is tall.
+                        childAspectRatio: 2.1, // Example: Item is 3x wider than it is tall.
                       ),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
@@ -793,8 +796,12 @@ class ProductCard2 extends StatefulWidget {
 
   final FirebaseService firebaseService;
 
-  const ProductCard2({super.key, required this.postData, required this.postId, required this
-      .firebaseService});
+  const ProductCard2({
+    super.key,
+    required this.postData,
+    required this.postId,
+    required this.firebaseService,
+  });
 
   @override
   State<ProductCard2> createState() => _ProductCard2State();
@@ -824,8 +831,7 @@ class _ProductCard2State extends State<ProductCard2> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailsScreen(
-                  postId: widget.postId, didComeFromManagedPosts: false),
+              builder: (context) => DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
             ),
           ).then((_) {
             if (mounted) {
@@ -840,11 +846,7 @@ class _ProductCard2State extends State<ProductCard2> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
-            BoxShadow(
-                color: Color(0x3F8A8A8A),
-                spreadRadius: 0,
-                blurRadius: 9,
-                offset: Offset(0, 1)),
+            BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
           ],
         ),
         child: Row(
@@ -870,12 +872,9 @@ class _ProductCard2State extends State<ProductCard2> {
                     right: 8,
                     child: Container(
                       padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(
-                          color: Colors.white70, shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
                       child: Icon(
-                        isLiked
-                            ? Icons.favorite
-                            : Icons.favorite_border_outlined,
+                        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
                         color: isLiked ? Colors.red : Colors.grey,
                         size: 18,
                       ),
@@ -896,7 +895,7 @@ class _ProductCard2State extends State<ProductCard2> {
                       title,
                       style: GoogleFonts.poppins(
                         color: onboardingColor,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -904,21 +903,24 @@ class _ProductCard2State extends State<ProductCard2> {
                       '\$$price',
                       style: GoogleFonts.poppins(
                         color: onboardingColor,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.location_on_outlined,
-                            size: 16, color: popularPostsLocationTextColor),
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 14,
+                          color: popularPostsLocationTextColor,
+                        ),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             city,
                             style: GoogleFonts.poppins(
                               color: popularPostsLocationTextColor,
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w400,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -935,19 +937,18 @@ class _ProductCard2State extends State<ProductCard2> {
                           likes,
                           style: GoogleFonts.poppins(
                             color: popularPostsLocationTextColor,
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                         const SizedBox(width: 12),
-                        const Icon(Icons.visibility_outlined,
-                            size: 16, color: onboardingColor),
+                        const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
                         const SizedBox(width: 4),
                         Text(
                           views,
                           style: GoogleFonts.poppins(
                             color: popularPostsLocationTextColor,
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -955,14 +956,17 @@ class _ProductCard2State extends State<ProductCard2> {
                     ),
                     Row(
                       children: [
-                        const Icon(Icons.access_time_outlined,
-                            size: 16, color: popularPostsLocationTextColor),
+                        const Icon(
+                          Icons.access_time_outlined,
+                          size: 16,
+                          color: popularPostsLocationTextColor,
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           postedAgoText,
                           style: GoogleFonts.poppins(
                             color: popularPostsLocationTextColor,
-                            fontSize: 14,
+                            fontSize: 13,
                             fontWeight: FontWeight.w400,
                           ),
                           overflow: TextOverflow.ellipsis,

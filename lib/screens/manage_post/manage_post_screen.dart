@@ -191,38 +191,6 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                   subtitle: Text("Post details..."),
                                 ),
                               ),
-
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
-                                ),
-                              ),
-
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
-                                ),
-                              ),
-
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
-                                ),
-                              ),
-
-                              Card(
-                                child: ListTile(
-                                  leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
-                                ),
-                              ),
                             ],
                           ),
                         );
@@ -235,7 +203,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                       final postData = snapshot.data;
 
                       if (postData!.isEmpty) {
-                        return const Center(child: Text("User has no posts!"));
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Container(alignment: Alignment.center, child: Text("User has no posts!")),
+                        );
                       }
 
                       return ListView.builder(
@@ -486,41 +457,23 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           content: Container(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
                   padding: EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.priority_high_rounded,
-                    color: Colors.red,
-                    size: 40,
-                  ),
+                  decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle),
+                  child: Icon(Icons.priority_high_rounded, color: Colors.red, size: 40),
                 ),
                 SizedBox(height: 20),
-                Text(
-                  "Are you Sure?",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+                Text("Are you Sure?", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
                 SizedBox(height: 8),
                 Text(
                   "Are you sure you want to delete this post? Once deleted, the data will be permanently removed.",
                   textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 24),
                 Row(
@@ -532,9 +485,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         label: Text("Cancel", style: TextStyle(color: Colors.red)),
                         style: OutlinedButton.styleFrom(
                           side: BorderSide(color: Colors.red),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                           padding: EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: () {
@@ -549,9 +500,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         label: Text("Delete", style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                           padding: EdgeInsets.symmetric(vertical: 12),
                         ),
                         onPressed: () async {
@@ -595,7 +544,6 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
         icon: Icon(icon, color: color, size: 20),
         onPressed: () async {
           if (action == "Delete") {
-
             _showDeleteConfirmationDialog(postId);
             // if (context.mounted) {
             //   setState(() {});

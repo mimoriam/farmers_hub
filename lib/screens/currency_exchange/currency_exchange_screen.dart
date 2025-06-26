@@ -155,7 +155,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
 
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
           child: Column(
             children: [
               GestureDetector(
@@ -181,7 +181,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                     ),
                   ),
                   // color: selected == 1 ? onboardingColor : Colors.white,
-                  color: selected == 1 || _selectedCurrency == "syria" ? onboardingColor : Colors.white,
+                  // color: selected == 1 || _selectedCurrency == "syria" ? onboardingColor : Colors.white,
+                  color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -190,10 +191,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.payments, // The dollar icon
-                          color:
-                              selected == 1 || _selectedCurrency == "syria"
-                                  ? Colors.white
-                                  : Colors.grey.shade600, // Icon color when not
+                          // color:
+                          //     selected == 1 || _selectedCurrency == "syria"
+                          //         ? Colors.white
+                          //         : Colors.grey.shade600, // Icon color when not
+                          color: Colors.grey.shade600,
                           // selected
                           size: 24,
                         ),
@@ -204,10 +206,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Syria', // Title and subtitle
                             style: TextStyle(
-                              color:
-                                  selected == 1 || _selectedCurrency == "syria"
-                                      ? Colors.white
-                                      : Colors.grey.shade600, // Text color
+                              // color:
+                              //     selected == 1 || _selectedCurrency == "syria"
+                              //         ? Colors.white
+                              //         : Colors.grey.shade600, // Text color
+                              color: Colors.grey.shade600,
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -224,7 +227,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                             shape: BoxShape.circle,
                             color:
                                 selected == 1 || _selectedCurrency == "syria"
-                                    ? Colors.white
+                                    ? onboardingColor
                                     : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
@@ -262,8 +265,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  // color: Colors.white,
-                  color: selected == 2 || _selectedCurrency == "usd" ? onboardingColor : Colors.white,
+                  color: Colors.white,
+                  // color: selected == 2 || _selectedCurrency == "usd" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -272,10 +275,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.attach_money, // The dollar icon
-                          color:
-                              selected == 2 || _selectedCurrency == "usd"
-                                  ? Colors.white
-                                  : Colors.grey.shade600, // Icon color when not
+                          color: Colors.grey.shade600,
+                          // color:
+                          //     selected == 2 || _selectedCurrency == "usd"
+                          //         ? Colors.white
+                          //         : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -286,10 +290,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'US Dollar', // Title and subtitle
                             style: TextStyle(
-                              color:
-                                  selected == 2 || _selectedCurrency == "usd"
-                                      ? Colors.white
-                                      : Colors.grey.shade600,
+                              color: Colors.grey.shade600,
+                              // color:
+                              //     selected == 2 || _selectedCurrency == "usd"
+                              //         ? Colors.white
+                              //         : Colors.grey.shade600,
                               // Text color when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -306,7 +311,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                             shape: BoxShape.circle,
                             color:
                                 selected == 2 || _selectedCurrency == "usd"
-                                    ? Colors.white
+                                    ? onboardingColor
                                     : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
@@ -344,7 +349,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: selected == 3 || _selectedCurrency == "euro" ? onboardingColor : Colors.white,
+                  // color: selected == 3 || _selectedCurrency == "euro" ? onboardingColor : Colors.white,
+                  color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -353,10 +359,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.euro, // The dollar icon
-                          color:
-                              selected == 3 || _selectedCurrency == "euro"
-                                  ? Colors.white
-                                  : Colors.grey.shade600, // Icon color when not
+                          color: Colors.grey.shade600,
+                          // color:
+                          //     selected == 3 || _selectedCurrency == "euro"
+                          //         ? Colors.white
+                          //         : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -367,10 +374,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Euro', // Title and subtitle
                             style: TextStyle(
-                              color:
-                                  selected == 3 || _selectedCurrency == "euro"
-                                      ? Colors.white
-                                      : Colors.grey.shade600, // Text color
+                              color: Colors.grey.shade600,
+                              // color:
+                              //     selected == 3 || _selectedCurrency == "euro"
+                              //         ? Colors.white
+                              //         : Colors.grey.shade600, // Text color
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -387,7 +395,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                             shape: BoxShape.circle,
                             color:
                                 selected == 3 || _selectedCurrency == "euro"
-                                    ? Colors.white
+                                    ? onboardingColor
                                     : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(
@@ -427,7 +435,8 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                       width: 1,
                     ),
                   ),
-                  color: selected == 4 || _selectedCurrency == "lira" ? onboardingColor : Colors.white,
+                  // color: selected == 4 || _selectedCurrency == "lira" ? onboardingColor : Colors.white,
+                  color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -436,10 +445,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Icon part for US Dollar
                         Icon(
                           Icons.currency_lira, // The dollar icon
-                          color:
-                              selected == 4 || _selectedCurrency == "lira"
-                                  ? Colors.white
-                                  : Colors.grey.shade600, // Icon color when not
+                          color: Colors.grey.shade600,
+                          // color:
+                          //     selected == 4 || _selectedCurrency == "lira"
+                          //         ? Colors.white
+                          //         : Colors.grey.shade600, // Icon color when not
                           // selected
                           size: 24,
                         ),
@@ -450,10 +460,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           child: Text(
                             'Lira', // Title and subtitle
                             style: TextStyle(
-                              color:
-                                  selected == 4 || _selectedCurrency == "lira"
-                                      ? Colors.white
-                                      : Colors.grey.shade600, // Text color
+                              color: Colors.grey.shade600,
+                              // color:
+                              //     selected == 4 || _selectedCurrency == "lira"
+                              //         ? Colors.white
+                              //         : Colors.grey.shade600, // Text color
                               // when not selected
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -470,7 +481,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                             shape: BoxShape.circle,
                             color:
                                 selected == 4 || _selectedCurrency == "lira"
-                                    ? Colors.white
+                                    ? onboardingColor
                                     : Colors.transparent, // Fill color for
                             // unselected radio
                             // border: Border.all(

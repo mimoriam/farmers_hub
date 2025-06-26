@@ -335,7 +335,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   ],
                                 ),
 
-                            // SizedBox(height: 10),
+                            SizedBox(height: 6),
+
                             error.isNotEmpty
                                 ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                 : Container(),
@@ -400,7 +401,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               itemBuilder: (context, index) {
                                 return Stack(
                                   children: [
-                                    Image.file(_images[index], fit: BoxFit.fill, width: 110, height: 120),
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      child: Image.file(
+                                        _images[index],
+                                        fit: BoxFit.fill,
+                                        width: 110,
+                                        height: 120,
+                                      ),
+                                    ),
 
                                     Positioned(
                                       top: 4,

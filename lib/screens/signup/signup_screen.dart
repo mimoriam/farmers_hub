@@ -567,7 +567,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             "Signup",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
@@ -583,6 +583,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             "Already have an account? ",
                             style: GoogleFonts.montserrat(
                               color: accountText,
+                              decoration: TextDecoration.underline, //* Underline the text
+                              decorationColor: accountText,
                               textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                             ),
                           ),

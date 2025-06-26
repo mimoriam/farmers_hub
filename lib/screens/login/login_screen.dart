@@ -259,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               style: GoogleFonts.montserrat(
                                 textStyle: TextStyle(
                                   fontSize: 16,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
                               ),
@@ -303,16 +303,20 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Don't have an account? ",
+                              "Don't have an account?",
                               style: GoogleFonts.montserrat(
                                 color: accountText,
                                 textStyle: TextStyle(
                                   fontSize: 14,
+                                  decoration: TextDecoration.underline, //* Underline the text
+                                  decorationColor: accountText,
                                   fontWeight: FontWeight.w500,
                                   // decoration: TextDecoration.underline,
                                 ),
                               ),
                             ),
+
+                            SizedBox(width: 2),
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(

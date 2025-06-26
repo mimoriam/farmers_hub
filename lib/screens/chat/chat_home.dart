@@ -538,7 +538,7 @@ class _ChatHomeState extends State<ChatHome> {
             GestureDetector(
               onTap: () {
                 if (context.mounted) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const FavoritesScreen()),
                   ).then((_) {

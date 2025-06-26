@@ -437,7 +437,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                                   "Signup",
                                   style: GoogleFonts.poppins(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
                                 ),
