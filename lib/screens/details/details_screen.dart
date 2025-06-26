@@ -141,7 +141,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               const SizedBox(height: 16),
 
                               // _buildSellerInfo(username: postDetails["username"]),
-                              _buildSellerInfo(username: "", sellerData: ""),
+                              _buildSellerInfo(username: "", sellerData: "", profileImage: ""),
                               const SizedBox(height: 24),
 
                               _buildActionButtons(
@@ -184,6 +184,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               final sellerData = sellerSnapshot.data!['seller'];
               final sellerUsername = sellerData["username"];
               final sellerNumber = sellerData["phoneInfo"];
+              final sellerImage = sellerData["profileImage"];
 
               final currentUserId = firebaseService.currentUser?.uid;
               final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
@@ -228,7 +229,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const SizedBox(height: 16),
 
                             // _buildSellerInfo(username: postDetails["username"]),
-                            _buildSellerInfo(username: sellerUsername, sellerData: sellerData),
+                            _buildSellerInfo(
+                              username: sellerUsername,
+                              sellerData: sellerData,
+                              profileImage: sellerImage,
+                            ),
                             const SizedBox(height: 24),
 
                             _buildActionButtons(
@@ -496,7 +501,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildSellerInfo({required String username, required sellerData}) {
+  Widget _buildSellerInfo({required String profileImage, required String username, required sellerData}) {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
@@ -508,11 +513,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
       },
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.purple, // Color from the 'M'
-            child: Text('M', style: TextStyle(fontSize: 24, color: Colors.white)),
-          ),
+          profileImage == "default_pfp.jpg" || profileImage == ""
+              ? CircleAvatar(
+                radius: 24,
+                backgroundColor: onboardingColor, // Color from the 'M'
+                child: Text('A', style: TextStyle(fontSize: 24, color: Colors.white)),
+              )
+              : CircleAvatar(
+                radius: 24,
+                backgroundImage: NetworkImage(profileImage), // Use NetworkImage for URLs
+                // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+              ),
           const SizedBox(width: 12),
           Text(username, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         ],
