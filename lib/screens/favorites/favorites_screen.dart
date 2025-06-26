@@ -125,11 +125,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   }
 
   Widget _buildPostCard(Map<String, dynamic> post, String postId) {
+    final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildTopSection(
+          imageUrl: imageUrls.first,
           price: post["price"].toString(),
           category: post["category"],
           year: post["age"].toString(),
@@ -146,15 +149,27 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     );
   }
 
-  Widget _buildTopSection({required String price, required String category, required String year}) {
+  Widget _buildTopSection({
+    required String imageUrl,
+    required String price,
+    required String category,
+    required String year,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
-          child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
+          child: Image.network(
+            imageUrl,
+            width: 140,
+            height: 90,
+            fit: BoxFit.fill,
+          ),
         ),
+
         const SizedBox(width: 14),
+
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,6 +177,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               Text(price, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
               const SizedBox(height: 8),
               _buildDetailRow('Category:', category),
+
               const SizedBox(height: 4),
               _buildDetailRow('Model:', year),
             ],
