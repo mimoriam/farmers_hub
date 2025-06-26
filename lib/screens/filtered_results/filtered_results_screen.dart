@@ -704,6 +704,7 @@ class _ProductCardState extends State<ProductCard> {
     final price = widget.postData['price']?.toString() ?? '0';
     final likes = widget.postData['likes']?.toString() ?? '0';
     final views = widget.postData['views']?.toString() ?? '0';
+    final List<String> imageUrls = List<String>.from(widget.postData['imageUrls'] ?? []);
 
     final currentUserId = widget.firebaseService.currentUser?.uid;
     final List<dynamic> likedBy = widget.postData['likedBy'] ?? [];
@@ -752,8 +753,15 @@ class _ProductCardState extends State<ProductCard> {
                       bottomLeft: Radius.circular(12.0),
                       bottomRight: Radius.circular(12.0),
                     ),
-                    child: Image.asset(
-                      "images/backgrounds/cow_2.png",
+                    // child: Image.asset(
+                    //   "images/backgrounds/cow_2.png",
+                    //   height: 120,
+                    //   width: double.infinity,
+                    //   fit: BoxFit.cover,
+                    // ),
+
+                    child: Image.network(
+                      imageUrls.first,
                       height: 120,
                       width: double.infinity,
                       fit: BoxFit.cover,
