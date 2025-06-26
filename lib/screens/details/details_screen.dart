@@ -706,7 +706,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
         category == "Fruits" ||
                 category == "Vegetables" ||
-                category == "Olive & Oil" ||
+                category == "Olive Oil" ||
                 category == "Grains & Seeds" ||
                 category == "Fertilizers" ||
                 category == "Tools" ||
@@ -723,7 +723,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
         category == "Fruits" ||
                 category == "Vegetables" ||
-                category == "Olive & Oil" ||
+                category == "Olive Oil" ||
                 category == "Grains & Seeds" ||
                 category == "Fertilizers" ||
                 category == "Tools" ||

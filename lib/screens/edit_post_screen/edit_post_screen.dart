@@ -713,7 +713,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 [
                                                       'Fruits',
                                                       'Vegetables',
-                                                      'Olive & Oil',
+                                                      'Olive Oil',
                                                       "Live Stock",
                                                       'Grains & Seeds',
                                                       "Fertilizers",
@@ -873,7 +873,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 // Average Weight (in kgs)
                                                 postCategory == "Fruits" ||
                                                         postCategory == "Vegetables" ||
-                                                        postCategory == "Olive & Oil" ||
+                                                        postCategory == "Olive Oil" ||
                                                         postCategory == "Grains & Seeds" ||
                                                         postCategory == "Fertilizers" ||
                                                         postCategory == "Tools" ||

@@ -6,7 +6,7 @@ class SharedAxisPageRoute extends PageRouteBuilder {
     required Widget page,
     SharedAxisTransitionType transitionType = SharedAxisTransitionType.horizontal,
   }) : super(
-         transitionDuration: const Duration(milliseconds: 500),
+         transitionDuration: const Duration(milliseconds: 600),
          pageBuilder:
              (
                BuildContext context,

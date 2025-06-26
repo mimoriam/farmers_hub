@@ -565,7 +565,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
       {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
-      {'name': 'Olive & Oil', 'image': 'images/categories/olive_oil.png'},
+      {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
       {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
       {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
       {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
@@ -1490,7 +1490,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: SizedBox(
-                      height: 240,
+                      height: 232,
                       child: FutureBuilder(
                         future: firebaseService.getAllPostsByFeatured(),
                         builder: (context, snapshot) {
@@ -1717,9 +1717,9 @@ class PostCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
-        ],
+        // boxShadow: [
+        //   BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1727,6 +1727,7 @@ class PostCard extends StatelessWidget {
           // Image with Favorite Icon
           Padding(
             padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
+            // padding: const EdgeInsets.only(),
             child: Stack(
               children: [
                 ClipRRect(
@@ -1757,7 +1758,7 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Divider(color: dividerColor)),
+          Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Divider(color: dividerColor)),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 1, bottom: 6),
             child: Column(
@@ -1777,7 +1778,7 @@ class PostCard extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.location_on_outlined, size: 16, color: popularPostsLocationTextColor),
@@ -1806,7 +1807,7 @@ class PostCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 6),
+                const SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),

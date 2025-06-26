@@ -178,23 +178,11 @@ class _ChatHomeState extends State<ChatHome> {
   Widget _buildUserList2() {
     if (_isLoading) {
       // return const Center(child: CircularProgressIndicator(color: onboardingColor));
-      return Center(
-        child: Skeletonizer(
-          ignorePointers: true,
+      return Skeletonizer(
+        ignorePointers: true,
+        child: SingleChildScrollView(
           child: Column(
             children: [
-              ListTile(
-                leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
-              ),
-
-              ListTile(
-                leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
-              ),
-
               ListTile(
                 leading: CircleAvatar(child: Icon(Icons.person)),
                 title: Text('User Name'),
@@ -229,47 +217,19 @@ class _ChatHomeState extends State<ChatHome> {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return Center(child: CircularProgressIndicator(color: onboardingColor));
-          return Center(
-            child: Skeletonizer(
-              ignorePointers: true,
-              child: Column(
-                children: [
-                  ListTile(
+          return Skeletonizer(
+            ignorePointers: true,
+            child: SingleChildScrollView(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 4, // Number of skeleton items
+                itemBuilder: (context, index) {
+                  return const ListTile(
                     leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
+                    title: Text('User Name...........'),
                     subtitle: Text('Last message...'),
-                  ),
-
-                  ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
-                    subtitle: Text('Last message...'),
-                  ),
-
-                  ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
-                    subtitle: Text('Last message...'),
-                  ),
-
-                  ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
-                    subtitle: Text('Last message...'),
-                  ),
-
-                  ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
-                    subtitle: Text('Last message...'),
-                  ),
-
-                  ListTile(
-                    leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name'),
-                    subtitle: Text('Last message...'),
-                  ),
-                ],
+                  );
+                },
               ),
             ),
           );
@@ -322,29 +282,19 @@ class _ChatHomeState extends State<ChatHome> {
 
                   if (messageSnapshot.connectionState == ConnectionState.waiting) {
                     // return Center(child: CircularProgressIndicator(color: onboardingColor));
-                    return Center(
-                      child: Skeletonizer(
-                        ignorePointers: true,
-                        child: Column(
-                          children: [
-                            ListTile(
+                    return Skeletonizer(
+                      ignorePointers: true,
+                      child: SingleChildScrollView(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: 4, // Number of skeleton items
+                          itemBuilder: (context, index) {
+                            return const ListTile(
                               leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
+                              title: Text('User Name...........'),
                               subtitle: Text('Last message...'),
-                            ),
-
-                            ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
-                              subtitle: Text('Last message...'),
-                            ),
-
-                            ListTile(
-                              leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name'),
-                              subtitle: Text('Last message...'),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                     );
@@ -647,67 +597,69 @@ class _ChatHomeState extends State<ChatHome> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: FormBuilder(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
-                  child: FormBuilderTextField(
-                    name: "search",
-                    style: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                    ),
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      hintStyle: GoogleFonts.poppins(
+          child: SingleChildScrollView(
+            child: FormBuilder(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+                    child: FormBuilderTextField(
+                      name: "search",
+                      style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                        color: Colors.grey,
                       ),
-                      filled: true,
-                      fillColor: Colors.white,
-                      prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                      // suffixIcon: IconButton(
-                      //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                      //   onPressed: null,
-                      // ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                      decoration: InputDecoration(
+                        hintText: 'Search',
+                        hintStyle: GoogleFonts.poppins(
+                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                          color: Colors.grey,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+                        // suffixIcon: IconButton(
+                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                        //   onPressed: null,
+                        // ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                        ),
                       ),
                     ),
                   ),
-                ),
 
-                _buildUserList2(),
-                // ListView.builder(
-                //   shrinkWrap: true,
-                //   itemCount: messages.length,
-                //   itemBuilder: (context, index) {
-                //     final message = messages[index];
-                //
-                //     return MessageListItem(
-                //       avatarUrl: message.avatarUrl,
-                //       name: message.name,
-                //       lastMessage: message.lastMessage,
-                //       time: message.time,
-                //       date: message.date,
-                //       unreadCount: message.unreadCount,
-                //       onTap: () {
-                //         // Handle tap on message item, e.g., navigate to chat screen
-                //         print('Tapped on ${message.name}');
-                //       },
-                //     );
-                //   },
-                // ),
-              ],
+                  _buildUserList2(),
+                  // ListView.builder(
+                  //   shrinkWrap: true,
+                  //   itemCount: messages.length,
+                  //   itemBuilder: (context, index) {
+                  //     final message = messages[index];
+                  //
+                  //     return MessageListItem(
+                  //       avatarUrl: message.avatarUrl,
+                  //       name: message.name,
+                  //       lastMessage: message.lastMessage,
+                  //       time: message.time,
+                  //       date: message.date,
+                  //       unreadCount: message.unreadCount,
+                  //       onTap: () {
+                  //         // Handle tap on message item, e.g., navigate to chat screen
+                  //         print('Tapped on ${message.name}');
+                  //       },
+                  //     );
+                  //   },
+                  // ),
+                ],
+              ),
             ),
           ),
         ),

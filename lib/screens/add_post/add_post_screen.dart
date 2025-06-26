@@ -665,7 +665,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             [
                                                   'Fruits',
                                                   'Vegetables',
-                                                  'Olive & Oil',
+                                                  'Olive Oil',
                                                   "Live Stock",
                                                   'Grains & Seeds',
                                                   "Fertilizers",
@@ -818,7 +818,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             // Average Weight (in kgs)
                                             selectedCategory == "Fruits" ||
                                                     selectedCategory == "Vegetables" ||
-                                                    selectedCategory == "Olive & Oil" ||
+                                                    selectedCategory == "Olive Oil" ||
                                                     selectedCategory == "Grains & Seeds" ||
                                                     selectedCategory == "Fertilizers" ||
                                                     selectedCategory == "Tools" ||
