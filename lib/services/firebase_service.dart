@@ -618,4 +618,19 @@ class FirebaseService {
       return [];
     }
   }
+
+  Future<List<QueryDocumentSnapshot>> getSoldPostsByCurrentUser() async {
+    try {
+      final QuerySnapshot querySnapshot =
+          await _firestore
+              .collection(postCollection)
+              .where("sellerId", isEqualTo: currentUser?.uid)
+              .where("hasBeenSold", isEqualTo: true)
+              .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      return [];
+    }
+  }
 }

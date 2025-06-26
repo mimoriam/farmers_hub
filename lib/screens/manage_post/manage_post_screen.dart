@@ -23,6 +23,8 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
 
   final firebaseService = FirebaseService();
 
+  bool _showSoldPosts = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,7 +51,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 10),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
@@ -80,8 +82,77 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                     ),
                   ),
 
+                  Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Row(
+                            children: [
+                              FilterChip(
+                                onSelected: (bool selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _showSoldPosts = !_showSoldPosts;
+                                    });
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                                // selected: "",
+                                selected: _showSoldPosts == false,
+                                selectedColor: onboardingColor,
+                                backgroundColor: Colors.grey[300],
+                                label: Text(
+                                  "All Posts",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+
+                              SizedBox(width: 8),
+
+                              FilterChip(
+                                onSelected: (bool selected) {
+                                  if (selected) {
+                                    setState(() {
+                                      _showSoldPosts = !_showSoldPosts;
+                                    });
+                                  }
+                                },
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                                ),
+                                selectedColor: onboardingColor,
+                                selected: _showSoldPosts == true,
+                                backgroundColor: Colors.grey[300],
+                                label: Text(
+                                  "Sold",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
                   FutureBuilder(
-                    future: firebaseService.getAllPostsByCurrentUser(),
+                    future:
+                        _showSoldPosts == true
+                            ? firebaseService.getSoldPostsByCurrentUser()
+                            : firebaseService.getAllPostsByCurrentUser(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return const Center(child: CircularProgressIndicator(color: onboardingColor));
@@ -279,12 +350,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
         // Car Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
-          child: Image.network(
-            imageUrl,
-            width: 140,
-            height: 90,
-            fit: BoxFit.fill,
-          ),
+          child: Image.network(imageUrl, width: 140, height: 90, fit: BoxFit.fill),
           // child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
         ),
         const SizedBox(width: 14),
