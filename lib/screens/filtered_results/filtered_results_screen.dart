@@ -20,7 +20,14 @@ class FilteredResultsScreen extends StatefulWidget {
 
   SearchOption selectedSearchOption;
 
-  FilteredResultsScreen({super.key, this.searchQuery = "", this.selectedSearchOption = SearchOption.title});
+  SortOption selectedSortOption;
+
+  FilteredResultsScreen({
+    super.key,
+    this.searchQuery = "",
+    this.selectedSearchOption = SearchOption.title,
+    this.selectedSortOption = SortOption.descending,
+  });
 
   @override
   State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
@@ -61,16 +68,24 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
       _hasSearched = true;
     });
 
-    print(query);
-
     var results;
 
     if (widget.selectedSearchOption == SearchOption.title) {
-      results = await firebaseService.searchPosts(query);
+      results = await firebaseService.searchPosts(
+        query,
+        descending: widget.selectedSortOption == SortOption.descending,
+      );
     } else if (widget.selectedSearchOption == SearchOption.category) {
-      results = await firebaseService.searchPosts(query, isCategorySearch: true);
+      results = await firebaseService.searchPosts(
+        query,
+        isCategorySearch: true,
+        descending: widget.selectedSortOption == SortOption.descending,
+      );
     } else if (widget.selectedSearchOption == SearchOption.village) {
-      results = await firebaseService.searchPostsByCity(query);
+      results = await firebaseService.searchPostsByCity(
+        query,
+        descending: widget.selectedSortOption == SortOption.descending,
+      );
     }
 
     if (mounted) {
@@ -497,7 +512,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   //       style: TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.w500),
                   //     ),
                   //   ),
-
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 14),
                     child: FormBuilderTextField(
@@ -559,22 +573,88 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
                         SizedBox(width: 6),
 
+                        Row(
+                          children: [
+                            FilterChip(
+                              onSelected: (bool selected) {
+                                if (selected) {
+                                  setState(() {
+                                    widget.selectedSearchOption = SearchOption.title;
+                                    widget.searchQuery = "";
+                                    _formKey.currentState?.patchValue({"search": ""});
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
+                              selected: widget.selectedSearchOption == SearchOption.title,
+                              selectedColor: onboardingColor,
+                              backgroundColor: Colors.grey[300],
+                              label: Text(
+                                "Title",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 8),
+
+                            FilterChip(
+                              onSelected: (bool selected) {
+                                if (selected) {
+                                  setState(() {
+                                    widget.selectedSearchOption = SearchOption.category;
+                                    widget.searchQuery = "";
+                                    // _formKey.currentState?.reset();
+                                    _formKey.currentState?.patchValue({"search": ""});
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
+                              selected: widget.selectedSearchOption == SearchOption.category,
+                              selectedColor: onboardingColor,
+                              backgroundColor: Colors.grey[300],
+                              label: Text(
+                                "Category",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, right: 10),
+                    child: Row(
+                      children: [
                         FilterChip(
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                widget.selectedSearchOption = SearchOption.title;
+                                widget.selectedSortOption = SortOption.descending;
                                 widget.searchQuery = "";
                                 _formKey.currentState?.patchValue({"search": ""});
                               });
                             }
                           },
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                          selected: widget.selectedSearchOption == SearchOption.title,
+                          selected: widget.selectedSortOption == SortOption.descending,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Title",
+                            "Descending",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -589,7 +669,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                widget.selectedSearchOption = SearchOption.category;
+                                widget.selectedSortOption = SortOption.ascending;
                                 widget.searchQuery = "";
                                 // _formKey.currentState?.reset();
                                 _formKey.currentState?.patchValue({"search": ""});
@@ -597,11 +677,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                             }
                           },
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                          selected: widget.selectedSearchOption == SearchOption.category,
+                          selected: widget.selectedSortOption == SortOption.ascending,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Category",
+                            "Ascending",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -753,13 +833,13 @@ class _ProductCardState extends State<ProductCard> {
                       bottomLeft: Radius.circular(12.0),
                       bottomRight: Radius.circular(12.0),
                     ),
+
                     // child: Image.asset(
                     //   "images/backgrounds/cow_2.png",
                     //   height: 120,
                     //   width: double.infinity,
                     //   fit: BoxFit.cover,
                     // ),
-
                     child: Image.network(
                       imageUrls.first,
                       height: 120,

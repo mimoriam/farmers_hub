@@ -290,7 +290,6 @@ class FirebaseService {
     if (currentUser == null) return;
 
     try {
-
       // final userDoc = await _firestore.collection(userCollection).doc(currentUser!.uid).get();
       // final existingData = userDoc.data();
       // final oldImageUrl = existingData?['profileImage'];
@@ -549,7 +548,11 @@ class FirebaseService {
     }
   }
 
-  Future<List<QueryDocumentSnapshot>> searchPosts(String query, {bool isCategorySearch = false}) async {
+  Future<List<QueryDocumentSnapshot>> searchPosts(
+    String query, {
+    bool isCategorySearch = false,
+    bool descending = true,
+  }) async {
     try {
       if (query.isEmpty) {
         return [];
@@ -563,12 +566,14 @@ class FirebaseService {
             await _firestore
                 .collection(postCollection)
                 .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
+                .orderBy('createdAt', descending: descending)
                 .get();
       } else {
         querySnapshot =
             await _firestore
                 .collection(postCollection)
                 .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
+                .orderBy('createdAt', descending: descending)
                 .get();
       }
 
@@ -579,7 +584,7 @@ class FirebaseService {
     }
   }
 
-  Future<List<QueryDocumentSnapshot>> searchPostsByCity(String query) async {
+  Future<List<QueryDocumentSnapshot>> searchPostsByCity(String query, {bool descending = true}) async {
     try {
       if (query.isEmpty) {
         return [];
@@ -589,7 +594,11 @@ class FirebaseService {
       QuerySnapshot querySnapshot;
 
       querySnapshot =
-          await _firestore.collection(postCollection).where('location.city', isEqualTo: query).get();
+          await _firestore
+              .collection(postCollection)
+              .where('location.city', isEqualTo: query)
+              .orderBy('createdAt', descending: descending)
+              .get();
 
       return querySnapshot.docs;
     } catch (e) {
