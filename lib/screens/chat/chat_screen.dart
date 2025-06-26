@@ -169,7 +169,11 @@ class _ChatScreenState extends State<ChatScreen> {
           // });
 
           return FutureBuilder(
-            future: _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
+            // future: _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
+            future: Future.wait([
+              _firebaseService.getUserDataByEmail(email: widget.receiverEmail),
+              _firebaseService.getCurrentUserData(),
+            ]),
             builder: (context, userDataSnapshot) {
               if (userDataSnapshot.connectionState == ConnectionState.waiting) {
                 // return Scaffold(
@@ -277,15 +281,29 @@ class _ChatScreenState extends State<ChatScreen> {
                 );
               }
 
-              final userData = userDataSnapshot.data!.data() as Map<String, dynamic>?;
+              final receiverData = userDataSnapshot.data![0]!.data() as Map<String, dynamic>?;
+              final senderData = userDataSnapshot.data![1]!.data() as Map<String, dynamic>?;
 
-              final initialName = userData?['username'] ?? '';
-              final lastSeenAtTimestamp = userData?['lastSeenAt'] as Timestamp;
+              // final userData = userDataSnapshot.data!.data() as Map<String, dynamic>?;
+
+              // final initialName = userData?['username'] ?? '';
+              // final lastSeenAtTimestamp = userData?['lastSeenAt'] as Timestamp;
+              // final String formattedDateTime = DateFormat(
+              //   'MMM d, y ~ h:mm a',
+              // ).format(lastSeenAtTimestamp.toDate());
+
+              // This is receiver's PFP
+              // final profileImageUrl = userData?['profileImage'];
+
+              final receiverName = receiverData?['username'] ?? '';
+              final lastSeenAtTimestamp = receiverData?['lastSeenAt'] as Timestamp;
               final String formattedDateTime = DateFormat(
                 'MMM d, y ~ h:mm a',
               ).format(lastSeenAtTimestamp.toDate());
+              final receiverProfileImageUrl = receiverData?['profileImage'];
+              final senderProfileImageUrl = senderData?['profileImage'];
 
-              final profileImageUrl = userData?['profileImage'];
+              print(widget.user.photoURL);
 
               return Scaffold(
                 backgroundColor: homebackgroundColor,
@@ -301,15 +319,18 @@ class _ChatScreenState extends State<ChatScreen> {
                       //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
                       //   ),
                       // ),
-                      profileImageUrl == "default_pfp.jpg"
+                      receiverProfileImageUrl == "default_pfp.jpg"
+                          // widget.user.photoURL.contains("lh3.googleusercontent.com")
                           ? CircleAvatar(
                             radius: 20,
-                            backgroundColor: Colors.deepOrange,
+                            backgroundColor: onboardingColor,
                             child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
                           )
                           : CircleAvatar(
                             radius: 22,
-                            backgroundImage: NetworkImage(profileImageUrl), // Use NetworkImage for URLs
+                            backgroundImage: NetworkImage(
+                              receiverProfileImageUrl,
+                            ), // Use NetworkImage for URLs
                             // Or AssetImage for local assets: AssetImage('assets/your_image.png')
                           ),
                       const SizedBox(width: 12.0),
@@ -317,7 +338,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            initialName,
+                            // initialName,
+                            receiverName,
                             style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
                           ),
                           Text(formattedDateTime, style: TextStyle(color: Colors.white, fontSize: 14)),
@@ -345,7 +367,13 @@ class _ChatScreenState extends State<ChatScreen> {
                             controller: _controller,
                             children:
                                 snapshot.data!.docs
-                                    .map((doc) => _buildMessageItemList(doc, userData?['profileImage']))
+                                    .map(
+                                      (doc) => _buildMessageItemList(
+                                        doc,
+                                        senderProfileImageUrl,
+                                        receiverProfileImageUrl,
+                                      ),
+                                    )
                                     .toList(),
                           ),
                         ),
@@ -387,7 +415,11 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _buildMessageItemList(DocumentSnapshot doc, String? profileImageUrl) {
+  Widget _buildMessageItemList(
+    DocumentSnapshot doc,
+    String? senderProfileImageUrl,
+    String? receiverProfileImageUrl,
+  ) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
     bool isCurrentUser = data["senderId"] == widget.user.uid;
@@ -396,6 +428,11 @@ class _ChatScreenState extends State<ChatScreen> {
     var alignment = isCurrentUser ? Alignment.centerRight : Alignment.centerLeft;
     final Timestamp timestamp = data['timestamp'] as Timestamp;
     final String formattedTime = DateFormat('h:mm a').format(timestamp.toDate());
+
+    final profileImageUrl = isCurrentUser ? senderProfileImageUrl : receiverProfileImageUrl;
+    final displayName = isCurrentUser ? widget.user.displayName : widget.receiverEmail;
+
+    // print(widget.user.photoURL);
 
     return Container(
       alignment: alignment,
@@ -411,9 +448,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                 child:
                     profileImageUrl == "default_pfp.jpg"
+                    // profileImageUrl!.contains("lh3.googleusercontent.com")
                         ? CircleAvatar(
                           radius: 22,
-                          backgroundColor: Colors.deepOrange,
+                          backgroundColor: onboardingColor,
                           child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
                         )
                         : CircleAvatar(

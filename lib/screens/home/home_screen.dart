@@ -554,6 +554,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final String formattedDate = DateFormat('MMMM d, y').format(now);
     final String formattedDay = DateFormat('EEEE').format(now);
 
+    String _formatWeatherCondition(String condition) {
+      final words = condition.split(' ');
+      if (words.length > 2) {
+        return '${words.sublist(0, 2).join(' ')}\n${words.sublist(2).join(' ')}';
+      }
+      return condition;
+    }
+
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
       {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
@@ -1206,7 +1214,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                         Text(
                                           // 'Clear Sky',
-                                          _isLoadingLocation ? "..." : dynamicWeatherCondition,
+                                          _isLoadingLocation
+                                              ? "..."
+                                              : _formatWeatherCondition(dynamicWeatherCondition),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.poppins(
                                             fontSize: 13.6,
                                             fontWeight: FontWeight.w400,

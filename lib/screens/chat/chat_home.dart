@@ -725,7 +725,7 @@ class MessageListItem extends StatelessWidget {
             avatarUrl == "default_pfp.jpg"
                 ? CircleAvatar(
                   radius: 24,
-                  backgroundColor: Colors.deepOrange,
+                  backgroundColor: onboardingColor,
                   child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
                 )
                 : CircleAvatar(
