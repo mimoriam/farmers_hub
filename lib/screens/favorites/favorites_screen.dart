@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
+import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
+import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -23,14 +27,139 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
-        leading: BackButton(color: Colors.white),
+        leading: null,
         backgroundColor: onboardingColor,
-        automaticallyImplyLeading: true,
+        automaticallyImplyLeading: false,
         title: Text(
           "My Favorites",
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (context.mounted) {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+          }
+        },
+        backgroundColor: onboardingColor,
+        elevation: 4,
+        shape: CircleBorder(),
+        child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        height: 70,
+        // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
+        notchMargin: 10,
+        color: Colors.white,
+        elevation: 0,
+        // Shadow for the BottomAppBar
+        // clipBehavior: Clip.antiAlias,
+        clipBehavior: Clip.none,
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          // Children are the navigation items
+          children: <Widget>[
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
+                  Text(
+                    'Home',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                final user = firebaseService.currentUser;
+
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChatHome(user: user)),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
+                  Text(
+                    'Chat',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: () {},
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                  Text(
+                    'Favorites',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: () {
+                if (context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
+                  Text(
+                    'Profile',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: onboardingColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+
       body: SafeArea(
         child: FutureBuilder<List<QueryDocumentSnapshot>>(
           future: firebaseService.getFavoritedPosts(),
@@ -160,12 +289,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
-          child: Image.network(
-            imageUrl,
-            width: 140,
-            height: 90,
-            fit: BoxFit.fill,
-          ),
+          child: Image.network(imageUrl, width: 140, height: 90, fit: BoxFit.fill),
         ),
 
         const SizedBox(width: 14),

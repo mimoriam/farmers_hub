@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             GestureDetector(
               onTap: () {
                 if (context.mounted) {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(builder: (context) => const FavoritesScreen()),
                   ).then((_) {
