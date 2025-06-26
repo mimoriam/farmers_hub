@@ -1,4 +1,5 @@
 import 'package:farmers_hub/utils/constants.dart';
+import 'package:farmers_hub/utils/custom_page_transition_builder.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/screens/splash/splash_screen.dart';
@@ -27,11 +28,20 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'Farmers Hub',
 
-          theme: ThemeData(brightness: Brightness.light, textSelectionTheme: TextSelectionThemeData(
-            cursorColor: onboardingColor,
-            selectionHandleColor: onboardingColor,
-            selectionColor: onboardingColor,
-          )),
+          theme: ThemeData(
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.android: CustomPageTransitionsBuilder(),
+                TargetPlatform.iOS: CustomPageTransitionsBuilder(),
+              },
+            ),
+            brightness: Brightness.light,
+            textSelectionTheme: TextSelectionThemeData(
+              cursorColor: onboardingColor,
+              selectionHandleColor: onboardingColor,
+              selectionColor: onboardingColor,
+            ),
+          ),
           darkTheme: ThemeData(brightness: Brightness.dark),
 
           themeMode: themeNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,

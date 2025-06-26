@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
@@ -5,6 +6,7 @@ import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/location_service.dart';
+import 'package:farmers_hub/utils/custom_page_route.dart';
 import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -700,8 +702,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     final user = firebaseService.currentUser;
+
                     if (context.mounted) {
                       Navigator.push(
                         context,
@@ -711,6 +714,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
+
+                      // await Navigator.of(context).push(
+                      //   PageRouteBuilder(
+                      //     transitionDuration: const Duration(milliseconds: 500),
+                      //     pageBuilder:
+                      //         (context, animation, secondaryAnimation) =>
+                      //             ChatHome(user: firebaseService.currentUser),
+                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      //       return SharedAxisTransition(
+                      //         animation: animation,
+                      //         secondaryAnimation: secondaryAnimation,
+                      //         transitionType: SharedAxisTransitionType.vertical,
+                      //         child: child,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+
+                      // await Navigator.of(
+                      //   context,
+                      // ).push(SharedAxisPageRoute(page: ChatHome(user: firebaseService.currentUser)));
+                      //
+                      // if (mounted) {
+                      //   setState(() {});
+                      // }
                     }
                   },
                   child: Column(
@@ -731,7 +759,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const SizedBox(width: 6),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (context.mounted) {
                       Navigator.push(
                         context,
@@ -741,6 +769,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
+
+                      // await Navigator.of(context).push(
+                      //   PageRouteBuilder(
+                      //     transitionDuration: const Duration(milliseconds: 500),
+                      //     pageBuilder: (context, animation, secondaryAnimation) => const FavoritesScreen(),
+                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      //       return SharedAxisTransition(
+                      //         animation: animation,
+                      //         secondaryAnimation: secondaryAnimation,
+                      //         transitionType: SharedAxisTransitionType.vertical,
+                      //         child: child,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+
+                      // await Navigator.of(
+                      //   context,
+                      // ).push(SharedAxisPageRoute(page: const FavoritesScreen(),));
+                      //
+                      // if (mounted) {
+                      //   setState(() {});
+                      // }
                     }
                   },
                   child: Column(
@@ -760,7 +811,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     if (context.mounted) {
                       Navigator.push(
                         context,
@@ -770,6 +821,29 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
+
+                      // await Navigator.of(context).push(
+                      //   PageRouteBuilder(
+                      //     transitionDuration: const Duration(milliseconds: 500),
+                      //     pageBuilder: (context, animation, secondaryAnimation) => const ProfileScreen(),
+                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      //       return SharedAxisTransition(
+                      //         animation: animation,
+                      //         secondaryAnimation: secondaryAnimation,
+                      //         transitionType: SharedAxisTransitionType.vertical,
+                      //         child: child,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
+
+                      // await Navigator.of(
+                      //   context,
+                      // ).push(SharedAxisPageRoute(page:  const ProfileScreen(),));
+
+                      // if (mounted) {
+                      //   setState(() {});
+                      // }
                     }
                   },
                   child: Column(
