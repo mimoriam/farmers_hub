@@ -176,6 +176,8 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                           final post = postData[index].data() as Map<String, dynamic>;
                           final postId = postData[index].id;
 
+                          final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
+
                           return Center(
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
@@ -220,6 +222,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                       children: [
                                         // Top Section: Image and Details
                                         _buildTopSection(
+                                          imageUrl: imageUrls.first,
                                           price: post["price"].toString(),
                                           category: post["category"],
                                           year: post["age"].toString(),
@@ -264,20 +267,25 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     );
   }
 
-  Widget _buildTopSection({required String price, required String category, required String year}) {
+  Widget _buildTopSection({
+    required String imageUrl,
+    required String price,
+    required String category,
+    required String year,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Car Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
-          // child: Image.network(
-          //   'https://placehold.co/120x90/3366ff/FFFFFF?text=Fiesta',
-          //   width: 120,
-          //   height: 90,
-          //   fit: BoxFit.cover,
-          // ),
-          child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
+          child: Image.network(
+            imageUrl,
+            width: 140,
+            height: 90,
+            fit: BoxFit.fill,
+          ),
+          // child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
         ),
         const SizedBox(width: 14),
         // Car Details

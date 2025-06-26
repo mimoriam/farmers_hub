@@ -100,7 +100,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   void initState() {
     super.initState();
 
-    _initializeSpeech();
+    // _initializeSpeech();
     // If the screen is opened with an initial search query, perform the search
     if (widget.searchQuery.isNotEmpty) {
       _performSearch(widget.searchQuery);
@@ -517,18 +517,17 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        suffixIcon: IconButton(
-                          // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          icon: Icon(
-                            _isListening ? Icons.mic_outlined : Icons.mic_none,
-                            color: _isInitialized ? (_isListening ? Colors.green : Colors.blue) : Colors.red,
-
-                            // color: onboardingColor,
-                          ),
-                          // icon: const Icon(Icons.sort_outlined, color: onboardingColor),
-                          onPressed: _isInitializing ? null : _toggleListening,
-                          // onPressed: _showOptionsDialog,
-                        ),
+                        // suffixIcon: IconButton(
+                        //   // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                        //   icon: Icon(
+                        //     _isListening ? Icons.mic_outlined : Icons.mic_none,
+                        //     color: _isInitialized ? (_isListening ? Colors.green : Colors.blue) : Colors.red,
+                        //     // color: onboardingColor,
+                        //   ),
+                        //   // icon: const Icon(Icons.sort_outlined, color: onboardingColor),
+                        //   onPressed: _isInitializing ? null : _toggleListening,
+                        //   // onPressed: _showOptionsDialog,
+                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
