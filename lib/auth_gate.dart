@@ -8,6 +8,7 @@ import 'package:farmers_hub/screens/home/home_screen.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -22,16 +23,51 @@ class AuthGate extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
 
-          return const Scaffold(
+          // return const Scaffold(
+          //   body: Center(
+          //     child: Skeletonizer(
+          //       ignorePointers: true,
+          //       child: Column(
+          //         mainAxisAlignment: MainAxisAlignment.center,
+          //         children: [
+          //           // CircularProgressIndicator(),
+          //           SizedBox(height: 10), Text("Loading...")],
+          //       ),
+          //     ),
+          //   ),
+          // );
+
+          return Scaffold(
             body: Center(
-              child: Skeletonizer(
-                ignorePointers: true,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // CircularProgressIndicator(),
-                    SizedBox(height: 10), Text("Loading...")],
-                ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const SizedBox(width: 20.0, height: 100.0),
+                  const Text(
+                    'Your',
+                    style: TextStyle(fontSize: 43.0),
+                  ),
+                  const SizedBox(width: 20.0, height: 100.0),
+                  DefaultTextStyle(
+                    style: const TextStyle(
+                      fontSize: 40.0,
+                      fontFamily: 'Horizon',
+                    ),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        RotateAnimatedText('CROP'),
+                        RotateAnimatedText('HUB'),
+                      ],
+                      totalRepeatCount: 4,
+                      pause: const Duration(milliseconds: 4000),
+                      displayFullTextOnTap: true,
+                      stopPauseOnTap: true,
+                      onTap: () {
+                        print("Tap Event");
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           );
@@ -43,16 +79,52 @@ class AuthGate extends StatelessWidget {
             builder: (context, userExistsSnapshot) {
               if (userExistsSnapshot.connectionState == ConnectionState.waiting) {
                 // return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
-                return const Scaffold(
+                // return const Scaffold(
+                //   body: Center(
+                //     child: Skeletonizer(
+                //       ignorePointers: true,
+                //       child: Column(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           // CircularProgressIndicator(),
+                //           SizedBox(height: 10), Text("Loading... "),
+                //          ],
+                //       ),
+                //     ),
+                //   ),
+                // );
+
+                return Scaffold(
                   body: Center(
-                    child: Skeletonizer(
-                      ignorePointers: true,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // CircularProgressIndicator(),
-                          SizedBox(height: 10), Text("Loading...")],
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        const SizedBox(width: 20.0, height: 100.0),
+                        const Text(
+                          'Your',
+                          style: TextStyle(fontSize: 43.0),
+                        ),
+                        const SizedBox(width: 20.0, height: 100.0),
+                        DefaultTextStyle(
+                          style: const TextStyle(
+                            fontSize: 40.0,
+                            color: Colors.black,
+                          ),
+                          child: AnimatedTextKit(
+                            animatedTexts: [
+                              RotateAnimatedText('CROP'),
+                              RotateAnimatedText('HUB'),
+                            ],
+                            totalRepeatCount: 4,
+                            pause: const Duration(milliseconds: 4000),
+                            displayFullTextOnTap: true,
+                            stopPauseOnTap: true,
+                            onTap: () {
+                              print("Tap Event");
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 );
