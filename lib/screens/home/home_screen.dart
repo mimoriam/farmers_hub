@@ -1413,7 +1413,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           if (snapshot.connectionState == ConnectionState.waiting) {
                             // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                             return Skeletonizer(
-                              // ignoreContainers: true,
+                              ignoreContainers: true,
                               ignorePointers: true,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,

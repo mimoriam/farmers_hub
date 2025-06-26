@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -5,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -17,6 +21,18 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final FirebaseService _firebaseService = FirebaseService();
+
+  File? _imageFile;
+  final picker = ImagePicker();
+
+  Future<void> _pickImage() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
+  }
 
   InputDecoration _buildInputDecoration(String hintText, {IconData? prefixIcon}) {
     return InputDecoration(
@@ -139,9 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(
-                            decoration: _buildInputDecoration('Enter Your Name'),
-                          ),
+                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
                           const SizedBox(height: 14),
 
                           // --- PHONE NUMBER ---
@@ -150,9 +164,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(
-                            decoration: _buildInputDecoration('Enter Your Name'),
-                          ),
+                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
                           const SizedBox(height: 14),
 
                           // --- ADDRESS ---
@@ -161,9 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(
-                            decoration: _buildInputDecoration('Enter Your Name'),
-                          ),
+                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
                           const SizedBox(height: 14),
                         ],
                       ),
@@ -241,13 +251,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: Row(
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: _pickImage,
                             child: Stack(
                               children: [
-                                const CircleAvatar(
+                                CircleAvatar(
                                   radius: 40,
-                                  backgroundColor: Colors.deepOrange,
-                                  child: Text('A', style: TextStyle(fontSize: 40, color: Colors.white)),
+                                  backgroundColor: onboardingColor,
+                                  backgroundImage:
+                                      _imageFile != null
+                                          ? FileImage(_imageFile!)
+                                          : (userData?['profileImage'] != "default_pfp.jpg"
+                                                  ? NetworkImage(userData?['profileImage'])
+                                                  : null)
+                                              as ImageProvider?,
+                                  child:
+                                      _imageFile == null && (userData?['profileImage'] == "default_pfp.jpg")
+                                          ? Text('A', style: TextStyle(fontSize: 40, color: Colors.white))
+                                          : null,
                                 ),
                                 Positioned(
                                   bottom: 0,
@@ -394,8 +414,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         const SizedBox(width: 20),
                         // --- SAVE CHANGES BUTTON ---
                         Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
+                          child: TapDebouncer(
+                            cooldown: const Duration(milliseconds: 1000),
+                            onTap: () async {
                               // Validate and save the form state
                               if (_formKey.currentState!.validate()) {
                                 // Get the form data
@@ -409,6 +430,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   // Use dot notation to update a nested field
                                   // 'phoneInfo.completeNumber': _formKey.currentState?.fields['phone']?.value,
                                 };
+
+                                if (_imageFile != null) {
+                                  String? imageUrl = await _firebaseService.uploadProfileImage(_imageFile!);
+                                  if (imageUrl != null) {
+                                    updatedData['profileImage'] = imageUrl;
+                                  }
+                                }
 
                                 try {
                                   await _firebaseService.updateUserProfile(updatedData);
@@ -452,19 +480,25 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 );
                               }
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: onboardingColor,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                            ),
-                            child: const Text(
-                              'Save Changes',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+
+                            builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                              return ElevatedButton(
+                                onPressed: onTap,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: onboardingColor,
+                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                ),
+                                child: const Text(
+                                  'Save Changes',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ],

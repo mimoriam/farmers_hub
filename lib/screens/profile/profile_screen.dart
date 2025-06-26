@@ -318,36 +318,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Padding(
         // padding: const EdgeInsets.all(16.0),
         padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 32,
-                  backgroundColor: Colors.grey.shade400,
-                  child: Text(
-                    'J', // Placeholder Initial
-                    style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(width: 10),
-                Text(
-                  'Profile Information',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
-                ),
-              ],
-            ),
+        child: FutureBuilder<DocumentSnapshot?>(
+          future: _firebaseService.getCurrentUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // return const Center(child: CircularProgressIndicator(color: onboardingColor));
+              return Skeletonizer(
+                ignoreContainers: true,
+                ignorePointers: true,
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 32,
+                          backgroundColor: onboardingColor,
+                          child: Text(
+                            'A', // Placeholder Initial
+                            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        ),
 
-            FutureBuilder<DocumentSnapshot?>(
-              future: _firebaseService.getCurrentUserData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  // return const Center(child: CircularProgressIndicator(color: onboardingColor));
-                  return Skeletonizer(
-                    // ignoreContainers: true,
-                    ignorePointers: true,
-                    child: Column(
+                        SizedBox(width: 10),
+                        Text(
+                          'Profile Information',
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                        ),
+                      ],
+                    ),
+                    Column(
                       children: [
                         _buildInfoRow('Name', ""),
                         _buildInfoRow('Phone Number', ""),
@@ -355,31 +354,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         _buildInfoRow('Language', ""),
                       ],
                     ),
-                  );
-                }
+                  ],
+                ),
+              );
+            }
 
-                if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                  return const Center(child: Text("Failed to load user data."));
-                }
+            if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
+              return const Center(child: Text("Failed to load user data."));
+            }
 
-                final userData = snapshot.data!.data() as Map<String, dynamic>?;
+            final userData = snapshot.data!.data() as Map<String, dynamic>?;
 
-                final username = userData?['username'] ?? '';
-                final location = userData?["location"]["city"] ?? "";
-                final phoneNumber = userData?["phoneInfo"]["completeNumber"] ?? "";
+            final username = userData?['username'] ?? '';
+            final location = userData?["location"]["city"] ?? "";
+            final phoneNumber = userData?["phoneInfo"]["completeNumber"] ?? "";
+            final profileImageUrl = userData?['profileImage'];
 
-                return Column(
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 32,
+                      backgroundColor: onboardingColor,
+                      backgroundImage:
+                          profileImageUrl != null && profileImageUrl != "default_pfp.jpg"
+                              ? NetworkImage(profileImageUrl)
+                              : null,
+                      child:
+                          (profileImageUrl == null || profileImageUrl == "default_pfp.jpg")
+                              ? Text(
+                                'A', // Placeholder Initial
+                                style: TextStyle(
+                                  fontSize: 30,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                              : null,
+                    ),
+
+                    SizedBox(width: 10),
+                    Text(
+                      'Profile Information',
+                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                  ],
+                ),
+
+                Column(
                   children: [
                     _buildInfoRow('Name', username),
                     _buildInfoRow('Phone Number', phoneNumber),
                     _buildInfoRow('Location', location),
                     _buildInfoRow('Language', selectedLanguage),
                   ],
-                );
-              },
-            ),
-            // SizedBox(height: 25),
-          ],
+                ),
+                // SizedBox(height: 25),
+              ],
+            );
+          },
         ),
       ),
     );

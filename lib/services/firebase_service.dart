@@ -45,8 +45,7 @@ class FirebaseService {
       Reference ref = _storage.ref().child('posts/${_auth.currentUser!.uid}/$fileName');
 
       // Compress the image
-      final Uint8List? compressedImage =
-      await FlutterImageCompress.compressWithFile(
+      final Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
         image.absolute.path,
         quality: 60,
       );
@@ -59,6 +58,29 @@ class FirebaseService {
       UploadTask uploadTask = ref.putData(compressedImage);
       TaskSnapshot snapshot = await uploadTask;
 
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<String?> uploadProfileImage(File image) async {
+    try {
+      String fileName = 'profile_image_${_auth.currentUser!.uid}.jpg';
+      Reference ref = _storage.ref().child('users/${_auth.currentUser!.uid}/profile/$fileName');
+
+      final Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
+        image.absolute.path,
+        quality: 85, // You might want a slightly higher quality for profile pictures
+      );
+
+      if (compressedImage == null) {
+        return null;
+      }
+
+      UploadTask uploadTask = ref.putData(compressedImage);
+      TaskSnapshot snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
     } catch (e) {
       print(e);
@@ -268,7 +290,22 @@ class FirebaseService {
     if (currentUser == null) return;
 
     try {
-      await currentUser!.updateDisplayName(data["username"]);
+
+      // final userDoc = await _firestore.collection(userCollection).doc(currentUser!.uid).get();
+      // final existingData = userDoc.data();
+      // final oldImageUrl = existingData?['profileImage'];
+      //
+      // // Delete the old image
+      // if (data.containsKey("profileImage") && oldImageUrl != "default_pfp.jpg") {
+      //   await deleteImageFromUrl(oldImageUrl);
+      // }
+
+      if (data.containsKey("username")) {
+        await currentUser!.updateDisplayName(data["username"]);
+      }
+      if (data.containsKey("profileImage")) {
+        await currentUser!.updatePhotoURL(data["profileImage"]);
+      }
       await _firestore.collection(userCollection).doc(currentUser!.uid).update(data);
 
       await currentUser!.reload();
