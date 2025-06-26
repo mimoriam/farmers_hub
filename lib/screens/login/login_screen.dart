@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(height: 6),
+                        SizedBox(height: 20),
                         Text(
                           "Login to YOUR CROP",
                           textAlign: TextAlign.center,
@@ -69,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // style: TextStyle(fontSize: 16, color: Colors.black87),
                         ),
 
-                        SizedBox(height: 10),
+                        SizedBox(height: 14),
 
                         Divider(height: 2),
 
@@ -306,7 +306,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               "Don't have an account? ",
                               style: GoogleFonts.montserrat(
                                 color: accountText,
-                                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                                textStyle: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  // decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                             GestureDetector(
@@ -320,7 +324,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 "Signup",
                                 style: GoogleFonts.montserrat(
                                   color: onboardingColor,
-                                  textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  textStyle: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                    // decoration: TextDecoration.underline,
+                                    // color: onboardingColor,
+                                  ),
                                 ),
                               ),
                             ),
