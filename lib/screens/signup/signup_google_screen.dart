@@ -11,6 +11,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tap_debouncer/tap_debouncer.dart';
 
 class SignupGoogleScreen extends StatefulWidget {
   final User user;
@@ -388,54 +389,61 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         // ),
                         const SizedBox(height: 14),
 
-                        SizedBox(
-                          width: double.infinity,
-                          height: 50,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: onboardingColor,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                            ),
-                            onPressed:
-                                isPhoneValidated
-                                    ? () async {
-                                      if (_formKey.currentState!.validate()) {
-                                        setState(() {
-                                          error = '';
-                                        });
-                                        try {
-                                          await firebaseService.saveUserDataOnRegister(
-                                            user: widget.user,
-                                            username: _formKey.currentState?.fields['username']?.value,
-                                            phone: phoneInfo,
-                                            // address: _formKey.currentState?.fields['address']?.value,
-                                            // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
-                                          );
+                        TapDebouncer(
+                          cooldown: const Duration(milliseconds: 2000),
+                          onTap:
+                              isPhoneValidated
+                                  ? () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() {
+                                        error = '';
+                                      });
+                                      try {
+                                        await firebaseService.saveUserDataOnRegister(
+                                          user: widget.user,
+                                          username: _formKey.currentState?.fields['username']?.value,
+                                          phone: phoneInfo,
+                                          // address: _formKey.currentState?.fields['address']?.value,
+                                          // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
+                                        );
 
-                                          if (context.mounted) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                            );
-                                          }
-                                        } catch (e) {
-                                          setState(() {
-                                            debugPrint(e.toString());
-                                            error = e.toString();
-                                          });
+                                        if (context.mounted) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const HomeScreen()),
+                                          );
                                         }
+                                      } catch (e) {
+                                        setState(() {
+                                          debugPrint(e.toString());
+                                          error = e.toString();
+                                        });
                                       }
                                     }
-                                    : null,
-                            child: Text(
-                              "Signup",
-                              style: GoogleFonts.poppins(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                                  }
+                                  : null,
+
+                          builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                            return SizedBox(
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: onboardingColor,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                onPressed: onTap,
+                                child: Text(
+                                  "Signup",
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
+                            );
+                          },
                         ),
 
                         SizedBox(height: 34),

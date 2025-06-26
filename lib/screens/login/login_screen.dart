@@ -30,6 +30,8 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscureText = true;
   String error = '';
 
+  bool _isGoogleLoading = false;
+
   void _togglePasswordVisibility() {
     setState(() {
       _obscureText = !_obscureText;
@@ -356,51 +358,71 @@ class _LoginScreenState extends State<LoginScreen> {
                               btnColor: scaffoldBackgroundColor,
                             ),
 
-                            SignInButton.mini(
-                              buttonType: ButtonType.google,
-                              onPressed: () async {
-                                try {
-                                  // final user = await firebaseService.signInWithGoogle();
-                                  final user = await firebaseService.signInWithGoogle();
-                                  if (user.additionalUserInfo?.isNewUser ?? false) {
-                                    if (context.mounted) {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SignupGoogleScreen(user: user.user as User),
-                                        ),
-                                      );
-                                    }
-                                  } else {
-                                   // Feat: Check if user has completed registration properly
-                                    final userExists = await firebaseService
-                                        .checkIfUserDataExistsForSocialLogin(user: user.user!);
+                            _isGoogleLoading
+                                ? Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 26),
+                                  child: Container(
+                                    color: scaffoldBackgroundColor,
+                                    child: Center(child: CircularProgressIndicator(color: onboardingColor)),
+                                  ),
+                                )
+                                : SignInButton.mini(
+                                  buttonType: ButtonType.google,
+                                  onPressed: () async {
+                                    setState(() {
+                                      _isGoogleLoading = true;
+                                    });
 
-                                    if (userExists) {
-                                      if (context.mounted) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                        );
+                                    try {
+                                      // final user = await firebaseService.signInWithGoogle();
+                                      final user = await firebaseService.signInWithGoogle();
+                                      if (user.additionalUserInfo?.isNewUser ?? false) {
+                                        if (context.mounted) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder:
+                                                  (context) => SignupGoogleScreen(user: user.user as User),
+                                            ),
+                                          );
+                                        }
+                                      } else {
+                                        // Feat: Check if user has completed registration properly
+                                        final userExists = await firebaseService
+                                            .checkIfUserDataExistsForSocialLogin(user: user.user!);
+
+                                        if (userExists) {
+                                          if (context.mounted) {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => const HomeScreen()),
+                                            );
+                                          }
+                                        } else {
+                                          if (context.mounted) {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder:
+                                                    (context) => SignupGoogleScreen(user: user.user as User),
+                                              ),
+                                            );
+                                          }
+                                        }
                                       }
-                                    } else {
-                                      if (context.mounted) {
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => SignupGoogleScreen(user: user.user as User),
-                                          ),
-                                        );
+                                    } catch (e) {
+                                      debugPrint(e.toString());
+                                    } finally {
+                                      if (mounted) {
+                                        setState(() {
+                                          _isGoogleLoading = false;
+                                        });
                                       }
                                     }
-                                  }
-                                } catch (e) {
-                                  debugPrint(e.toString());
-                                }
-                              },
-                              elevation: 1,
-                              btnColor: scaffoldBackgroundColor,
-                            ),
+                                  },
+                                  elevation: 1,
+                                  btnColor: scaffoldBackgroundColor,
+                                ),
 
                             SignInButton.mini(
                               buttonType: ButtonType.facebook,
@@ -412,6 +434,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
 
                         SizedBox(height: 30),
+
+                        // if (_isGoogleLoading)
 
                         // Row(
                         //   mainAxisAlignment: MainAxisAlignment.center,

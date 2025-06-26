@@ -332,40 +332,38 @@ class _HomeScreenState extends State<HomeScreen> {
       if (mounted) {
         setState(() {
           _locationMessage = "Could not get location";
-        });
-      }
 
-      if (mounted) {
-        if (e.toString().contains("denied") || e.toString().contains("disabled")) {
-          await showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder:
-                (ctx) => AlertDialog(
-                  title: Text("Location Services Disabled"),
-                  content: Text("Please enable location services in settings."),
-                  backgroundColor: Colors.white,
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                        Geolocator.openLocationSettings();
-                        if (mounted) {
-                          setState(() {});
-                        }
-                      },
-                      child: Text("Open Settings"),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                      },
-                      child: Text("Cancel"),
-                    ),
-                  ],
-                ),
-          );
-        }
+          if (e.toString().contains("denied") || e.toString().contains("disabled")) {
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder:
+                  (ctx) => AlertDialog(
+                    title: Text("Location Services Disabled"),
+                    content: Text("Please enable location services in settings."),
+                    backgroundColor: Colors.white,
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          Geolocator.openLocationSettings();
+                          if (mounted) {
+                            setState(() {});
+                          }
+                        },
+                        child: Text("Open Settings"),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                        },
+                        child: Text("Cancel"),
+                      ),
+                    ],
+                  ),
+            );
+          }
+        });
       }
     } finally {
       if (mounted) {

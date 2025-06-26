@@ -381,6 +381,7 @@ class FirebaseService {
     required String currency,
     required String city,
     required List<String> imageUrls,
+    required bool hasBeenSold,
     String? village,
     String? province,
     String? country,
@@ -413,7 +414,7 @@ class FirebaseService {
         "village": village ?? "",
       },
       "imageUrls": imageUrls,
-      "hasBeenSold": false,
+      "hasBeenSold": hasBeenSold,
       "details": details ?? "",
     });
   }
@@ -458,8 +459,16 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getAllPostsByFeatured() async {
     try {
+      // final QuerySnapshot querySnapshot =
+      //     await _firestore.collection(postCollection).where("featured", isEqualTo: true).get();
+
+      // Do not return posts marked as sold
       final QuerySnapshot querySnapshot =
-          await _firestore.collection(postCollection).where("featured", isEqualTo: true).get();
+          await _firestore
+              .collection(postCollection)
+              .where("featured", isEqualTo: true)
+              .where("hasBeenSold", isEqualTo: false)
+              .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -561,18 +570,23 @@ class FirebaseService {
       final String lowerCaseQuery = query.toLowerCase();
       QuerySnapshot querySnapshot;
 
+      // DO NOT return posts that have been marked as sold
       if (isCategorySearch) {
         querySnapshot =
             await _firestore
                 .collection(postCollection)
                 .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
+                .where('hasBeenSold', isEqualTo: false)
                 .orderBy('createdAt', descending: descending)
                 .get();
       } else {
+
+        // Same as above
         querySnapshot =
             await _firestore
                 .collection(postCollection)
                 .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
+                .where('hasBeenSold', isEqualTo: false)
                 .orderBy('createdAt', descending: descending)
                 .get();
       }
@@ -597,6 +611,7 @@ class FirebaseService {
           await _firestore
               .collection(postCollection)
               .where('location.city', isEqualTo: query)
+              .where('hasBeenSold', isEqualTo: false)
               .orderBy('createdAt', descending: descending)
               .get();
 

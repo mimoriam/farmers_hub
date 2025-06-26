@@ -1045,30 +1045,45 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         Text("Price", style: _labelStyle),
                                         const SizedBox(height: 8),
 
-                                        FormBuilderTextField(
-                                          name: 'price',
-                                          maxLength: 6,
-                                          initialValue: postPrice.toString(),
-                                          autovalidateMode: validateMode,
-                                          decoration: InputDecoration(
-                                            hintText: 'Enter Your Price',
-                                            counterText: "",
-                                            border: _inputBorder,
-                                            enabledBorder: _inputBorder,
-                                            focusedBorder: _focusedInputBorder,
-                                            errorBorder: _errorInputBorder,
-                                            focusedErrorBorder: _focusedInputBorder,
-                                            contentPadding: _contentPadding,
-                                          ),
-                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                          validator: FormBuilderValidators.compose([
-                                            FormBuilderValidators.required(errorText: 'Price is required.'),
-                                            FormBuilderValidators.numeric(errorText: 'Must be a number.'),
-                                            FormBuilderValidators.min(
-                                              0,
-                                              errorText: 'Price cannot be negative.',
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: FormBuilderTextField(
+                                                name: 'price',
+                                                maxLength: 6,
+                                                initialValue: postPrice.toString(),
+                                                autovalidateMode: validateMode,
+                                                decoration: InputDecoration(
+                                                  hintText: 'Enter Your Price',
+                                                  counterText: "",
+                                                  border: _inputBorder,
+                                                  enabledBorder: _inputBorder,
+                                                  focusedBorder: _focusedInputBorder,
+                                                  errorBorder: _errorInputBorder,
+                                                  focusedErrorBorder: _focusedInputBorder,
+                                                  contentPadding: _contentPadding,
+                                                ),
+                                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                                validator: FormBuilderValidators.compose([
+                                                  FormBuilderValidators.required(errorText: 'Price is required.'),
+                                                  FormBuilderValidators.numeric(errorText: 'Must be a number.'),
+                                                  FormBuilderValidators.min(
+                                                    0,
+                                                    errorText: 'Price cannot be negative.',
+                                                  ),
+                                                ]),
+                                              ),
                                             ),
-                                          ]),
+
+                                            Expanded(
+                                              child: FormBuilderCheckbox(
+                                                name: 'hasBeenSold',
+                                                initialValue: postDetails["hasBeenSold"],
+                                                title: Text("Mark as sold", style: _labelStyle),
+                                                activeColor: onboardingColor,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         // const SizedBox(height: 30),
                                       ],
@@ -1305,6 +1320,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         featured: true,
                                         city: postCity,
                                         village: _formKey.currentState?.fields['village']?.value,
+                                        hasBeenSold: _formKey.currentState?.fields['hasBeenSold']?.value ?? false,
                                         // city: selectedCity,
                                         // city: placeDetails.city!,
                                         // province: placeDetails.province!,

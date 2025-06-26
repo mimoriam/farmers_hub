@@ -466,6 +466,36 @@ class _ChatHomeState extends State<ChatHome> {
     // ),
   ];
 
+  void _showSupportDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Contact Support"),
+          content: Text("Would you like to contact an admin?"),
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel", style: TextStyle(color: Colors.grey[600])),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Contact", style: TextStyle(color: onboardingColor)),
+              onPressed: () {
+                // TODO: Implement logic to find and start a chat with an admin.
+                print("Initiating chat with admin...");
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -473,6 +503,14 @@ class _ChatHomeState extends State<ChatHome> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // leading: BackButton(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.support_agent, color: Colors.white),
+            onPressed: () {
+              _showSupportDialog(context);
+            },
+          ),
+        ],
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(

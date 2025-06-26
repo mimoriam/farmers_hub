@@ -303,7 +303,7 @@ class _ChatScreenState extends State<ChatScreen> {
               final receiverProfileImageUrl = receiverData?['profileImage'];
               final senderProfileImageUrl = senderData?['profileImage'];
 
-              print(widget.user.photoURL);
+              // print(widget.user.photoURL);
 
               return Scaffold(
                 backgroundColor: homebackgroundColor,
