@@ -170,6 +170,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   String dynamicWeatherCondition = "...";
 
+  String _tipOfTheDay = "Loading tip...";
+
+  bool _isLoadingTip = true;
+
   late final AppLifecycleListener _listener;
 
   // Future<void> _fetchLocation() async {
@@ -376,6 +380,20 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<void> _fetchTipOfTheDay() async {
+    if (!mounted) return;
+    setState(() {
+      _isLoadingTip = true;
+    });
+    final String tip = await firebaseService.getTipOfTheDay();
+    if (mounted) {
+      setState(() {
+        _tipOfTheDay = tip;
+        _isLoadingTip = false;
+      });
+    }
+  }
+
   Future<void> _saveLocationToProfile(updatedData) async {
     await firebaseService.updateUserProfile(updatedData);
   }
@@ -436,6 +454,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _listener = AppLifecycleListener(onStateChange: _onStateChanged);
 
     _fetchBackgroundImages();
+
+    _fetchTipOfTheDay();
   }
 
   @override
@@ -1054,7 +1074,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 builder:
                                                     (context) => FilteredResultsScreen(
                                                       searchQuery: _selectedLocation,
-                                                      selectedSearchOption: SearchOption.village,
+                                                      selectedSearchOption: SearchOption.city,
                                                     ),
                                               ),
                                             );
@@ -1174,46 +1194,46 @@ class _HomeScreenState extends State<HomeScreen> {
                       CarouselSlider.builder(
                         itemCount: _isLoadingCarousel ? 5 : _backgroundImages.length,
                         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-                          return _isLoadingCarousel ? Skeletonizer(
-                            ignorePointers: true,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 5.0),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[300],
-                                borderRadius:
-                                BorderRadius.circular(12.0),
-                              ),
-                            ),
-                          ) : Container(
-                            width: MediaQuery.of(context).size.width,
-                            decoration: BoxDecoration(
-                              // color: Colors.grey[300], // Placeholder background if image fails
-                              color: Colors.green,
-                              // borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            child: ClipRRect(
-                              // borderRadius: BorderRadius.circular(12.0),
-                              // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
-                              child: Image.network(
-                                _backgroundImages[itemIndex],
-                                fit: BoxFit.fill,
-                                errorBuilder: (
-                                  BuildContext context,
-                                  Object exception,
-                                  StackTrace? stackTrace,
-                                ) {
-                                  return const Center(
-                                    child: Text(
-                                      'Could not load image',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          );
+                          return _isLoadingCarousel
+                              ? Skeletonizer(
+                                ignorePointers: true,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                              )
+                              : Container(
+                                width: MediaQuery.of(context).size.width,
+                                decoration: BoxDecoration(
+                                  // color: Colors.grey[300], // Placeholder background if image fails
+                                  color: Colors.green,
+                                  // borderRadius: BorderRadius.circular(12.0),
+                                ),
+                                child: ClipRRect(
+                                  // borderRadius: BorderRadius.circular(12.0),
+                                  // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
+                                  child: Image.network(
+                                    _backgroundImages[itemIndex],
+                                    fit: BoxFit.fill,
+                                    errorBuilder: (
+                                      BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace,
+                                    ) {
+                                      return const Center(
+                                        child: Text(
+                                          'Could not load image',
+                                          style: TextStyle(color: Colors.red),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              );
                         },
                         options: CarouselOptions(
                           height: 210.0,
@@ -1418,14 +1438,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                           color: Colors.black,
                                         ),
                                       ),
-                                      Text(
-                                        'Perfect day for soil preparation and planting seedlings. Moisture levels are optimal.',
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400,
-                                          color: clearSkyText,
-                                        ),
-                                      ),
+
+                                      // Text(
+                                      //   'Perfect day for soil preparation and planting seedlings. Moisture levels are optimal.',
+                                      //   style: GoogleFonts.poppins(
+                                      //     fontSize: 11,
+                                      //     fontWeight: FontWeight.w400,
+                                      //     color: clearSkyText,
+                                      //   ),
+                                      // ),
+                                      _isLoadingTip
+                                          ? Skeletonizer(
+                                            ignorePointers: true,
+                                            child: Text(
+                                              'Loading tip for you...',
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w400,
+                                                color: clearSkyText,
+                                              ),
+                                            ),
+                                          )
+                                          : Text(
+                                            _tipOfTheDay,
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w400,
+                                              color: clearSkyText,
+                                            ),
+                                          ),
                                     ],
                                   ),
                                 ),

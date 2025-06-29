@@ -621,6 +621,46 @@ class FirebaseService {
     }
   }
 
+  Future<String> getTipOfTheDay() async {
+    try {
+      final DocumentSnapshot tipDoc =
+          await _firestore.collection("tip_of_the_day").doc("hxcf10ioz0RL0VPZXqeM").get();
+
+      if (tipDoc.exists) {
+        final data = tipDoc.data() as Map<String, dynamic>;
+        return data['message'] ?? 'Default tip: Remember to water your plants!';
+      }
+      return 'Tip not found.';
+    } catch (e) {
+      print("Error fetching tip of the day: $e");
+      return 'Could not load tip.';
+    }
+  }
+
+  Future<List<QueryDocumentSnapshot>> searchPostsByVillage(String query, {bool descending = true}) async {
+    try {
+      if (query.isEmpty) {
+        return [];
+      }
+
+      // final String lowerCaseQuery = query.toLowerCase();
+      QuerySnapshot querySnapshot;
+
+      querySnapshot =
+          await _firestore
+              .collection(postCollection)
+              .where('location.village', isEqualTo: query)
+              .where('hasBeenSold', isEqualTo: false)
+              .orderBy('createdAt', descending: descending)
+              .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      print("Error searching posts for city: $e");
+      return [];
+    }
+  }
+
   Future<List<QueryDocumentSnapshot>> getFavoritedPosts() async {
     try {
       final QuerySnapshot querySnapshot =

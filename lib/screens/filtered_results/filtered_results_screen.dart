@@ -33,7 +33,7 @@ class FilteredResultsScreen extends StatefulWidget {
   State<FilteredResultsScreen> createState() => _FilteredResultsScreenState();
 }
 
-enum SearchOption { title, category, village }
+enum SearchOption { title, category, city, village }
 
 // Enum for sort options
 enum SortOption { ascending, descending }
@@ -81,8 +81,13 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
         isCategorySearch: true,
         descending: widget.selectedSortOption == SortOption.descending,
       );
-    } else if (widget.selectedSearchOption == SearchOption.village) {
+    } else if (widget.selectedSearchOption == SearchOption.city) {
       results = await firebaseService.searchPostsByCity(
+        query,
+        descending: widget.selectedSortOption == SortOption.descending,
+      );
+    } else if (widget.selectedSearchOption == SearchOption.village) {
+      results = await firebaseService.searchPostsByVillage(
         query,
         descending: widget.selectedSortOption == SortOption.descending,
       );
@@ -554,107 +559,45 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     ),
                   ),
 
+                  // Chip(
+                  //   backgroundColor: onboardingColor,
+                  //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                  //   label: Text(
+                  //     "Filters (1)",
+                  //     style: GoogleFonts.poppins(
+                  //       fontSize: 14,
+                  //       fontWeight: FontWeight.w500,
+                  //       color: Colors.white,
+                  //     ),
+                  //   ),
+                  // ),
+
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 4),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Chip(
-                          backgroundColor: onboardingColor,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                          label: Text(
-                            "Filters (1)",
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
 
                         SizedBox(width: 6),
 
-                        Row(
-                          children: [
-                            FilterChip(
-                              onSelected: (bool selected) {
-                                if (selected) {
-                                  setState(() {
-                                    widget.selectedSearchOption = SearchOption.title;
-                                    widget.searchQuery = "";
-                                    _formKey.currentState?.patchValue({"search": ""});
-                                  });
-                                }
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              selected: widget.selectedSearchOption == SearchOption.title,
-                              selectedColor: onboardingColor,
-                              backgroundColor: Colors.grey[300],
-                              label: Text(
-                                "Title",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(width: 8),
-
-                            FilterChip(
-                              onSelected: (bool selected) {
-                                if (selected) {
-                                  setState(() {
-                                    widget.selectedSearchOption = SearchOption.category;
-                                    widget.searchQuery = "";
-                                    // _formKey.currentState?.reset();
-                                    _formKey.currentState?.patchValue({"search": ""});
-                                  });
-                                }
-                              },
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                              ),
-                              selected: widget.selectedSearchOption == SearchOption.category,
-                              selectedColor: onboardingColor,
-                              backgroundColor: Colors.grey[300],
-                              label: Text(
-                                "Category",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      children: [
                         FilterChip(
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                widget.selectedSortOption = SortOption.descending;
+                                widget.selectedSearchOption = SearchOption.title;
                                 widget.searchQuery = "";
                                 _formKey.currentState?.patchValue({"search": ""});
                               });
                             }
                           },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                          selected: widget.selectedSortOption == SortOption.descending,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          selected: widget.selectedSearchOption == SearchOption.title,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Descending",
+                            "Title",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -669,19 +612,77 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
-                                widget.selectedSortOption = SortOption.ascending;
+                                widget.selectedSearchOption = SearchOption.category;
                                 widget.searchQuery = "";
                                 // _formKey.currentState?.reset();
                                 _formKey.currentState?.patchValue({"search": ""});
                               });
                             }
                           },
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
-                          selected: widget.selectedSortOption == SortOption.ascending,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          selected: widget.selectedSearchOption == SearchOption.category,
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Ascending",
+                            "Category",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 8),
+
+                        FilterChip(
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              setState(() {
+                                widget.selectedSearchOption = SearchOption.city;
+                                widget.searchQuery = "";
+                                _formKey.currentState?.patchValue({"search": ""});
+                              });
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          selected: widget.selectedSearchOption == SearchOption.city,
+                          selectedColor: onboardingColor,
+                          backgroundColor: Colors.grey[300],
+                          label: Text(
+                            "City",
+                            style: GoogleFonts.poppins(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        SizedBox(width: 8),
+
+                        FilterChip(
+                          onSelected: (bool selected) {
+                            if (selected) {
+                              setState(() {
+                                widget.selectedSearchOption = SearchOption.village;
+                                widget.searchQuery = "";
+                                _formKey.currentState?.patchValue({"search": ""});
+                              });
+                            }
+                          },
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(20)),
+                          ),
+                          selected: widget.selectedSearchOption == SearchOption.village,
+                          selectedColor: onboardingColor,
+                          backgroundColor: Colors.grey[300],
+                          label: Text(
+                            "Village",
                             style: GoogleFonts.poppins(
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -691,6 +692,69 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         ),
                       ],
                     ),
+                  ),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        child: Row(
+                          children: [
+                            FilterChip(
+                              onSelected: (bool selected) {
+                                if (selected) {
+                                  setState(() {
+                                    widget.selectedSortOption = SortOption.descending;
+                                    widget.searchQuery = "";
+                                    _formKey.currentState?.patchValue({"search": ""});
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                              selected: widget.selectedSortOption == SortOption.descending,
+                              selectedColor: onboardingColor,
+                              backgroundColor: Colors.grey[300],
+                              label: Text(
+                                "Descending",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(width: 8),
+
+                            FilterChip(
+                              onSelected: (bool selected) {
+                                if (selected) {
+                                  setState(() {
+                                    widget.selectedSortOption = SortOption.ascending;
+                                    widget.searchQuery = "";
+                                    // _formKey.currentState?.reset();
+                                    _formKey.currentState?.patchValue({"search": ""});
+                                  });
+                                }
+                              },
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                              selected: widget.selectedSortOption == SortOption.ascending,
+                              selectedColor: onboardingColor,
+                              backgroundColor: Colors.grey[300],
+                              label: Text(
+                                "Ascending",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
 
                   Padding(
