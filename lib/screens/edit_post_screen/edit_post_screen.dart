@@ -156,99 +156,102 @@ class _EditPostScreenState extends State<EditPostScreen> {
             return Skeletonizer(
               ignorePointers: true,
               ignoreContainers: true,
+              // enabled: _isLoadingImages,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    DottedBorder(
-                      options: RoundedRectDottedBorderOptions(
-                        radius: const Radius.circular(20),
-                        color: onboardingColor,
-                        strokeWidth: 1,
-                      ),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(12)),
-                        child: Container(
-                          width: double.infinity,
-                          height: 340,
-                          color: Colors.white,
-                          child: GridView.builder(
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 2,
-                              mainAxisSpacing: 2,
-                            ),
-                            itemCount:
-                                _imageUrls.length +
-                                _newImages.length +
-                                ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
-                            itemBuilder: (context, index) {
-                              if (index < _imageUrls.length) {
-                                return Stack(
-                                  children: [
-                                    Image.network(
-                                      _imageUrls[index],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                                    Positioned(
-                                      top: 4,
-                                      left: 4,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Icon(Icons.close, color: Colors.black, size: 20),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              } else if (index < _imageUrls.length + _newImages.length) {
-                                final newImageIndex = index - _imageUrls.length;
-
-                                return Stack(
-                                  children: [
-                                    Image.file(
-                                      _newImages[newImageIndex],
-                                      fit: BoxFit.cover,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                    ),
-                                    Positioned(
-                                      top: 4,
-                                      left: 4,
-                                      child: GestureDetector(
-                                        onTap: () {},
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Icon(Icons.close, color: Colors.black, size: 20),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return Center(
-                                  child: IconButton(
-                                    icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
-                                    onPressed: _pickImage,
-                                  ),
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
+                    _buildImagePickerSection2(),
+                    // DottedBorder(
+                    //   options: RoundedRectDottedBorderOptions(
+                    //     radius: const Radius.circular(20),
+                    //     color: onboardingColor,
+                    //     strokeWidth: 1,
+                    //   ),
+                    //   child: ClipRRect(
+                    //     borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    //     child: Container(
+                    //       width: double.infinity,
+                    //       height: 340,
+                    //       color: Colors.white,
+                    //       child: GridView.builder(
+                    //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    //           crossAxisCount: 2,
+                    //           crossAxisSpacing: 2,
+                    //           mainAxisSpacing: 2,
+                    //         ),
+                    //         itemCount:
+                    //             _imageUrls.length +
+                    //             _newImages.length +
+                    //             ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+                    //         itemBuilder: (context, index) {
+                    //           if (index < _imageUrls.length) {
+                    //             return Stack(
+                    //               children: [
+                    //                 Image.network(
+                    //                   _imageUrls[index],
+                    //                   fit: BoxFit.cover,
+                    //                   width: double.infinity,
+                    //                   height: double.infinity,
+                    //                 ),
+                    //                 Positioned(
+                    //                   top: 4,
+                    //                   left: 4,
+                    //                   child: GestureDetector(
+                    //                     onTap: () {},
+                    //                     child: Container(
+                    //                       decoration: BoxDecoration(
+                    //                         color: Colors.white,
+                    //                         shape: BoxShape.rectangle,
+                    //                         borderRadius: BorderRadius.circular(10),
+                    //                       ),
+                    //                       child: Icon(Icons.close, color: Colors.black, size: 20),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             );
+                    //           } else if (index < _imageUrls.length + _newImages.length) {
+                    //             final newImageIndex = index - _imageUrls.length;
+                    //
+                    //             return Stack(
+                    //               children: [
+                    //                 Image.file(
+                    //                   _newImages[newImageIndex],
+                    //                   fit: BoxFit.cover,
+                    //                   width: double.infinity,
+                    //                   height: double.infinity,
+                    //                 ),
+                    //                 Positioned(
+                    //                   top: 4,
+                    //                   left: 4,
+                    //                   child: GestureDetector(
+                    //                     onTap: () {},
+                    //                     child: Container(
+                    //                       decoration: BoxDecoration(
+                    //                         color: Colors.white,
+                    //                         shape: BoxShape.rectangle,
+                    //                         borderRadius: BorderRadius.circular(10),
+                    //                       ),
+                    //                       child: Icon(Icons.close, color: Colors.black, size: 20),
+                    //                     ),
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             );
+                    //           } else {
+                    //             /*return Center(
+                    //               child: IconButton(
+                    //                 icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+                    //                 onPressed: _pickImage,
+                    //               ),
+                    //             );*/
+                    //             return Center(child: Container());
+                    //           }
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
 
                     ListView.builder(
                       itemCount: 4,
@@ -304,7 +307,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                           // SizedBox(height: 2),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            child: _buildImagePickerSection(), // --- MODIFIED UI WIDGET ---
+                            child: _buildImagePickerSection2(), // --- MODIFIED UI WIDGET ---
                           ),
 
                           // Center(
@@ -469,6 +472,114 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                     : Container(),
 
                                 error.isNotEmpty ? SizedBox(height: 10) : Container(),
+
+                                GridView.builder(
+                                  shrinkWrap: true,
+                                  // Important to make GridView work inside SingleChildScrollView
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 4,
+                                    crossAxisSpacing: 8,
+                                    mainAxisSpacing: 8,
+                                  ),
+
+                                  // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
+                                  itemCount:
+                                      _imageUrls.length +
+                                      _newImages.length +
+                                      ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+                                  itemBuilder: (context, index) {
+                                    if (index < _imageUrls.length) {
+                                      return Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            child: Image.network(
+                                              _imageUrls[index],
+                                              fit: BoxFit.fill,
+                                              width: 110,
+                                              height: 120,
+                                            ),
+                                          ),
+
+                                          Positioned(
+                                            top: 4,
+                                            left: 4,
+                                            child: GestureDetector(
+                                              // onTap: () => _removeImage(index),
+                                              onTap: () {
+                                                _removeExistingImage(index);
+                                                if (_imageUrls.length + _newImages.length <= 4) {
+                                                  setState(() {
+                                                    error = '';
+                                                  });
+                                                }
+                                                return;
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.rectangle,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                child: Icon(Icons.close, color: Colors.black, size: 20),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else if (index < _imageUrls.length + _newImages.length) {
+                                      final newImageIndex = index - _imageUrls.length;
+
+                                      return Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(10.0),
+                                            child: Image.file(
+                                              _newImages[newImageIndex],
+                                              fit: BoxFit.fill,
+                                              width: 110,
+                                              height: 120,
+                                            ),
+                                          ),
+
+                                          Positioned(
+                                            top: 4,
+                                            left: 4,
+                                            child: GestureDetector(
+                                              // onTap: () => _removeImage(index),
+                                              onTap: () {
+                                                _removeNewImage(newImageIndex);
+                                                if (_imageUrls.length + _newImages.length <= 4) {
+                                                  setState(() {
+                                                    error = '';
+                                                  });
+                                                }
+                                                return;
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  shape: BoxShape.rectangle,
+                                                  borderRadius: BorderRadius.circular(10),
+                                                ),
+                                                child: Icon(Icons.close, color: Colors.black, size: 20),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    } else {
+                                      // return Center(
+                                      //   child: IconButton(
+                                      //     icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+                                      //     onPressed: _pickImage,
+                                      //   ),
+                                      // );
+                                      return Center(child: Container());
+                                    }
+                                  },
+                                ),
 
                                 Card(
                                   color: Colors.white,
@@ -1063,10 +1174,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                   focusedErrorBorder: _focusedInputBorder,
                                                   contentPadding: _contentPadding,
                                                 ),
-                                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                                keyboardType: const TextInputType.numberWithOptions(
+                                                  decimal: true,
+                                                ),
                                                 validator: FormBuilderValidators.compose([
-                                                  FormBuilderValidators.required(errorText: 'Price is required.'),
-                                                  FormBuilderValidators.numeric(errorText: 'Must be a number.'),
+                                                  FormBuilderValidators.required(
+                                                    errorText: 'Price is required.',
+                                                  ),
+                                                  FormBuilderValidators.numeric(
+                                                    errorText: 'Must be a number.',
+                                                  ),
                                                   FormBuilderValidators.min(
                                                     0,
                                                     errorText: 'Price cannot be negative.',
@@ -1320,7 +1437,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         featured: true,
                                         city: postCity,
                                         village: _formKey.currentState?.fields['village']?.value,
-                                        hasBeenSold: _formKey.currentState?.fields['hasBeenSold']?.value ?? false,
+                                        hasBeenSold:
+                                            _formKey.currentState?.fields['hasBeenSold']?.value ?? false,
                                         // city: selectedCity,
                                         // city: placeDetails.city!,
                                         // province: placeDetails.province!,
@@ -1397,126 +1515,65 @@ class _EditPostScreenState extends State<EditPostScreen> {
     );
   }
 
-  Widget _buildImagePickerSection() {
+  Widget _buildImagePickerSection2() {
     return Column(
       children: [
-        // if (_isLoadingImages)
-        // Center(child: CircularProgressIndicator(color: Colors.red,))
-        //   Center(child: Skeletonizer(
-        //     ignorePointers: true,
-        //     child: Column(
-        //       mainAxisAlignment: MainAxisAlignment.center,
-        //       children: [
-        //         // CircularProgressIndicator(),
-        //         SizedBox(height: 10), Text("Loading...")],
-        //     ),
-        //   ),)
-        // else
         Skeletonizer(
           ignorePointers: true,
+          ignoreContainers: true,
           enabled: _isLoadingImages,
           child: DottedBorder(
             options: RoundedRectDottedBorderOptions(
               radius: const Radius.circular(20),
               color: onboardingColor,
               strokeWidth: 1,
+              // dashPattern: const [6, 6],
             ),
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(12)),
               child: Container(
-                width: double.infinity,
-                height: 340,
-                color: Colors.white,
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 2,
-                    mainAxisSpacing: 2,
+                width: double.infinity, // Take up all available horizontal space.
+                height: 260, // Fixed height for the container.
+                color: Colors.white, // Background color of the container.
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10, top: 56, bottom: 10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    // Center the content vertically.
+                    children: [
+                      // The Expanded widget allows the icon to take up available space,
+                      // pushing the button to the bottom.
+                      const Expanded(
+                        child: Center(child: Icon(Icons.image_outlined, size: 36, color: onboardingColor)),
+                      ),
+                      const SizedBox(height: 20),
+                      // This is the "Add Images" button.
+                      _imageUrls.length + _newImages.length >= 4
+                          ? Container()
+                          : SizedBox(
+                            width: double.infinity,
+                            // Make button take full width of its parent.
+                            child: ElevatedButton.icon(
+                              onPressed: _pickImage,
+                              icon: const Icon(Icons.add_photo_alternate_rounded, color: Colors.white),
+                              label: const Text(
+                                'Add Images',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: onboardingColor, // Button background color.
+                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                elevation: 2, // Adds a subtle shadow.
+                              ),
+                            ),
+                          ),
+                    ],
                   ),
-                  itemCount:
-                      _imageUrls.length +
-                      _newImages.length +
-                      ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index < _imageUrls.length) {
-                      return Stack(
-                        children: [
-                          Image.network(
-                            _imageUrls[index],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                          Positioned(
-                            top: 4,
-                            left: 4,
-                            child: GestureDetector(
-                              onTap: () {
-                                _removeExistingImage(index);
-                                if (_imageUrls.length + _newImages.length <= 4) {
-                                  setState(() {
-                                    error = '';
-                                  });
-                                }
-                                return;
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(Icons.close, color: Colors.black, size: 20),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else if (index < _imageUrls.length + _newImages.length) {
-                      final newImageIndex = index - _imageUrls.length;
-
-                      return Stack(
-                        children: [
-                          Image.file(
-                            _newImages[newImageIndex],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
-                          Positioned(
-                            top: 4,
-                            left: 4,
-                            child: GestureDetector(
-                              onTap: () {
-                                _removeNewImage(newImageIndex);
-                                if (_imageUrls.length + _newImages.length <= 4) {
-                                  setState(() {
-                                    error = '';
-                                  });
-                                }
-                                return;
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Icon(Icons.close, color: Colors.black, size: 20),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    } else {
-                      return Center(
-                        child: IconButton(
-                          icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
-                          onPressed: _pickImage,
-                        ),
-                      );
-                    }
-                  },
                 ),
               ),
             ),
@@ -1525,4 +1582,134 @@ class _EditPostScreenState extends State<EditPostScreen> {
       ],
     );
   }
+
+  // Widget _buildImagePickerSection() {
+  //   return Column(
+  //     children: [
+  //       // if (_isLoadingImages)
+  //       // Center(child: CircularProgressIndicator(color: Colors.red,))
+  //       //   Center(child: Skeletonizer(
+  //       //     ignorePointers: true,
+  //       //     child: Column(
+  //       //       mainAxisAlignment: MainAxisAlignment.center,
+  //       //       children: [
+  //       //         // CircularProgressIndicator(),
+  //       //         SizedBox(height: 10), Text("Loading...")],
+  //       //     ),
+  //       //   ),)
+  //       // else
+  //       Skeletonizer(
+  //         ignorePointers: true,
+  //         ignoreContainers: true,
+  //         enabled: _isLoadingImages,
+  //         child: DottedBorder(
+  //           options: RoundedRectDottedBorderOptions(
+  //             radius: const Radius.circular(20),
+  //             color: onboardingColor,
+  //             strokeWidth: 1,
+  //           ),
+  //           child: ClipRRect(
+  //             borderRadius: const BorderRadius.all(Radius.circular(12)),
+  //             child: Container(
+  //               width: double.infinity,
+  //               height: 340,
+  //               color: Colors.white,
+  //               child: GridView.builder(
+  //                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                   crossAxisCount: 2,
+  //                   crossAxisSpacing: 2,
+  //                   mainAxisSpacing: 2,
+  //                 ),
+  //                 itemCount:
+  //                     _imageUrls.length +
+  //                     _newImages.length +
+  //                     ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+  //                 itemBuilder: (context, index) {
+  //                   if (index < _imageUrls.length) {
+  //                     return Stack(
+  //                       children: [
+  //                         Image.network(
+  //                           _imageUrls[index],
+  //                           fit: BoxFit.cover,
+  //                           width: double.infinity,
+  //                           height: double.infinity,
+  //                         ),
+  //                         Positioned(
+  //                           top: 4,
+  //                           left: 4,
+  //                           child: GestureDetector(
+  //                             onTap: () {
+  //                               _removeExistingImage(index);
+  //                               if (_imageUrls.length + _newImages.length <= 4) {
+  //                                 setState(() {
+  //                                   error = '';
+  //                                 });
+  //                               }
+  //                               return;
+  //                             },
+  //                             child: Container(
+  //                               decoration: BoxDecoration(
+  //                                 color: Colors.white,
+  //                                 shape: BoxShape.rectangle,
+  //                                 borderRadius: BorderRadius.circular(10),
+  //                               ),
+  //                               child: Icon(Icons.close, color: Colors.black, size: 20),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     );
+  //                   } else if (index < _imageUrls.length + _newImages.length) {
+  //                     final newImageIndex = index - _imageUrls.length;
+  //
+  //                     return Stack(
+  //                       children: [
+  //                         Image.file(
+  //                           _newImages[newImageIndex],
+  //                           fit: BoxFit.cover,
+  //                           width: double.infinity,
+  //                           height: double.infinity,
+  //                         ),
+  //                         Positioned(
+  //                           top: 4,
+  //                           left: 4,
+  //                           child: GestureDetector(
+  //                             onTap: () {
+  //                               _removeNewImage(newImageIndex);
+  //                               if (_imageUrls.length + _newImages.length <= 4) {
+  //                                 setState(() {
+  //                                   error = '';
+  //                                 });
+  //                               }
+  //                               return;
+  //                             },
+  //                             child: Container(
+  //                               decoration: BoxDecoration(
+  //                                 color: Colors.white,
+  //                                 shape: BoxShape.rectangle,
+  //                                 borderRadius: BorderRadius.circular(10),
+  //                               ),
+  //                               child: Icon(Icons.close, color: Colors.black, size: 20),
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     );
+  //                   } else {
+  //                     return Center(
+  //                       child: IconButton(
+  //                         icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+  //                         onPressed: _pickImage,
+  //                       ),
+  //                     );
+  //                   }
+  //                 },
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

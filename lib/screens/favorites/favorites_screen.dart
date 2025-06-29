@@ -119,7 +119,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                  SvgPicture.asset(
+                    semanticsLabel: 'Favorites Icon',
+                    "images/icons/favorites.svg",
+                    // colorFilter: ColorFilter.mode(onboardingColor, BlendMode.),
+                  ),
                   Text(
                     'Favorites',
                     style: GoogleFonts.montserrat(
@@ -208,9 +212,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                 return Center(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 6
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                     child: GestureDetector(
                       onTap: () {
                         if (context.mounted) {

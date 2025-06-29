@@ -666,7 +666,7 @@ class _HomeScreenState extends State<HomeScreen> {
               }
             },
             backgroundColor: onboardingColor,
-            elevation: 3,
+            elevation: 0,
             shape: CircleBorder(),
             child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
           ),
@@ -1598,9 +1598,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 14),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 30),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Container(
-                      width: 360,
+                      width: 365,
                       padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(

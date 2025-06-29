@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           }
         },
         backgroundColor: onboardingColor,
-        elevation: 4,
+        elevation: 0,
         shape: CircleBorder(),
         child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
       ),
