@@ -580,7 +580,6 @@ class FirebaseService {
                 .orderBy('createdAt', descending: descending)
                 .get();
       } else {
-
         // Same as above
         querySnapshot =
             await _firestore
@@ -645,6 +644,21 @@ class FirebaseService {
 
       return querySnapshot.docs;
     } catch (e) {
+      return [];
+    }
+  }
+
+  Future<List<String>> getBackgroundImages() async {
+    try {
+      final ListResult result = await _storage.ref().child('backgrounds').listAll();
+      final List<String> imageUrls = [];
+      for (final Reference ref in result.items) {
+        final String downloadUrl = await ref.getDownloadURL();
+        imageUrls.add(downloadUrl);
+      }
+      return imageUrls;
+    } catch (e) {
+      print("Error getting background images: $e");
       return [];
     }
   }

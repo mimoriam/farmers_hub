@@ -434,12 +434,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _fetchLocation();
     _listener = AppLifecycleListener(onStateChange: _onStateChanged);
+
+    _fetchBackgroundImages();
   }
 
   @override
   void dispose() {
     _listener.dispose();
     super.dispose();
+  }
+
+  Future<void> _fetchBackgroundImages() async {
+    final List<String> imageUrls = await firebaseService.getBackgroundImages();
+    if (mounted) {
+      setState(() {
+        _backgroundImages = imageUrls;
+        _isLoadingCarousel = false;
+      });
+    }
   }
 
   // void _openCountryPicker() {
@@ -471,13 +483,16 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentCarouselPage = 0; // To keep track of the current carousel page
 
   // Placeholder image URLs for the carousel
-  final List<String> imgList = [
-    'images/backgrounds/tractor_ad.jpg',
-    'images/backgrounds/olive_oil_bottle_2.jpg',
-    'images/backgrounds/grains.jpg',
-    'images/backgrounds/food_marketplace.jpg',
-    'images/backgrounds/pomegranates.jpg',
-  ];
+  // final List<String> imgList = [
+  //   'images/backgrounds/tractor_ad.jpg',
+  //   'images/backgrounds/olive_oil_bottle_2.jpg',
+  //   'images/backgrounds/grains.jpg',
+  //   'images/backgrounds/food_marketplace.jpg',
+  //   'images/backgrounds/pomegranates.jpg',
+  // ];
+
+  List<String> _backgroundImages = [];
+  bool _isLoadingCarousel = true;
 
   Widget _buildCategoryItem(String name, String imageUrl) {
     return GestureDetector(
@@ -1157,9 +1172,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   Column(
                     children: [
                       CarouselSlider.builder(
-                        itemCount: imgList.length,
+                        itemCount: _isLoadingCarousel ? 5 : _backgroundImages.length,
                         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-                          return Container(
+                          return _isLoadingCarousel ? Skeletonizer(
+                            ignorePointers: true,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                                borderRadius:
+                                BorderRadius.circular(12.0),
+                              ),
+                            ),
+                          ) : Container(
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               // color: Colors.grey[300], // Placeholder background if image fails
@@ -1168,7 +1195,23 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             child: ClipRRect(
                               // borderRadius: BorderRadius.circular(12.0),
-                              child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
+                              // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
+                              child: Image.network(
+                                _backgroundImages[itemIndex],
+                                fit: BoxFit.fill,
+                                errorBuilder: (
+                                  BuildContext context,
+                                  Object exception,
+                                  StackTrace? stackTrace,
+                                ) {
+                                  return const Center(
+                                    child: Text(
+                                      'Could not load image',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                           );
                         },
@@ -1179,7 +1222,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           autoPlay: true,
                           // enlargeCenterPage: true,
                           // enlargeFactor: 1,
-                          autoPlayInterval: Duration(seconds: 3),
+                          // autoPlayInterval: Duration(seconds: 3),
+                          autoPlayInterval: Duration(seconds: 6),
                           autoPlayAnimationDuration: Duration(milliseconds: 1000),
                           autoPlayCurve: Curves.fastOutSlowIn,
                           scrollDirection: Axis.horizontal,
