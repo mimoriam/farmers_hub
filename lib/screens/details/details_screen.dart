@@ -19,6 +19,87 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
 
+class FavoriteIconButton extends StatefulWidget {
+  final String postId;
+  final bool initialIsLiked;
+  final FirebaseService firebaseService;
+
+  const FavoriteIconButton({
+    super.key,
+    required this.postId,
+    required this.initialIsLiked,
+    required this.firebaseService,
+  });
+
+  @override
+  State<FavoriteIconButton> createState() => _FavoriteIconButtonState();
+}
+
+class _FavoriteIconButtonState extends State<FavoriteIconButton> {
+  late bool _isLiked;
+  bool _isLiking = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _isLiked = widget.initialIsLiked;
+  }
+
+  // This ensures the button updates if the stream provides a new value
+  @override
+  void didUpdateWidget(FavoriteIconButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialIsLiked != oldWidget.initialIsLiked) {
+      setState(() {
+        _isLiked = widget.initialIsLiked;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // If the button is processing a like, show a spinner
+    if (_isLiking) {
+      return const Padding(
+        padding: EdgeInsets.all(12.0),
+        child: SizedBox(
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(strokeWidth: 2.5, color: onboardingColor),
+        ),
+      );
+    }
+
+    // Otherwise, show the appropriate heart icon
+    return IconButton(
+      icon: Icon(
+        _isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+        color: _isLiked ? Colors.red : Colors.grey[700],
+      ),
+      onPressed: () async {
+        // Prevent multiple clicks
+        if (_isLiking) return;
+
+        // 1. Immediately update the local UI optimistically and show spinner
+        setState(() {
+          _isLiking = true;
+          _isLiked = !_isLiked;
+        });
+
+        // 2. Call Firebase in the background
+        await widget.firebaseService.updatePostLikes(postId: widget.postId, like: _isLiked);
+
+        // 3. Hide the spinner once the background task is done
+        if (mounted) {
+          setState(() {
+            _isLiking = false;
+          });
+        }
+      },
+    );
+  }
+}
+
 class DetailsScreen extends StatefulWidget {
   final String postId;
 
@@ -37,11 +118,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
   static final Set<String> _sessionViewedPosts = {};
 
   int _currentCarouselPage = 0;
+  Future<Map<String, dynamic>?>? _sellerDetailsFuture;
 
   @override
   void initState() {
     super.initState();
     _incrementViewCountIfFirstTime();
+
+    _sellerDetailsFuture = firebaseService.getPostAndSellerDetails(widget.postId);
   }
 
   void _incrementViewCountIfFirstTime() {
@@ -98,9 +182,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
             return const Center(child: Text("Post not found or has been deleted."));
           }
 
+          final postDetails = postSnapshot.data!.data() as Map<String, dynamic>;
+          final currentUserId = firebaseService.currentUser?.uid;
+
+          // Initialize local state from the stream data
+          // final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
+          // _isLiked ??= currentUserId != null && likedBy.contains(currentUserId);
+          // _likeCount ??= postDetails['likes'] ?? 0;
+
           return FutureBuilder<Map<String, dynamic>?>(
             // future: firebaseService.getPostDetails(widget.postId),
-            future: firebaseService.getPostAndSellerDetails(widget.postId),
+            // future: firebaseService.getPostAndSellerDetails(widget.postId),
+            future: _sellerDetailsFuture,
             builder: (context, sellerSnapshot) {
               if (sellerSnapshot.connectionState == ConnectionState.waiting) {
                 // return const Center(child: CircularProgressIndicator(color: onboardingColor));
@@ -118,12 +211,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // _buildTitleAndActions2({}),
                               _buildTitleAndActions(
                                 currency: "",
                                 title: "",
                                 price: "",
                                 location: {"city": "Wew lad"},
                                 isLiked: true,
+                                isLiking: false,
                                 onLike:
                                     () => firebaseService.updatePostLikes(postId: widget.postId, like: !true),
                               ),
@@ -205,20 +300,56 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildTitleAndActions(
-                              currency: postDetails["currency"].toString().toLowerCase(),
-                              title: postDetails["title"],
-                              price: postDetails["price"].toString(),
-                              location: postDetails["location"],
-                              isLiked: isLiked,
-                              onLike:
-                                  () =>
-                                      firebaseService.updatePostLikes(postId: widget.postId, like: !isLiked),
-                            ),
+                            _buildTitleAndActions2(postDetails),
+                            // _buildTitleAndActions(
+                            //   currency: postDetails["currency"].toString().toLowerCase(),
+                            //   title: postDetails["title"],
+                            //   price: postDetails["price"].toString(),
+                            //   location: postDetails["location"],
+                            //   // isLiked: isLiked,
+                            //   // onLike:
+                            //   //     () =>
+                            //   //         firebaseService.updatePostLikes(postId: widget.postId, like: !isLiked),
+                            //
+                            //   // Use local state
+                            //   isLiked: _isLiked!,
+                            //
+                            //   isLiking: _isLiking,
+                            //
+                            //   onLike: () async {
+                            //     if (_isLiking) return; // Prevent multiple clicks
+                            //
+                            //     setState(() {
+                            //       _isLiking = true; // Start loading
+                            //       _isLiked = !_isLiked!;
+                            //       if (_isLiked!) {
+                            //         _likeCount = (_likeCount ?? 0) + 1;
+                            //       } else {
+                            //         _likeCount = (_likeCount ?? 0) - 1;
+                            //       }
+                            //     });
+                            //
+                            //     try {
+                            //       await firebaseService.updatePostLikes(
+                            //         postId: widget.postId,
+                            //         like: _isLiked!,
+                            //       );
+                            //     } finally {
+                            //       if (mounted) {
+                            //         setState(() {
+                            //           _isLiking = false; // Stop loading
+                            //         });
+                            //       }
+                            //     }
+                            //   },
+                            // ),
                             const SizedBox(height: 8),
 
                             _buildEngagementStats(
                               likes: postDetails["likes"].toString(),
+
+                              // Use local state for likes
+                              // likes: _likeCount.toString(),
                               views: postDetails["views"].toString(),
                               dated: postDetails["createdAt"],
                               // dated:
@@ -376,12 +507,80 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
+  Widget _buildTitleAndActions2(Map<String, dynamic> postDetails) {
+    final String currency = postDetails["currency"].toString().toLowerCase();
+    final String title = postDetails["title"];
+    final String price = postDetails["price"].toString();
+    final Map location = postDetails["location"];
+    final currentUserId = firebaseService.currentUser?.uid;
+    final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
+    final bool isCurrentlyLiked = currentUserId != null && likedBy.contains(currentUserId);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      currency == "usd"
+                          ? "\$"
+                          : currency == "euro"
+                          ? "€"
+                          : currency == "lira"
+                          ? "₺"
+                          : "(SYP)",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: onboardingColor,
+                      ),
+                    ),
+                    Text(
+                      price,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: onboardingColor,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+              ],
+            ),
+            Row(
+              children: [
+                IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}, color: Colors.grey[700]),
+                // USE THE NEW WIDGET HERE
+                FavoriteIconButton(
+                  postId: widget.postId,
+                  initialIsLiked: isCurrentlyLiked,
+                  firebaseService: firebaseService,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _buildTitleAndActions({
     required String currency,
     required String title,
     required String price,
     required Map location,
     required bool isLiked,
+    required bool isLiking,
     required VoidCallback onLike,
   }) {
     return Column(
@@ -432,15 +631,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   },
                   color: Colors.grey[700],
                 ),
-                IconButton(
-                  icon: Icon(
-                    isLiked ? Icons.favorite : Icons.favorite_border_outlined,
-                    color: isLiked ? Colors.red : Colors.grey[700],
-                  ),
-                  // icon: Icon(Icons.favorite, color: Colors.red), // For liked state
-                  onPressed: onLike,
-                  color: Colors.grey[700],
-                ),
+
+                isLiking
+                    ? Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        width: 24,
+                        height: 24,
+                        child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.grey[700]),
+                      ),
+                    )
+                    : IconButton(
+                      icon: Icon(
+                        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                        color: isLiked ? Colors.red : Colors.grey[700],
+                      ),
+                      // icon: Icon(Icons.favorite, color: Colors.red), // For liked state
+                      onPressed: onLike,
+                      color: Colors.grey[700],
+                    ),
               ],
             ),
           ],
