@@ -1343,6 +1343,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     featured: true,
                                     city: widget.location ?? selectedCity,
                                     village: _formKey.currentState?.fields['village']?.value,
+                                    color: '#FFFFFFFF',
                                     // city: selectedCity,
                                     // city: placeDetails.city!,
                                     // province: placeDetails.province!,

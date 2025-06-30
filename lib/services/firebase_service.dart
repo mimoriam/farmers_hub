@@ -352,6 +352,19 @@ class FirebaseService {
     return querySnapshot.docs.length < 3;
   }
 
+  Future<bool> isUserSubscribed() async {
+    if (currentUser == null) {
+      return false; // Return false if no user is logged in.
+    }
+    final userDoc = await getCurrentUserData();
+    if (userDoc != null && userDoc.exists) {
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      // Return the value of 'isSubscribed', defaulting to false if it doesn't exist.
+      return userData?['isSubscribed'] ?? false;
+    }
+    return false;
+  }
+
   Future<void> createPost({
     required String title,
     required String category,
@@ -369,6 +382,7 @@ class FirebaseService {
     String? country,
     String? details,
     bool? featured,
+    String color = '#FFFFFFFF', // Default color (white)
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
@@ -401,6 +415,7 @@ class FirebaseService {
       "imageUrls": imageUrls,
       "hasBeenSold": false,
       "details": details ?? "",
+      "color": color,
       "createdAt": FieldValue.serverTimestamp(),
     });
   }
@@ -423,14 +438,14 @@ class FirebaseService {
     String? country,
     String? details,
     bool? featured,
+    String? color,
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
 
     // Note: createdAt, likes, views etc. are preserved by using update()
-    await _firestore.collection(postCollection).doc(postId).update({
+    final Map<String, dynamic> dataToUpdate = {
       "sellerId": currentUser?.uid,
-      // "username": currentUser?.displayName,
       "title": title,
       "searchTitleKeywords": keywordsTitle,
       "searchCategoryKeywords": keywordsCategory,
@@ -452,7 +467,13 @@ class FirebaseService {
       "imageUrls": imageUrls,
       "hasBeenSold": hasBeenSold,
       "details": details ?? "",
-    });
+    };
+
+    if (color != null) {
+      dataToUpdate['color'] = color;
+    }
+
+    await _firestore.collection(postCollection).doc(postId).update(dataToUpdate);
   }
 
   Future<void> markPostAsSold(String postId) async {

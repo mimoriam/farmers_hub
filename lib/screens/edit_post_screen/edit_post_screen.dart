@@ -42,6 +42,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
   final picker = ImagePicker();
   bool _isLoadingImages = true;
 
+  bool _isSubscribed = false;
+  bool _isLoadingSubscription = true;
+
   Future<void> _loadPostImages() async {
     final postDetails = await firebaseService.getPostDetails(widget.postId);
     if (mounted) {
@@ -54,13 +57,58 @@ class _EditPostScreenState extends State<EditPostScreen> {
     }
   }
 
+  /// Fetches the user's subscription status from Firebase.
+  Future<void> _checkSubscriptionStatus() async {
+    final subscribed = await firebaseService.isUserSubscribed();
+    if (mounted) {
+      setState(() {
+        _isSubscribed = subscribed;
+        _isLoadingSubscription = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _loadPostImages();
+
+    _checkSubscriptionStatus();
+  }
+
+  Future<bool> _handleImageChangeAttempt() async {
+    if (_isSubscribed) {
+      return true; // Allow the change if the user is subscribed.
+    }
+
+    // If not subscribed, show a dialog and prevent the change.
+    await showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+            title: const Text("Subscription Required"),
+            content: const Text("You need to be a subscribed user to change post images."),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK")),
+              TextButton(
+                onPressed: () {
+                  // TODO: Navigate to your subscription screen
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Subscribe"),
+              ),
+            ],
+          ),
+    );
+    return false; // Deny the change.
   }
 
   Future<void> _pickImage() async {
+    // Check for permission before picking an image.
+    if (!await _handleImageChangeAttempt()) return;
+
     final int totalImages = _imageUrls.length + _newImages.length;
 
     if (totalImages >= 4) {
@@ -96,14 +144,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   // *** MODIFIED: Track URL before removing from UI ***
-  void _removeExistingImage(int index) {
+  Future<void> _removeExistingImage(int index) async {
+    // Check for permission before removing an image.
+    if (!await _handleImageChangeAttempt()) return;
+
     setState(() {
       _removedImageUrls.add(_imageUrls[index] as String);
       _imageUrls.removeAt(index);
     });
   }
 
-  void _removeNewImage(int index) {
+  Future<void> _removeNewImage(int index) async {
+    // Check for permission before removing an image.
+    if (!await _handleImageChangeAttempt()) return;
+
     setState(() {
       _newImages.removeAt(index);
     });
@@ -161,6 +215,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                 child: Column(
                   children: [
                     _buildImagePickerSection2(),
+
                     // DottedBorder(
                     //   options: RoundedRectDottedBorderOptions(
                     //     radius: const Radius.circular(20),
@@ -252,7 +307,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
                     //     ),
                     //   ),
                     // ),
-
                     ListView.builder(
                       itemCount: 4,
                       shrinkWrap: true,
@@ -466,7 +520,6 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                     ),
 
                                 // error.isNotEmpty ? SizedBox(height: 2) : Container(),
-
                                 error.isNotEmpty
                                     ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                     : Container(),
@@ -509,14 +562,17 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                               left: 4,
                                               child: GestureDetector(
                                                 // onTap: () => _removeImage(index),
-                                                onTap: () {
-                                                  _removeExistingImage(index);
-                                                  if (_imageUrls.length + _newImages.length <= 4) {
-                                                    setState(() {
-                                                      error = '';
-                                                    });
+                                                onTap: () async {
+                                                  await _removeExistingImage(index);
+
+                                                  if (_isSubscribed) {
+                                                    if (_imageUrls.length + _newImages.length <= 4) {
+                                                      setState(() {
+                                                        error = '';
+                                                      });
+                                                    }
+                                                    return;
                                                   }
-                                                  return;
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(
@@ -550,14 +606,17 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                               left: 4,
                                               child: GestureDetector(
                                                 // onTap: () => _removeImage(index),
-                                                onTap: () {
-                                                  _removeNewImage(newImageIndex);
-                                                  if (_imageUrls.length + _newImages.length <= 4) {
-                                                    setState(() {
-                                                      error = '';
-                                                    });
+                                                onTap: () async {
+                                                  await _removeNewImage(newImageIndex);
+
+                                                  if (_isSubscribed) {
+                                                    if (_imageUrls.length + _newImages.length <= 4) {
+                                                      setState(() {
+                                                        error = '';
+                                                      });
+                                                    }
+                                                    return;
                                                   }
-                                                  return;
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(
