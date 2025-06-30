@@ -473,112 +473,115 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                 error.isNotEmpty ? SizedBox(height: 10) : Container(),
 
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  // Important to make GridView work inside SingleChildScrollView
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 4,
-                                    crossAxisSpacing: 8,
-                                    mainAxisSpacing: 8,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  child: GridView.builder(
+                                    shrinkWrap: true,
+                                    // Important to make GridView work inside SingleChildScrollView
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 4,
+                                      crossAxisSpacing: 8,
+                                      mainAxisSpacing: 8,
+                                    ),
+
+                                    // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
+                                    itemCount:
+                                        _imageUrls.length +
+                                        _newImages.length +
+                                        ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+                                    itemBuilder: (context, index) {
+                                      if (index < _imageUrls.length) {
+                                        return Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              child: Image.network(
+                                                _imageUrls[index],
+                                                fit: BoxFit.fill,
+                                                width: 110,
+                                                height: 120,
+                                              ),
+                                            ),
+
+                                            Positioned(
+                                              top: 4,
+                                              left: 4,
+                                              child: GestureDetector(
+                                                // onTap: () => _removeImage(index),
+                                                onTap: () {
+                                                  _removeExistingImage(index);
+                                                  if (_imageUrls.length + _newImages.length <= 4) {
+                                                    setState(() {
+                                                      error = '';
+                                                    });
+                                                  }
+                                                  return;
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  child: Icon(Icons.close, color: Colors.black, size: 20),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      } else if (index < _imageUrls.length + _newImages.length) {
+                                        final newImageIndex = index - _imageUrls.length;
+
+                                        return Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(10.0),
+                                              child: Image.file(
+                                                _newImages[newImageIndex],
+                                                fit: BoxFit.fill,
+                                                width: 110,
+                                                height: 120,
+                                              ),
+                                            ),
+
+                                            Positioned(
+                                              top: 4,
+                                              left: 4,
+                                              child: GestureDetector(
+                                                // onTap: () => _removeImage(index),
+                                                onTap: () {
+                                                  _removeNewImage(newImageIndex);
+                                                  if (_imageUrls.length + _newImages.length <= 4) {
+                                                    setState(() {
+                                                      error = '';
+                                                    });
+                                                  }
+                                                  return;
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                  ),
+                                                  child: Icon(Icons.close, color: Colors.black, size: 20),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      } else {
+                                        // return Center(
+                                        //   child: IconButton(
+                                        //     icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+                                        //     onPressed: _pickImage,
+                                        //   ),
+                                        // );
+                                        return Center(child: Container());
+                                      }
+                                    },
                                   ),
-
-                                  // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
-                                  itemCount:
-                                      _imageUrls.length +
-                                      _newImages.length +
-                                      ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
-                                  itemBuilder: (context, index) {
-                                    if (index < _imageUrls.length) {
-                                      return Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(10.0),
-                                            child: Image.network(
-                                              _imageUrls[index],
-                                              fit: BoxFit.fill,
-                                              width: 110,
-                                              height: 120,
-                                            ),
-                                          ),
-
-                                          Positioned(
-                                            top: 4,
-                                            left: 4,
-                                            child: GestureDetector(
-                                              // onTap: () => _removeImage(index),
-                                              onTap: () {
-                                                _removeExistingImage(index);
-                                                if (_imageUrls.length + _newImages.length <= 4) {
-                                                  setState(() {
-                                                    error = '';
-                                                  });
-                                                }
-                                                return;
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: Icon(Icons.close, color: Colors.black, size: 20),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    } else if (index < _imageUrls.length + _newImages.length) {
-                                      final newImageIndex = index - _imageUrls.length;
-
-                                      return Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(10.0),
-                                            child: Image.file(
-                                              _newImages[newImageIndex],
-                                              fit: BoxFit.fill,
-                                              width: 110,
-                                              height: 120,
-                                            ),
-                                          ),
-
-                                          Positioned(
-                                            top: 4,
-                                            left: 4,
-                                            child: GestureDetector(
-                                              // onTap: () => _removeImage(index),
-                                              onTap: () {
-                                                _removeNewImage(newImageIndex);
-                                                if (_imageUrls.length + _newImages.length <= 4) {
-                                                  setState(() {
-                                                    error = '';
-                                                  });
-                                                }
-                                                return;
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                                child: Icon(Icons.close, color: Colors.black, size: 20),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    } else {
-                                      // return Center(
-                                      //   child: IconButton(
-                                      //     icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
-                                      //     onPressed: _pickImage,
-                                      //   ),
-                                      // );
-                                      return Center(child: Container());
-                                    }
-                                  },
                                 ),
 
                                 Card(

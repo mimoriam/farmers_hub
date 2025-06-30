@@ -386,58 +386,61 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             // _images.isEmpty
                             //     ? Container() :
                             //     ?
-                            GridView.builder(
-                              shrinkWrap: true,
-                              // Important to make GridView work inside SingleChildScrollView
-                              physics: const NeverScrollableScrollPhysics(),
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 4,
-                                crossAxisSpacing: 8,
-                                mainAxisSpacing: 8,
-                              ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                // Important to make GridView work inside SingleChildScrollView
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                ),
 
-                              // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
-                              itemCount: _images.length,
-                              itemBuilder: (context, index) {
-                                return Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      child: Image.file(
-                                        _images[index],
-                                        fit: BoxFit.fill,
-                                        width: 110,
-                                        height: 120,
-                                      ),
-                                    ),
-
-                                    Positioned(
-                                      top: 4,
-                                      left: 4,
-                                      child: GestureDetector(
-                                        // onTap: () => _removeImage(index),
-                                        onTap: () {
-                                          _removeImage(index);
-                                          if (_images.length <= 4) {
-                                            setState(() {
-                                              error = '';
-                                            });
-                                          }
-                                          return;
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            shape: BoxShape.rectangle,
-                                            borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: Icon(Icons.close, color: Colors.black, size: 20),
+                                // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
+                                itemCount: _images.length,
+                                itemBuilder: (context, index) {
+                                  return Stack(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        child: Image.file(
+                                          _images[index],
+                                          fit: BoxFit.fill,
+                                          width: 110,
+                                          height: 120,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
+
+                                      Positioned(
+                                        top: 4,
+                                        left: 4,
+                                        child: GestureDetector(
+                                          // onTap: () => _removeImage(index),
+                                          onTap: () {
+                                            _removeImage(index);
+                                            if (_images.length <= 4) {
+                                              setState(() {
+                                                error = '';
+                                              });
+                                            }
+                                            return;
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: Icon(Icons.close, color: Colors.black, size: 20),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
                             ),
 
                             Card(
@@ -989,79 +992,86 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     ),
                                     const SizedBox(height: 10),
 
-                                    Text("Currency", style: _labelStyle),
-                                    const SizedBox(height: 8),
+                                    // Text("Currency", style: _labelStyle),
+                                    // const SizedBox(height: 8),
 
-                                    Container(
-                                      padding: EdgeInsets.only(right: 0, top: 2, bottom: 2),
-                                      // No explicit border for dropdown, styling via DropdownButton properties
-                                      child: DropdownButtonFormField2<String>(
-                                        items:
-                                            ['Syria', "Usd", "Euro", "Lira"]
-                                                .map(
-                                                  (lang) => DropdownMenuItem<String>(
-                                                    value: lang,
-                                                    child: Text(lang),
-                                                  ),
-                                                )
-                                                .toList(),
-                                        decoration: InputDecoration(
-                                          contentPadding: const EdgeInsets.symmetric(
-                                            vertical: 1,
-                                            horizontal: 2,
-                                          ),
-                                          border: _inputBorder,
-                                          enabledBorder: _inputBorder,
-                                          focusedBorder: _focusedInputBorder,
-                                          errorBorder: _errorInputBorder,
-                                          focusedErrorBorder: _focusedInputBorder,
-                                        ),
-                                        iconStyleData: IconStyleData(
-                                          // Using IconStyleData for icon properties
-                                          iconEnabledColor: onboardingTextColor,
-                                        ),
+                                    // Container(
+                                    //   padding: EdgeInsets.only(right: 0, top: 2, bottom: 2),
+                                    //   // No explicit border for dropdown, styling via DropdownButton properties
+                                    //   child: DropdownButtonFormField2<String>(
+                                    //     items:
+                                    //         ['Syria', "Usd", "Euro", "Lira"]
+                                    //             .map(
+                                    //               (lang) => DropdownMenuItem<String>(
+                                    //                 value: lang,
+                                    //                 child: Text(lang),
+                                    //               ),
+                                    //             )
+                                    //             .toList(),
+                                    //     decoration: InputDecoration(
+                                    //       contentPadding: const EdgeInsets.symmetric(
+                                    //         vertical: 1,
+                                    //         horizontal: 2,
+                                    //       ),
+                                    //       border: _inputBorder,
+                                    //       enabledBorder: _inputBorder,
+                                    //       focusedBorder: _focusedInputBorder,
+                                    //       errorBorder: _errorInputBorder,
+                                    //       focusedErrorBorder: _focusedInputBorder,
+                                    //     ),
+                                    //     iconStyleData: IconStyleData(
+                                    //       // Using IconStyleData for icon properties
+                                    //       iconEnabledColor: onboardingTextColor,
+                                    //     ),
+                                    //
+                                    //     dropdownStyleData: DropdownStyleData(
+                                    //       offset: const Offset(0, 0),
+                                    //       decoration: BoxDecoration(
+                                    //         borderRadius: BorderRadius.circular(16),
+                                    //         color: Colors.white,
+                                    //       ),
+                                    //     ),
+                                    //     // value: "USD",
+                                    //     value: defaultCurrency?.toCapitalize() ?? "Usd",
+                                    //     onChanged: (value) async {
+                                    //       await firebaseService.updateCurrency(value!.toLowerCase());
+                                    //       setState(() {});
+                                    //     },
+                                    //   ),
+                                    // ),
 
-                                        dropdownStyleData: DropdownStyleData(
-                                          offset: const Offset(0, 0),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(16),
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                        // value: "USD",
-                                        value: defaultCurrency?.toCapitalize() ?? "Usd",
-                                        onChanged: (value) async {
-                                          await firebaseService.updateCurrency(value!.toLowerCase());
-                                          setState(() {});
-                                        },
-                                      ),
-                                    ),
-
-                                    const SizedBox(height: 10),
+                                    // const SizedBox(height: 10),
 
                                     Text("Price", style: _labelStyle),
                                     const SizedBox(height: 8),
 
-                                    FormBuilderTextField(
-                                      name: 'price',
-                                      maxLength: 6,
-                                      autovalidateMode: validateMode,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter Your Price',
-                                        counterText: "",
-                                        border: _inputBorder,
-                                        enabledBorder: _inputBorder,
-                                        focusedBorder: _focusedInputBorder,
-                                        errorBorder: _errorInputBorder,
-                                        focusedErrorBorder: _focusedInputBorder,
-                                        contentPadding: _contentPadding,
-                                      ),
-                                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                      validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(errorText: 'Price is required.'),
-                                        FormBuilderValidators.numeric(errorText: 'Must be a number.'),
-                                        FormBuilderValidators.min(0, errorText: 'Price cannot be negative.'),
-                                      ]),
+                                    Row(
+                                      children: [
+                                        // Text(defaultCurrency.toString().to),
+                                        Expanded(
+                                          child: FormBuilderTextField(
+                                            name: 'price',
+                                            maxLength: 6,
+                                            autovalidateMode: validateMode,
+                                            decoration: InputDecoration(
+                                              hintText: 'Enter Your Price',
+                                              counterText: "",
+                                              border: _inputBorder,
+                                              enabledBorder: _inputBorder,
+                                              focusedBorder: _focusedInputBorder,
+                                              errorBorder: _errorInputBorder,
+                                              focusedErrorBorder: _focusedInputBorder,
+                                              contentPadding: _contentPadding,
+                                            ),
+                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                            validator: FormBuilderValidators.compose([
+                                              FormBuilderValidators.required(errorText: 'Price is required.'),
+                                              FormBuilderValidators.numeric(errorText: 'Must be a number.'),
+                                              FormBuilderValidators.min(0, errorText: 'Price cannot be negative.'),
+                                            ]),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                     // const SizedBox(height: 30),
                                   ],

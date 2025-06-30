@@ -1210,7 +1210,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: MediaQuery.of(context).size.width,
                                 decoration: BoxDecoration(
                                   // color: Colors.grey[300], // Placeholder background if image fails
-                                  color: Colors.green,
+                                  // color: Colors.green,
+                                  color: homebackgroundColor,
                                   // borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: ClipRRect(
