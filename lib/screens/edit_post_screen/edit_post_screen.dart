@@ -465,16 +465,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       ],
                                     ),
 
-                                SizedBox(height: 4),
+                                // error.isNotEmpty ? SizedBox(height: 2) : Container(),
 
                                 error.isNotEmpty
                                     ? Text(error, style: TextStyle(color: Colors.red, fontSize: 18))
                                     : Container(),
 
-                                error.isNotEmpty ? SizedBox(height: 10) : Container(),
+                                error.isNotEmpty ? SizedBox(height: 6) : Container(),
 
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                                   child: GridView.builder(
                                     shrinkWrap: true,
                                     // Important to make GridView work inside SingleChildScrollView

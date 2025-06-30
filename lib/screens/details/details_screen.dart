@@ -787,6 +787,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ? Container()
             : Row(
               children: [
+                SizedBox(width: 3),
                 TapDebouncer(
                   cooldown: const Duration(milliseconds: 2000),
                   onTap:
@@ -828,7 +829,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   },
                 ),
 
-                SizedBox(width: 6),
+                SizedBox(width: 10),
 
                 firebaseService.currentUser?.displayName == username
                     ? Container()

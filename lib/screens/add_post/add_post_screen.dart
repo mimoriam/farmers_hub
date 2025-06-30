@@ -387,7 +387,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             //     ? Container() :
                             //     ?
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                               child: GridView.builder(
                                 shrinkWrap: true,
                                 // Important to make GridView work inside SingleChildScrollView
