@@ -431,8 +431,22 @@ class FirebaseService {
 
   Future<void> deletePostById(String postId) async {
     try {
+      // Get the post details to find the image URLs
+      final postDetails = await getPostDetails(postId);
+      final List<dynamic>? imageUrls = postDetails['imageUrls'];
+
+      // Delete all images associated with the post from Firebase Storage
+      if (imageUrls != null) {
+        for (final imageUrl in imageUrls) {
+          await deleteImageFromUrl(imageUrl);
+        }
+      }
+
+      // Delete the post document from Firestore
       await _firestore.collection(postCollection).doc(postId).delete();
-    } catch (e) {}
+    } catch (e) {
+      print("Error deleting post: $e");
+    }
   }
 
   Future<List<QueryDocumentSnapshot>> getAllPostsByCurrentUser() async {
@@ -700,6 +714,41 @@ class FirebaseService {
     } catch (e) {
       print("Error getting background images: $e");
       return [];
+    }
+  }
+
+  /// Deletes the current user's account and all of their posts.
+  Future<void> deleteUserAndPosts() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user != null) {
+        // 1. Delete the user's data from the "users" collection
+        await _firestore.collection(userCollection).doc(user.uid).delete();
+
+        // 2. Get all posts by the current user
+        final userPosts = await getAllPostsByCurrentUser();
+
+        // 3. Delete each post
+        for (final post in userPosts) {
+          await deletePostById(post.id);
+        }
+
+        // 4. Delete the user's account from Firebase Authentication
+        await user.delete();
+      } else {
+        throw AuthException('No user is currently signed in.');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        throw AuthException(
+          'This operation is sensitive and requires recent authentication. Please log in again before retrying this request.',
+        );
+      } else {
+        throw AuthException('Error deleting user: ${e.message}');
+      }
+    } catch (e) {
+      throw AuthException('An unexpected error occurred while deleting the user and their posts.');
     }
   }
 }

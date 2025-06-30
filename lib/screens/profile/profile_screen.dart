@@ -54,6 +54,104 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _getSharedPrefsData().then((_) {});
   }
 
+  void _showDeleteConfirmationDialog2() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          title: Text("Are you sure?", style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600])),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Delete", style: TextStyle(color: Colors.red)),
+              onPressed: () async {
+                try {
+                  await firebaseService.deleteUserAndPosts();
+                  if (context.mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                          (Route<dynamic> route) => false,
+                    );
+                  }
+                } catch (e) {
+                  // Handle any errors, e.g., show a snackbar
+                  if (context.mounted) {
+                    Navigator.of(context).pop(); // Close the dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Error deleting account: ${e.toString()}"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showDeleteConfirmationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+          title: Text("Delete Account", style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600])),
+          content: Text(
+            "Are you sure you want to delete your account and all of your posts? This action cannot be undone.",
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text("Delete", style: TextStyle(color: Colors.red)),
+              onPressed: () async {
+                try {
+                  Navigator.of(context).pop();
+                  _showDeleteConfirmationDialog2();
+                  // await firebaseService.deleteUserAndPosts();
+                  // if (context.mounted) {
+                  //   Navigator.of(context).pushAndRemoveUntil(
+                  //     MaterialPageRoute(builder: (context) => LoginScreen()),
+                  //     (Route<dynamic> route) => false,
+                  //   );
+                  // }
+                } catch (e) {
+                  // Handle any errors, e.g., show a snackbar
+                  if (context.mounted) {
+                    Navigator.of(context).pop(); // Close the dialog
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("Error deleting account: ${e.toString()}"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                }
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -291,10 +389,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           textColor: Colors.red[700],
                           // Optional: different color for destructive actions
                           iconColor: Colors.red[700],
-                          onTap: () {
-                            // Handle Delete Account tap
-                            print('Delete Account tapped');
-                          },
+                          onTap: _showDeleteConfirmationDialog,
                           showDivider: false, // No divider for the last item in a section
                         ),
                       ],

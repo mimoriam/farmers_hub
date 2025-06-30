@@ -1201,7 +1201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   width: MediaQuery.of(context).size.width,
                                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.grey[300],
+                                    color: scaffoldBackgroundColor,
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
@@ -1211,7 +1211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 decoration: BoxDecoration(
                                   // color: Colors.grey[300], // Placeholder background if image fails
                                   // color: Colors.green,
-                                  color: homebackgroundColor,
+                                  color: scaffoldBackgroundColor,
                                   // borderRadius: BorderRadius.circular(12.0),
                                 ),
                                 child: ClipRRect(
