@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart'; // ADD THIS IMPORT
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -22,10 +23,13 @@ class FavoritesScreen extends StatefulWidget {
 class _FavoritesScreenState extends State<FavoritesScreen> {
   final firebaseService = FirebaseService();
 
+  String _searchQuery = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: homebackgroundColor,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         leading: null,
         backgroundColor: onboardingColor,
@@ -164,8 +168,51 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         ),
       ),
 
-      body: SafeArea(
-        child: FutureBuilder<List<QueryDocumentSnapshot>>(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),
+                child: FormBuilderTextField(
+                  name: "search",
+                  onChanged: (value) {
+                    setState(() {
+                      _searchQuery = value ?? "";
+                    });
+                  },
+                  style: GoogleFonts.poppins(
+                    textStyle: const TextStyle(
+                      fontSize: 13.69,
+                      fontWeight: FontWeight.w400,
+                      height: 1.43,
+                    ),
+                  ),
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    hintStyle: GoogleFonts.poppins(
+                      textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                      color: Colors.grey,
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                    prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ];
+        },
+
+        body: FutureBuilder<List<QueryDocumentSnapshot>>(
           future: firebaseService.getFavoritedPosts(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -202,13 +249,31 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               return const Center(child: Text("You have no favorited posts yet!"));
             }
 
-            final postData = snapshot.data!;
+            final allPosts = snapshot.data!;
+            final filteredPosts =
+            _searchQuery.isEmpty
+                ? allPosts
+                : allPosts.where((post) {
+              final title =
+                  (post.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ?? '';
+              return title.contains(_searchQuery.toLowerCase());
+            }).toList();
+
+            if (filteredPosts.isEmpty) {
+              return const Center(child: Text("No favorites match your search."));
+            }
+
+            // final postData = snapshot.data!;
 
             return ListView.builder(
-              itemCount: postData.length,
+              // itemCount: postData.length,
+              itemCount: filteredPosts.length,
               itemBuilder: (BuildContext context, int index) {
-                final post = postData[index].data() as Map<String, dynamic>;
-                final postId = postData[index].id;
+                // final post = postData[index].data() as Map<String, dynamic>;
+                // final postId = postData[index].id;
+
+                final post = filteredPosts[index].data() as Map<String, dynamic>;
+                final postId = filteredPosts[index].id;
 
                 return Center(
                   child: Padding(
@@ -220,7 +285,8 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                             context,
                             MaterialPageRoute(
                               builder:
-                                  (context) => DetailsScreen(
+                                  (context) =>
+                                  DetailsScreen(
                                     postId: postId.toString(),
                                     didComeFromManagedPosts: false,
                                   ),

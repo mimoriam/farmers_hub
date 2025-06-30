@@ -58,6 +58,8 @@ class _ChatHomeState extends State<ChatHome> {
 
   bool _isLoading = true;
 
+  String _searchQuery = "";
+
   Future<List> _getUserIds() async {
     return await _chatService.getUsersIdForChat();
   }
@@ -245,33 +247,60 @@ class _ChatHomeState extends State<ChatHome> {
           // snapshot.data?.map((user) {
           // });
 
-          users.forEach((user) {
-            // Check if user isn't being duplicated and added to list
-            if (!(messages.any((item) => item.name == user["username"]))) {
-              messages.add(
-                MessageItem(
-                  // avatarUrl:
-                  //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-                  avatarUrl: user["profileImage"],
-                  // name: user["username"],
-                  id: "${user["id"]}",
-                  name: "${user["username"]}",
-                  email: "${user["email"]}",
-                  lastMessage: 'Hi its available',
-                  time: '12:00 PM',
-                ),
-              );
-            }
-          });
+          final filteredUsers =
+              _searchQuery.isEmpty
+                  ? users
+                  : users.where((user) {
+                    final username = user['username'].toString().toLowerCase();
+                    return username.contains(_searchQuery.toLowerCase());
+                  }).toList();
+
+          print(filteredUsers);
+
+          if (filteredUsers.isEmpty) {
+            return const Center(child: Text("No users found."));
+          }
+
+          // users.forEach((user) {
+          //   // Check if user isn't being duplicated and added to list
+          //   if (!(messages.any((item) => item.name == user["username"]))) {
+          //     messages.add(
+          //       MessageItem(
+          //         // avatarUrl:
+          //         //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
+          //         avatarUrl: user["profileImage"],
+          //         // name: user["username"],
+          //         id: "${user["id"]}",
+          //         name: "${user["username"]}",
+          //         email: "${user["email"]}",
+          //         lastMessage: 'Hi its available',
+          //         time: '12:00 PM',
+          //       ),
+          //     );
+          //   }
+          // });
 
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: messages.length,
+            // itemCount: messages.length,
+            itemCount: filteredUsers.length,
             itemBuilder: (context, index) {
-              final message = messages[index];
+              final user = filteredUsers[index];
+              final otherUserId = user['id'];
+              // final message = messages[index];
 
-              final useR = users[index];
-              final otherUserId = useR['id'];
+              // final useR = users[index];
+              // final otherUserId = useR['id'];
+
+              final messageItem = MessageItem(
+                avatarUrl: user["profileImage"],
+                id: user["id"],
+                name: user["username"],
+                email: user["email"],
+                lastMessage: '',
+                // This will be filled by the stream
+                time: '', // This will be filled by the stream
+              );
 
               return StreamBuilder<QuerySnapshot>(
                 // stream: _chatService.getLastMessage(message.id, widget.user.uid),
@@ -358,13 +387,19 @@ class _ChatHomeState extends State<ChatHome> {
                       final unreadCount = unreadCountSnapshot.data ?? 0;
 
                       return MessageListItem(
-                        avatarUrl: message.avatarUrl,
-                        name: message.name,
-                        // lastMessage: message.lastMessage,
+                        // avatarUrl: message.avatarUrl,
+                        // name: message.name,
+                        // // lastMessage: message.lastMessage,
+                        // lastMessage: lastMessage,
+                        // // time: message.time,
+                        // time: time,
+                        // date: message.date,
+                        // unreadCount: unreadCount,
+                        avatarUrl: messageItem.avatarUrl,
+                        name: messageItem.name,
                         lastMessage: lastMessage,
-                        // time: message.time,
                         time: time,
-                        date: message.date,
+                        date: messageItem.date,
                         unreadCount: unreadCount,
                         onTap: () {
                           if (context.mounted) {
@@ -372,8 +407,10 @@ class _ChatHomeState extends State<ChatHome> {
                               MaterialPageRoute(
                                 builder:
                                     (context) => ChatScreen(
-                                      receiverId: message.id,
-                                      receiverEmail: message.email,
+                                      // receiverId: message.id,
+                                      // receiverEmail: message.email,
+                                      receiverId: messageItem.id,
+                                      receiverEmail: messageItem.email,
                                       user: widget.user,
                                     ),
                               ),
@@ -453,14 +490,14 @@ class _ChatHomeState extends State<ChatHome> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // leading: BackButton(color: Colors.white),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.support_agent, color: Colors.white),
-            onPressed: () {
-              _showSupportDialog(context);
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.support_agent, color: Colors.white),
+        //     onPressed: () {
+        //       _showSupportDialog(context);
+        //     },
+        //   ),
+        // ],
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
@@ -597,73 +634,121 @@ class _ChatHomeState extends State<ChatHome> {
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
-          child: SingleChildScrollView(
-            child: FormBuilder(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
-                    child: FormBuilderTextField(
-                      name: "search",
-                      style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        hintStyle: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                          color: Colors.grey,
+          child: NestedScrollView(
+            headerSliverBuilder:
+                (context, innerBoxIsScrolled) => [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: FormBuilderTextField(
+                        name: "search",
+                        // 2. UPDATE the text field to update the state
+                        onChanged: (value) {
+                          setState(() {
+                            print(value);
+                            _searchQuery = value ?? "";
+                          });
+                        },
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                            fontSize: 13.69,
+                            fontWeight: FontWeight.w400,
+                            height: 1.43,
+                          ),
                         ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        // suffixIcon: IconButton(
-                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                        //   onPressed: null,
-                        // ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                        decoration: InputDecoration(
+                          hintText: 'Search',
+                          hintStyle: GoogleFonts.poppins(
+                            textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                            color: Colors.grey,
+                          ),
+                          filled: true,
+                          fillColor: Colors.white,
+                          prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+                          // suffixIcon: IconButton(
+                          //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+                          //   onPressed: null,
+                          // ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                          ),
                         ),
                       ),
                     ),
                   ),
-
-                  _buildUserList2(),
-                  // ListView.builder(
-                  //   shrinkWrap: true,
-                  //   itemCount: messages.length,
-                  //   itemBuilder: (context, index) {
-                  //     final message = messages[index];
-                  //
-                  //     return MessageListItem(
-                  //       avatarUrl: message.avatarUrl,
-                  //       name: message.name,
-                  //       lastMessage: message.lastMessage,
-                  //       time: message.time,
-                  //       date: message.date,
-                  //       unreadCount: message.unreadCount,
-                  //       onTap: () {
-                  //         // Handle tap on message item, e.g., navigate to chat screen
-                  //         print('Tapped on ${message.name}');
-                  //       },
-                  //     );
-                  //   },
-                  // ),
                 ],
-              ),
-            ),
+            body: _buildUserList2(),
+            // child: FormBuilder(
+            //   key: _formKey,
+            //   child: Column(
+            //     mainAxisAlignment: MainAxisAlignment.start,
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     // mainAxisSize: MainAxisSize.min,
+            //     children: [
+            //       Padding(
+            //         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
+            //         child: FormBuilderTextField(
+            //           name: "search",
+            //           style: GoogleFonts.poppins(
+            //             textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+            //           ),
+            //           decoration: InputDecoration(
+            //             hintText: 'Search',
+            //             hintStyle: GoogleFonts.poppins(
+            //               textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+            //               color: Colors.grey,
+            //             ),
+            //             filled: true,
+            //             fillColor: Colors.white,
+            //             prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+            //             // suffixIcon: IconButton(
+            //             //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
+            //             //   onPressed: null,
+            //             // ),
+            //             enabledBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(10),
+            //               borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+            //             ),
+            //             focusedBorder: OutlineInputBorder(
+            //               borderRadius: BorderRadius.circular(10),
+            //               borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+
+            // _buildUserList2(),
+            // ListView.builder(
+            //   shrinkWrap: true,
+            //   itemCount: messages.length,
+            //   itemBuilder: (context, index) {
+            //     final message = messages[index];
+            //
+            //     return MessageListItem(
+            //       avatarUrl: message.avatarUrl,
+            //       name: message.name,
+            //       lastMessage: message.lastMessage,
+            //       time: message.time,
+            //       date: message.date,
+            //       unreadCount: message.unreadCount,
+            //       onTap: () {
+            //         // Handle tap on message item, e.g., navigate to chat screen
+            //         print('Tapped on ${message.name}');
+            //       },
+            //     );
+            //   },
+            // ),
+            // ],
           ),
         ),
       ),
+      // ),
+      // ),
     );
   }
 }
