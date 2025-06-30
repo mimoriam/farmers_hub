@@ -25,6 +25,24 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
 
   bool _showSoldPosts = false;
 
+  String _searchQuery = "";
+
+  int _selectedTabIndex = 0;
+
+  /// Determines which Firebase query to run based on the selected tab.
+  Future<List<QueryDocumentSnapshot<Object?>>> _getFutureForSelectedTab() {
+    switch (_selectedTabIndex) {
+      case 0:
+        return firebaseService.getAllPostsByCurrentUser();
+      case 1:
+        return firebaseService.getSoldPostsByCurrentUser();
+      case 2:
+        return firebaseService.getFavoritedPosts();
+      default:
+        return firebaseService.getAllPostsByCurrentUser();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +75,11 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                       style: GoogleFonts.poppins(
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
                       ),
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value ?? "";
+                        });
+                      },
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(
@@ -82,77 +105,80 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                     ),
                   ),
 
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Row(
-                            children: [
-                              FilterChip(
-                                onSelected: (bool selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      _showSoldPosts = !_showSoldPosts;
-                                    });
-                                  }
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                ),
-                                // selected: "",
-                                selected: _showSoldPosts == false,
-                                selectedColor: onboardingColor,
-                                backgroundColor: Colors.grey[300],
-                                label: Text(
-                                  "All Posts",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                  // Center(
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.center,
+                  //       crossAxisAlignment: CrossAxisAlignment.center,
+                  //       children: [
+                  //         Row(
+                  //           children: [
+                  //             FilterChip(
+                  //               onSelected: (bool selected) {
+                  //                 if (selected) {
+                  //                   setState(() {
+                  //                     _showSoldPosts = !_showSoldPosts;
+                  //                   });
+                  //                 }
+                  //               },
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.all(Radius.circular(20)),
+                  //               ),
+                  //               // selected: "",
+                  //               selected: _showSoldPosts == false,
+                  //               selectedColor: onboardingColor,
+                  //               backgroundColor: Colors.grey[300],
+                  //               label: Text(
+                  //                 "All Posts",
+                  //                 style: GoogleFonts.poppins(
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.w500,
+                  //                   color: Colors.white,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //
+                  //             SizedBox(width: 8),
+                  //
+                  //             FilterChip(
+                  //               onSelected: (bool selected) {
+                  //                 if (selected) {
+                  //                   setState(() {
+                  //                     _showSoldPosts = !_showSoldPosts;
+                  //                   });
+                  //                 }
+                  //               },
+                  //               shape: RoundedRectangleBorder(
+                  //                 borderRadius: BorderRadius.all(Radius.circular(20)),
+                  //               ),
+                  //               selectedColor: onboardingColor,
+                  //               selected: _showSoldPosts == true,
+                  //               backgroundColor: Colors.grey[300],
+                  //               label: Text(
+                  //                 "Sold",
+                  //                 style: GoogleFonts.poppins(
+                  //                   fontSize: 14,
+                  //                   fontWeight: FontWeight.w500,
+                  //                   color: Colors.white,
+                  //                 ),
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
 
-                              SizedBox(width: 8),
-
-                              FilterChip(
-                                onSelected: (bool selected) {
-                                  if (selected) {
-                                    setState(() {
-                                      _showSoldPosts = !_showSoldPosts;
-                                    });
-                                  }
-                                },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                                ),
-                                selectedColor: onboardingColor,
-                                selected: _showSoldPosts == true,
-                                backgroundColor: Colors.grey[300],
-                                label: Text(
-                                  "Sold",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  _buildTabBar(),
 
                   FutureBuilder(
-                    future:
-                        _showSoldPosts == true
-                            ? firebaseService.getSoldPostsByCurrentUser()
-                            : firebaseService.getAllPostsByCurrentUser(),
+                    // future:
+                    //     _showSoldPosts == true
+                    //         ? firebaseService.getSoldPostsByCurrentUser()
+                    //         : firebaseService.getAllPostsByCurrentUser(),
+                    future: _getFutureForSelectedTab(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         // return const Center(child: CircularProgressIndicator(color: onboardingColor));
@@ -209,15 +235,42 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         );
                       }
 
+                      final filteredPosts =
+                          _searchQuery.isEmpty
+                              ? postData
+                              : postData.where((post) {
+                                final title =
+                                    (post.data() as Map<String, dynamic>)['title']
+                                        ?.toString()
+                                        .toLowerCase() ??
+                                    '';
+                                return title.contains(_searchQuery.toLowerCase());
+                              }).toList();
+
+                      if (filteredPosts.isEmpty) {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: Text("No posts match your search."),
+                          ),
+                        );
+                      }
+
                       return ListView.builder(
-                        itemCount: postData.length,
+                        // itemCount: postData.length,
+                        itemCount: filteredPosts.length,
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          final post = postData[index].data() as Map<String, dynamic>;
-                          final postId = postData[index].id;
+                          // final post = postData[index].data() as Map<String, dynamic>;
+                          // final postId = postData[index].id;
+                          //
+                          // final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
 
+                          final post = filteredPosts[index].data() as Map<String, dynamic>;
+                          final postId = filteredPosts[index].id;
                           final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
 
                           return Center(
@@ -301,6 +354,58 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                     },
                   ),
                 ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTabBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          _buildTabItem(0, "All Post"),
+          SizedBox(width: 10),
+          _buildTabItem(1, "Sold"),
+          SizedBox(width: 10),
+          _buildTabItem(2, "Liked"),
+        ],
+      ),
+    );
+  }
+
+  /// Builds an individual item for the tab bar.
+  Widget _buildTabItem(int index, String title) {
+    bool isSelected = _selectedTabIndex == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedTabIndex = index;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? onboardingColor : Colors.white,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.grey[500],
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
