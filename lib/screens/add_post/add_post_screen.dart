@@ -1041,7 +1041,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     // ),
 
                                     // const SizedBox(height: 10),
-
                                     Text("Price", style: _labelStyle),
                                     const SizedBox(height: 8),
 
@@ -1063,11 +1062,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               focusedErrorBorder: _focusedInputBorder,
                                               contentPadding: _contentPadding,
                                             ),
-                                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                            keyboardType: const TextInputType.numberWithOptions(
+                                              decimal: true,
+                                            ),
                                             validator: FormBuilderValidators.compose([
                                               FormBuilderValidators.required(errorText: 'Price is required.'),
                                               FormBuilderValidators.numeric(errorText: 'Must be a number.'),
-                                              FormBuilderValidators.min(0, errorText: 'Price cannot be negative.'),
+                                              FormBuilderValidators.min(
+                                                0,
+                                                errorText: 'Price cannot be negative.',
+                                              ),
                                             ]),
                                           ),
                                         ),
@@ -1238,6 +1242,39 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             TapDebouncer(
                               cooldown: const Duration(milliseconds: 1000),
                               onTap: () async {
+                                // Check if the user can create a post.
+                                bool canPost = await firebaseService.canCreatePost();
+
+                                if (!canPost) {
+                                  if (context.mounted) {
+                                    showDialog(
+                                      context: context,
+                                      builder:
+                                          (context) => AlertDialog(
+                                            title: const Text("Monthly Limit Reached"),
+                                            content: const Text(
+                                              "You have reached your limit of 3 posts per month. Subscribe to post without limits.",
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.of(context).pop(),
+                                                child: const Text("OK"),
+                                              ),
+                                              // Optional: Add a button to a subscription screen
+                                              TextButton(
+                                                onPressed: () {
+                                                  // TODO: Navigate to subscription screen
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text("Subscribe"),
+                                              ),
+                                            ],
+                                          ),
+                                    );
+                                  }
+                                  return; // Stop execution if the user cannot post.
+                                }
+
                                 if (_images.isEmpty) {
                                   setState(() {
                                     error = "Upload an image!";

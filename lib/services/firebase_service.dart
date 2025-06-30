@@ -197,6 +197,7 @@ class FirebaseService {
         "id": user.uid,
         "isEmailVerified": user.emailVerified ? true : false,
         "isAdmin": false,
+        "isSubscribed": false,
         "defaultCurrency": currencyType.usd.name.toLowerCase(),
         "phoneInfo": {
           "completeNumber": phone["completeNumber"],
@@ -316,6 +317,41 @@ class FirebaseService {
   }
 
   // * POST CRUD:
+
+  Future<bool> canCreatePost() async {
+    if (currentUser == null) {
+      return false;
+    }
+
+    final userDoc = await getCurrentUserData();
+    final userData = userDoc?.data() as Map<String, dynamic>?;
+
+    // If the user is subscribed, they can always post.
+    if (userData?['isSubscribed'] == true) {
+      return true;
+    }
+
+    // For non-subscribed users, check their post count for the current month.
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final endOfMonth = (now.month < 12) ? DateTime(now.year, now.month + 1, 1) : DateTime(now.year + 1, 1, 1);
+
+    // Convert DateTime to Timestamp for the query
+    final startOfMonthTimestamp = Timestamp.fromDate(startOfMonth);
+    final endOfMonthTimestamp = Timestamp.fromDate(endOfMonth);
+
+    final querySnapshot =
+        await _firestore
+            .collection(postCollection)
+            .where('sellerId', isEqualTo: currentUser!.uid)
+            .where('createdAt', isGreaterThanOrEqualTo: startOfMonthTimestamp)
+            .where('createdAt', isLessThan: endOfMonthTimestamp)
+            .get();
+
+    // Allow posting only if the user has created fewer than 3 posts this month.
+    return querySnapshot.docs.length < 3;
+  }
+
   Future<void> createPost({
     required String title,
     required String category,

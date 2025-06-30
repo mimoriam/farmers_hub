@@ -255,7 +255,7 @@ class _ChatHomeState extends State<ChatHome> {
                     return username.contains(_searchQuery.toLowerCase());
                   }).toList();
 
-          print(filteredUsers);
+          // print(filteredUsers);
 
           if (filteredUsers.isEmpty) {
             return const Center(child: Text("No users found."));
@@ -383,7 +383,7 @@ class _ChatHomeState extends State<ChatHome> {
                         return Center(child: Text("Something went wrong: ${snapshot.error}"));
                       }
 
-                      print(unreadCountSnapshot.data);
+                      // print(unreadCountSnapshot.data);
                       final unreadCount = unreadCountSnapshot.data ?? 0;
 
                       return MessageListItem(
@@ -645,7 +645,7 @@ class _ChatHomeState extends State<ChatHome> {
                         // 2. UPDATE the text field to update the state
                         onChanged: (value) {
                           setState(() {
-                            print(value);
+                            // print(value);
                             _searchQuery = value ?? "";
                           });
                         },
