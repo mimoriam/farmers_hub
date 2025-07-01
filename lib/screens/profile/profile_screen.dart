@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
@@ -9,6 +10,7 @@ import 'package:farmers_hub/screens/feedback/send_feedback_screen.dart';
 import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
+import 'package:farmers_hub/services/locale_service.dart';
 import 'package:farmers_hub/services/theme_service.dart';
 import 'package:flutter/material.dart';
 
@@ -550,7 +552,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         _buildSettingItemCard(
           icon: Icons.verified_user_outlined, // Shield/verified icon
-          title: 'Account Verification',
+          // title: 'Account Verification',
+          title: AppLocalizations.of(context)!.agreeTerms,
           onTap: () {
             // Navigate to Account Verification Screen
           },
@@ -636,9 +639,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
                         await asyncPrefs.setString("language", value);
 
-                        setState(() {
-                          selectedLanguage = value;
-                        });
+                        if (mounted) {
+                          if (value == "English") {
+                            Provider.of<LocaleProvider>(
+                              context,
+                              listen: false,
+                            ).setLocale(const Locale('en'));
+                          } else {
+                            Provider.of<LocaleProvider>(
+                              context,
+                              listen: false,
+                            ).setLocale(const Locale('ar'));
+                          }
+                        }
+
+                        if (mounted) {
+                          setState(() {
+                            selectedLanguage = value;
+                          });
+                        }
                       }
                     },
                   ),

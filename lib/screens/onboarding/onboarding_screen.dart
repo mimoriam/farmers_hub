@@ -1,4 +1,5 @@
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
+import 'package:farmers_hub/services/locale_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,6 +8,7 @@ import 'package:farmers_hub/utils/constants.dart';
 import 'package:farmers_hub/auth_gate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -137,10 +139,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
                   dropdownStyleData: DropdownStyleData(
                     offset: const Offset(0, -12),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      color: Colors.white,
-                    ),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
                   ),
                   value: selectedLanguage,
 
@@ -238,6 +237,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                               await asyncPrefs.setString("language", selectedLanguage);
 
                               if (context.mounted) {
+                                if (selectedLanguage == "English") {
+                                  Provider.of<LocaleProvider>(
+                                    context,
+                                    listen: false,
+                                  ).setLocale(const Locale('en'));
+                                } else {
+                                  Provider.of<LocaleProvider>(
+                                    context,
+                                    listen: false,
+                                  ).setLocale(const Locale('ar'));
+                                }
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (context) => const AuthGate()),

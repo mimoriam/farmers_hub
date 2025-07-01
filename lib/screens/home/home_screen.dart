@@ -6,7 +6,7 @@ import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
-import 'package:farmers_hub/services/local_service.dart';
+import 'package:farmers_hub/services/locale_service.dart';
 import 'package:farmers_hub/services/location_service.dart';
 import 'package:farmers_hub/utils/custom_page_route.dart';
 import 'package:farmers_hub/utils/time_format.dart';

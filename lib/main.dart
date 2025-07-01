@@ -1,4 +1,4 @@
-import 'package:farmers_hub/services/local_service.dart';
+import 'package:farmers_hub/services/locale_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:farmers_hub/utils/custom_page_transition_builder.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +9,7 @@ import 'package:farmers_hub/services/theme_service.dart';
 
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -19,14 +20,19 @@ Future<void> main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final localeProvider = LocaleProvider();
+
+  // Await the loading of the locale.
+  await localeProvider.loadLocale();
   // runApp(ChangeNotifierProvider(create: (_) => ThemeNotifier(), child: const MyApp()));
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        // ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider.value(value: localeProvider),
       ],
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -42,14 +48,13 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: AppLocalizations.of(context)!.appTitle,
+      title: AppLocalizations.of(context)?.appTitle,
 
       // Get the locale from your LocaleProvider
       locale: localeProvider.locale,
 
       // Change locale like this:
       // Provider.of<LocaleProvider>(context, listen: false).setLocale(const Locale('ar'));
-
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
