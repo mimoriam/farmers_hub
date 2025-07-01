@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -52,13 +53,14 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             SvgPicture.asset(
                 "images/icons/splash_white.svg",
-              semanticsLabel: 'Your Crop icon',
+              semanticsLabel: AppLocalizations.of(context)!.yourCropIcon,
               width: 90,
               height: 104,
             ),
             const SizedBox(height: 20),
             Text(
-              "YOUR CROP",
+              // "YOUR CROP",
+              AppLocalizations.of(context)!.yourCrop,
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                 textStyle: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w600),
@@ -66,7 +68,8 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              "Buy & Sell Securely Online.",
+              // "Buy & Sell Securely Online.",
+              AppLocalizations.of(context)!.buySell,
               style: GoogleFonts.poppins(
                 textStyle: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
               ),

@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -34,7 +35,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               SvgPicture.asset(
                 "images/icons/splash_green.svg",
-                semanticsLabel: 'Your Crop icon',
+                semanticsLabel: AppLocalizations.of(context)!.yourCropIcon,
                 width: 152,
                 height: 152,
               ),
@@ -42,7 +43,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(height: 14),
 
               Text(
-                "YOUR CROP",
+                AppLocalizations.of(context)!.yourCrop,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.montserrat(
                   textStyle: TextStyle(color: onboardingColor, fontSize: 20, fontWeight: FontWeight.w500),
@@ -52,7 +53,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16),
                 child: Text(
-                  'Welcome to Farmers Hub! Buy & Sell Fruits, Vegetables, Livestock, & More – All Securely Online.',
+                  // 'Welcome to Farmers Hub! Buy & Sell Fruits, Vegetables, Livestock, & More – All Securely Online.',
+                  AppLocalizations.of(context)!.welcome,
                   textAlign: TextAlign.center,
                   // style: TextStyle(fontSize: 14, color: Colors.black54),
                   style: GoogleFonts.poppins(
@@ -74,7 +76,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       children: [
                         WidgetSpan(child: Icon(Icons.volume_up, size: 18, color: Colors.blue)),
                         TextSpan(
-                          text: ' Choose Preferred Language',
+                          // text: ' Choose Preferred Language',
+                          text: AppLocalizations.of(context)!.chooseLanguage,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
@@ -183,7 +186,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             padding: EdgeInsets.only(top: 14),
                             child: Text.rich(
                               TextSpan(
-                                text: 'By continuing, you agree to ',
+                                // text: 'By continuing, you agree to ',
+                                text: AppLocalizations.of(context)!.continueAgree,
                                 style: GoogleFonts.poppins(
                                   color: onboardingTextColor,
                                   textStyle: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
@@ -203,7 +207,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                           Center(
                             child: Text(
-                              'Terms of Use Policy.',
+                              // 'Terms of Use Policy.',
+                              AppLocalizations.of(context)!.terms,
                               style: GoogleFonts.poppins(
                                 color: onboardingColor,
                                 textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
@@ -246,7 +251,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
                     ),
                     child: Text(
-                      'Agree Terms & Conditions',
+                      // 'Agree Terms & Conditions',
+                      AppLocalizations.of(context)!.agreeTerms,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.montserrat(
                         color: Colors.white,

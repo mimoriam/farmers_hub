@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Farmers Hub',
+      title: AppLocalizations.of(context)!.appTitle,
 
       // Get the locale from your LocaleProvider
       locale: localeProvider.locale,
