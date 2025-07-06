@@ -185,6 +185,7 @@ class FirebaseService {
     }
   }
 
+  // TODO: Massive change but once user is subscribed, change all his posts to "verifiedSeller" > true
   Future<void> saveUserDataOnRegister({
     required User user,
     required String username,
@@ -426,6 +427,7 @@ class FirebaseService {
       "color": color,
       "createdAt": FieldValue.serverTimestamp(),
       "hasBeenDeleted": false,
+      "status": "pending",
     });
   }
 
@@ -551,6 +553,7 @@ class FirebaseService {
           .collection(postCollection)
           .where("featured", isEqualTo: true)
           .where("hasBeenSold", isEqualTo: false)
+          .where("status", isEqualTo: "approved")
           .get();
 
       return querySnapshot.docs;
@@ -662,6 +665,7 @@ class FirebaseService {
             .collection(postCollection)
             .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
             .where('hasBeenSold', isEqualTo: false)
+            .where("status", isEqualTo: "approved")
             .orderBy('createdAt', descending: descending)
             .get();
       } else {
@@ -670,6 +674,7 @@ class FirebaseService {
             .collection(postCollection)
             .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
             .where('hasBeenSold', isEqualTo: false)
+            .where("status", isEqualTo: "approved")
             .orderBy('createdAt', descending: descending)
             .get();
       }
@@ -697,6 +702,7 @@ class FirebaseService {
           .collection(postCollection)
           .where('location.city', isEqualTo: query)
           .where('hasBeenSold', isEqualTo: false)
+          .where("status", isEqualTo: "approved")
           .orderBy('createdAt', descending: descending)
           .get();
 
@@ -741,6 +747,7 @@ class FirebaseService {
           .collection(postCollection)
           .where('location.village', isEqualTo: query)
           .where('hasBeenSold', isEqualTo: false)
+          .where("status", isEqualTo: "approved")
           .orderBy('createdAt', descending: descending)
           .get();
 

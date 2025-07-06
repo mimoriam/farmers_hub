@@ -1251,9 +1251,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       context: context,
                                       builder:
                                           (context) => AlertDialog(
+                                            backgroundColor: Colors.white,
                                             title: const Text("Monthly Limit Reached"),
                                             content: const Text(
-                                              "You have reached your limit of 3 posts per month. Subscribe to post without limits.",
+                                              "You have reached your limit of 3 posts per month. Subscribe now to post without limits.",
                                             ),
                                             actions: [
                                               TextButton(

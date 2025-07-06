@@ -4,6 +4,7 @@ import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/chat/chat_screen.dart';
+import 'package:farmers_hub/screens/commission/commission_screen.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
 import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
@@ -164,7 +165,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void showFeedbackDialog(BuildContext context) {
     int currentRating = 5; // To hold the selected star rating
 
-
     showDialog(
       context: context,
       barrierDismissible: true, // Allows dismissing by tapping outside
@@ -173,9 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return StatefulBuilder(
           builder: (context, setState) {
             return Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
               elevation: 5,
               backgroundColor: Colors.transparent, // Make Dialog's own background transparent
               child: _buildDialogContent(dialogContext, setState, currentRating, (rating) {
@@ -190,14 +188,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-// Separate function for the dialog content to keep it organized
+  // Separate function for the dialog content to keep it organized
   Widget _buildDialogContent(
-      BuildContext context,
-      StateSetter setState, // To update the rating from outside
-      int currentRating,
-      Function(int) onRatingUpdate,
-      ) {
-
+    BuildContext context,
+    StateSetter setState, // To update the rating from outside
+    int currentRating,
+    Function(int) onRatingUpdate,
+  ) {
     final Color primaryGreen = onboardingColor;
     final Color darkTextColor = Colors.black87;
     final Color lightTextColor = Colors.grey.shade600;
@@ -241,11 +238,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.0),
             boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: Offset(0, 5),
-              ),
+              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
             ],
           ),
           child: Column(
@@ -273,11 +266,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Text(
                 'Your feedback make help us better! Tap the button below to share feedback and Get Support!',
                 textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
-                  fontSize: 13,
-                  color: lightTextColor,
-                  height: 1.4,
-                ),
+                style: GoogleFonts.poppins(fontSize: 13, color: lightTextColor, height: 1.4),
               ),
               SizedBox(height: 20),
               // Star Rating
@@ -307,9 +296,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: onboardingColor,
                   minimumSize: Size(double.infinity, 50), // Full width
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
                 onPressed: () {
@@ -324,9 +311,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 style: OutlinedButton.styleFrom(
                   minimumSize: Size(double.infinity, 50), // Full width
                   side: BorderSide(color: onboardingColor, width: 1.5),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                   padding: EdgeInsets.symmetric(vertical: 12),
                 ),
                 onPressed: () {
@@ -364,7 +349,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -567,7 +551,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildSettingsItem(
                       icon: Icons.currency_bitcoin,
                       text: 'Commission & Membership',
-                      onTap: () {},
+                      onTap: () {
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CommissionScreen()),
+                          );
+                        }
+                      },
                       showDivider: false, // No divider for the last item in a section
                     ),
 
