@@ -3,6 +3,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/screens/chat/chat_screen.dart';
 import 'package:farmers_hub/screens/currency_exchange/currency_exchange_screen.dart';
 import 'package:farmers_hub/screens/edit_profile/edit_profile_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
@@ -63,7 +64,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          title: Text("Are you sure?", style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600])),
+          title: Text(
+            "Are you sure?",
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+          ),
           actions: <Widget>[
             TextButton(
               child: Text("Cancel"),
@@ -79,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (context.mounted) {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(builder: (context) => LoginScreen()),
-                          (Route<dynamic> route) => false,
+                      (Route<dynamic> route) => false,
                     );
                   }
                 } catch (e) {
@@ -109,7 +113,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          title: Text("Delete Account", style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600])),
+          title: Text(
+            "Delete Account",
+            style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+          ),
           content: Text(
             "Are you sure you want to delete your account and all of your posts? This action cannot be undone.",
             style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
@@ -162,7 +169,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
+            );
           }
         },
         backgroundColor: onboardingColor,
@@ -270,7 +280,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile_selected.svg"),
+                SvgPicture.asset(
+                  semanticsLabel: 'Profile Icon',
+                  "images/icons/profile_selected.svg",
+                ),
                 Text(
                   'Profile',
                   style: GoogleFonts.montserrat(
@@ -292,7 +305,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         title: Text(
           "User Profile",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: SafeArea(
@@ -306,7 +323,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: const EdgeInsets.only(left: 4),
                   child: Text(
                     'Profile Settings',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
                   ),
                 ),
 
@@ -315,6 +336,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 // SizedBox(height: 1),
                 Padding(padding: const EdgeInsets.only(left: 4), child: _buildSettingsList()),
+
+                _buildSettingsCard(
+                  context,
+                  children: [
+                    _buildSettingsItem(
+                      icon: Icons.chat_outlined,
+                      text: 'Admin Chat Support',
+                      onTap: () async {
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ChatScreen(
+                                receiverId: "w6A7diKRtVYo75YLKK8jdLSIdvW2",
+                                receiverEmail: "devmimo420@gmail.com",
+                                user: _firebaseService.currentUser,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    ),
+
+                    _buildSettingsItem(
+                      icon: Icons.currency_bitcoin,
+                      text: 'Commission & Membership',
+                      onTap: () {},
+                      showDivider: false, // No divider for the last item in a section
+                    ),
+
+                    _buildSettingsItem(
+                      icon: Icons.thumb_up_outlined,
+                      text: 'Rate us',
+                      onTap: () {},
+                      showDivider: false, // No divider for the last item in a section
+                    ),
+                  ],
+                ),
 
                 // SizedBox(height: 1),
                 ListView(
@@ -437,14 +496,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           backgroundColor: onboardingColor,
                           child: Text(
                             'A', // Placeholder Initial
-                            style: TextStyle(fontSize: 30, color: Colors.white, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
 
                         SizedBox(width: 10),
                         Text(
                           'Profile Information',
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black87,
+                          ),
                         ),
                       ],
                     ),
@@ -482,25 +549,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       backgroundColor: onboardingColor,
                       backgroundImage:
                           profileImageUrl != null && profileImageUrl != "default_pfp.jpg"
-                              ? NetworkImage(profileImageUrl)
-                              : null,
-                      child:
-                          (profileImageUrl == null || profileImageUrl == "default_pfp.jpg")
-                              ? Text(
-                                'A', // Placeholder Initial
-                                style: TextStyle(
-                                  fontSize: 30,
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                              : null,
+                          ? NetworkImage(profileImageUrl)
+                          : null,
+                      child: (profileImageUrl == null || profileImageUrl == "default_pfp.jpg")
+                          ? Text(
+                              'A', // Placeholder Initial
+                              style: TextStyle(
+                                fontSize: 30,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : null,
                     ),
 
                     SizedBox(width: 10),
                     Text(
                       'Profile Information',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
                     ),
                   ],
                 ),
@@ -530,7 +600,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         children: [
           // Skeleton.keep(child: Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 16))),
           Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 16)),
-          Text(value, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87)),
+          Text(
+            value,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black87),
+          ),
         ],
       ),
     );
@@ -595,7 +668,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(width: 12.0), // Spacing between icon and text
                   Text(
                     'Language',
-                    style: TextStyle(fontSize: 16.0, color: Colors.grey[700], fontWeight: FontWeight.w500),
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ],
               ),
@@ -606,24 +683,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.only(left: 100, right: 0, top: 2, bottom: 2),
                   // No explicit border for dropdown, styling via DropdownButton properties
                   child: DropdownButtonFormField2<String>(
-                    items:
-                        ['English', 'Arabic']
-                            .map(
-                              (lang) => DropdownMenuItem<String>(
-                                // onTap: () async {
-                                //   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
-                                //   await asyncPrefs.setString("language", lang);
-                                //   if (context.mounted) {
-                                //     setState(() {
-                                //       selectedLanguage = lang;
-                                //     });
-                                //   }
-                                // },
-                                value: lang,
-                                child: Text(lang),
-                              ),
-                            )
-                            .toList(),
+                    items: ['English', 'Arabic']
+                        .map(
+                          (lang) => DropdownMenuItem<String>(
+                            // onTap: () async {
+                            //   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+                            //   await asyncPrefs.setString("language", lang);
+                            //   if (context.mounted) {
+                            //     setState(() {
+                            //       selectedLanguage = lang;
+                            //     });
+                            //   }
+                            // },
+                            value: lang,
+                            child: Text(lang),
+                          ),
+                        )
+                        .toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),
                       enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
@@ -636,7 +712,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     dropdownStyleData: DropdownStyleData(
                       offset: const Offset(0, 0),
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), color: Colors.white),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.white,
+                      ),
                     ),
                     value: selectedLanguage,
                     onChanged: (value) async {
@@ -893,17 +972,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           color: isSelected ? selectedColor : unselectedColor,
           borderRadius: BorderRadius.circular(25.0),
           border: Border.all(color: isSelected ? selectedColor : Colors.grey[300]!, width: 0.8),
-          boxShadow:
-              isSelected
-                  ? [
-                    BoxShadow(
-                      color: selectedColor.withOpacity(0.3),
-                      spreadRadius: 1,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    ),
-                  ]
-                  : [],
+          boxShadow: isSelected
+              ? [
+                  BoxShadow(
+                    color: selectedColor.withOpacity(0.3),
+                    spreadRadius: 1,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ]
+              : [],
         ),
         child: Text(
           label,
@@ -942,7 +1020,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           leading: Icon(icon, color: iconColor ?? Colors.grey[600], size: 24),
           title: Text(
             text,
-            style: TextStyle(fontSize: 16, color: textColor ?? Colors.grey[800], fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 16,
+              color: textColor ?? Colors.grey[800],
+              fontWeight: FontWeight.w500,
+            ),
           ),
           trailing: Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
           onTap: onTap,
