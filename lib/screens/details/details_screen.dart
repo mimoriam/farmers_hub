@@ -162,16 +162,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
         title: Text(
           "Details",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
       body: StreamBuilder<DocumentSnapshot>(
-        stream:
-            FirebaseFirestore.instance
-                .collection(FirebaseService().postCollection)
-                .doc(widget.postId)
-                .snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection(FirebaseService().postCollection)
+            .doc(widget.postId)
+            .snapshots(),
         builder: (context, postSnapshot) {
           if (postSnapshot.connectionState == ConnectionState.waiting) {
             // return const Center(child: CircularProgressIndicator(color: onboardingColor));
@@ -219,8 +222,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 location: {"city": "Wew lad"},
                                 isLiked: true,
                                 isLiking: false,
-                                onLike:
-                                    () => firebaseService.updatePostLikes(postId: widget.postId, like: !true),
+                                onLike: () => firebaseService.updatePostLikes(
+                                  postId: widget.postId,
+                                  like: !true,
+                                ),
                               ),
                               const SizedBox(height: 8),
 
@@ -270,7 +275,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 );
               }
 
-              if (sellerSnapshot.hasError || !sellerSnapshot.hasData || sellerSnapshot.data == null) {
+              if (sellerSnapshot.hasError ||
+                  !sellerSnapshot.hasData ||
+                  sellerSnapshot.data == null) {
                 return const Center(child: Text("Failed to load user data."));
               }
 
@@ -376,7 +383,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             ),
                             const SizedBox(height: 18),
 
-                            _buildVerifiedSellerBadge(verifiedSeller: postDetails["verifiedSeller"]),
+                            _buildVerifiedSellerBadge(
+                              verifiedSeller: postDetails["verifiedSeller"],
+                            ),
                             const SizedBox(height: 4),
 
                             _buildDetailsSection(
@@ -436,6 +445,39 @@ class _DetailsScreenState extends State<DetailsScreen> {
       );
     }
 
+    // If there's only one image, just display it directly without the CarouselSlider
+    if (imageUrls.length == 1) {
+      return Image.network(
+        imageUrls.first,
+        height: 300, // Ensure consistent height
+        fit: BoxFit.fill,
+        width: double.infinity,
+        // Add a loading builder and error builder for better UX
+        loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            height: 300,
+            color: Colors.grey[300],
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                    : null,
+                color: onboardingColor, // Or your app's theme color
+              ),
+            ),
+          );
+        },
+        errorBuilder: (BuildContext context, Object error, StackTrace? stackTrace) {
+          return Container(
+            height: 300,
+            color: Colors.grey[300],
+            child: Center(child: Icon(Icons.broken_image, size: 50, color: Colors.grey[600])),
+          );
+        },
+      );
+    }
+
     return StatefulBuilder(
       builder: (BuildContext context, StateSetter setState) {
         return Stack(
@@ -447,15 +489,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
             //     return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
             //   },
             CarouselSlider(
-              items:
-                  imageUrls.mapIndexed((index, element) {
-                    final imageUrl = imageUrls[index];
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
-                      },
-                    );
-                  }).toList(),
+              items: imageUrls.mapIndexed((index, element) {
+                final imageUrl = imageUrls[index];
+                return Builder(
+                  builder: (BuildContext context) {
+                    return Image.network(imageUrl, fit: BoxFit.fill, width: double.infinity);
+                  },
+                );
+              }).toList(),
               options: CarouselOptions(
                 height: 300,
                 viewportFraction: 1.0,
@@ -559,7 +600,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
             Row(
               children: [
-                IconButton(icon: const Icon(Icons.share_outlined), onPressed: () {}, color: Colors.grey[700]),
+                IconButton(
+                  icon: const Icon(Icons.share_outlined),
+                  onPressed: () {},
+                  color: Colors.grey[700],
+                ),
                 // USE THE NEW WIDGET HERE
                 FavoriteIconButton(
                   postId: widget.postId,
@@ -608,11 +653,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           : currency == "lira"
                           ? "₺"
                           : "(SYP)",
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: onboardingColor,
+                      ),
                     ),
                     Text(
                       price,
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: onboardingColor),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: onboardingColor,
+                      ),
                     ),
                   ],
                 ),
@@ -634,22 +687,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
                 isLiking
                     ? Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2.5, color: Colors.grey[700]),
-                      ),
-                    )
+                        padding: const EdgeInsets.all(12.0),
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2.5,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      )
                     : IconButton(
-                      icon: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
-                        color: isLiked ? Colors.red : Colors.grey[700],
+                        icon: Icon(
+                          isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                          color: isLiked ? Colors.red : Colors.grey[700],
+                        ),
+                        // icon: Icon(Icons.favorite, color: Colors.red), // For liked state
+                        onPressed: onLike,
+                        color: Colors.grey[700],
                       ),
-                      // icon: Icon(Icons.favorite, color: Colors.red), // For liked state
-                      onPressed: onLike,
-                      color: Colors.grey[700],
-                    ),
               ],
             ),
           ],
@@ -658,7 +714,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildEngagementStats({required String likes, required String views, required Timestamp dated}) {
+  Widget _buildEngagementStats({
+    required String likes,
+    required String views,
+    required Timestamp dated,
+  }) {
     final currentUserId = firebaseService.currentUser?.uid;
     final postedAgoText = formatTimeAgo(dated);
 
@@ -710,13 +770,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildSellerInfo({required String profileImage, required String username, required sellerData}) {
+  Widget _buildSellerInfo({
+    required String profileImage,
+    required String username,
+    required sellerData,
+  }) {
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => DetailsUserPostsScreen(postSellerData: sellerData)),
+            MaterialPageRoute(
+              builder: (context) => DetailsUserPostsScreen(postSellerData: sellerData),
+            ),
           );
         }
       },
@@ -724,15 +790,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
         children: [
           profileImage == "default_pfp.jpg" || profileImage == ""
               ? CircleAvatar(
-                radius: 24,
-                backgroundColor: onboardingColor, // Color from the 'M'
-                child: Text('A', style: TextStyle(fontSize: 24, color: Colors.white)),
-              )
+                  radius: 24,
+                  backgroundColor: onboardingColor, // Color from the 'M'
+                  child: Text('A', style: TextStyle(fontSize: 24, color: Colors.white)),
+                )
               : CircleAvatar(
-                radius: 24,
-                backgroundImage: NetworkImage(profileImage), // Use NetworkImage for URLs
-                // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-              ),
+                  radius: 24,
+                  backgroundImage: NetworkImage(profileImage), // Use NetworkImage for URLs
+                  // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                ),
           const SizedBox(width: 12),
           Text(username, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
         ],
@@ -750,35 +816,35 @@ class _DetailsScreenState extends State<DetailsScreen> {
       children: [
         firebaseService.currentUser!.uid == postUserId
             ? widget.didComeFromManagedPosts
-                ? Container()
-                : Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
-                        label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
-                        onPressed: () async {
-                          // Handle Chat action
+                  ? Container()
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
+                            label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
+                            onPressed: () async {
+                              // Handle Chat action
 
-                          if (context.mounted) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => ManagePostScreen()),
-                            );
-                            //     .then((_) {
-                            //   setState(() {});
-                            // });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: onboardingColor,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              if (context.mounted) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => ManagePostScreen()),
+                                );
+                                //     .then((_) {
+                                //   setState(() {});
+                                // });
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: onboardingColor,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                )
+                      ],
+                    )
             : Container(),
 
         SizedBox(height: 4),
@@ -786,17 +852,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
         firebaseService.currentUser!.uid == postUserId
             ? Container()
             : Row(
-              children: [
-                SizedBox(width: 3),
-                TapDebouncer(
-                  cooldown: const Duration(milliseconds: 2000),
-                  onTap:
-                      firebaseService.currentUser?.displayName == username
-                          ? null
-                          : () async {
+                children: [
+                  SizedBox(width: 3),
+                  TapDebouncer(
+                    cooldown: const Duration(milliseconds: 2000),
+                    onTap: firebaseService.currentUser?.displayName == username
+                        ? null
+                        : () async {
                             // Handle Chat action
 
-                            final ChatService _chatService = ChatService(user: firebaseService.currentUser);
+                            final ChatService _chatService = ChatService(
+                              user: firebaseService.currentUser,
+                            );
                             final user = firebaseService.currentUser;
 
                             await _chatService.addUserForChat(username: username);
@@ -808,74 +875,76 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               );
                             }
                           },
-                  builder: (BuildContext context, TapDebouncerFunc? onTap) {
-                    return Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-                        label: Text(
-                          firebaseService.currentUser?.displayName == username
-                              ? "Can't chat with yourself"
-                              : 'Chat',
-                          style: TextStyle(color: Colors.white),
+                    builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                      return Expanded(
+                        child: ElevatedButton.icon(
+                          icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                          label: Text(
+                            firebaseService.currentUser?.displayName == username
+                                ? "Can't chat with yourself"
+                                : 'Chat',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          onPressed: onTap,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: onboardingColor,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          ),
                         ),
-                        onPressed: onTap,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: onboardingColor,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                      );
+                    },
+                  ),
 
-                SizedBox(width: 10),
+                  SizedBox(width: 10),
 
-                firebaseService.currentUser?.displayName == username
-                    ? Container()
-                    : Expanded(
-                      child: ElevatedButton.icon(
-                        icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
-                        label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
-                        onPressed: () async {
-                          // final String whatsapp = "+1-14821421408214";
-                          final String whatsapp = phoneNumber;
-                          final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
-                          final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+                  firebaseService.currentUser?.displayName == username
+                      ? Container()
+                      : Expanded(
+                          child: ElevatedButton.icon(
+                            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                            label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
+                            onPressed: () async {
+                              // final String whatsapp = "+1-14821421408214";
+                              final String whatsapp = phoneNumber;
+                              final String whatsappURlAndroid =
+                                  "whatsapp://send?phone=$whatsapp&text=${""}";
+                              final String whatsappIoSURL =
+                                  "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
 
-                          if (Platform.isIOS) {
-                            if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
-                              await launchUrl(Uri.parse(whatsappIoSURL));
-                            } else {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
+                              if (Platform.isIOS) {
+                                if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+                                  await launchUrl(Uri.parse(whatsappIoSURL));
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                    );
+                                  }
+                                }
+                              } else {
+                                // Android
+                                if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+                                  await launchUrl(Uri.parse(whatsappURlAndroid));
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                    );
+                                  }
+                                }
                               }
-                            }
-                          } else {
-                            // Android
-                            if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
-                              await launchUrl(Uri.parse(whatsappURlAndroid));
-                            } else {
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).showSnackBar(const SnackBar(content: Text("Whatsapp not installed")));
-                              }
-                            }
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: onboardingColor,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: onboardingColor,
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                // const SizedBox(width: 10),
-              ],
-            ),
+                  // const SizedBox(width: 10),
+                ],
+              ),
       ],
     );
   }
@@ -888,7 +957,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
         alignment: Alignment.centerLeft,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          decoration: BoxDecoration(color: Colors.yellow[700], borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(
+            color: Colors.yellow[700],
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Text(
             'Verified Seller',
             style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 12),
@@ -929,7 +1001,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ? Container()
             : _buildDetailRow('Gender:', gender),
 
-        (averageWeight.isNotEmpty) ? _buildDetailRow('Average Weight (in kg):', averageWeight) : Container(),
+        (averageWeight.isNotEmpty)
+            ? _buildDetailRow('Average Weight (in kg):', averageWeight)
+            : Container(),
 
         category == "Fruits" ||
                 category == "Vegetables" ||
@@ -967,12 +1041,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
         children: [
           Text(title, style: TextStyle(fontSize: 15, color: Colors.grey[700])),
           GestureDetector(
-            onTap:
-                phoneBlue == true
-                    ? () {
-                      _makePhoneCall(value);
-                    }
-                    : null,
+            onTap: phoneBlue == true
+                ? () {
+                    _makePhoneCall(value);
+                  }
+                : null,
             child: Text(
               value,
               style: TextStyle(

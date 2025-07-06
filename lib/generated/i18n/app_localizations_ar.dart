@@ -276,7 +276,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get farmingTip => 'نصيحة الزراعة لليوم';
 
   @override
-  String get farmingDyTip => 'اليوم مناسب لتحضير التربة وزراعة الشتلات. مستويات الرطوبة مثالية.';
+  String get farmingDyTip =>
+      'اليوم مناسب لتحضير التربة وزراعة الشتلات. مستويات الرطوبة مثالية.';
 
   @override
   String get exploreProducts => 'استكشف منتجاتنا';
@@ -627,7 +628,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get validPhoneNumber => 'الرجاء إدخال رقم صالح.';
 
   @override
-  String get nameMustHaveThreeLetters => 'يجب أن يحتوي الاسم على 3 أحرف على الأقل.';
+  String get nameMustHaveThreeLetters =>
+      'يجب أن يحتوي الاسم على 3 أحرف على الأقل.';
 
   @override
   String get changeDisplayName => 'تغيير اسم العرض';
@@ -657,7 +659,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get myFavoritesPostTitle => 'عنوان منشوراتي المفضلة';
 
   @override
-  String get suggestions => 'هل لديك اقتراح أو وجدت خطأ؟ أخبرنا في الحقل أدناه.';
+  String get suggestions =>
+      'هل لديك اقتراح أو وجدت خطأ؟ أخبرنا في الحقل أدناه.';
 
   @override
   String get sendFeedback => 'إرسال الملاحظات';
@@ -759,7 +762,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get pressMicrophone => 'جاهز! اضغط على الميكروفون لبدء التحدث…';
 
   @override
-  String get speechError => 'التعرف على الكلام غير متاح. يرجى تثبيت تطبيق Google او تمكين خدمات الكلام في اعدادات جهازك > التطبيقات > التطبيقات الافتراضية > الادخال الصوتي';
+  String get speechError =>
+      'التعرف على الكلام غير متاح. يرجى تثبيت تطبيق Google او تمكين خدمات الكلام في اعدادات جهازك > التطبيقات > التطبيقات الافتراضية > الادخال الصوتي';
 
   @override
   String get english => 'الإنجليزية';
@@ -780,7 +784,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chooseLanguage => 'اختر لغتك المفضلة';
 
   @override
-  String get welcome => 'مرحبًا بكم في تطبيق محصولك! قم ببيع الفاكهة، الخضروات، الماشية، والمزيد - كل ذلك في مكان واحد.';
+  String get welcome =>
+      'مرحبًا بكم في تطبيق محصولك! قم ببيع الفاكهة، الخضروات، الماشية، والمزيد - كل ذلك في مكان واحد.';
 
   @override
   String get managePosts => 'إدارة المنشورات';
@@ -798,7 +803,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get delete => 'حذف';
 
   @override
-  String get sureForDeletePost => 'هل أنت متأكد أنك تريد حذف هذا المنشور؟ بمجرد الحذف، ستفقد البيانات بشكل دائم.';
+  String get sureForDeletePost =>
+      'هل أنت متأكد أنك تريد حذف هذا المنشور؟ بمجرد الحذف، ستفقد البيانات بشكل دائم.';
 
   @override
   String get yourPostDetails => 'تفاصيل المنشور...';

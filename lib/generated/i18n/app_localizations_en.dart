@@ -117,7 +117,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get locationServiceDisable => 'Location Services Disabled';
 
   @override
-  String get enableLocationService => 'Please enable location services in settings.';
+  String get enableLocationService =>
+      'Please enable location services in settings.';
 
   @override
   String get openSettings => 'Open Settings';
@@ -276,7 +277,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get farmingTip => 'Farming Tip of the Day';
 
   @override
-  String get farmingDyTip => 'Perfect day for soil preparation and planting seedlings. Moisture levels are optimal.';
+  String get farmingDyTip =>
+      'Perfect day for soil preparation and planting seedlings. Moisture levels are optimal.';
 
   @override
   String get exploreProducts => 'Explore our Products';
@@ -657,7 +659,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myFavoritesPostTitle => 'Favorite Post Title';
 
   @override
-  String get suggestions => 'Do you have a suggestion or found a bug? Let us know in the field below.';
+  String get suggestions =>
+      'Do you have a suggestion or found a bug? Let us know in the field below.';
 
   @override
   String get sendFeedback => 'Send Feedback';
@@ -738,7 +741,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speechServiceDisabled => '• Speech services are disabled';
 
   @override
-  String get googleAppNotInstalled => '• Google app is not installed or updated';
+  String get googleAppNotInstalled =>
+      '• Google app is not installed or updated';
 
   @override
   String get failedRecognition => 'Failed to initialize speech recognition';
@@ -750,16 +754,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get speechRecognitionIssue => 'Speech Recognition Issue';
 
   @override
-  String get microphonePermissionNotGranted => '• Microphone permissions not granted';
+  String get microphonePermissionNotGranted =>
+      '• Microphone permissions not granted';
 
   @override
-  String get speechNotWorking => 'Speech recognition is not working. This might be because:';
+  String get speechNotWorking =>
+      'Speech recognition is not working. This might be because:';
 
   @override
-  String get pressMicrophone => 'Ready! Press the microphone to start speaking...';
+  String get pressMicrophone =>
+      'Ready! Press the microphone to start speaking...';
 
   @override
-  String get speechError => 'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
+  String get speechError =>
+      'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
 
   @override
   String get english => 'English';
@@ -780,7 +788,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get chooseLanguage => ' Choose Preferred Language\'';
 
   @override
-  String get welcome => 'Welcome to Farmers Hub! Buy & Sell Fruits, Vegetables, Livestock, & More – All Securely Online.';
+  String get welcome =>
+      'Welcome to Farmers Hub! Buy & Sell Fruits, Vegetables, Livestock, & More – All Securely Online.';
 
   @override
   String get managePosts => 'Manage Posts';
@@ -798,7 +807,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get sureForDeletePost => 'Are you sure you want to delete this post? Once deleted, the data will be permanently removed.';
+  String get sureForDeletePost =>
+      'Are you sure you want to delete this post? Once deleted, the data will be permanently removed.';
 
   @override
   String get yourPostDetails => 'Post details...';
