@@ -201,6 +201,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
               if (sellerSnapshot.connectionState == ConnectionState.waiting) {
                 // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                 return Skeletonizer(
+                  effect: ShimmerEffect(
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
+                  ),
                   ignoreContainers: true,
                   ignorePointers: true,
                   child: SingleChildScrollView(

@@ -80,6 +80,10 @@ class _ChatScreenState extends State<ChatScreen> {
               backgroundColor: onboardingColor,
               elevation: 0,
               title: Skeletonizer(
+                effect: ShimmerEffect(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                ),
                 ignorePointers: true,
                 child: Row(
                   children: [
@@ -105,6 +109,10 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             body: Center(
               child: Skeletonizer(
+                effect: ShimmerEffect(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                ),
                 ignorePointers: true,
                 child: Column(
                   children: [
@@ -188,6 +196,10 @@ class _ChatScreenState extends State<ChatScreen> {
                     backgroundColor: onboardingColor,
                     elevation: 0,
                     title: Skeletonizer(
+                      effect: ShimmerEffect(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
                       ignorePointers: true,
                       child: Row(
                         children: [
@@ -217,6 +229,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   body: Center(
                     child: Skeletonizer(
+                      effect: ShimmerEffect(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
                       ignorePointers: true,
                       child: Column(
                         children: [

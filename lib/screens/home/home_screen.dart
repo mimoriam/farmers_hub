@@ -693,6 +693,7 @@ class _HomeScreenState extends State<HomeScreen> {
         },
         child: Scaffold(
           backgroundColor: homebackgroundColor,
+          resizeToAvoidBottomInset: false,
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
@@ -1199,6 +1200,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
                           return _isLoadingCarousel
                               ? Skeletonizer(
+                            effect: ShimmerEffect(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                            ),
                                 ignorePointers: true,
                                 child: Container(
                                   width: MediaQuery.of(context).size.width,
@@ -1453,6 +1458,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       // ),
                                       _isLoadingTip
                                           ? Skeletonizer(
+                                        effect: ShimmerEffect(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                        ),
                                             ignorePointers: true,
                                             child: Text(
                                               'Loading tip for you...',

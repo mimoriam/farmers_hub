@@ -827,7 +827,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         // A GridView item defaults to a square aspect ratio (1.0).
                         // A full-width square will be very tall. Adjust this ratio to make
                         // your items look more like list items (wider than they are tall).
-                        childAspectRatio: 2.1, // Example: Item is 3x wider than it is tall.
+                        childAspectRatio: 3, // Example: Item is 3x wider than it is tall.
                       ),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
@@ -904,145 +904,159 @@ class _ProductCard2State extends State<ProductCard2> {
           });
         }
       },
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: [
-            BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
-          ],
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1, //* Changed flex to 1 for the image
-              child: Stack(
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(12.0),
-                      bottomLeft: Radius.circular(12.0),
-                    ),
-                    child: Image.network(
-                      imageUrls.first,
-                      height: double.infinity,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: Container(
-                      padding: const EdgeInsets.all(6),
-                      decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
-                      child: Icon(
-                        isLiked ? Icons.favorite : Icons.favorite_border_outlined,
-                        color: isLiked ? Colors.red : Colors.grey,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+      child: Stack(
+        children: [
+          Container(
+            clipBehavior: Clip.antiAlias,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(6.0),
             ),
-            Expanded(
-              flex: 1, //* Changed flex to 2 for the stats
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      title,
-                      style: GoogleFonts.poppins(
-                        color: onboardingColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1, //* Changed flex to 1 for the image
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(6.0),
+                          bottomLeft: Radius.circular(6.0),
+                        ),
+                        child: Image.network(
+                          imageUrls.first,
+                          height: double.infinity,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '\$$price',
-                      style: GoogleFonts.poppins(
-                        color: onboardingColor,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.location_on_outlined,
-                          size: 14,
-                          color: popularPostsLocationTextColor,
-                        ),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            city,
-                            style: GoogleFonts.poppins(
-                              color: popularPostsLocationTextColor,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w400,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      //* Likes and Views are now in the same row
-                      children: [
-                        Icon(Icons.favorite, size: 16, color: Colors.redAccent),
-                        const SizedBox(width: 4),
-                        Text(
-                          likes,
-                          style: GoogleFonts.poppins(
-                            color: popularPostsLocationTextColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
-                        const SizedBox(width: 4),
-                        Text(
-                          views,
-                          style: GoogleFonts.poppins(
-                            color: popularPostsLocationTextColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.access_time_outlined,
-                          size: 16,
-                          color: popularPostsLocationTextColor,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          postedAgoText,
-                          style: GoogleFonts.poppins(
-                            color: popularPostsLocationTextColor,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w400,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ],
+                      // Positioned(
+                      //   top: 8,
+                      //   right: 8,
+                      //   child: Container(
+                      //     padding: const EdgeInsets.all(6),
+                      //     decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
+                      //     child: Icon(
+                      //       isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                      //       color: isLiked ? Colors.red : Colors.grey,
+                      //       size: 18,
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
+                Expanded(
+                  flex: 1, //* Changed flex to 2 for the stats
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Text(
+                          title,
+                          style: GoogleFonts.poppins(
+                            color: onboardingColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '\$$price',
+                          style: GoogleFonts.poppins(
+                            color: onboardingColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.location_on_outlined,
+                              size: 14,
+                              color: popularPostsLocationTextColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                city,
+                                style: GoogleFonts.poppins(
+                                  color: popularPostsLocationTextColor,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          //* Likes and Views are now in the same row
+                          children: [
+                            Icon(Icons.favorite, size: 16, color: Colors.redAccent),
+                            const SizedBox(width: 4),
+                            Text(
+                              likes,
+                              style: GoogleFonts.poppins(
+                                color: popularPostsLocationTextColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
+                            const SizedBox(width: 4),
+                            Text(
+                              views,
+                              style: GoogleFonts.poppins(
+                                color: popularPostsLocationTextColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.access_time_outlined,
+                              size: 16,
+                              color: popularPostsLocationTextColor,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              postedAgoText,
+                              style: GoogleFonts.poppins(
+                                color: popularPostsLocationTextColor,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 3,
+            right: 3,
+            child: Container(
+              padding: const EdgeInsets.all(6),
+              decoration: BoxDecoration(color: Colors.white70, shape: BoxShape.circle),
+              child: Icon(
+                isLiked ? Icons.favorite : Icons.favorite_border_outlined,
+                color: isLiked ? Colors.red : Colors.grey,
+                size: 18,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

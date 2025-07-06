@@ -158,6 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: homebackgroundColor,
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
@@ -421,6 +422,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // return const Center(child: CircularProgressIndicator(color: onboardingColor));
               return Skeletonizer(
+                effect: ShimmerEffect(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                ),
                 ignoreContainers: true,
                 ignorePointers: true,
                 child: Column(

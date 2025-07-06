@@ -50,6 +50,10 @@ class _DetailsUserPostsScreenState extends State<DetailsUserPostsScreen> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                     return Skeletonizer(
+                      effect: ShimmerEffect(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
                       ignoreContainers: true,
                       child: ListView.builder(
                         itemCount: 4,

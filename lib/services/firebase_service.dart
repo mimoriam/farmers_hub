@@ -131,7 +131,10 @@ class FirebaseService {
   }
 
   // Email/Password Registration
-  Future<UserCredential> registerWithEmail({required String email, required String password}) async {
+  Future<UserCredential> registerWithEmail({
+    required String email,
+    required String password,
+  }) async {
     try {
       return await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException {
@@ -209,6 +212,7 @@ class FirebaseService {
         "location": {"city": "", "province": ""},
         "profileImage": "default_pfp.jpg",
         "username": username,
+        "hasBeenDeleted": true,
       });
 
       await currentUser!.updateDisplayName(username);
@@ -278,8 +282,11 @@ class FirebaseService {
 
   Future<DocumentSnapshot?> getUserDataByEmail({required String email}) async {
     try {
-      final querySnapshot =
-          await _firestore.collection(userCollection).where('email', isEqualTo: email).limit(1).get();
+      final querySnapshot = await _firestore
+          .collection(userCollection)
+          .where('email', isEqualTo: email)
+          .limit(1)
+          .get();
 
       return querySnapshot.docs.first;
     } catch (e) {
@@ -334,19 +341,20 @@ class FirebaseService {
     // For non-subscribed users, check their post count for the current month.
     final now = DateTime.now();
     final startOfMonth = DateTime(now.year, now.month, 1);
-    final endOfMonth = (now.month < 12) ? DateTime(now.year, now.month + 1, 1) : DateTime(now.year + 1, 1, 1);
+    final endOfMonth = (now.month < 12)
+        ? DateTime(now.year, now.month + 1, 1)
+        : DateTime(now.year + 1, 1, 1);
 
     // Convert DateTime to Timestamp for the query
     final startOfMonthTimestamp = Timestamp.fromDate(startOfMonth);
     final endOfMonthTimestamp = Timestamp.fromDate(endOfMonth);
 
-    final querySnapshot =
-        await _firestore
-            .collection(postCollection)
-            .where('sellerId', isEqualTo: currentUser!.uid)
-            .where('createdAt', isGreaterThanOrEqualTo: startOfMonthTimestamp)
-            .where('createdAt', isLessThan: endOfMonthTimestamp)
-            .get();
+    final querySnapshot = await _firestore
+        .collection(postCollection)
+        .where('sellerId', isEqualTo: currentUser!.uid)
+        .where('createdAt', isGreaterThanOrEqualTo: startOfMonthTimestamp)
+        .where('createdAt', isLessThan: endOfMonthTimestamp)
+        .get();
 
     // Allow posting only if the user has created fewer than 3 posts this month.
     return querySnapshot.docs.length < 3;
@@ -417,6 +425,7 @@ class FirebaseService {
       "details": details ?? "",
       "color": color,
       "createdAt": FieldValue.serverTimestamp(),
+      "hasBeenDeleted": false,
     });
   }
 
@@ -508,8 +517,10 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getAllPostsByCurrentUser() async {
     try {
-      final QuerySnapshot querySnapshot =
-          await _firestore.collection(postCollection).where("sellerId", isEqualTo: currentUser?.uid).get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("sellerId", isEqualTo: currentUser?.uid)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -519,8 +530,10 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getAllPostsBySellerId(String sellerId) async {
     try {
-      final QuerySnapshot querySnapshot =
-          await _firestore.collection(postCollection).where("sellerId", isEqualTo: sellerId).get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("sellerId", isEqualTo: sellerId)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -534,12 +547,11 @@ class FirebaseService {
       //     await _firestore.collection(postCollection).where("featured", isEqualTo: true).get();
 
       // Do not return posts marked as sold
-      final QuerySnapshot querySnapshot =
-          await _firestore
-              .collection(postCollection)
-              .where("featured", isEqualTo: true)
-              .where("hasBeenSold", isEqualTo: false)
-              .get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("featured", isEqualTo: true)
+          .where("hasBeenSold", isEqualTo: false)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -549,7 +561,10 @@ class FirebaseService {
 
   Future<Map<String, dynamic>> getPostDetails(String postId) async {
     try {
-      final DocumentSnapshot documentSnapshot = await _firestore.collection(postCollection).doc(postId).get();
+      final DocumentSnapshot documentSnapshot = await _firestore
+          .collection(postCollection)
+          .doc(postId)
+          .get();
 
       return documentSnapshot.data() as Map<String, dynamic>;
     } catch (e) {
@@ -643,22 +658,20 @@ class FirebaseService {
 
       // DO NOT return posts that have been marked as sold
       if (isCategorySearch) {
-        querySnapshot =
-            await _firestore
-                .collection(postCollection)
-                .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
-                .where('hasBeenSold', isEqualTo: false)
-                .orderBy('createdAt', descending: descending)
-                .get();
+        querySnapshot = await _firestore
+            .collection(postCollection)
+            .where('searchCategoryKeywords', arrayContains: lowerCaseQuery)
+            .where('hasBeenSold', isEqualTo: false)
+            .orderBy('createdAt', descending: descending)
+            .get();
       } else {
         // Same as above
-        querySnapshot =
-            await _firestore
-                .collection(postCollection)
-                .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
-                .where('hasBeenSold', isEqualTo: false)
-                .orderBy('createdAt', descending: descending)
-                .get();
+        querySnapshot = await _firestore
+            .collection(postCollection)
+            .where('searchTitleKeywords', arrayContains: lowerCaseQuery)
+            .where('hasBeenSold', isEqualTo: false)
+            .orderBy('createdAt', descending: descending)
+            .get();
       }
 
       return querySnapshot.docs;
@@ -668,7 +681,10 @@ class FirebaseService {
     }
   }
 
-  Future<List<QueryDocumentSnapshot>> searchPostsByCity(String query, {bool descending = true}) async {
+  Future<List<QueryDocumentSnapshot>> searchPostsByCity(
+    String query, {
+    bool descending = true,
+  }) async {
     try {
       if (query.isEmpty) {
         return [];
@@ -677,13 +693,12 @@ class FirebaseService {
       // final String lowerCaseQuery = query.toLowerCase();
       QuerySnapshot querySnapshot;
 
-      querySnapshot =
-          await _firestore
-              .collection(postCollection)
-              .where('location.city', isEqualTo: query)
-              .where('hasBeenSold', isEqualTo: false)
-              .orderBy('createdAt', descending: descending)
-              .get();
+      querySnapshot = await _firestore
+          .collection(postCollection)
+          .where('location.city', isEqualTo: query)
+          .where('hasBeenSold', isEqualTo: false)
+          .orderBy('createdAt', descending: descending)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -694,8 +709,10 @@ class FirebaseService {
 
   Future<String> getTipOfTheDay() async {
     try {
-      final DocumentSnapshot tipDoc =
-          await _firestore.collection("tip_of_the_day").doc("hxcf10ioz0RL0VPZXqeM").get();
+      final DocumentSnapshot tipDoc = await _firestore
+          .collection("tip_of_the_day")
+          .doc("hxcf10ioz0RL0VPZXqeM")
+          .get();
 
       if (tipDoc.exists) {
         final data = tipDoc.data() as Map<String, dynamic>;
@@ -708,7 +725,10 @@ class FirebaseService {
     }
   }
 
-  Future<List<QueryDocumentSnapshot>> searchPostsByVillage(String query, {bool descending = true}) async {
+  Future<List<QueryDocumentSnapshot>> searchPostsByVillage(
+    String query, {
+    bool descending = true,
+  }) async {
     try {
       if (query.isEmpty) {
         return [];
@@ -717,13 +737,12 @@ class FirebaseService {
       // final String lowerCaseQuery = query.toLowerCase();
       QuerySnapshot querySnapshot;
 
-      querySnapshot =
-          await _firestore
-              .collection(postCollection)
-              .where('location.village', isEqualTo: query)
-              .where('hasBeenSold', isEqualTo: false)
-              .orderBy('createdAt', descending: descending)
-              .get();
+      querySnapshot = await _firestore
+          .collection(postCollection)
+          .where('location.village', isEqualTo: query)
+          .where('hasBeenSold', isEqualTo: false)
+          .orderBy('createdAt', descending: descending)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -734,8 +753,10 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getFavoritedPosts() async {
     try {
-      final QuerySnapshot querySnapshot =
-          await _firestore.collection(postCollection).where("likedBy", arrayContains: currentUser!.uid).get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("likedBy", arrayContains: currentUser!.uid)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -746,12 +767,11 @@ class FirebaseService {
 
   Future<List<QueryDocumentSnapshot>> getSoldPostsByCurrentUser() async {
     try {
-      final QuerySnapshot querySnapshot =
-          await _firestore
-              .collection(postCollection)
-              .where("sellerId", isEqualTo: currentUser?.uid)
-              .where("hasBeenSold", isEqualTo: true)
-              .get();
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("sellerId", isEqualTo: currentUser?.uid)
+          .where("hasBeenSold", isEqualTo: true)
+          .get();
 
       return querySnapshot.docs;
     } catch (e) {
@@ -771,6 +791,29 @@ class FirebaseService {
     } catch (e) {
       print("Error getting background images: $e");
       return [];
+    }
+  }
+
+  Future<void> deleteUserOnlyButPreservePostsAndStorageData() async {
+    try {
+      final user = _auth.currentUser;
+
+      if (user != null) {
+        // TODO: Mark hasBeenDeleted as false and add a check when searching and sorting to
+        // disallow the users from seeing the deleted user's posts and images
+      } else {
+        throw AuthException('No user is currently signed in.');
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        throw AuthException(
+          'This operation is sensitive and requires recent authentication. Please log in again before retrying this request.',
+        );
+      } else {
+        throw AuthException('Error deleting user: ${e.message}');
+      }
+    } catch (e) {
+      throw AuthException('An unexpected error occurred while deleting the user and their posts.');
     }
   }
 

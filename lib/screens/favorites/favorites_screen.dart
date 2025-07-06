@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
+import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
@@ -36,14 +37,21 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         automaticallyImplyLeading: false,
         title: Text(
           "My Favorites",
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
+            );
           }
         },
         backgroundColor: onboardingColor,
@@ -126,7 +134,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   SvgPicture.asset(
                     semanticsLabel: 'Favorites Icon',
                     "images/icons/favorites.svg",
-                    // colorFilter: ColorFilter.mode(onboardingColor, BlendMode.),
+                    colorFilter: ColorFilter.mode(Color(0xFF008000), BlendMode.srcIn),
                   ),
                   Text(
                     'Favorites',
@@ -191,7 +199,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   decoration: InputDecoration(
                     hintText: 'Search',
                     hintStyle: GoogleFonts.poppins(
-                      textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                      textStyle: TextStyle(
+                        fontSize: 13.69,
+                        fontWeight: FontWeight.w400,
+                        height: 1.43,
+                      ),
                       color: Colors.grey,
                     ),
                     filled: true,
@@ -218,6 +230,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               // return const Center(child: CircularProgressIndicator(color: onboardingColor));
               return Skeletonizer(
+                effect: ShimmerEffect(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                ),
                 ignoreContainers: true,
                 ignorePointers: true,
                 child: Column(
@@ -250,73 +266,105 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             }
 
             final allPosts = snapshot.data!;
-            final filteredPosts =
-            _searchQuery.isEmpty
+            final filteredPosts = _searchQuery.isEmpty
                 ? allPosts
                 : allPosts.where((post) {
-              final title =
-                  (post.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ?? '';
-              return title.contains(_searchQuery.toLowerCase());
-            }).toList();
+                    final title =
+                        (post.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ??
+                        '';
+                    return title.contains(_searchQuery.toLowerCase());
+                  }).toList();
 
             if (filteredPosts.isEmpty) {
               return const Center(child: Text("No favorites match your search."));
             }
 
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: GridView.builder(
+                shrinkWrap: true,
+                // Important to make GridView work inside SingleChildScrollView
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1, // Number of columns
+                  crossAxisSpacing: 4.0, // Horizontal space between cards
+                  mainAxisSpacing: 12.0, // Vertical space between cards
+                  // childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                  // IMPORTANT: You'll likely need to adjust the item height.
+                  // A GridView item defaults to a square aspect ratio (1.0).
+                  // A full-width square will be very tall. Adjust this ratio to make
+                  // your items look more like list items (wider than they are tall).
+                  childAspectRatio: 3, // Example: Item is 3x wider than it is tall.
+                ),
+                itemCount: filteredPosts.length,
+                itemBuilder: (context, index) {
+                  final postData = filteredPosts[index].data() as Map<String, dynamic>;
+                  final postId = filteredPosts[index].id;
+
+                  // return ProductCard(postData: popularPostsData[index]);
+                  return ProductCard2(
+                    postData: postData,
+                    postId: postId,
+                    firebaseService: firebaseService,
+                  );
+                },
+              ),
+            );
+
             // final postData = snapshot.data!;
 
-            return ListView.builder(
-              // itemCount: postData.length,
-              itemCount: filteredPosts.length,
-              itemBuilder: (BuildContext context, int index) {
-                // final post = postData[index].data() as Map<String, dynamic>;
-                // final postId = postData[index].id;
-
-                final post = filteredPosts[index].data() as Map<String, dynamic>;
-                final postId = filteredPosts[index].id;
-
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    child: GestureDetector(
-                      onTap: () {
-                        if (context.mounted) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) =>
-                                  DetailsScreen(
-                                    postId: postId.toString(),
-                                    didComeFromManagedPosts: false,
-                                  ),
-                            ),
-                          ).then((_) => setState(() {}));
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.0),
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //     color: Colors.grey.withOpacity(0.2),
-                          //     spreadRadius: 2,
-                          //     blurRadius: 10,
-                          //     offset: const Offset(0, 5),
-                          //   ),
-                          // ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: _buildPostCard(post, postId),
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            );
+            // return ListView.builder(
+            //   // itemCount: postData.length,
+            //   itemCount: filteredPosts.length,
+            //   itemBuilder: (BuildContext context, int index) {
+            //     // final post = postData[index].data() as Map<String, dynamic>;
+            //     // final postId = postData[index].id;
+            //
+            //     final post = filteredPosts[index].data() as Map<String, dynamic>;
+            //     final postId = filteredPosts[index].id;
+            //
+            //     return Center(
+            //       child: Padding(
+            //         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            //         child: GestureDetector(
+            //           onTap: () {
+            //             if (context.mounted) {
+            //               Navigator.push(
+            //                 context,
+            //                 MaterialPageRoute(
+            //                   builder:
+            //                       (context) =>
+            //                       DetailsScreen(
+            //                         postId: postId.toString(),
+            //                         didComeFromManagedPosts: false,
+            //                       ),
+            //                 ),
+            //               ).then((_) => setState(() {}));
+            //             }
+            //           },
+            //           child: Container(
+            //             decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               borderRadius: BorderRadius.circular(10.0),
+            //               // boxShadow: [
+            //               //   BoxShadow(
+            //               //     color: Colors.grey.withOpacity(0.2),
+            //               //     spreadRadius: 2,
+            //               //     blurRadius: 10,
+            //               //     offset: const Offset(0, 5),
+            //               //   ),
+            //               // ],
+            //             ),
+            //             child: Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: _buildPostCard(post, postId),
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     );
+            //   },
+            // );
           },
         ),
       ),
@@ -368,7 +416,10 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(price, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
+              Text(
+                price,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
               const SizedBox(height: 8),
               _buildDetailRow('Category:', category),
 
@@ -391,7 +442,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             value,
-            style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

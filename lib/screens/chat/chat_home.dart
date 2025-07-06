@@ -181,6 +181,10 @@ class _ChatHomeState extends State<ChatHome> {
     if (_isLoading) {
       // return const Center(child: CircularProgressIndicator(color: onboardingColor));
       return Skeletonizer(
+        effect: ShimmerEffect(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+        ),
         ignorePointers: true,
         child: SingleChildScrollView(
           child: Column(
@@ -220,6 +224,10 @@ class _ChatHomeState extends State<ChatHome> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return Center(child: CircularProgressIndicator(color: onboardingColor));
           return Skeletonizer(
+            effect: ShimmerEffect(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+            ),
             ignorePointers: true,
             child: SingleChildScrollView(
               child: ListView.builder(
@@ -312,6 +320,10 @@ class _ChatHomeState extends State<ChatHome> {
                   if (messageSnapshot.connectionState == ConnectionState.waiting) {
                     // return Center(child: CircularProgressIndicator(color: onboardingColor));
                     return Skeletonizer(
+                      effect: ShimmerEffect(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
                       ignorePointers: true,
                       child: SingleChildScrollView(
                         child: ListView.builder(
@@ -352,6 +364,10 @@ class _ChatHomeState extends State<ChatHome> {
 
                         return Center(
                           child: Skeletonizer(
+                            effect: ShimmerEffect(
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                            ),
                             ignorePointers: true,
                             child: Column(
                               children: [
