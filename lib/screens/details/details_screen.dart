@@ -10,6 +10,7 @@ import 'package:farmers_hub/utils/time_format.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -906,7 +907,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       ? Container()
                       : Expanded(
                           child: ElevatedButton.icon(
-                            icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                            // icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
+                            icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
                             label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
                             onPressed: () async {
                               // final String whatsapp = "+1-14821421408214";
