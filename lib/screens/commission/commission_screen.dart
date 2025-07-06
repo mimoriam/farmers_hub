@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CommissionScreen extends StatefulWidget {
   const CommissionScreen({super.key});
@@ -21,6 +24,33 @@ class _CommissionScreenState extends State<CommissionScreen> {
   // Dummy image URL for the receipt placeholder
   final String receiptPlaceholderImageUrl =
       'https://via.placeholder.com/300x200.png/E8E8E8/AAAAAA?Text=Upload+Receipt+Image';
+
+  File? _receiptImage; // To store the selected image file
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickReceiptImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: source);
+      if (pickedFile != null) {
+        setState(() {
+          _receiptImage = File(pickedFile.path);
+        });
+      }
+    } catch (e) {
+      // Handle any errors, e.g., permissions
+      print("Error picking image: $e");
+      // Optionally, show a snackbar or dialog to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error picking image: ${e.toString().substring(0, 60)}...')),
+      );
+    }
+  }
+
+  void _removeReceiptImage() {
+    setState(() {
+      _receiptImage = null;
+    });
+  }
 
   void _calculateCommission() {
     if (_formKey.currentState?.saveAndValidate() ?? false) {
@@ -43,12 +73,34 @@ class _CommissionScreenState extends State<CommissionScreen> {
   final String mtnTextLogo = "MTN Cash";
   final String systelTextLogo = "SYSTEL Cash";
 
-  final FaIcon mtnLogo = FaIcon(FontAwesomeIcons.simCard, color: Color(0xFFFFCC00), size: 28); // Example for MTN (sim card, needs color)
-  final FaIcon systelLogo = FaIcon(FontAwesomeIcons.moneyBillWave, color: Colors.blueAccent, size: 28); // Generic for Systel Cash
-  final FaIcon stripeLogo = FaIcon(FontAwesomeIcons.stripe, color: Color(0xFF6772E5), size: 30); // Stripe has 'S' and full 'stripe'
+  final Color receiptBackgroundColor = Color(0xFFE6E0F8);
+
+  final FaIcon mtnLogo = FaIcon(
+    FontAwesomeIcons.simCard,
+    color: Color(0xFFFFCC00),
+    size: 28,
+  ); // Example for MTN (sim card, needs color)
+  final FaIcon systelLogo = FaIcon(
+    FontAwesomeIcons.moneyBillWave,
+    color: Colors.blueAccent,
+    size: 28,
+  ); // Generic for Systel Cash
+  final FaIcon stripeLogo = FaIcon(
+    FontAwesomeIcons.stripe,
+    color: Color(0xFF6772E5),
+    size: 30,
+  ); // Stripe has 'S' and full 'stripe'
   final FaIcon visaLogo = FaIcon(FontAwesomeIcons.ccVisa, color: Color(0xFF1A1F71), size: 28);
-  final FaIcon mastercardLogo = FaIcon(FontAwesomeIcons.ccMastercard, color: Color(0xFFEB001B), size: 28); // Your UI had a generic green circle, maybe for Mobile Money generally
-  final FaIcon bankLogo = FaIcon(FontAwesomeIcons.buildingColumns, color: Colors.grey.shade700, size: 28); // Generic bank icon
+  final FaIcon mastercardLogo = FaIcon(
+    FontAwesomeIcons.ccMastercard,
+    color: Color(0xFFEB001B),
+    size: 28,
+  ); // Your UI had a generic green circle, maybe for Mobile Money generally
+  final FaIcon bankLogo = FaIcon(
+    FontAwesomeIcons.buildingColumns,
+    color: Colors.grey.shade700,
+    size: 28,
+  ); // Generic bank icon
 
   Widget _buildPaymentLogo(dynamic logoContent, {Color? textColor}) {
     Widget contentWidget;
@@ -78,9 +130,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.grey.shade300),
       ),
-      child: Center(
-        child: contentWidget,
-      ),
+      child: Center(child: contentWidget),
     );
   }
 
@@ -385,36 +435,46 @@ class _CommissionScreenState extends State<CommissionScreen> {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.network(
-                        'https://via.placeholder.com/600x800.png/E6E0F8/AAAAAA?Text=Receipt+Image+Area',
-                        fit: BoxFit.contain,
-                        height: 250,
-                        width: double.infinity,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          height: 250,
-                          color: Colors.grey[200],
-                          child: Center(
-                            child: Icon(
-                              Icons.image_not_supported,
-                              size: 50,
-                              color: Colors.grey[400],
+                      child: _receiptImage != null
+                          ? Image.file(
+                              _receiptImage!,
+                              fit: BoxFit.fill, // Or BoxFit.cover
+                              height: 250,
+                              width: double.infinity,
+                            )
+                          : Container(
+                              // Placeholder when no image is selected
+                              height: 250,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: receiptBackgroundColor, // Use the same background
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.image_search_outlined, // Placeholder icon
+                                  size: 60,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
                             ),
+                    ),
+                    if (_receiptImage != null) // Show remove button only if image exists
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: InkWell(
+                          onTap: _removeReceiptImage,
+                          child: Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.5),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(Icons.close, color: Colors.white, size: 18),
                           ),
                         ),
                       ),
-                    ),
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.3),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(Icons.close, color: Colors.white, size: 16),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -429,7 +489,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                       ),
                       onPressed: () {
-                        print("Upload File tapped");
+                        _pickReceiptImage(ImageSource.gallery);
                       },
                       child: Text(
                         'Upload File',
@@ -443,6 +503,21 @@ class _CommissionScreenState extends State<CommissionScreen> {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                        elevation: 2,
+                      ),
+                      onPressed: (_receiptImage != null)
+                          ? () {
+                              // TODO: Implement send receipt action with _receiptImage
+                              print("Send button tapped with image: ${_receiptImage!.path}");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Sending receipt... (image selected)')),
+                              );
+                            }
+                          : null,
                       child: Text(
                         'Send',
                         style: GoogleFonts.poppins(
@@ -450,15 +525,6 @@ class _CommissionScreenState extends State<CommissionScreen> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-                        elevation: 2,
-                      ),
-                      onPressed: () {
-                        print("Send button tapped");
-                      },
                     ),
                   ),
                 ],

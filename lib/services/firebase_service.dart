@@ -30,7 +30,7 @@ class FirebaseService {
   final userCollection = "users";
   final postCollection = "posts";
 
-  Future<String?> uploadImage(File image) async {
+  Future<String?> uploadImage(File image, {String? path}) async {
     try {
       // 1. Get the original filename.
       String originalFileName = p.basename(image.path);
@@ -40,9 +40,14 @@ class FirebaseService {
 
       // 3. Combine them for a unique and readable filename.
       String fileName = '${timestamp}_$originalFileName';
+      Reference ref;
 
       // 4. Create a reference and upload the file.
-      Reference ref = _storage.ref().child('posts/${_auth.currentUser!.uid}/$fileName');
+      if (path != null && path == "commission_receipts") {
+        ref = _storage.ref().child('users/$path/$fileName');
+      } else {
+        ref = _storage.ref().child('posts/${_auth.currentUser!.uid}/$fileName');
+      }
 
       // Compress the image
       final Uint8List? compressedImage = await FlutterImageCompress.compressWithFile(
