@@ -161,6 +161,211 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  void showFeedbackDialog(BuildContext context) {
+    int currentRating = 5; // To hold the selected star rating
+
+
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissing by tapping outside
+      builder: (BuildContext dialogContext) {
+        // Use StatefulBuilder if you need to update the dialog's content (like the star rating)
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              elevation: 5,
+              backgroundColor: Colors.transparent, // Make Dialog's own background transparent
+              child: _buildDialogContent(dialogContext, setState, currentRating, (rating) {
+                setState(() {
+                  currentRating = rating;
+                });
+              }),
+            );
+          },
+        );
+      },
+    );
+  }
+
+// Separate function for the dialog content to keep it organized
+  Widget _buildDialogContent(
+      BuildContext context,
+      StateSetter setState, // To update the rating from outside
+      int currentRating,
+      Function(int) onRatingUpdate,
+      ) {
+
+    final Color primaryGreen = onboardingColor;
+    final Color darkTextColor = Colors.black87;
+    final Color lightTextColor = Colors.grey.shade600;
+
+    // Helper function to get the appropriate emoji based on the rating
+    String getEmojiForRating(int rating) {
+      switch (rating) {
+        case 0: // Default or no rating yet
+          return '🤔'; // Thinking face or a neutral default
+        case 1:
+          return '😢'; // Crying face
+        case 2:
+          return '😕'; // Confused/Slightly frowning
+        case 3:
+          return '🙂'; // Smiling face
+        case 4:
+          return '🥰'; // Smiling face with hearts (or similar to your "kissing face")
+        case 5:
+          return '😍'; // Heart eyes
+        default:
+          return '😊'; // Default smiling face if rating is somehow out of expected range
+      }
+    }
+
+    String currentEmoji = getEmojiForRating(currentRating);
+
+    return Stack(
+      clipBehavior: Clip.none, // Allows the emoji to go outside the Stack's bounds
+      alignment: Alignment.topCenter,
+      children: <Widget>[
+        // Card content
+        Container(
+          margin: EdgeInsets.only(top: 40), // Space for the emoji to stick out
+          padding: EdgeInsets.only(
+            top: 50, // Space inside the card, below the emoji
+            bottom: 20,
+            left: 10,
+            right: 10,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min, // Important for dialogs
+            children: <Widget>[
+              Text(
+                'Review by ${_firebaseService.currentUser!.displayName}', // Replace with dynamic data if needed
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color: lightTextColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 12),
+              Text(
+                'How Was Your Experience with us',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: darkTextColor,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Your feedback make help us better! Tap the button below to share feedback and Get Support!',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: lightTextColor,
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 20),
+              // Star Rating
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(5, (index) {
+                  return IconButton(
+                    icon: Icon(
+                      index < currentRating ? Icons.star : Icons.star_border,
+                      color: Colors.amber,
+                      size: 35,
+                    ),
+                    onPressed: () {
+                      onRatingUpdate(index + 1);
+                    },
+                  );
+                }),
+              ),
+              SizedBox(height: 12),
+              // Share Feedback Button
+              ElevatedButton.icon(
+                icon: Icon(Icons.thumb_up_alt_outlined, color: Colors.white, size: 20),
+                label: Text(
+                  'Share feedback',
+                  style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w600),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: onboardingColor,
+                  minimumSize: Size(double.infinity, 50), // Full width
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () {
+                  // Handle share feedback action
+                  print('Feedback shared with rating: $currentRating');
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+              ),
+              SizedBox(height: 12),
+              // Cancel Button
+              OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  minimumSize: Size(double.infinity, 50), // Full width
+                  side: BorderSide(color: onboardingColor, width: 1.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                },
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.poppins(color: primaryGreen, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
+        ),
+        // Top Emoji - Positioned to stick out
+        Positioned(
+          top: -10, // Adjust this value to control how much the emoji sticks out
+          child: Container(
+            padding: EdgeInsets.all(0), // No padding needed if emoji itself is well-sized
+            // decoration: BoxDecoration( // Optional: if you want a background behind the emoji
+            //   color: Colors.white,
+            //   shape: BoxShape.circle,
+            //   boxShadow: [
+            //     BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 5, spreadRadius: 1)
+            //   ]
+            // ),
+            child: Text(
+              // '😍', // The emoji
+              currentEmoji,
+              style: TextStyle(
+                fontSize: 70, // Adjust size of emoji
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -369,7 +574,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildSettingsItem(
                       icon: Icons.thumb_up_outlined,
                       text: 'Rate us',
-                      onTap: () {},
+                      onTap: () {
+                        showFeedbackDialog(context);
+                      },
                       showDivider: false, // No divider for the last item in a section
                     ),
                   ],
