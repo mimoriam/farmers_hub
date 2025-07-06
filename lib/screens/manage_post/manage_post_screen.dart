@@ -504,7 +504,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return MaterialButton(
       onPressed: () {},
       color: hasBeenSold ? onboardingColor : Colors.grey,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14.0)),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -512,9 +512,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           children: [
             Icon(Icons.check_circle, color: Colors.white, size: 20),
 
-            SizedBox(width: 8),
+            SizedBox(width: 4),
 
-            Text(hasBeenSold ? "Sold" : "Un-Sold", style: TextStyle(color: Colors.white, fontSize: 16)),
+            Text(hasBeenSold ? "Sold" : "Un-Sold", style: TextStyle(color: Colors.white, fontSize: 13)),
           ],
         ),
       ),
