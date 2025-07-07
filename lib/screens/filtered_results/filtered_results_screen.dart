@@ -1012,6 +1012,7 @@ class _ProductCard2State extends State<ProductCard2> {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
+                        // TODO COMMIT HERE
                         Text(
                           '\$$price',
                           style: GoogleFonts.poppins(
