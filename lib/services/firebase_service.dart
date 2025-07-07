@@ -390,13 +390,13 @@ class FirebaseService {
     required String currency,
     required String city,
     required List<String> imageUrls,
+    required String postColor,
     // required String imageUrl,
     String? village,
     String? province,
     String? country,
     String? details,
     bool? featured,
-    String color = '#FFFFFFFF', // Default color (white)
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
@@ -429,7 +429,7 @@ class FirebaseService {
       "imageUrls": imageUrls,
       "hasBeenSold": false,
       "details": details ?? "",
-      "color": color,
+      "color": postColor,
       "createdAt": FieldValue.serverTimestamp(),
       "hasBeenDeleted": false,
       "status": "pending",

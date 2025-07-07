@@ -7,6 +7,7 @@ import 'package:farmers_hub/services/location_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,6 +58,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
   // File? _image;
   List<File> _images = [];
   final picker = ImagePicker();
+
+  Color pickerColor = Color(0xff443a49);
+  Color currentColor = scaffoldBackgroundColor;
+
+  void changeColor(Color color) {
+    setState(() => pickerColor = color);
+  }
 
   Future<void> _pickImage() async {
     final int remainingImages = 4 - _images.length;
@@ -133,6 +141,54 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void showColorPickerDialog() {
+      const List<Color> colors = [
+        Colors.red,
+        Colors.pink,
+        Colors.purple,
+        Colors.deepPurple,
+        Colors.indigo,
+        Colors.blue,
+        Colors.lightBlue,
+        Colors.cyan,
+        Colors.teal,
+        Colors.green,
+        Colors.lightGreen,
+        Colors.lime,
+        Colors.yellow,
+        Colors.amber,
+        Colors.orange,
+        Colors.deepOrange,
+        Colors.brown,
+      ];
+
+      showDialog(
+        context: context,
+        // The builder is used to create the content of the dialog.
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text('Pick a color!'),
+          content: BlockPicker(
+            pickerColor: pickerColor,
+            onColorChanged: changeColor,
+            // Provide the list of custom colors here.
+            availableColors: colors,
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+              child: const Text('Got it'),
+              onPressed: () {
+                // When the user confirms, update the currentColor and close the dialog.
+                setState(() => currentColor = pickerColor);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      );
+    }
+
     Widget _buildRadioOptionContainer(String text, {bool isHorizontal = false}) {
       return Container(
         width: isHorizontal ? null : double.infinity, // Full width for vertical items
@@ -157,7 +213,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
         title: Text(
           "Create Post",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
@@ -264,7 +324,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   height: 260, // Fixed height for the container.
                                   color: Colors.white, // Background color of the container.
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 10, right: 10, top: 56, bottom: 10),
+                                    padding: const EdgeInsets.only(
+                                      left: 10,
+                                      right: 10,
+                                      top: 56,
+                                      bottom: 10,
+                                    ),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       // Center the content vertically.
@@ -285,33 +350,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         _images.length >= 4
                                             ? Container()
                                             : SizedBox(
-                                              width: double.infinity,
-                                              // Make button take full width of its parent.
-                                              child: ElevatedButton.icon(
-                                                onPressed: _pickImage,
-                                                icon: const Icon(
-                                                  Icons.add_photo_alternate_rounded,
-                                                  color: Colors.white,
-                                                ),
-                                                label: const Text(
-                                                  'Add Images',
-                                                  style: TextStyle(
+                                                width: double.infinity,
+                                                // Make button take full width of its parent.
+                                                child: ElevatedButton.icon(
+                                                  onPressed: _pickImage,
+                                                  icon: const Icon(
+                                                    Icons.add_photo_alternate_rounded,
                                                     color: Colors.white,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.bold,
                                                   ),
-                                                ),
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      onboardingColor, // Button background color.
-                                                  padding: const EdgeInsets.symmetric(vertical: 16),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(12),
+                                                  label: const Text(
+                                                    'Add Images',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
                                                   ),
-                                                  elevation: 2, // Adds a subtle shadow.
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor:
+                                                        onboardingColor, // Button background color.
+                                                    padding: const EdgeInsets.symmetric(
+                                                      vertical: 16,
+                                                    ),
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                    ),
+                                                    elevation: 2, // Adds a subtle shadow.
+                                                  ),
                                                 ),
                                               ),
-                                            ),
                                       ],
                                     ),
                                   ),
@@ -324,16 +391,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             _images.length >= 4
                                 ? Container()
                                 : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.info_outline, color: onboardingColor, size: 20),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      'Add up to 4 photos for more views!',
-                                      style: TextStyle(fontSize: 14, color: Colors.black),
-                                    ),
-                                  ],
-                                ),
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(Icons.info_outline, color: onboardingColor, size: 20),
+                                      SizedBox(width: 8),
+                                      Text(
+                                        'Add up to 4 photos for more views!',
+                                        style: TextStyle(fontSize: 14, color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
 
                             SizedBox(height: 6),
 
@@ -446,7 +513,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             Card(
                               color: Colors.white,
                               elevation: 1.0, // Subtle shadow
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -463,7 +532,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       maxLines: 2,
                                       autovalidateMode: validateMode,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9 ]*$')),
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(r'^[a-zA-Z0-9 ]*$'),
+                                        ),
                                       ],
                                       // buildCounter:
                                       //     (
@@ -494,7 +565,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         // helperStyle: TextStyle(color: Colors.grey[600]),
                                       ),
                                       validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(errorText: 'Post title is required.'),
+                                        FormBuilderValidators.required(
+                                          errorText: 'Post title is required.',
+                                        ),
                                         FormBuilderValidators.maxLength(120),
                                       ]),
                                     ),
@@ -517,13 +590,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             horizontal: 6,
                                           ),
                                           border: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderSide: BorderSide(
+                                              color: onboardingTextColor,
+                                              width: 1.0,
+                                            ),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           errorBorder: _errorInputBorder,
                                           enabledBorder: _inputBorder,
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderSide: BorderSide(
+                                              color: onboardingTextColor,
+                                              width: 1.0,
+                                            ),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                         ),
@@ -604,7 +683,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       maxLength: 120,
                                       autovalidateMode: validateMode,
                                       inputFormatters: [
-                                        FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9 ]*$')),
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(r'^[a-zA-Z0-9 ]*$'),
+                                        ),
                                       ],
                                       decoration: InputDecoration(
                                         hintText: 'Enter Village',
@@ -622,7 +703,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                       // keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                       validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(errorText: 'Village is required.'),
+                                        FormBuilderValidators.required(
+                                          errorText: 'Village is required.',
+                                        ),
                                       ]),
                                     ),
 
@@ -648,13 +731,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           //   borderRadius: BorderRadius.circular(8),
                                           // ),
                                           border: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderSide: BorderSide(
+                                              color: onboardingTextColor,
+                                              width: 1.0,
+                                            ),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                           enabledBorder: _inputBorder,
                                           errorBorder: _errorInputBorder,
                                           focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                            borderSide: BorderSide(
+                                              color: onboardingTextColor,
+                                              width: 1.0,
+                                            ),
                                             borderRadius: BorderRadius.circular(12),
                                           ),
                                         ),
@@ -739,206 +828,221 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     selectedCategory == null
                                         ? Container()
                                         : Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            selectedCategory == "Live Stock" ||
-                                                    selectedCategory == "Worker Services"
-                                                ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Gender", style: _labelStyle),
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              selectedCategory == "Live Stock" ||
+                                                      selectedCategory == "Worker Services"
+                                                  ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("Gender", style: _labelStyle),
 
-                                                    const SizedBox(height: 8),
+                                                        const SizedBox(height: 8),
 
-                                                    Padding(
-                                                      // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-                                                      padding: const EdgeInsets.only(
-                                                        right: 0,
-                                                        left: 0,
-                                                        bottom: 10,
-                                                      ),
-                                                      child: DropdownButtonFormField2<String>(
-                                                        autovalidateMode: validateMode,
-                                                        decoration: InputDecoration(
-                                                          labelText: "Select a Gender",
-                                                          floatingLabelBehavior: FloatingLabelBehavior.never,
-                                                          contentPadding: const EdgeInsets.symmetric(
-                                                            vertical: 0,
-                                                            horizontal: 6,
+                                                        Padding(
+                                                          // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                                          padding: const EdgeInsets.only(
+                                                            right: 0,
+                                                            left: 0,
+                                                            bottom: 10,
                                                           ),
-                                                          border: OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                              color: onboardingTextColor,
-                                                              width: 1.0,
-                                                            ),
-                                                            borderRadius: BorderRadius.circular(12),
-                                                          ),
-                                                          enabledBorder: _inputBorder,
-                                                          errorBorder: _errorInputBorder,
-                                                          focusedBorder: OutlineInputBorder(
-                                                            borderSide: BorderSide(
-                                                              color: onboardingTextColor,
-                                                              width: 1.0,
-                                                            ),
-                                                            borderRadius: BorderRadius.circular(12),
-                                                          ),
-                                                        ),
-                                                        iconStyleData: IconStyleData(
-                                                          // Using IconStyleData for icon properties
-                                                          iconEnabledColor: onboardingTextColor,
-                                                        ),
-
-                                                        dropdownStyleData: DropdownStyleData(
-                                                          maxHeight: 160,
-                                                          offset: const Offset(0, -10),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(12),
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
-
-                                                        // value: "Damascus",
-                                                        items:
-                                                            ['Male', 'Female']
-                                                                .map(
-                                                                  (gender) => DropdownMenuItem<String>(
-                                                                    value: gender,
-                                                                    child: Text(gender),
+                                                          child: DropdownButtonFormField2<String>(
+                                                            autovalidateMode: validateMode,
+                                                            decoration: InputDecoration(
+                                                              labelText: "Select a Gender",
+                                                              floatingLabelBehavior:
+                                                                  FloatingLabelBehavior.never,
+                                                              contentPadding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    vertical: 0,
+                                                                    horizontal: 6,
                                                                   ),
+                                                              border: OutlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                  color: onboardingTextColor,
+                                                                  width: 1.0,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                              ),
+                                                              enabledBorder: _inputBorder,
+                                                              errorBorder: _errorInputBorder,
+                                                              focusedBorder: OutlineInputBorder(
+                                                                borderSide: BorderSide(
+                                                                  color: onboardingTextColor,
+                                                                  width: 1.0,
+                                                                ),
+                                                                borderRadius: BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            iconStyleData: IconStyleData(
+                                                              // Using IconStyleData for icon properties
+                                                              iconEnabledColor: onboardingTextColor,
+                                                            ),
+
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              maxHeight: 160,
+                                                              offset: const Offset(0, -10),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(
+                                                                  12,
+                                                                ),
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+
+                                                            // value: "Damascus",
+                                                            items: ['Male', 'Female']
+                                                                .map(
+                                                                  (gender) =>
+                                                                      DropdownMenuItem<String>(
+                                                                        value: gender,
+                                                                        child: Text(gender),
+                                                                      ),
                                                                 )
                                                                 .toList(),
-                                                        value: selectedGender,
-                                                        validator: (String? value) {
-                                                          if (value == null) {
-                                                            return 'Gender is required.';
-                                                          }
-                                                          return null;
-                                                        },
-                                                        onChanged: (String? value) {
-                                                          setState(() {
-                                                            selectedGender = value;
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-
-                                                    const SizedBox(height: 2),
-                                                  ],
-                                                )
-                                                : Container(),
-
-                                            // Average Weight (in kgs)
-                                            selectedCategory == "Fruits" ||
-                                                    selectedCategory == "Vegetables" ||
-                                                    selectedCategory == "Olive Oil" ||
-                                                    selectedCategory == "Grains & Seeds" ||
-                                                    selectedCategory == "Fertilizers" ||
-                                                    selectedCategory == "Tools" ||
-                                                    selectedCategory == "Land Services" ||
-                                                    selectedCategory == "Equipments" ||
-                                                    selectedCategory == "Delivery" ||
-                                                    selectedCategory == "Pesticides" ||
-                                                    selectedCategory == "Animal Feed" ||
-                                                    selectedCategory == "Others"
-                                                ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Average Weight (in kgs)", style: _labelStyle),
-
-                                                    const SizedBox(height: 8),
-
-                                                    FormBuilderTextField(
-                                                      name: 'avg_weight',
-                                                      maxLength: 3,
-                                                      autovalidateMode: validateMode,
-                                                      decoration: InputDecoration(
-                                                        counterText: "",
-                                                        hintText: 'Enter Average Weight in kilograms',
-                                                        border: _inputBorder,
-                                                        enabledBorder: _inputBorder,
-                                                        focusedBorder: _focusedInputBorder,
-                                                        errorBorder: _errorInputBorder,
-                                                        focusedErrorBorder: _focusedInputBorder,
-                                                        contentPadding: _contentPadding,
-                                                        // The image shows a dropdown arrow, this is a stylistic choice.
-                                                        // If it's a free text field, suffixIcon is decorative.
-                                                        // If it's a dropdown, use FormBuilderDropdown.
-                                                        // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
-                                                      ),
-                                                      keyboardType: const TextInputType.numberWithOptions(
-                                                        decimal: true,
-                                                      ),
-                                                      validator: FormBuilderValidators.compose([
-                                                        FormBuilderValidators.required(
-                                                          errorText: 'Average weight is required.',
+                                                            value: selectedGender,
+                                                            validator: (String? value) {
+                                                              if (value == null) {
+                                                                return 'Gender is required.';
+                                                              }
+                                                              return null;
+                                                            },
+                                                            onChanged: (String? value) {
+                                                              setState(() {
+                                                                selectedGender = value;
+                                                              });
+                                                            },
+                                                          ),
                                                         ),
-                                                        FormBuilderValidators.numeric(
-                                                          errorText: 'Must be a number.',
-                                                        ),
-                                                        FormBuilderValidators.min(
-                                                          0,
-                                                          errorText: 'Weight cannot be negative.',
-                                                        ),
-                                                        FormBuilderValidators.max(
-                                                          10000,
-                                                          errorText: 'Weight cannot exceed.',
-                                                        ),
-                                                      ]),
-                                                    ),
 
-                                                    const SizedBox(height: 10),
-                                                  ],
-                                                )
-                                                : Container(),
+                                                        const SizedBox(height: 2),
+                                                      ],
+                                                    )
+                                                  : Container(),
 
-                                            selectedCategory == "Live Stock" ||
-                                                    selectedCategory == "Worker Services"
-                                                ? Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text("Age (in years)", style: _labelStyle),
+                                              // Average Weight (in kgs)
+                                              selectedCategory == "Fruits" ||
+                                                      selectedCategory == "Vegetables" ||
+                                                      selectedCategory == "Olive Oil" ||
+                                                      selectedCategory == "Grains & Seeds" ||
+                                                      selectedCategory == "Fertilizers" ||
+                                                      selectedCategory == "Tools" ||
+                                                      selectedCategory == "Land Services" ||
+                                                      selectedCategory == "Equipments" ||
+                                                      selectedCategory == "Delivery" ||
+                                                      selectedCategory == "Pesticides" ||
+                                                      selectedCategory == "Animal Feed" ||
+                                                      selectedCategory == "Others"
+                                                  ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Average Weight (in kgs)",
+                                                          style: _labelStyle,
+                                                        ),
 
-                                                    const SizedBox(height: 8),
+                                                        const SizedBox(height: 8),
 
-                                                    FormBuilderTextField(
-                                                      name: 'age',
-                                                      maxLength: 2,
-                                                      autovalidateMode: validateMode,
-                                                      decoration: InputDecoration(
-                                                        counterText: "",
-                                                        hintText: 'Enter age in years',
-                                                        border: _inputBorder,
-                                                        enabledBorder: _inputBorder,
-                                                        focusedBorder: _focusedInputBorder,
-                                                        errorBorder: _errorInputBorder,
-                                                        focusedErrorBorder: _focusedInputBorder,
-                                                        contentPadding: _contentPadding,
-                                                      ),
-                                                      keyboardType: TextInputType.number,
-                                                      validator: FormBuilderValidators.compose([
-                                                        FormBuilderValidators.required(
-                                                          errorText: 'Age is required.',
+                                                        FormBuilderTextField(
+                                                          name: 'avg_weight',
+                                                          maxLength: 3,
+                                                          autovalidateMode: validateMode,
+                                                          decoration: InputDecoration(
+                                                            counterText: "",
+                                                            hintText:
+                                                                'Enter Average Weight in kilograms',
+                                                            border: _inputBorder,
+                                                            enabledBorder: _inputBorder,
+                                                            focusedBorder: _focusedInputBorder,
+                                                            errorBorder: _errorInputBorder,
+                                                            focusedErrorBorder: _focusedInputBorder,
+                                                            contentPadding: _contentPadding,
+                                                            // The image shows a dropdown arrow, this is a stylistic choice.
+                                                            // If it's a free text field, suffixIcon is decorative.
+                                                            // If it's a dropdown, use FormBuilderDropdown.
+                                                            // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                                          ),
+                                                          keyboardType:
+                                                              const TextInputType.numberWithOptions(
+                                                                decimal: true,
+                                                              ),
+                                                          validator: FormBuilderValidators.compose([
+                                                            FormBuilderValidators.required(
+                                                              errorText:
+                                                                  'Average weight is required.',
+                                                            ),
+                                                            FormBuilderValidators.numeric(
+                                                              errorText: 'Must be a number.',
+                                                            ),
+                                                            FormBuilderValidators.min(
+                                                              0,
+                                                              errorText:
+                                                                  'Weight cannot be negative.',
+                                                            ),
+                                                            FormBuilderValidators.max(
+                                                              10000,
+                                                              errorText: 'Weight cannot exceed.',
+                                                            ),
+                                                          ]),
                                                         ),
-                                                        FormBuilderValidators.numeric(
-                                                          errorText: 'Must be a number.',
-                                                        ),
-                                                        FormBuilderValidators.min(
-                                                          0,
-                                                          errorText: 'Age cannot be negative.',
-                                                        ),
-                                                        FormBuilderValidators.max(
-                                                          999,
-                                                          errorText: 'Age cannot exceed.',
-                                                        ),
-                                                      ]),
-                                                    ),
 
-                                                    const SizedBox(height: 10),
-                                                  ],
-                                                )
-                                                : Container(),
-                                          ],
-                                        ),
+                                                        const SizedBox(height: 10),
+                                                      ],
+                                                    )
+                                                  : Container(),
+
+                                              selectedCategory == "Live Stock" ||
+                                                      selectedCategory == "Worker Services"
+                                                  ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text("Age (in years)", style: _labelStyle),
+
+                                                        const SizedBox(height: 8),
+
+                                                        FormBuilderTextField(
+                                                          name: 'age',
+                                                          maxLength: 2,
+                                                          autovalidateMode: validateMode,
+                                                          decoration: InputDecoration(
+                                                            counterText: "",
+                                                            hintText: 'Enter age in years',
+                                                            border: _inputBorder,
+                                                            enabledBorder: _inputBorder,
+                                                            focusedBorder: _focusedInputBorder,
+                                                            errorBorder: _errorInputBorder,
+                                                            focusedErrorBorder: _focusedInputBorder,
+                                                            contentPadding: _contentPadding,
+                                                          ),
+                                                          keyboardType: TextInputType.number,
+                                                          validator: FormBuilderValidators.compose([
+                                                            FormBuilderValidators.required(
+                                                              errorText: 'Age is required.',
+                                                            ),
+                                                            FormBuilderValidators.numeric(
+                                                              errorText: 'Must be a number.',
+                                                            ),
+                                                            FormBuilderValidators.min(
+                                                              0,
+                                                              errorText: 'Age cannot be negative.',
+                                                            ),
+                                                            FormBuilderValidators.max(
+                                                              999,
+                                                              errorText: 'Age cannot exceed.',
+                                                            ),
+                                                          ]),
+                                                        ),
+
+                                                        const SizedBox(height: 10),
+                                                      ],
+                                                    )
+                                                  : Container(),
+                                            ],
+                                          ),
 
                                     // FormBuilderRadioGroup<String>(
                                     //   name: 'gender',
@@ -962,6 +1066,23 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     //   ),
                                     //   separator: const SizedBox(width: 16), // Spacing between options
                                     // ),
+                                    Text("Color", style: _labelStyle),
+
+                                    // const SizedBox(height: 8),
+                                    ListTile(
+                                      title: const Text('Select a color: '),
+                                      trailing: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: currentColor,
+                                          shape: const CircleBorder(), // Makes the button a circle
+                                          padding: const EdgeInsets.all(12), // Gives it some size
+                                        ),
+                                        onPressed: showColorPickerDialog,
+                                        child: Text(""),
+                                      ),
+                                    ),
+
+                                    // const SizedBox(height: 10),
                                     Text("Quantity", style: _labelStyle),
                                     const SizedBox(height: 8),
 
@@ -982,8 +1103,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                       keyboardType: TextInputType.number,
                                       validator: FormBuilderValidators.compose([
-                                        FormBuilderValidators.required(errorText: 'Quantity is required.'),
-                                        FormBuilderValidators.integer(errorText: 'Must be a whole number.'),
+                                        FormBuilderValidators.required(
+                                          errorText: 'Quantity is required.',
+                                        ),
+                                        FormBuilderValidators.integer(
+                                          errorText: 'Must be a whole number.',
+                                        ),
                                         FormBuilderValidators.min(
                                           1,
                                           errorText: 'Quantity must be at least 1.',
@@ -1066,8 +1191,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               decimal: true,
                                             ),
                                             validator: FormBuilderValidators.compose([
-                                              FormBuilderValidators.required(errorText: 'Price is required.'),
-                                              FormBuilderValidators.numeric(errorText: 'Must be a number.'),
+                                              FormBuilderValidators.required(
+                                                errorText: 'Price is required.',
+                                              ),
+                                              FormBuilderValidators.numeric(
+                                                errorText: 'Must be a number.',
+                                              ),
                                               FormBuilderValidators.min(
                                                 0,
                                                 errorText: 'Price cannot be negative.',
@@ -1193,7 +1322,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             Card(
                               color: Colors.white,
                               elevation: 1.0, // Subtle shadow
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Column(
@@ -1249,28 +1380,27 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   if (context.mounted) {
                                     showDialog(
                                       context: context,
-                                      builder:
-                                          (context) => AlertDialog(
-                                            backgroundColor: Colors.white,
-                                            title: const Text("Monthly Limit Reached"),
-                                            content: const Text(
-                                              "You have reached your limit of 3 posts per month. Subscribe now to post without limits.",
-                                            ),
-                                            actions: [
-                                              TextButton(
-                                                onPressed: () => Navigator.of(context).pop(),
-                                                child: const Text("OK"),
-                                              ),
-                                              // Optional: Add a button to a subscription screen
-                                              TextButton(
-                                                onPressed: () {
-                                                  // TODO: Navigate to subscription screen
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: const Text("Subscribe"),
-                                              ),
-                                            ],
+                                      builder: (context) => AlertDialog(
+                                        backgroundColor: Colors.white,
+                                        title: const Text("Monthly Limit Reached"),
+                                        content: const Text(
+                                          "You have reached your limit of 3 posts per month. Subscribe now to post without limits.",
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () => Navigator.of(context).pop(),
+                                            child: const Text("OK"),
                                           ),
+                                          // Optional: Add a button to a subscription screen
+                                          TextButton(
+                                            onPressed: () {
+                                              // TODO: Navigate to subscription screen
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Subscribe"),
+                                          ),
+                                        ],
+                                      ),
                                     );
                                   }
                                   return; // Stop execution if the user cannot post.
@@ -1323,28 +1453,31 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     category: selectedCategory!,
                                     gender:
                                         selectedCategory == "Live Stock" ||
-                                                selectedCategory == "Worker Services"
-                                            ? selectedGender
-                                            : "",
+                                            selectedCategory == "Worker Services"
+                                        ? selectedGender
+                                        : "",
                                     currency: currency,
                                     averageWeight:
                                         selectedCategory != "Live Stock" ||
-                                                selectedCategory != "Worker Services"
-                                            ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
-                                            : "",
-                                    quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
+                                            selectedCategory != "Worker Services"
+                                        ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                        : "",
+                                    quantity: int.parse(
+                                      _formKey.currentState?.fields['quantity']?.value,
+                                    ),
                                     // age: int.parse(_formKey.currentState?.fields['age']?.value),
                                     age:
                                         selectedCategory == "Live Stock" ||
-                                                selectedCategory == "Worker Services"
-                                            ? int.parse(_formKey.currentState?.fields['age']?.value)
-                                            : 0,
+                                            selectedCategory == "Worker Services"
+                                        ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                        : 0,
                                     price: int.parse(_formKey.currentState?.fields['price']?.value),
                                     details: _formKey.currentState?.fields['add_details']?.value,
                                     featured: true,
                                     city: widget.location ?? selectedCity,
                                     village: _formKey.currentState?.fields['village']?.value,
-                                    color: '#FFFFFFFF',
+                                    // postColor: '#FFFFFFFF',
+                                    postColor: "0x${currentColor.toHexString()}",
                                     // city: selectedCity,
                                     // city: placeDetails.city!,
                                     // province: placeDetails.province!,
@@ -1373,7 +1506,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     backgroundColor: onboardingColor,
                                     minimumSize: const Size(double.infinity, 33),
                                     // Full width, slightly taller
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
                                     padding: const EdgeInsets.symmetric(vertical: 15),
                                   ),
                                   onPressed: onTap,
