@@ -229,9 +229,55 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                       final postData = snapshot.data;
 
                       if (postData!.isEmpty) {
+                        // return SizedBox(
+                        //   height: MediaQuery.of(context).size.height * 0.5,
+                        //   child: Container(alignment: Alignment.center, child: Text("User has no posts!")),
+                        // );
+
                         return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
-                          child: Container(alignment: Alignment.center, child: Text("User has no posts!")),
+                          width: MediaQuery.of(context).size.width * 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Icon(
+                                  Icons.post_add_outlined, // An icon that fits the context
+                                  color: Colors.grey[700],
+                                  size: 44.0,
+                                ),
+                              ),
+
+                              const SizedBox(height: 24.0),
+
+                              const Text(
+                                'Nothing to see here',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF333A44), // A dark slate gray color
+                                ),
+                              ),
+
+                              const SizedBox(height: 8.0),
+
+                              Text(
+                                'Your posts will show here!',
+                                textAlign: TextAlign.center, // Ensures the text is center-aligned
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.grey[600],
+                                  height: 1.5, // Line height for better readability
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       }
 

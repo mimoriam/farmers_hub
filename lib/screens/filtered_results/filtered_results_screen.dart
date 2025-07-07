@@ -205,34 +205,33 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   void _showRetryDialog() {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Speech Recognition Issue'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Speech recognition is not working. This might be because:'),
-                const SizedBox(height: 10),
-                const Text('• Google app is not installed or updated'),
-                const Text('• Speech services are disabled'),
-                const Text('• Microphone permissions not granted'),
-                const Text('• No default voice input app selected'),
-                const SizedBox(height: 10),
-                const Text('Would you like to try reinitializing?'),
-              ],
-            ),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _initializeSpeech();
-                },
-                child: const Text('Retry'),
-              ),
-            ],
+      builder: (context) => AlertDialog(
+        title: const Text('Speech Recognition Issue'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Speech recognition is not working. This might be because:'),
+            const SizedBox(height: 10),
+            const Text('• Google app is not installed or updated'),
+            const Text('• Speech services are disabled'),
+            const Text('• Microphone permissions not granted'),
+            const Text('• No default voice input app selected'),
+            const SizedBox(height: 10),
+            const Text('Would you like to try reinitializing?'),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _initializeSpeech();
+            },
+            child: const Text('Retry'),
           ),
+        ],
+      ),
     );
   }
 
@@ -241,36 +240,35 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Select Language'),
-            content: SizedBox(
-              width: double.maxFinite,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: _availableLocales.length,
-                itemBuilder: (context, index) {
-                  final locale = _availableLocales[index];
-                  return ListTile(
-                    title: Text(locale.name),
-                    subtitle: Text(locale.localeId),
-                    leading: Radio<String>(
-                      value: locale.localeId,
-                      groupValue: _selectedLocale,
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLocale = value;
-                        });
-                        _speechService.setLocale(value!);
-                        Navigator.pop(context);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
-            actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+      builder: (context) => AlertDialog(
+        title: const Text('Select Language'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: _availableLocales.length,
+            itemBuilder: (context, index) {
+              final locale = _availableLocales[index];
+              return ListTile(
+                title: Text(locale.name),
+                subtitle: Text(locale.localeId),
+                leading: Radio<String>(
+                  value: locale.localeId,
+                  groupValue: _selectedLocale,
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedLocale = value;
+                    });
+                    _speechService.setLocale(value!);
+                    Navigator.pop(context);
+                  },
+                ),
+              );
+            },
           ),
+        ),
+        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+      ),
     );
   }
 
@@ -475,7 +473,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
         title: Text(
           "Filtered Search Result",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: SafeArea(
@@ -522,7 +524,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                        textStyle: TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                        ),
                       ),
                       onChanged: _onSearchChanged,
                       initialValue: widget.searchQuery.isEmpty ? "" : widget.searchQuery,
@@ -530,7 +536,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                          textStyle: TextStyle(
+                            fontSize: 13.69,
+                            fontWeight: FontWeight.w400,
+                            height: 1.43,
+                          ),
                           color: Colors.grey,
                         ),
                         filled: true,
@@ -571,13 +581,11 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   //     ),
                   //   ),
                   // ),
-
                   Padding(
                     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-
                         SizedBox(width: 6),
 
                         FilterChip(
@@ -711,7 +719,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                                   });
                                 }
                               },
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
                               selected: widget.selectedSortOption == SortOption.descending,
                               selectedColor: onboardingColor,
                               backgroundColor: Colors.grey[300],
@@ -738,7 +748,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                                   });
                                 }
                               },
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(20)),
+                              ),
                               selected: widget.selectedSortOption == SortOption.ascending,
                               selectedColor: onboardingColor,
                               backgroundColor: Colors.grey[300],
@@ -784,14 +796,49 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     ),
                   ),
 
+                  // _searchResults.isEmpty
+                  //     ? Padding(
+                  //       padding: const EdgeInsets.symmetric(horizontal: 10),
+                  //       child: SizedBox(
+                  //         height: MediaQuery.of(context).size.height * 0.5,
+                  //         child: Container(alignment: Alignment.center, child: Text("No results")),
+                  //       ),
+                  //     )
+                  //     : Container(),
                   _searchResults.isEmpty
-                      ? Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: SizedBox(
+                      ? SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
-                          child: Container(alignment: Alignment.center, child: Text("No results")),
-                        ),
-                      )
+                          width: MediaQuery.of(context).size.width * 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(16.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                                  borderRadius: BorderRadius.circular(16.0),
+                                ),
+                                child: Icon(
+                                  Icons.search_outlined, // An icon that fits the context
+                                  color: Colors.grey[700],
+                                  size: 44.0,
+                                ),
+                              ),
+
+                              const SizedBox(height: 24.0),
+
+                              const Text(
+                                'No search results',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF333A44), // A dark slate gray color
+                                ),
+                              ),
+                            ],
+                          ),
+                        )
                       : Container(),
 
                   Padding(
@@ -887,7 +934,9 @@ class _ProductCard2State extends State<ProductCard2> {
     final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
 
     final createdAtTimestamp = widget.postData['createdAt'] as Timestamp?;
-    final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
+    final postedAgoText = createdAtTimestamp != null
+        ? formatTimeAgo(createdAtTimestamp)
+        : 'Just now';
 
     return GestureDetector(
       onTap: () {
@@ -895,7 +944,8 @@ class _ProductCard2State extends State<ProductCard2> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
+              builder: (context) =>
+                  DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
             ),
           ).then((_) {
             if (mounted) {
@@ -1068,7 +1118,12 @@ class ProductCard extends StatefulWidget {
 
   final FirebaseService firebaseService;
 
-  const ProductCard({super.key, required this.postData, required this.postId, required this.firebaseService});
+  const ProductCard({
+    super.key,
+    required this.postData,
+    required this.postId,
+    required this.firebaseService,
+  });
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -1089,7 +1144,9 @@ class _ProductCardState extends State<ProductCard> {
     final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
 
     final createdAtTimestamp = widget.postData['createdAt'] as Timestamp?;
-    final postedAgoText = createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
+    final postedAgoText = createdAtTimestamp != null
+        ? formatTimeAgo(createdAtTimestamp)
+        : 'Just now';
 
     return GestureDetector(
       onTap: () {
@@ -1097,7 +1154,8 @@ class _ProductCardState extends State<ProductCard> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
+              builder: (context) =>
+                  DetailsScreen(postId: widget.postId, didComeFromManagedPosts: false),
             ),
           ).then((_) {
             if (mounted) {
@@ -1114,7 +1172,12 @@ class _ProductCardState extends State<ProductCard> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12.0),
           boxShadow: [
-            BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
+            BoxShadow(
+              color: Color(0x3F8A8A8A),
+              spreadRadius: 0,
+              blurRadius: 9,
+              offset: Offset(0, 1),
+            ),
           ],
         ),
         child: Column(
@@ -1163,7 +1226,10 @@ class _ProductCardState extends State<ProductCard> {
               ),
             ),
 
-            Padding(padding: const EdgeInsets.symmetric(horizontal: 10), child: Divider(color: dividerColor)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(color: dividerColor),
+            ),
 
             Padding(
               padding: const EdgeInsets.only(left: 10, right: 10, top: 6, bottom: 6),
@@ -1181,7 +1247,11 @@ class _ProductCardState extends State<ProductCard> {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.location_on_outlined, size: 16, color: popularPostsLocationTextColor),
+                      const Icon(
+                        Icons.location_on_outlined,
+                        size: 16,
+                        color: popularPostsLocationTextColor,
+                      ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
@@ -1212,7 +1282,11 @@ class _ProductCardState extends State<ProductCard> {
                   const SizedBox(height: 6),
                   Row(
                     children: [
-                      const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),
+                      const Icon(
+                        Icons.access_time_outlined,
+                        size: 16,
+                        color: popularPostsLocationTextColor,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         // widget.postData['createdAt'].toString(),

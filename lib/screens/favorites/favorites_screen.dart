@@ -262,7 +262,51 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             }
 
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text("You have no favorited posts yet!"));
+              // return const Center(child: Text("You have no favorited posts yet!"));
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(16.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                        borderRadius: BorderRadius.circular(16.0),
+                      ),
+                      child: Icon(
+                        Icons.favorite_border_outlined, // An icon that fits the context
+                        color: Colors.grey[700],
+                        size: 44.0,
+                      ),
+                    ),
+
+                    const SizedBox(height: 24.0),
+
+                    const Text(
+                      'Nothing to see here',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF333A44), // A dark slate gray color
+                      ),
+                    ),
+
+                    const SizedBox(height: 8.0),
+
+                    Text(
+                      'Like a post to see it here!',
+                      textAlign: TextAlign.center, // Ensures the text is center-aligned
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.grey[600],
+                        height: 1.5, // Line height for better readability
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             final allPosts = snapshot.data!;

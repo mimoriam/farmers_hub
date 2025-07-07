@@ -782,14 +782,15 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }) {
     return GestureDetector(
       onTap: () {
-        if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetailsUserPostsScreen(postSellerData: sellerData),
-            ),
-          );
-        }
+        // TODO: Check User's profile posts
+        // if (context.mounted) {
+        //   Navigator.push(
+        //     context,
+        //     MaterialPageRoute(
+        //       builder: (context) => DetailsUserPostsScreen(postSellerData: sellerData),
+        //     ),
+        //   );
+        // }
       },
       child: Row(
         children: [
