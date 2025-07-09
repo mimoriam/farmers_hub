@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
@@ -39,7 +40,10 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
   final double bottomCornerRadius;
 
-  const UpwardNotchedAndRoundedRectangle({this.topCornerRadius = 0.0, this.bottomCornerRadius = 0.0});
+  const UpwardNotchedAndRoundedRectangle({
+    this.topCornerRadius = 0.0,
+    this.bottomCornerRadius = 0.0,
+  });
 
   @override
   Path getOuterPath(Rect host, Rect? guest) {
@@ -119,7 +123,12 @@ class UpwardNotchedAndRoundedRectangle extends NotchedShape {
     // Top-right rounded corner
     if (topCornerRadius > 0) {
       path.arcTo(
-        Rect.fromLTWH(host.right - topCornerRadius * 2, host.top, topCornerRadius * 2, topCornerRadius * 2),
+        Rect.fromLTWH(
+          host.right - topCornerRadius * 2,
+          host.top,
+          topCornerRadius * 2,
+          topCornerRadius * 2,
+        ),
         math.pi * 3 / 2, // Start angle (270 deg) for top-right
         math.pi / 2, // Sweep angle (90 deg)
         false,
@@ -344,30 +353,29 @@ class _HomeScreenState extends State<HomeScreen> {
             showDialog(
               context: context,
               barrierDismissible: false,
-              builder:
-                  (ctx) => AlertDialog(
-                    title: Text("Location Services Disabled"),
-                    content: Text("Please enable location services in settings."),
-                    backgroundColor: Colors.white,
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                          Geolocator.openLocationSettings();
-                          if (mounted) {
-                            setState(() {});
-                          }
-                        },
-                        child: Text("Open Settings"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                        },
-                        child: Text("Cancel"),
-                      ),
-                    ],
+              builder: (ctx) => AlertDialog(
+                title: Text("Location Services Disabled"),
+                content: Text("Please enable location services in settings."),
+                backgroundColor: Colors.white,
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      Geolocator.openLocationSettings();
+                      if (mounted) {
+                        setState(() {});
+                      }
+                    },
+                    child: Text("Open Settings"),
                   ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                    },
+                    child: Text("Cancel"),
+                  ),
+                ],
+              ),
             );
           }
         });
@@ -524,11 +532,10 @@ class _HomeScreenState extends State<HomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => FilteredResultsScreen(
-                    searchQuery: name.split(' ')[0].toLowerCase(),
-                    selectedSearchOption: SearchOption.category,
-                  ),
+              builder: (context) => FilteredResultsScreen(
+                searchQuery: name.split(' ')[0].toLowerCase(),
+                selectedSearchOption: SearchOption.category,
+              ),
             ),
           );
         }
@@ -697,7 +704,10 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (context.mounted) {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => AddPostScreen())).then((_) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddPostScreen()),
+                ).then((_) {
                   if (mounted) {
                     setState(() {});
                   }
@@ -835,7 +845,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                      SvgPicture.asset(
+                        semanticsLabel: 'Favorites Icon',
+                        "images/icons/favorites.svg",
+                      ),
                       Text(
                         'Favorites',
                         style: GoogleFonts.montserrat(
@@ -974,7 +987,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: InputDecoration(
                                 labelText: "Location",
                                 floatingLabelBehavior: FloatingLabelBehavior.never,
-                                contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 6),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  vertical: 0,
+                                  horizontal: 6,
+                                ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: onboardingColor, width: 1.0),
                                   borderRadius: BorderRadius.circular(8),
@@ -1025,7 +1041,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                         "Ras al-Ayn",
                                         "Kobani",
                                       ]
-                                      .map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang)))
+                                      .map(
+                                        (lang) => DropdownMenuItem<String>(
+                                          value: lang,
+                                          child: Text(lang),
+                                        ),
+                                      )
                                       .toList(),
 
                               onChanged: (value) {
@@ -1066,39 +1087,39 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: EdgeInsets.only(top: 4, bottom: 7),
                               child: ElevatedButton(
-                                onPressed:
-                                    _selectedLocation.isEmpty
-                                        ? null
-                                        : () {
-                                          if (context.mounted) {
-                                            Navigator.push(
-                                              context,
-                                              // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
-                                              MaterialPageRoute(
-                                                builder:
-                                                    (context) => FilteredResultsScreen(
-                                                      searchQuery: _selectedLocation,
-                                                      selectedSearchOption: SearchOption.city,
-                                                    ),
+                                onPressed: _selectedLocation.isEmpty
+                                    ? null
+                                    : () {
+                                        if (context.mounted) {
+                                          Navigator.push(
+                                            context,
+                                            // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                                            MaterialPageRoute(
+                                              builder: (context) => FilteredResultsScreen(
+                                                searchQuery: _selectedLocation,
+                                                selectedSearchOption: SearchOption.city,
                                               ),
-                                            );
-                                          }
-                                          // if (context.mounted) {
-                                          //   Navigator.push(
-                                          //     context,
-                                          //     MaterialPageRoute(
-                                          //       builder:
-                                          //           (context) => AddPostScreen(location: _selectedLocation),
-                                          //     ),
-                                          //   ).then((_) {
-                                          //     if (mounted) {
-                                          //       setState(() {});
-                                          //     }
-                                          //   });
-                                          // }
-                                        },
+                                            ),
+                                          );
+                                        }
+                                        // if (context.mounted) {
+                                        //   Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder:
+                                        //           (context) => AddPostScreen(location: _selectedLocation),
+                                        //     ),
+                                        //   ).then((_) {
+                                        //     if (mounted) {
+                                        //       setState(() {});
+                                        //     }
+                                        //   });
+                                        // }
+                                      },
                                 style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
                                   padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
@@ -1123,12 +1144,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                 icon: const Icon(Icons.notifications_none_outlined),
                                 style: IconButton.styleFrom(
                                   elevation: 0,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
                                 ),
                                 // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                                padding: const EdgeInsets.only(left: 20, right: 20, top: 12, bottom: 13),
+                                padding: const EdgeInsets.only(
+                                  left: 20,
+                                  right: 20,
+                                  top: 12,
+                                  bottom: 13,
+                                ),
                                 // padding: EdgeInsets.only(left: 19, right: 19, top: 12, bottom: ),
                               ),
                             ),
@@ -1159,7 +1187,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           name: "search",
                           readOnly: true,
                           style: GoogleFonts.poppins(
-                            textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                            textStyle: TextStyle(
+                              fontSize: 13.69,
+                              fontWeight: FontWeight.w400,
+                              height: 1.43,
+                            ),
                             color: Colors.grey,
                           ),
                           decoration: InputDecoration(
@@ -1200,49 +1232,67 @@ class _HomeScreenState extends State<HomeScreen> {
                         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
                           return _isLoadingCarousel
                               ? Skeletonizer(
-                            effect: ShimmerEffect(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                            ),
-                                ignorePointers: true,
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width,
-                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                    color: scaffoldBackgroundColor,
-                                    borderRadius: BorderRadius.circular(12.0),
+                                  effect: ShimmerEffect(
+                                    baseColor: Colors.grey[300]!,
+                                    highlightColor: Colors.grey[100]!,
                                   ),
-                                ),
-                              )
+                                  ignorePointers: true,
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                    decoration: BoxDecoration(
+                                      color: scaffoldBackgroundColor,
+                                      borderRadius: BorderRadius.circular(12.0),
+                                    ),
+                                  ),
+                                )
                               : Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration: BoxDecoration(
-                                  // color: Colors.grey[300], // Placeholder background if image fails
-                                  // color: Colors.green,
-                                  color: scaffoldBackgroundColor,
-                                  // borderRadius: BorderRadius.circular(12.0),
-                                ),
-                                child: ClipRRect(
-                                  // borderRadius: BorderRadius.circular(12.0),
-                                  // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
-                                  child: Image.network(
-                                    _backgroundImages[itemIndex],
-                                    fit: BoxFit.fill,
-                                    errorBuilder: (
-                                      BuildContext context,
-                                      Object exception,
-                                      StackTrace? stackTrace,
-                                    ) {
-                                      return const Center(
-                                        child: Text(
-                                          'Could not load image',
-                                          style: TextStyle(color: Colors.red),
-                                        ),
-                                      );
-                                    },
+                                  width: MediaQuery.of(context).size.width,
+                                  decoration: BoxDecoration(
+                                    // color: Colors.grey[300], // Placeholder background if image fails
+                                    // color: Colors.green,
+                                    color: scaffoldBackgroundColor,
+                                    // borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                ),
-                              );
+                                  child: ClipRRect(
+                                    // borderRadius: BorderRadius.circular(12.0),
+                                    // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
+                                    child: CachedNetworkImage(
+                                      imageUrl: _backgroundImages[itemIndex],
+                                      fit: BoxFit.fill,
+                                      placeholder: (context, url) => Skeletonizer(
+                                        enabled: true,
+                                        child: Container(
+                                          color: Colors.grey[300], // A base color for the skeleton
+                                        ),
+                                      ),
+                                      errorWidget: (context, url, error) {
+                                        return const Center(
+                                          child: Text(
+                                            'Could not load image',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    // child: Image.network(
+                                    //   _backgroundImages[itemIndex],
+                                    //   fit: BoxFit.fill,
+                                    //   errorBuilder: (
+                                    //     BuildContext context,
+                                    //     Object exception,
+                                    //     StackTrace? stackTrace,
+                                    //   ) {
+                                    //     return const Center(
+                                    //       child: Text(
+                                    //         'Could not load image',
+                                    //         style: TextStyle(color: Colors.red),
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    // ),
+                                  ),
+                                );
                         },
                         options: CarouselOptions(
                           height: 210.0,
@@ -1343,7 +1393,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.wb_sunny_outlined, size: 36.0, color: onboardingColor),
+                                    const Icon(
+                                      Icons.wb_sunny_outlined,
+                                      size: 36.0,
+                                      color: onboardingColor,
+                                    ),
                                     const SizedBox(width: 12.0),
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1458,28 +1512,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                       // ),
                                       _isLoadingTip
                                           ? Skeletonizer(
-                                        effect: ShimmerEffect(
-                                          baseColor: Colors.grey[300]!,
-                                          highlightColor: Colors.grey[100]!,
-                                        ),
-                                            ignorePointers: true,
-                                            child: Text(
-                                              'Loading tip for you...',
+                                              effect: ShimmerEffect(
+                                                baseColor: Colors.grey[300]!,
+                                                highlightColor: Colors.grey[100]!,
+                                              ),
+                                              ignorePointers: true,
+                                              child: Text(
+                                                'Loading tip for you...',
+                                                style: GoogleFonts.poppins(
+                                                  fontSize: 11,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: clearSkyText,
+                                                ),
+                                              ),
+                                            )
+                                          : Text(
+                                              _tipOfTheDay,
                                               style: GoogleFonts.poppins(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w400,
                                                 color: clearSkyText,
                                               ),
                                             ),
-                                          )
-                                          : Text(
-                                            _tipOfTheDay,
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w400,
-                                              color: clearSkyText,
-                                            ),
-                                          ),
                                     ],
                                   ),
                                 ),
@@ -1514,7 +1568,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 if (context.mounted) {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => const CategoriesScreen()),
+                                    MaterialPageRoute(
+                                      builder: (context) => const CategoriesScreen(),
+                                    ),
                                   );
                                 }
                               },
@@ -1547,10 +1603,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Disable GridView's own scrolling
                           mainAxisSpacing: 10.0,
                           crossAxisSpacing: 1.0,
-                          children:
-                              categories.map((category) {
-                                return _buildCategoryItem(category["name"]!, category["image"]!);
-                              }).toList(),
+                          children: categories.map((category) {
+                            return _buildCategoryItem(category["name"]!, category["image"]!);
+                          }).toList(),
                         ),
                       ],
                     ),
@@ -1644,13 +1699,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               final post = featuredData[index].data() as Map<String, dynamic>;
                               final currentUserId = firebaseService.currentUser?.uid;
                               final List<dynamic> likedBy = post['likedBy'] ?? [];
-                              final bool isLiked = currentUserId != null && likedBy.contains(currentUserId);
+                              final bool isLiked =
+                                  currentUserId != null && likedBy.contains(currentUserId);
 
                               final createdAtTimestamp = post['createdAt'] as Timestamp?;
-                              final postedAgoText =
-                                  createdAtTimestamp != null ? formatTimeAgo(createdAtTimestamp) : 'Just now';
+                              final postedAgoText = createdAtTimestamp != null
+                                  ? formatTimeAgo(createdAtTimestamp)
+                                  : 'Just now';
 
-                              final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
+                              final List<String> imageUrls = List<String>.from(
+                                post['imageUrls'] ?? [],
+                              );
 
                               return GestureDetector(
                                 onTap: () {
@@ -1658,11 +1717,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => DetailsScreen(
-                                              postId: featuredData[index].id.toString(),
-                                              didComeFromManagedPosts: false,
-                                            ),
+                                        builder: (context) => DetailsScreen(
+                                          postId: featuredData[index].id.toString(),
+                                          didComeFromManagedPosts: false,
+                                        ),
                                       ),
                                     ).then((_) {
                                       if (mounted) {
@@ -1755,7 +1813,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: onboardingColor,
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
                             ),
                             child: Text(
                               'Explore',
@@ -1839,10 +1899,19 @@ class PostCard extends StatelessWidget {
                     bottomLeft: Radius.circular(12.0),
                     bottomRight: Radius.circular(12.0),
                   ),
-                  child:
-                      debug
-                          ? Image.asset(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover)
-                          : Image.network(imageUrl, height: 120, width: double.infinity, fit: BoxFit.cover),
+                  child: debug
+                      ? Image.asset(
+                          imageUrl,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          imageUrl,
+                          height: 120,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                 ),
                 Positioned(
                   top: 8,
@@ -1860,7 +1929,10 @@ class PostCard extends StatelessWidget {
               ],
             ),
           ),
-          Padding(padding: const EdgeInsets.symmetric(horizontal: 8), child: Divider(color: dividerColor)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Divider(color: dividerColor),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 10, right: 10, top: 1, bottom: 6),
             child: Column(
@@ -1883,7 +1955,11 @@ class PostCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.location_on_outlined, size: 16, color: popularPostsLocationTextColor),
+                    const Icon(
+                      Icons.location_on_outlined,
+                      size: 16,
+                      color: popularPostsLocationTextColor,
+                    ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
@@ -1912,7 +1988,11 @@ class PostCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.access_time_outlined, size: 16, color: popularPostsLocationTextColor),
+                    const Icon(
+                      Icons.access_time_outlined,
+                      size: 16,
+                      color: popularPostsLocationTextColor,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       postedAgo,

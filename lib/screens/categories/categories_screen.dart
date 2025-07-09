@@ -18,6 +18,55 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   final validateMode = AutovalidateMode.onUserInteraction;
 
+  String _searchQuery = "";
+
+  List<Map<String, String>> _filteredCategories = [];
+
+  final List<Map<String, String>> categories = [
+    {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
+    {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
+    {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
+    {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
+    {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
+    {'name': 'Fertilizers', 'image': 'images/categories/fertilizers.jpg'},
+    {'name': 'Tools', 'image': 'images/categories/tools_and_equipments.jpg'},
+    {'name': 'Land Services', 'image': 'images/categories/land_services.jpg'},
+    {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
+    {'name': 'Delivery', 'image': 'images/categories/delivery.jpg'},
+    {'name': 'Worker Services', 'image': 'images/categories/worker_services.jpg'},
+    {'name': 'Pesticides', 'image': 'images/categories/pesticides.jpg'},
+    {'name': 'Animal Feed', 'image': 'images/categories/animal_feed.jpg'},
+    {'name': 'Others', 'image': 'images/categories/others.png'},
+  ];
+
+  final List<Map<String, String>> popularCategories = [
+    {'name': 'Apples', 'image': 'images/categories/apples.png'},
+    {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
+    {'name': 'Pomegranates', 'image': 'images/categories/iv_pomegranate.png'},
+  ];
+
+  // Method to filter categories based on the search query
+  void _filterCategories(String query) {
+    setState(() {
+      _searchQuery = query.toLowerCase();
+      if (_searchQuery.isEmpty) {
+        _filteredCategories = List.from(categories);
+      } else {
+        _filteredCategories = categories
+            .where((category) =>
+            category['name']!.toLowerCase().contains(_searchQuery))
+            .toList();
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // Initially, show all categories
+    _filteredCategories = List.from(categories);
+  }
+
   Widget _buildCategoryItem(BuildContext context, String name, String imageUrl) {
     return GestureDetector(
       onTap: () {
@@ -87,28 +136,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, String>> categories = [
-      {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
-      {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
-      {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
-      {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
-      {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
-      {'name': 'Fertilizers', 'image': 'images/categories/fertilizers.jpg'},
-      {'name': 'Tools', 'image': 'images/categories/tools_and_equipments.jpg'},
-      {'name': 'Land Services', 'image': 'images/categories/land_services.jpg'},
-      {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
-      {'name': 'Delivery', 'image': 'images/categories/delivery.jpg'},
-      {'name': 'Worker Services', 'image': 'images/categories/worker_services.jpg'},
-      {'name': 'Pesticides', 'image': 'images/categories/pesticides.jpg'},
-      {'name': 'Animal Feed', 'image': 'images/categories/animal_feed.jpg'},
-      {'name': 'Others', 'image': 'images/categories/others.png'},
-    ];
-
-    final List<Map<String, String>> popularCategories = [
-      {'name': 'Apples', 'image': 'images/categories/apples.png'},
-      {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
-      {'name': 'Pomegranates', 'image': 'images/categories/iv_pomegranate.png'},
-    ];
 
     return Scaffold(
       backgroundColor: homebackgroundColor,
@@ -146,6 +173,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
                       ),
                       onChanged: (String? query) {
+                        _filterCategories(query ?? '');
                       },
                       decoration: InputDecoration(
                         hintText: 'Search',
@@ -191,7 +219,16 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                           ),
                         ),
 
-                        GridView.builder(
+                        _filteredCategories.isEmpty && _searchQuery.isNotEmpty
+                            ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 30.0),
+                            child: Text(
+                              'No categories found for "$_searchQuery"',
+                              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
+                            ),
+                          ),
+                        ) : GridView.builder(
                           shrinkWrap: true,
                           // Important to make GridView work inside SingleChildScrollView
                           physics: const NeverScrollableScrollPhysics(),
@@ -202,9 +239,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             mainAxisSpacing: 10.0, // Vertical spacing between items
                             childAspectRatio: 1.2,
                           ),
-                          itemCount: categories.length,
+                          // itemCount: categories.length,
+                            itemCount: _filteredCategories.length,
                           itemBuilder: (BuildContext context, int index) {
-                            final category = categories[index];
+                            final category = _filteredCategories[index];
                             return _buildCategoryItem(context, category["name"]!, category["image"]!);
                           },
                         ),

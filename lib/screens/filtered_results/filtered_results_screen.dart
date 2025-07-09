@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -703,8 +704,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      SizedBox(width: 6),
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 10),
                         child: Row(
@@ -814,26 +816,28 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(16.0),
+                                // padding: const EdgeInsets.all(16.0),
                                 decoration: BoxDecoration(
-                                  border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                                  borderRadius: BorderRadius.circular(16.0),
+                                  // border: Border.all(color: Colors.grey.shade400, width: 1.5),
+                                  // borderRadius: BorderRadius.circular(16.0),
                                 ),
-                                child: Icon(
-                                  Icons.search_outlined, // An icon that fits the context
-                                  color: Colors.grey[700],
-                                  size: 44.0,
+                                child: ImageFiltered(
+                                  imageFilter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
+                                  child: Icon(
+                                    Icons.search_outlined, // An icon that fits the context
+                                    color: Colors.grey[700],
+                                    size: 34.0,
+                                  ),
                                 ),
                               ),
 
-                              const SizedBox(height: 24.0),
+                              // const SizedBox(height: 10.0),
 
                               const Text(
                                 'No search results',
                                 style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF333A44), // A dark slate gray color
+                                  fontSize: 14.0,
+                                  color: Colors.grey,
                                 ),
                               ),
                             ],

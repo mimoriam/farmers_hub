@@ -281,16 +281,16 @@ class _ChatHomeState extends State<ChatHome> {
                     child: Icon(
                       Icons.mark_chat_unread_outlined, // An icon that fits the context
                       color: Colors.grey[700],
-                      size: 44.0,
+                      size: 36.0,
                     ),
                   ),
 
-                  const SizedBox(height: 24.0),
+                  const SizedBox(height: 8.0),
 
                   const Text(
                     'Nothing to see here',
                     style: TextStyle(
-                      fontSize: 20.0,
+                      fontSize: 18.0,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF333A44), // A dark slate gray color
                     ),
@@ -302,7 +302,7 @@ class _ChatHomeState extends State<ChatHome> {
                     'Start a conversation with any of the sellers.\nYour chats will show here.',
                     textAlign: TextAlign.center, // Ensures the text is center-aligned
                     style: TextStyle(
-                      fontSize: 15.0,
+                      fontSize: 14.0,
                       color: Colors.grey[600],
                       height: 1.5, // Line height for better readability
                     ),
