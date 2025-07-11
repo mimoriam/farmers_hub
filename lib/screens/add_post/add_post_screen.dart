@@ -139,6 +139,198 @@ class _AddPostScreenState extends State<AddPostScreen> {
   // Common padding for input content
   final EdgeInsets _contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 14);
 
+  int _selectedColorIndex = 0;
+
+  final List<Color> _colors = [Colors.red, Colors.orange, Colors.blue, Colors.green];
+
+  Future<void> _showConfirmationDialog() async {
+    bool isCommitted = false;
+
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.white,
+              title: Center(child: const Text('Allah Your Mubarak')),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      child: Text(
+                        'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
+                        style: TextStyle(
+                          fontSize: 13
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Checkbox(
+                          activeColor: onboardingColor,
+                          checkColor: Colors.white,
+                          value: isCommitted,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isCommitted = value!;
+                            });
+                          },
+                        ),
+                        const Text('I commit to that'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              actionsAlignment: MainAxisAlignment.center,
+              actions: <Widget>[
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: onboardingColor,
+                    foregroundColor: Colors.white,
+                  ),
+                  onPressed: isCommitted
+                      ? () async {
+                          // The existing logic from the original "Submit" button's onTap is moved here.
+                          bool canPost = await firebaseService.canCreatePost();
+
+                          if (!canPost) {
+                            if (context.mounted) {
+                              Navigator.of(context).pop(); // Close the confirmation dialog
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  title: const Text("Monthly Limit Reached"),
+                                  content: const Text(
+                                    "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      child: const Text("OK"),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // TODO: Navigate to subscription screen
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text("Subscribe"),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                            return;
+                          }
+
+                          if (_images.isEmpty) {
+                            this.setState(() {
+                              error = "Upload an image!";
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                              }
+
+                              _scrollController.animateTo(
+                                _scrollController.position.minScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
+                            });
+
+                            return;
+                          }
+
+                          if (_formKey.currentState!.validate() &&
+                              selectedCategory != null &&
+                              _images.isNotEmpty) {
+                            List<String> imageUrls = [];
+
+                            if (_images.isNotEmpty && _images.length <= 4) {
+                              imageUrls = await firebaseService.uploadImages(_images);
+                            } else {
+                              this.setState(() {
+                                error = "Can't upload more than 4 images!";
+                                _scrollController.animateTo(
+                                  _scrollController.position.minScrollExtent,
+                                  curve: Curves.easeOut,
+                                  duration: const Duration(milliseconds: 300),
+                                );
+                              });
+
+                              if (context.mounted) {
+                                Navigator.of(context).pop();
+                                return;
+                              }
+                            }
+
+                            final doc = await firebaseService.getCurrentUserData();
+                            final userData = doc?.data() as Map<String, dynamic>?;
+
+                            final currency = userData?["defaultCurrency"] ?? "usd";
+
+                            firebaseService.createPost(
+                              title: _formKey.currentState?.fields['title']?.value,
+                              imageUrls: imageUrls,
+                              category: selectedCategory!,
+                              gender:
+                                  selectedCategory == "Live Stock" ||
+                                      selectedCategory == "Worker Services"
+                                  ? selectedGender
+                                  : "",
+                              currency: currency,
+                              averageWeight:
+                                  selectedCategory != "Live Stock" ||
+                                      selectedCategory != "Worker Services"
+                                  ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                  : "",
+                              quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
+                              age:
+                                  selectedCategory == "Live Stock" ||
+                                      selectedCategory == "Worker Services"
+                                  ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                  : 0,
+                              price: int.parse(_formKey.currentState?.fields['price']?.value),
+                              details: _formKey.currentState?.fields['add_details']?.value,
+                              featured: true,
+                              city: widget.location ?? selectedCity,
+                              village: _formKey.currentState?.fields['village']?.value,
+                              // postColor: "0x${currentColor.toHexString()}",
+                              postColor: "0x${_colors[_selectedColorIndex].toHexString()}",
+                            );
+
+                            _formKey.currentState?.reset();
+                            this.setState(() {
+                              locationSelected = false;
+                              error = "";
+                              _images = [];
+                            });
+
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => HomeScreen()),
+                              );
+                            }
+                          }
+                        }
+                      : null,
+                  child: const Text('Confirm'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     void showColorPickerDialog() {
@@ -201,6 +393,32 @@ class _AddPostScreenState extends State<AddPostScreen> {
           // This basic styling provides the border.
         ),
         child: Text(text, style: const TextStyle(fontSize: 14)),
+      );
+    }
+
+    Widget _buildColorBox(int index) {
+      bool isSelected = _selectedColorIndex == index;
+      return GestureDetector(
+        onTap: () {
+          // Update the state to reflect the new selection
+          setState(() {
+            _selectedColorIndex = index;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 4),
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: _colors[index],
+              borderRadius: BorderRadius.circular(8.0),
+              // Add a border and a checkmark if this box is selected
+              border: isSelected ? Border.all(color: Colors.black, width: 2.5) : null,
+            ),
+            child: isSelected ? const Icon(Icons.check, color: Colors.white) : null,
+          ),
+        ),
       );
     }
 
@@ -1068,19 +1286,32 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     // ),
                                     Text("Color", style: _labelStyle),
 
-                                    // const SizedBox(height: 8),
-                                    ListTile(
-                                      title: const Text('Select a color: '),
-                                      trailing: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: currentColor,
-                                          shape: const CircleBorder(), // Makes the button a circle
-                                          padding: const EdgeInsets.all(12), // Gives it some size
-                                        ),
-                                        onPressed: showColorPickerDialog,
-                                        child: Text(""),
-                                      ),
+                                    const SizedBox(height: 8),
+
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      children: List.generate(4, (index) => _buildColorBox(index)),
                                     ),
+
+                                    const SizedBox(height: 8),
+
+                                    // InkWell(
+                                    //   onTap: showColorPickerDialog,
+                                    //   child: ListTile(
+                                    //     title: const Text('Select a color: '),
+                                    //     trailing: ElevatedButton(
+                                    //       style: ElevatedButton.styleFrom(
+                                    //         backgroundColor: currentColor,
+                                    //         shape: RoundedRectangleBorder(
+                                    //           borderRadius: BorderRadius.circular(12),
+                                    //         ),
+                                    //         padding: const EdgeInsets.symmetric(horizontal: 0), // Gives it some size
+                                    //       ),
+                                    //       onPressed: showColorPickerDialog,
+                                    //       child: Text(""),
+                                    //     ),
+                                    //   ),
+                                    // ),
 
                                     // const SizedBox(height: 10),
                                     Text("Quantity", style: _labelStyle),
@@ -1173,6 +1404,58 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       children: [
                                         // Text(defaultCurrency.toString().to),
                                         Expanded(
+                                          flex: 1,
+                                          child: Container(
+                                            padding: EdgeInsets.only(right: 0, top: 2, bottom: 2),
+                                            // No explicit border for dropdown, styling via DropdownButton properties
+                                            child: DropdownButtonFormField2<String>(
+                                              items: ['Syria', "Usd", "Euro", "Lira"]
+                                                  .map(
+                                                    (lang) => DropdownMenuItem<String>(
+                                                      value: lang,
+                                                      child: Text(lang),
+                                                    ),
+                                                  )
+                                                  .toList(),
+                                              decoration: InputDecoration(
+                                                contentPadding: const EdgeInsets.symmetric(
+                                                  vertical: 1,
+                                                  horizontal: 2,
+                                                ),
+                                                border: _inputBorder,
+                                                enabledBorder: _inputBorder,
+                                                focusedBorder: _focusedInputBorder,
+                                                errorBorder: _errorInputBorder,
+                                                focusedErrorBorder: _focusedInputBorder,
+                                              ),
+                                              iconStyleData: IconStyleData(
+                                                // Using IconStyleData for icon properties
+                                                iconEnabledColor: onboardingTextColor,
+                                              ),
+
+                                              dropdownStyleData: DropdownStyleData(
+                                                offset: const Offset(0, 0),
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(16),
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              // value: "USD",
+                                              value: defaultCurrency?.toCapitalize() ?? "Usd",
+                                              onChanged: (value) async {
+                                                await firebaseService.updateCurrency(
+                                                  value!.toLowerCase(),
+                                                );
+                                                setState(() {});
+                                              },
+                                            ),
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 6),
+
+                                        Expanded(
+                                          flex: 2,
                                           child: FormBuilderTextField(
                                             name: 'price',
                                             maxLength: 6,
@@ -1374,131 +1657,138 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               cooldown: const Duration(milliseconds: 1000),
                               onTap: () async {
                                 // Check if the user can create a post.
-                                bool canPost = await firebaseService.canCreatePost();
 
-                                if (!canPost) {
-                                  if (context.mounted) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => AlertDialog(
-                                        backgroundColor: Colors.white,
-                                        title: const Text("Monthly Limit Reached"),
-                                        content: const Text(
-                                          "You have reached your limit of 3 posts per month. Subscribe now to post without limits.",
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () => Navigator.of(context).pop(),
-                                            child: const Text("OK"),
-                                          ),
-                                          // Optional: Add a button to a subscription screen
-                                          TextButton(
-                                            onPressed: () {
-                                              // TODO: Navigate to subscription screen
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: const Text("Subscribe"),
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                  return; // Stop execution if the user cannot post.
+                                // FocusScope.of(context).unfocus();
+
+                                if (_formKey.currentState!.validate()) {
+                                  _showConfirmationDialog();
                                 }
 
-                                if (_images.isEmpty) {
-                                  setState(() {
-                                    error = "Upload an image!";
-
-                                    _scrollController.animateTo(
-                                      _scrollController.position.minScrollExtent,
-                                      curve: Curves.easeOut,
-                                      duration: const Duration(milliseconds: 300),
-                                    );
-                                  });
-
-                                  return;
-                                }
-
-                                if (_formKey.currentState!.validate() &&
-                                    selectedCategory != null &&
-                                    _images.isNotEmpty) {
-                                  List<String> imageUrls = [];
-
-                                  if (_images.isNotEmpty && _images.length <= 4) {
-                                    imageUrls = await firebaseService.uploadImages(_images);
-                                  } else {
-                                    setState(() {
-                                      error = "Can't upload more than 4 images!";
-
-                                      _scrollController.animateTo(
-                                        _scrollController.position.minScrollExtent,
-                                        curve: Curves.easeOut,
-                                        duration: const Duration(milliseconds: 300),
-                                      );
-                                    });
-
-                                    return;
-                                  }
-
-                                  final doc = await firebaseService.getCurrentUserData();
-                                  final userData = doc?.data() as Map<String, dynamic>?;
-
-                                  final currency = userData?["defaultCurrency"] ?? "usd";
-
-                                  firebaseService.createPost(
-                                    title: _formKey.currentState?.fields['title']?.value,
-                                    // imageUrl: imageUrl.toString(),
-                                    imageUrls: imageUrls,
-                                    category: selectedCategory!,
-                                    gender:
-                                        selectedCategory == "Live Stock" ||
-                                            selectedCategory == "Worker Services"
-                                        ? selectedGender
-                                        : "",
-                                    currency: currency,
-                                    averageWeight:
-                                        selectedCategory != "Live Stock" ||
-                                            selectedCategory != "Worker Services"
-                                        ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
-                                        : "",
-                                    quantity: int.parse(
-                                      _formKey.currentState?.fields['quantity']?.value,
-                                    ),
-                                    // age: int.parse(_formKey.currentState?.fields['age']?.value),
-                                    age:
-                                        selectedCategory == "Live Stock" ||
-                                            selectedCategory == "Worker Services"
-                                        ? int.parse(_formKey.currentState?.fields['age']?.value)
-                                        : 0,
-                                    price: int.parse(_formKey.currentState?.fields['price']?.value),
-                                    details: _formKey.currentState?.fields['add_details']?.value,
-                                    featured: true,
-                                    city: widget.location ?? selectedCity,
-                                    village: _formKey.currentState?.fields['village']?.value,
-                                    // postColor: '#FFFFFFFF',
-                                    postColor: "0x${currentColor.toHexString()}",
-                                    // city: selectedCity,
-                                    // city: placeDetails.city!,
-                                    // province: placeDetails.province!,
-                                    // country: placeDetails.country!,
-                                  );
-
-                                  _formKey.currentState?.reset();
-                                  setState(() {
-                                    locationSelected = false;
-                                    error = "";
-                                    // _image = null;
-                                    _images = [];
-                                  });
-
-                                  if (context.mounted) {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => HomeScreen()),
-                                    );
-                                  }
-                                }
+                                // bool canPost = await firebaseService.canCreatePost();
+                                //
+                                // if (!canPost) {
+                                //   if (context.mounted) {
+                                //     showDialog(
+                                //       context: context,
+                                //       builder: (context) => AlertDialog(
+                                //         backgroundColor: Colors.white,
+                                //         title: const Text("Monthly Limit Reached"),
+                                //         content: const Text(
+                                //           "You have reached your limit of 3 posts per month. Subscribe now to post without limits.",
+                                //         ),
+                                //         actions: [
+                                //           TextButton(
+                                //             onPressed: () => Navigator.of(context).pop(),
+                                //             child: const Text("OK"),
+                                //           ),
+                                //           // Optional: Add a button to a subscription screen
+                                //           TextButton(
+                                //             onPressed: () {
+                                //               // TODO: Navigate to subscription screen
+                                //               Navigator.of(context).pop();
+                                //             },
+                                //             child: const Text("Subscribe"),
+                                //           ),
+                                //         ],
+                                //       ),
+                                //     );
+                                //   }
+                                //   return; // Stop execution if the user cannot post.
+                                // }
+                                //
+                                // if (_images.isEmpty) {
+                                //   setState(() {
+                                //     error = "Upload an image!";
+                                //
+                                //     _scrollController.animateTo(
+                                //       _scrollController.position.minScrollExtent,
+                                //       curve: Curves.easeOut,
+                                //       duration: const Duration(milliseconds: 300),
+                                //     );
+                                //   });
+                                //
+                                //   return;
+                                // }
+                                //
+                                // if (_formKey.currentState!.validate() &&
+                                //     selectedCategory != null &&
+                                //     _images.isNotEmpty) {
+                                //   List<String> imageUrls = [];
+                                //
+                                //   if (_images.isNotEmpty && _images.length <= 4) {
+                                //     imageUrls = await firebaseService.uploadImages(_images);
+                                //   } else {
+                                //     setState(() {
+                                //       error = "Can't upload more than 4 images!";
+                                //
+                                //       _scrollController.animateTo(
+                                //         _scrollController.position.minScrollExtent,
+                                //         curve: Curves.easeOut,
+                                //         duration: const Duration(milliseconds: 300),
+                                //       );
+                                //     });
+                                //
+                                //     return;
+                                //   }
+                                //
+                                //   final doc = await firebaseService.getCurrentUserData();
+                                //   final userData = doc?.data() as Map<String, dynamic>?;
+                                //
+                                //   final currency = userData?["defaultCurrency"] ?? "usd";
+                                //
+                                //   firebaseService.createPost(
+                                //     title: _formKey.currentState?.fields['title']?.value,
+                                //     // imageUrl: imageUrl.toString(),
+                                //     imageUrls: imageUrls,
+                                //     category: selectedCategory!,
+                                //     gender:
+                                //         selectedCategory == "Live Stock" ||
+                                //             selectedCategory == "Worker Services"
+                                //         ? selectedGender
+                                //         : "",
+                                //     currency: currency,
+                                //     averageWeight:
+                                //         selectedCategory != "Live Stock" ||
+                                //             selectedCategory != "Worker Services"
+                                //         ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                //         : "",
+                                //     quantity: int.parse(
+                                //       _formKey.currentState?.fields['quantity']?.value,
+                                //     ),
+                                //     // age: int.parse(_formKey.currentState?.fields['age']?.value),
+                                //     age:
+                                //         selectedCategory == "Live Stock" ||
+                                //             selectedCategory == "Worker Services"
+                                //         ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                //         : 0,
+                                //     price: int.parse(_formKey.currentState?.fields['price']?.value),
+                                //     details: _formKey.currentState?.fields['add_details']?.value,
+                                //     featured: true,
+                                //     city: widget.location ?? selectedCity,
+                                //     village: _formKey.currentState?.fields['village']?.value,
+                                //     // postColor: '#FFFFFFFF',
+                                //     postColor: "0x${currentColor.toHexString()}",
+                                //     // city: selectedCity,
+                                //     // city: placeDetails.city!,
+                                //     // province: placeDetails.province!,
+                                //     // country: placeDetails.country!,
+                                //   );
+                                //
+                                //   _formKey.currentState?.reset();
+                                //   setState(() {
+                                //     locationSelected = false;
+                                //     error = "";
+                                //     // _image = null;
+                                //     _images = [];
+                                //   });
+                                //
+                                //   if (context.mounted) {
+                                //     Navigator.pushReplacement(
+                                //       context,
+                                //       MaterialPageRoute(builder: (context) => HomeScreen()),
+                                //     );
+                                //   }
+                                // }
                               },
                               builder: (BuildContext context, TapDebouncerFunc? onTap) {
                                 return ElevatedButton(

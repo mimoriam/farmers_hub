@@ -36,13 +36,19 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     {'name': 'Worker Services', 'image': 'images/categories/worker_services.jpg'},
     {'name': 'Pesticides', 'image': 'images/categories/pesticides.jpg'},
     {'name': 'Animal Feed', 'image': 'images/categories/animal_feed.jpg'},
+    {'name': 'Jams & Molasses', 'image': 'images/categories/jam.png'},
+    {'name': 'Irrigation System', 'image': 'images/categories/irrigation.png'},
     {'name': 'Others', 'image': 'images/categories/others.png'},
   ];
 
   final List<Map<String, String>> popularCategories = [
+    {'name': 'Tomatoes', 'image': 'images/categories/tomatoes.jpg'},
+    {'name': 'Rice', 'image': 'images/categories/rice.jpg'},
     {'name': 'Apples', 'image': 'images/categories/apples.png'},
     {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
-    {'name': 'Pomegranates', 'image': 'images/categories/iv_pomegranate.png'},
+    {'name': 'Pomegranate', 'image': 'images/categories/iv_pomegranate.png'},
+    {'name': 'Honey', 'image': 'images/categories/honey.png'},
+    {'name': 'Leafy Green', 'image': 'images/categories/leafy_green.png'},
   ];
 
   // Method to filter categories based on the search query

@@ -61,12 +61,16 @@ class _FavoriteIconButtonState extends State<FavoriteIconButton> {
   Widget build(BuildContext context) {
     // If the button is processing a like, show a spinner
     if (_isLiking) {
-      return const Padding(
+      return Padding(
         padding: EdgeInsets.all(12.0),
         child: SizedBox(
           width: 24,
           height: 24,
-          child: CircularProgressIndicator(strokeWidth: 2.5, color: onboardingColor),
+          child: Skeletonizer(
+            effect: ShimmerEffect(baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!),
+            // ignoreContainers: true,
+            child: Icon(Icons.favorite_border_outlined),
+          ),
         ),
       );
     }
@@ -152,6 +156,84 @@ class _DetailsScreenState extends State<DetailsScreen> {
     }
   }
 
+  Widget _buildDialogContent(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        children: <Widget>[
+          // The main content of the dialog
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(16.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min, // To make the card compact
+              children: <Widget>[
+                const Text(
+                  'Report a violating ad',
+                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 12.0),
+                const TextField(
+                  maxLines: 4,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your report here...',
+                    border: OutlineInputBorder(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14.0),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add report logic here
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: onboardingColor,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                    child: const Text('Report to admin'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // The close button
+          // Positioned(
+          //   right: 0.0,
+          //   top: 0.0,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Navigator.of(context).pop();
+          //     },
+          //     child: Container(
+          //       padding: const EdgeInsets.all(4),
+          //       decoration: BoxDecoration(
+          //         color: Colors.grey.shade200,
+          //         borderRadius: const BorderRadius.only(
+          //           topRight: Radius.circular(16),
+          //           bottomLeft: Radius.circular(12),
+          //         ),
+          //       ),
+          //       child: const Icon(Icons.close, color: Colors.black54),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,6 +242,21 @@ class _DetailsScreenState extends State<DetailsScreen> {
         leading: BackButton(color: Colors.white),
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return _buildDialogContent(context);
+                },
+              );
+            },
+            icon: Icon(Icons.report_problem_outlined),
+            color: Colors.yellowAccent,
+          ),
+        ],
         title: Text(
           "Details",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -561,6 +658,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final currentUserId = firebaseService.currentUser?.uid;
     final List<dynamic> likedBy = postDetails['likedBy'] ?? [];
     final bool isCurrentlyLiked = currentUserId != null && likedBy.contains(currentUserId);
+    final String village = postDetails["location"]["village"];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -600,7 +698,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   ],
                 ),
                 const SizedBox(height: 4),
-                Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                Row(
+                  children: [
+                    Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                    Text(", "),
+                    Text(village, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                  ],
+                ),
               ],
             ),
             Row(

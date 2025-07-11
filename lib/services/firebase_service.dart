@@ -362,8 +362,8 @@ class FirebaseService {
         .where('createdAt', isLessThan: endOfMonthTimestamp)
         .get();
 
-    // Allow posting only if the user has created fewer than 3 posts this month.
-    return querySnapshot.docs.length < 3;
+    // Allow posting only if the user has created fewer than 2 posts this month.
+    return querySnapshot.docs.length < 2;
   }
 
   Future<bool> isUserSubscribed() async {

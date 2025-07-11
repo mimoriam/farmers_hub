@@ -45,15 +45,21 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
   final FirebaseService firebaseService = FirebaseService();
 
-  final SpeechService _speechService = SpeechService();
+  // final SpeechService _speechService = SpeechService();
+  //
+  // String _recognizedText = 'Initializing speech recognition...';
+  // bool _isListening = false;
+  // bool _isInitialized = false;
+  // bool _isInitializing = true;
+  // String _errorMessage = '';
+  // List<LocaleName> _availableLocales = [];
+  // String? _selectedLocale;
 
-  String _recognizedText = 'Initializing speech recognition...';
+  // Direct speech_to_text implementation instead of using SpeechService
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
   bool _isListening = false;
-  bool _isInitialized = false;
-  bool _isInitializing = true;
-  String _errorMessage = '';
-  List<LocaleName> _availableLocales = [];
-  String? _selectedLocale;
 
   List<QueryDocumentSnapshot> _searchResults = [];
   bool _isLoading = false;
@@ -122,112 +128,91 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     super.initState();
 
     // _initializeSpeech();
+    _initSpeech();
     // If the screen is opened with an initial search query, perform the search
     if (widget.searchQuery.isNotEmpty) {
       _performSearch(widget.searchQuery);
     }
   }
 
-  Future<void> _initializeSpeech() async {
+  void _startListening() async {
+    if (!_speechEnabled) return;
+
     setState(() {
-      _isInitializing = true;
-      _recognizedText = 'Initializing speech recognition...';
+      _isListening = true;
+      _lastWords = '';
     });
 
-    // Set up callbacks before initialization
-    _speechService.onSpeechResult = (text) {
-      setState(() {
-        _recognizedText = text.isEmpty ? 'Listening...' : text;
-      });
-    };
+    print("AAAA STARTED");
 
-    _speechService.onError = (error) {
-      setState(() {
-        _errorMessage = error;
-      });
-    };
+    // await Future.delayed(const Duration(milliseconds: 3000), () {});
 
-    _speechService.onListeningStateChanged = (isListening) {
-      setState(() {
-        _isListening = isListening;
-        if (isListening) {
-          _recognizedText = 'Listening...';
-          _errorMessage = '';
-        }
-      });
-    };
+    await _speechToText.listen(
+      onResult: _onSpeechResult,
+      listenFor: Duration(seconds: 10),
+      pauseFor: Duration(seconds: 3),
+      partialResults: true,
+      localeId: "en_US", // You can change this to your preferred locale
+      cancelOnError: true,
+      listenMode: ListenMode.confirmation,
+    );
 
-    _speechService.onLocalesLoaded = (locales) {
-      setState(() {
-        _availableLocales = locales;
-        _selectedLocale = _speechService.currentLocale;
-      });
-    };
+    print("AAA AENDED");
+  }
 
-    // Check availability first
-    bool available = await _speechService.checkAvailability();
-    if (!available) {
-      setState(() {
-        _isInitializing = false;
-        _isInitialized = false;
-        _errorMessage =
-            'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
-        _recognizedText = 'Speech recognition unavailable';
-      });
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      _lastWords = result.recognizedWords;
+      // Update the search field with recognized text
+      _formKey.currentState?.patchValue({'search': _lastWords});
+      // Trigger search
+      _onSearchChanged(_lastWords);
+    });
+
+    print(_lastWords);
+  }
+
+  /// Toggle speech recognition
+  void _toggleListening() async {
+    if (!_speechEnabled) {
+      _showSpeechNotAvailableDialog();
       return;
     }
 
-    // Initialize the service
-    bool initialized = await _speechService.initialize();
-
-    setState(() {
-      _isInitializing = false;
-      _isInitialized = initialized;
-
-      if (initialized) {
-        _recognizedText = 'Ready! Press the microphone to start speaking...';
-        _errorMessage = '';
-        _availableLocales = _speechService.availableLocales;
-        _selectedLocale = _speechService.currentLocale;
-      } else {
-        _errorMessage = _speechService.errorMessage;
-        _recognizedText = 'Failed to initialize speech recognition';
-      }
-    });
+    if (_isListening) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
   }
 
-  void _clearText() {
-    setState(() {
-      _recognizedText = 'Ready! Press the microphone to start speaking...';
-      _errorMessage = '';
-    });
-  }
-
-  void _showRetryDialog() {
+  void _showSpeechNotAvailableDialog() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Speech Recognition Issue'),
+        title: const Text('Speech Recognition Not Available'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Speech recognition is not working. This might be because:'),
+            const Text('Speech recognition is not available. This might be because:'),
             const SizedBox(height: 10),
-            const Text('• Google app is not installed or updated'),
-            const Text('• Speech services are disabled'),
             const Text('• Microphone permissions not granted'),
-            const Text('• No default voice input app selected'),
+            const Text('• Speech services are disabled'),
+            const Text('• Device does not support speech recognition'),
             const SizedBox(height: 10),
-            const Text('Would you like to try reinitializing?'),
+            const Text('Please check your device settings and try again.'),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK'),
+          ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              _initializeSpeech();
+              _initSpeech();
             },
             child: const Text('Retry'),
           ),
@@ -236,71 +221,280 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     );
   }
 
-  void _showLocaleDialog() {
-    if (_availableLocales.isEmpty) return;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Select Language'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: _availableLocales.length,
-            itemBuilder: (context, index) {
-              final locale = _availableLocales[index];
-              return ListTile(
-                title: Text(locale.name),
-                subtitle: Text(locale.localeId),
-                leading: Radio<String>(
-                  value: locale.localeId,
-                  groupValue: _selectedLocale,
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedLocale = value;
-                    });
-                    _speechService.setLocale(value!);
-                    Navigator.pop(context);
-                  },
-                ),
-              );
-            },
-          ),
-        ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
-      ),
-    );
+  /// Stop listening for speech
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {
+      _isListening = false;
+    });
   }
+
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize(
+      onError: (errorNotification) {
+        print('Speech error: ${errorNotification.errorMsg}');
+        setState(() {
+          _isListening = false;
+        });
+      },
+      onStatus: (status) {
+        print('Speech status: $status');
+        setState(() {
+          _isListening = status == 'listening';
+        });
+      },
+    );
+
+    if (!_speechEnabled) {
+      print('Speech recognition not available');
+    }
+
+    setState(() {});
+  }
+
+  // Future<void> _initializeSpeech() async {
+  //   setState(() {
+  //     _isInitializing = true;
+  //     _recognizedText = 'Initializing speech recognition...';
+  //   });
+  //
+  //   _speechService.onSpeechResult = (text) {
+  //     setState(() {
+  //       _recognizedText = text.isEmpty ? 'Listening...' : text;
+  //       _formKey.currentState?.patchValue({'search': text});
+  //       _onSearchChanged(text);
+  //     });
+  //   };
+  //
+  //   _speechService.onError = (error) {
+  //     setState(() {
+  //       _errorMessage = error;
+  //     });
+  //   };
+  //
+  //   _speechService.onListeningStateChanged = (isListening) {
+  //     setState(() {
+  //       _isListening = isListening;
+  //       if (isListening) {
+  //         _recognizedText = 'Listening...';
+  //         _errorMessage = '';
+  //       }
+  //     });
+  //   };
+  //
+  //   _speechService.onLocalesLoaded = (locales) {
+  //     setState(() {
+  //       _availableLocales = locales;
+  //       _selectedLocale = _speechService.currentLocale;
+  //     });
+  //   };
+  //
+  //   bool available = await _speechService.checkAvailability();
+  //   if (!available) {
+  //     setState(() {
+  //       _isInitializing = false;
+  //       _isInitialized = false;
+  //       _errorMessage =
+  //       'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
+  //       _recognizedText = 'Speech recognition unavailable';
+  //     });
+  //     return;
+  //   }
+  //
+  //   bool initialized = await _speechService.initialize();
+  //
+  //   setState(() {
+  //     _isInitializing = false;
+  //     _isInitialized = initialized;
+  //
+  //     if (initialized) {
+  //       _recognizedText = 'Ready! Press the microphone to start speaking...';
+  //       _errorMessage = '';
+  //       _availableLocales = _speechService.availableLocales;
+  //       _selectedLocale = _speechService.currentLocale;
+  //     } else {
+  //       _errorMessage = _speechService.errorMessage;
+  //       _recognizedText = 'Failed to initialize speech recognition';
+  //     }
+  //   });
+  // }
+
+  // Future<void> _initializeSpeech() async {
+  //   setState(() {
+  //     _isInitializing = true;
+  //     _recognizedText = 'Initializing speech recognition...';
+  //   });
+  //
+  //   print("AAAA");
+  //
+  //   // Set up callbacks before initialization
+  //   _speechService.onSpeechResult = (text) {
+  //     setState(() {
+  //       _recognizedText = text.isEmpty ? 'Listening...' : text;
+  //     });
+  //   };
+  //
+  //   _speechService.onError = (error) {
+  //     setState(() {
+  //       _errorMessage = error;
+  //     });
+  //   };
+  //
+  //   _speechService.onListeningStateChanged = (isListening) {
+  //     setState(() {
+  //       _isListening = isListening;
+  //       if (isListening) {
+  //         _recognizedText = 'Listening...';
+  //         _errorMessage = '';
+  //       }
+  //     });
+  //   };
+  //
+  //   _speechService.onLocalesLoaded = (locales) {
+  //     setState(() {
+  //       _availableLocales = locales;
+  //       _selectedLocale = _speechService.currentLocale;
+  //     });
+  //   };
+  //
+  //   // Check availability first
+  //   bool available = await _speechService.checkAvailability();
+  //   if (!available) {
+  //     setState(() {
+  //       _isInitializing = false;
+  //       _isInitialized = false;
+  //       _errorMessage =
+  //           'Speech recognition not available. Please install Google app or enable speech services in your device Settings > Apps > Default apps > Voice input.';
+  //       _recognizedText = 'Speech recognition unavailable';
+  //     });
+  //     return;
+  //   }
+  //
+  //   // Initialize the service
+  //   bool initialized = await _speechService.initialize();
+  //
+  //   setState(() {
+  //     _isInitializing = false;
+  //     _isInitialized = initialized;
+  //
+  //     if (initialized) {
+  //       _recognizedText = 'Ready! Press the microphone to start speaking...';
+  //       _errorMessage = '';
+  //       _availableLocales = _speechService.availableLocales;
+  //       _selectedLocale = _speechService.currentLocale;
+  //     } else {
+  //       _errorMessage = _speechService.errorMessage;
+  //       _recognizedText = 'Failed to initialize speech recognition';
+  //     }
+  //   });
+  // }
+
+  // void _clearText() {
+  //   setState(() {
+  //     _recognizedText = 'Ready! Press the microphone to start speaking...';
+  //     _errorMessage = '';
+  //   });
+  // }
+
+  // void _showRetryDialog() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Speech Recognition Issue'),
+  //       content: Column(
+  //         mainAxisSize: MainAxisSize.min,
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const Text('Speech recognition is not working. This might be because:'),
+  //           const SizedBox(height: 10),
+  //           const Text('• Google app is not installed or updated'),
+  //           const Text('• Speech services are disabled'),
+  //           const Text('• Microphone permissions not granted'),
+  //           const Text('• No default voice input app selected'),
+  //           const SizedBox(height: 10),
+  //           const Text('Would you like to try reinitializing?'),
+  //         ],
+  //       ),
+  //       actions: [
+  //         TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.pop(context);
+  //             _initializeSpeech();
+  //           },
+  //           child: const Text('Retry'),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  // void _showLocaleDialog() {
+  //   if (_availableLocales.isEmpty) return;
+  //
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Select Language'),
+  //       content: SizedBox(
+  //         width: double.maxFinite,
+  //         child: ListView.builder(
+  //           shrinkWrap: true,
+  //           itemCount: _availableLocales.length,
+  //           itemBuilder: (context, index) {
+  //             final locale = _availableLocales[index];
+  //             return ListTile(
+  //               title: Text(locale.name),
+  //               subtitle: Text(locale.localeId),
+  //               leading: Radio<String>(
+  //                 value: locale.localeId,
+  //                 groupValue: _selectedLocale,
+  //                 onChanged: (value) {
+  //                   setState(() {
+  //                     _selectedLocale = value;
+  //                   });
+  //                   _speechService.setLocale(value!);
+  //                   Navigator.pop(context);
+  //                 },
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //       actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel'))],
+  //     ),
+  //   );
+  // }
 
   @override
   void dispose() {
-    _speechService.dispose();
+    // _speechService.dispose();
+    _speechToText.stop();
     _debounce?.cancel();
     super.dispose();
   }
-
-  void _toggleListening() async {
-    if (!_isInitialized) {
-      _showRetryDialog();
-      return;
-    }
-
-    if (_isListening) {
-      await _speechService.stopListening();
-    } else {
-      setState(() {
-        _recognizedText = 'Starting to listen...';
-        _errorMessage = '';
-      });
-
-      await _speechService.startListening(
-        localeId: _selectedLocale,
-        listenFor: const Duration(seconds: 30),
-        pauseFor: const Duration(seconds: 2),
-      );
-    }
-  }
+  //
+  // void _toggleListening() async {
+  //   if (!_isInitialized) {
+  //     _showRetryDialog();
+  //     return;
+  //   }
+  //
+  //   if (_isListening) {
+  //     await _speechService.stopListening();
+  //   } else {
+  //     setState(() {
+  //       _recognizedText = 'Starting to listen...';
+  //       _errorMessage = '';
+  //     });
+  //
+  //     await _speechService.startListening(
+  //       localeId: _selectedLocale,
+  //       listenFor: const Duration(seconds: 30),
+  //       pauseFor: const Duration(seconds: 2),
+  //     );
+  //   }
+  // }
 
   // SearchOption _selectedSearchOption = SearchOption.title;
   SortOption _selectedSortOption = SortOption.ascending;
@@ -558,6 +752,16 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         //   onPressed: _isInitializing ? null : _toggleListening,
                         //   // onPressed: _showOptionsDialog,
                         // ),
+
+                        // suffixIcon: IconButton(
+                        //   icon: Icon(
+                        //     _isListening ? Icons.mic_off : Icons.mic,
+                        //     color: _isInitialized
+                        //         ? (_isListening ? Colors.red : onboardingColor)
+                        //         : Colors.grey,
+                        //   ),
+                        //   onPressed: _isInitializing ? null : _toggleListening,
+                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -569,6 +773,15 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       ),
                     ),
                   ),
+                  // IconButton(
+                  //   icon: Icon(
+                  //     _isListening ? Icons.mic : Icons.mic_none,
+                  //     color: _speechEnabled
+                  //         ? (_isListening ? Colors.red : onboardingColor)
+                  //         : Colors.grey,
+                  //   ),
+                  //   onPressed: _speechEnabled ? _toggleListening : _showSpeechNotAvailableDialog,
+                  // ),
 
                   // Chip(
                   //   backgroundColor: onboardingColor,
@@ -583,13 +796,14 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   //   ),
                   // ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 4),
+                    padding: const EdgeInsets.only(left: 5, right: 10, bottom: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(width: 6),
+                        // SizedBox(width: 2),
 
                         FilterChip(
+                          checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
@@ -608,7 +822,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           label: Text(
                             "Title",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -618,6 +832,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         SizedBox(width: 8),
 
                         FilterChip(
+                          checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
@@ -637,7 +852,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           label: Text(
                             "Category",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -647,6 +862,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         SizedBox(width: 8),
 
                         FilterChip(
+                          checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
@@ -665,7 +881,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           label: Text(
                             "City",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -675,6 +891,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         SizedBox(width: 8),
 
                         FilterChip(
+                          checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
                             if (selected) {
                               setState(() {
@@ -693,7 +910,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           label: Text(
                             "Village",
                             style: GoogleFonts.poppins(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w500,
                               color: Colors.white,
                             ),
@@ -712,6 +929,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         child: Row(
                           children: [
                             FilterChip(
+                              checkmarkColor: Colors.white,
                               onSelected: (bool selected) {
                                 if (selected) {
                                   setState(() {
@@ -730,7 +948,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               label: Text(
                                 "Descending",
                                 style: GoogleFonts.poppins(
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
@@ -740,6 +958,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                             SizedBox(width: 8),
 
                             FilterChip(
+                              checkmarkColor: Colors.white,
                               onSelected: (bool selected) {
                                 if (selected) {
                                   setState(() {
@@ -759,7 +978,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               label: Text(
                                 "Ascending",
                                 style: GoogleFonts.poppins(
-                                  fontSize: 14,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w500,
                                   color: Colors.white,
                                 ),
@@ -772,7 +991,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   ),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 18),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 18, top: 6),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -826,7 +1045,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                                   child: Icon(
                                     Icons.search_outlined, // An icon that fits the context
                                     color: Colors.grey[700],
-                                    size: 34.0,
+                                    size: 36.0,
                                   ),
                                 ),
                               ),
@@ -884,6 +1103,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       itemBuilder: (context, index) {
                         final postData = _searchResults[index].data() as Map<String, dynamic>;
                         final postId = _searchResults[index].id;
+
 
                         // return ProductCard(postData: popularPostsData[index]);
                         return ProductCard2(

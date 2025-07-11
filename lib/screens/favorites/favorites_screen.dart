@@ -390,14 +390,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             //             decoration: BoxDecoration(
             //               color: Colors.white,
             //               borderRadius: BorderRadius.circular(10.0),
-            //               // boxShadow: [
-            //               //   BoxShadow(
-            //               //     color: Colors.grey.withOpacity(0.2),
-            //               //     spreadRadius: 2,
-            //               //     blurRadius: 10,
-            //               //     offset: const Offset(0, 5),
-            //               //   ),
-            //               // ],
             //             ),
             //             child: Padding(
             //               padding: const EdgeInsets.all(8.0),
