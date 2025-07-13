@@ -173,6 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         return StatefulBuilder(
           builder: (context, setState) {
             return Dialog(
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
               elevation: 5,
               backgroundColor: Colors.transparent, // Make Dialog's own background transparent
@@ -237,9 +238,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16.0),
-            boxShadow: [
-              BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
-            ],
+            // boxShadow: [
+            //   BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: Offset(0, 5)),
+            // ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min, // Important for dialogs
@@ -274,6 +275,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(5, (index) {
                   return IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
                     icon: Icon(
                       index < currentRating ? Icons.star : Icons.star_border,
                       color: Colors.amber,

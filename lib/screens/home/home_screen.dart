@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:animations/animations.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,6 +26,7 @@ import 'package:farmers_hub/screens/chat/chat_home.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -35,6 +38,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
   final double topCornerRadius;
@@ -1062,7 +1066,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               onChanged: (value) {
                                 if (value == null) return;
 
-
                                 setState(() {
                                   _selectedLocation = value;
                                   _hasSelectedLocation = true;
@@ -1846,7 +1849,71 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 44),
+                  const SizedBox(height: 8),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: SizedBox(
+                          width: 140,
+                          child: OutlinedButton.icon(
+                            icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 24),
+                            label: Text(
+                              'Whatsapp',
+                              style: GoogleFonts.poppins(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: onboardingColor,
+                              // padding: const EdgeInsets.symmetric(vertical: 14),
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                              side: BorderSide(color: onboardingColor, width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final String whatsapp = "+1-14821421408214";
+                              // final String whatsapp = phoneNumber;
+                              final String whatsappURlAndroid =
+                                  "whatsapp://send?phone=$whatsapp&text=${""}";
+                              final String whatsappIoSURL =
+                                  "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+
+                              if (Platform.isIOS) {
+                                if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+                                  await launchUrl(Uri.parse(whatsappIoSURL));
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                    );
+                                  }
+                                }
+                              } else {
+                                // Android
+                                if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+                                  await launchUrl(Uri.parse(whatsappURlAndroid));
+                                } else {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                    );
+                                  }
+                                }
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
                 ],
               ),
             ),

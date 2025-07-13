@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -71,7 +72,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
   }
 
   final String mtnTextLogo = "MTN Cash";
-  final String systelTextLogo = "SYSTEL Cash";
+  final String systelTextLogo = "Syriatel Cash";
 
   final Color receiptBackgroundColor = Color(0xFFE6E0F8);
 
@@ -246,32 +247,84 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     const SizedBox(width: 8),
                     // You can keep the DropdownButton as is, or use FormBuilderDropdown
                     // For simplicity, keeping the stateful DropdownButton here
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _selectedCurrency,
-                        icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey[700]),
-                        items: _currencies.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            _selectedCurrency = newValue!;
-                            _calculateCommission(); // Recalculate if currency change affects it
-                          });
-                        },
+                    // DropdownButtonHideUnderline(
+                    //   child: DropdownButton<String>(
+                    //     value: _selectedCurrency,
+                    //     icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey[700]),
+                    //     items: _currencies.map((String value) {
+                    //       return DropdownMenuItem<String>(
+                    //         value: value,
+                    //         child: Text(
+                    //           value,
+                    //           style: GoogleFonts.poppins(
+                    //             fontSize: 16,
+                    //             fontWeight: FontWeight.w500,
+                    //             color: Colors.black87,
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }).toList(),
+                    //     onChanged: (String? newValue) {
+                    //       setState(() {
+                    //         _selectedCurrency = newValue!;
+                    //         _calculateCommission(); // Recalculate if currency change affects it
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
+
+                    DropdownButton2<String>(
+                      value: _selectedCurrency,
+                      items: _currencies
+                          .map((String item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ))
+                          .toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _selectedCurrency = newValue!;
+                          _calculateCommission(); // Recalculate if currency change affects it
+                        });
+                      },
+                      iconStyleData: IconStyleData(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                      buttonStyleData: ButtonStyleData(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        height: 40,
+                        width: 80,
+                      ),
+                      dropdownStyleData: DropdownStyleData(
+                        maxHeight: 200,
+                        width: 80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Colors.white,
+                        ),
+                        elevation: 0,
+                        // offset: const Offset(-20, 0),
+                        // scrollbarTheme: ScrollbarThemeData(
+                        //   radius: const Radius.circular(40),
+                        //   thickness: MaterialStateProperty.all<double>(6),
+                        //   thumbVisibility: MaterialStateProperty.all<bool>(true),
+                        // ),
+                      ),
+                      menuItemStyleData: const MenuItemStyleData(
+                        height: 40,
                       ),
                     ),
-                    const SizedBox(width: 8), // Padding for the dropdown
+                    // const SizedBox(width: 8), // Padding for the dropdown
                   ],
                 ),
               ),
@@ -402,8 +455,8 @@ class _CommissionScreenState extends State<CommissionScreen> {
                   spacing: 12.0,
                   runSpacing: 12.0,
                   children: [
-                    _buildPaymentLogo(mtnTextLogo, textColor: onboardingColor),
-                    _buildPaymentLogo(systelTextLogo, textColor: onboardingColor),
+                    _buildPaymentLogo(mtnTextLogo, textColor: Colors.grey.shade600),
+                    _buildPaymentLogo(systelTextLogo, textColor: Colors.grey.shade600),
                     _buildPaymentLogo(stripeLogo),
                     _buildPaymentLogo(visaLogo),
                     _buildPaymentLogo(mastercardLogo),
@@ -428,7 +481,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Color(0xFFE6E0F8),
+                  color: Colors.grey.shade600,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Stack(
@@ -447,14 +500,16 @@ class _CommissionScreenState extends State<CommissionScreen> {
                               height: 250,
                               width: double.infinity,
                               decoration: BoxDecoration(
-                                color: receiptBackgroundColor, // Use the same background
+                                // color: receiptBackgroundColor, // Use the same background
+                                color: Colors.grey.shade600,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: Center(
                                 child: Icon(
                                   Icons.image_search_outlined, // Placeholder icon
-                                  size: 60,
-                                  color: Colors.grey[600],
+                                  size: 40,
+                                  // color: Colors.grey[600],
+                                  color: onboardingColor,
                                 ),
                               ),
                             ),
@@ -514,7 +569,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                               // TODO: Implement send receipt action with _receiptImage
                               print("Send button tapped with image: ${_receiptImage!.path}");
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Sending receipt... (image selected)')),
+                                SnackBar(content: Text('Sending receipt...')),
                               );
                             }
                           : null,
