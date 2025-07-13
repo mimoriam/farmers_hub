@@ -8,6 +8,7 @@ import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/favorites/favorites_screen.dart';
+import 'package:farmers_hub/screens/notifications/notifications_screen.dart';
 import 'package:farmers_hub/screens/profile/profile_screen.dart';
 import 'package:farmers_hub/services/locale_service.dart';
 import 'package:farmers_hub/services/location_service.dart';
@@ -681,21 +682,21 @@ class _HomeScreenState extends State<HomeScreen> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  backgroundColor: scaffoldBackgroundColor,
-                  title: Text("Confirm Exit"),
+                  backgroundColor: Colors.white,
+                  title: Text("Confirm Exit!"),
                   content: Text("Are you sure you want to exit the app?"),
                   actions: <Widget>[
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop(); // Don't exit
                       },
-                      child: Text("Cancel"),
+                      child: Text("Cancel", style: TextStyle(color: Colors.grey[600])),
                     ),
                     TextButton(
                       onPressed: () {
                         SystemNavigator.pop();
                       },
-                      child: Text("Exit"),
+                      child: Text("Exit", style: TextStyle(color: Colors.red)),
                     ),
                   ],
                 );
@@ -1157,7 +1158,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             Padding(
                               padding: const EdgeInsets.only(bottom: 3),
                               child: IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  if (context.mounted) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => NotificationsScreen(),
+                                      ),
+                                    );
+                                  }
+                                },
                                 icon: const Icon(Icons.notifications_none_outlined),
                                 style: IconButton.styleFrom(
                                   elevation: 0,
