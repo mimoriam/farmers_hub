@@ -37,7 +37,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
       case 1:
         return firebaseService.getSoldPostsByCurrentUser();
       case 2:
-        return firebaseService.getFavoritedPosts();
+        // return firebaseService.getFavoritedPosts();
+        // Instead of favorited posts, return posts that are pending approval:
+        return firebaseService.getPendingPostsByCurrentUser();
       default:
         return firebaseService.getAllPostsByCurrentUser();
     }
@@ -422,7 +424,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           SizedBox(width: 10),
           _buildTabItem(1, "Sold"),
           SizedBox(width: 10),
-          _buildTabItem(2, "Liked"),
+          _buildTabItem(2, "Pending"),
         ],
       ),
     );

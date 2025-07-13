@@ -149,7 +149,11 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
         title: Text(
           "Currency Exchange",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
@@ -189,15 +193,22 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                     child: Row(
                       children: [
                         // Icon part for US Dollar
-                        Icon(
-                          Icons.payments, // The dollar icon
-                          // color:
-                          //     selected == 1 || _selectedCurrency == "syria"
-                          //         ? Colors.white
-                          //         : Colors.grey.shade600, // Icon color when not
+                        // Icon(
+                        //   Icons.payments, // The dollar icon
+                        //   // color:
+                        //   //     selected == 1 || _selectedCurrency == "syria"
+                        //   //         ? Colors.white
+                        //   //         : Colors.grey.shade600, // Icon color when not
+                        //   color: Colors.grey.shade600,
+                        //   // selected
+                        //   size: 24,
+                        // ),
+                        Image.asset(
+                          "images/icons/syria_currency.png",
+                          width: 48.0,
+                          height: 48.0,
                           color: Colors.grey.shade600,
-                          // selected
-                          size: 24,
+                          colorBlendMode: BlendMode.srcIn,
                         ),
                         const SizedBox(width: 16.0),
 
@@ -220,22 +231,34 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         const SizedBox(width: 16.0),
 
                         // Radio button part (custom look for unselected state)
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                selected == 1 || _selectedCurrency == "syria"
-                                    ? onboardingColor
-                                    : Colors.transparent, // Fill color for
-                            // unselected radio
-                            // border: Border.all(
-                            //   color: Colors.grey.shade400, // Border color for unselected radio
-                            //   width: 2,
-                            // ),
-                          ),
-                          child: null, // No inner icon when not selected
+                        // Container(
+                        //   width: 24,
+                        //   height: 24,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: selected == 1 || _selectedCurrency == "syria"
+                        //         ? onboardingColor
+                        //         : Colors.transparent, // Fill color for
+                        //     // unselected radio
+                        //     // border: Border.all(
+                        //     //   color: Colors.grey.shade400, // Border color for unselected radio
+                        //     //   width: 2,
+                        //     // ),
+                        //   ),
+                        //   child: null, // No inner icon when not selected
+                        // ),
+                        Radio<String>(
+                          value: currencyType.syria.name,
+                          groupValue: _selectedCurrency,
+                          onChanged: (String? newValue) async {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCurrency = newValue;
+                              });
+                              await _firebaseService.updateCurrency(newValue);
+                            }
+                          },
+                          activeColor: onboardingColor,
                         ),
                       ],
                     ),
@@ -281,7 +304,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           //         ? Colors.white
                           //         : Colors.grey.shade600, // Icon color when not
                           // selected
-                          size: 24,
+                          size: 28,
                         ),
                         const SizedBox(width: 16.0),
 
@@ -304,22 +327,34 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         const SizedBox(width: 16.0),
 
                         // Radio button part (custom look for unselected state)
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                selected == 2 || _selectedCurrency == "usd"
-                                    ? onboardingColor
-                                    : Colors.transparent, // Fill color for
-                            // unselected radio
-                            // border: Border.all(
-                            //   color: Colors.grey.shade400, // Border color for unselected radio
-                            //   width: 2,
-                            // ),
-                          ),
-                          child: null, // No inner icon when not selected
+                        // Container(
+                        //   width: 24,
+                        //   height: 24,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: selected == 2 || _selectedCurrency == "usd"
+                        //         ? onboardingColor
+                        //         : Colors.transparent, // Fill color for
+                        //     // unselected radio
+                        //     // border: Border.all(
+                        //     //   color: Colors.grey.shade400, // Border color for unselected radio
+                        //     //   width: 2,
+                        //     // ),
+                        //   ),
+                        //   child: null, // No inner icon when not selected
+                        // ),
+                        Radio<String>(
+                          value: currencyType.usd.name,
+                          groupValue: _selectedCurrency,
+                          onChanged: (String? newValue) async {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCurrency = newValue;
+                              });
+                              await _firebaseService.updateCurrency(newValue);
+                            }
+                          },
+                          activeColor: onboardingColor,
                         ),
                       ],
                     ),
@@ -365,7 +400,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           //         ? Colors.white
                           //         : Colors.grey.shade600, // Icon color when not
                           // selected
-                          size: 24,
+                          size: 28,
                         ),
                         const SizedBox(width: 16.0),
 
@@ -388,22 +423,34 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         const SizedBox(width: 16.0),
 
                         // Radio button part (custom look for unselected state)
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                selected == 3 || _selectedCurrency == "euro"
-                                    ? onboardingColor
-                                    : Colors.transparent, // Fill color for
-                            // unselected radio
-                            // border: Border.all(
-                            //   color: Colors.grey.shade400, // Border color for unselected radio
-                            //   width: 2,
-                            // ),
-                          ),
-                          child: null, // No inner icon when not selected
+                        // Container(
+                        //   width: 24,
+                        //   height: 24,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: selected == 3 || _selectedCurrency == "euro"
+                        //         ? onboardingColor
+                        //         : Colors.transparent, // Fill color for
+                        //     // unselected radio
+                        //     // border: Border.all(
+                        //     //   color: Colors.grey.shade400, // Border color for unselected radio
+                        //     //   width: 2,
+                        //     // ),
+                        //   ),
+                        //   child: null, // No inner icon when not selected
+                        // ),
+                        Radio<String>(
+                          value: currencyType.euro.name,
+                          groupValue: _selectedCurrency,
+                          onChanged: (String? newValue) async {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCurrency = newValue;
+                              });
+                              await _firebaseService.updateCurrency(newValue);
+                            }
+                          },
+                          activeColor: onboardingColor,
                         ),
                       ],
                     ),
@@ -451,7 +498,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                           //         ? Colors.white
                           //         : Colors.grey.shade600, // Icon color when not
                           // selected
-                          size: 24,
+                          size: 28,
                         ),
                         const SizedBox(width: 16.0),
 
@@ -474,22 +521,34 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         const SizedBox(width: 16.0),
 
                         // Radio button part (custom look for unselected state)
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color:
-                                selected == 4 || _selectedCurrency == "lira"
-                                    ? onboardingColor
-                                    : Colors.transparent, // Fill color for
-                            // unselected radio
-                            // border: Border.all(
-                            //   color: Colors.grey.shade400, // Border color for unselected radio
-                            //   width: 2,
-                            // ),
-                          ),
-                          child: null, // No inner icon when not selected
+                        // Container(
+                        //   width: 24,
+                        //   height: 24,
+                        //   decoration: BoxDecoration(
+                        //     shape: BoxShape.circle,
+                        //     color: selected == 4 || _selectedCurrency == "lira"
+                        //         ? onboardingColor
+                        //         : Colors.transparent, // Fill color for
+                        //     // unselected radio
+                        //     // border: Border.all(
+                        //     //   color: Colors.grey.shade400, // Border color for unselected radio
+                        //     //   width: 2,
+                        //     // ),
+                        //   ),
+                        //   child: null, // No inner icon when not selected
+                        // ),
+                        Radio<String>(
+                          value: currencyType.lira.name,
+                          groupValue: _selectedCurrency,
+                          onChanged: (String? newValue) async {
+                            if (newValue != null) {
+                              setState(() {
+                                _selectedCurrency = newValue;
+                              });
+                              await _firebaseService.updateCurrency(newValue);
+                            }
+                          },
+                          activeColor: onboardingColor,
                         ),
                       ],
                     ),

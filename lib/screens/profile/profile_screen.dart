@@ -826,14 +826,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             }
           },
         ),
-        _buildSettingItemCard(
-          icon: Icons.verified_user_outlined, // Shield/verified icon
-          // title: 'Account Verification',
-          title: AppLocalizations.of(context)!.agreeTerms,
-          onTap: () {
-            // Navigate to Account Verification Screen
-          },
-        ),
+        // _buildSettingItemCard(
+        //   icon: Icons.verified_user_outlined, // Shield/verified icon
+        //   // title: 'Account Verification',
+        //   title: AppLocalizations.of(context)!.agreeTerms,
+        //   onTap: () {
+        //     // Navigate to Account Verification Screen
+        //   },
+        // ),
 
         SizedBox(height: 4),
 
@@ -951,17 +951,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         SizedBox(height: 4),
 
-        _buildSettingItemCard(
-          icon: Icons.currency_exchange,
-          title: 'Currency',
-          onTap: () {
-            if (context.mounted) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
-              );
-            }
-          },
+        Card(
+          color: Colors.white,
+          elevation: 1,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+          margin: EdgeInsets.symmetric(vertical: 5.0),
+          child: Column(
+            children: [
+              _buildSettingsItem(
+                icon: Icons.currency_exchange,
+                text: 'Currency',
+                onTap: () {
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const CurrencyExchangeScreen()),
+                    );
+                  }
+                },
+              ),
+
+              // Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+              _buildSettingsItem(
+                icon: Icons.history_outlined,
+                text: 'Post History',
+                onTap: () {
+                  if (context.mounted) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ManagePostScreen()),
+                    );
+                  }
+                },
+              ),
+
+              _buildSettingsItem(
+                icon: Icons.verified_user_outlined,
+                text: AppLocalizations.of(context)!.agreeTerms,
+                onTap: () {
+                  // Navigate to Account Verification Screen
+                },
+              ),
+            ],
+          ),
         ),
 
         // Currecy Dropdown
@@ -1032,15 +1064,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // ),
 
         // SizedBox(height: 4),
-        _buildSettingItemCard(
-          icon: Icons.history_outlined, // Clock/history icon
-          title: 'Post History',
-          onTap: () {
-            if (context.mounted) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManagePostScreen()));
-            }
-          },
-        ),
+        // _buildSettingItemCard(
+        //   icon: Icons.history_outlined, // Clock/history icon
+        //   title: 'Post History',
+        //   onTap: () {
+        //     if (context.mounted) {
+        //       Navigator.push(context, MaterialPageRoute(builder: (context) => ManagePostScreen()));
+        //     }
+        //   },
+        // ),
 
         // _buildThemeModeCard(), // Custom card for theme mode
       ],
@@ -1228,11 +1260,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onTap: onTap,
           contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         ),
-        if (showDivider)
-          Padding(
-            padding: const EdgeInsets.only(left: 72.0, right: 16.0), // Align divider with text
-            child: Divider(height: 1, thickness: 1, color: Colors.grey[200]),
-          ),
+        // if (showDivider)
+        //   Padding(
+        //     padding: const EdgeInsets.only(left: 12.0, right: 12), // Align divider with text
+        //     child: Divider(height: 1, thickness: 1, color: Colors.grey[200]),
+        //   ),
       ],
     );
   }

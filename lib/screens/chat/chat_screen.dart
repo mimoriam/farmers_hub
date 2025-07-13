@@ -526,7 +526,7 @@ class _ChatScreenState extends State<ChatScreen> {
               name: "message",
               style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
               decoration: InputDecoration(
-                hintText: "Type your message...",
+                hintText: "🙂 Type your message...",
                 filled: true,
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
@@ -535,7 +535,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: BorderSide(color: textFieldBorderSideColor),
+                  borderSide: BorderSide(color: onboardingColor),
                 ),
               ),
             ),
@@ -545,7 +545,10 @@ class _ChatScreenState extends State<ChatScreen> {
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.rectangle,
-              borderRadius: BorderRadius.circular(11),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: textFieldBorderSideColor
+              ),
             ),
             margin: EdgeInsets.only(right: 10),
             child: IconButton(

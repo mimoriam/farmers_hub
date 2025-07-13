@@ -794,6 +794,20 @@ class FirebaseService {
     }
   }
 
+  Future<List<QueryDocumentSnapshot>> getPendingPostsByCurrentUser() async {
+    try {
+      final QuerySnapshot querySnapshot = await _firestore
+          .collection(postCollection)
+          .where("sellerId", isEqualTo: currentUser?.uid)
+          .where("status", isEqualTo: "pending")
+          .get();
+
+      return querySnapshot.docs;
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<List<String>> getBackgroundImages() async {
     try {
       final ListResult result = await _storage.ref().child('backgrounds').listAll();
