@@ -32,7 +32,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         automaticallyImplyLeading: true,
         title: Text(
           "Notifications",
-          // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 16,

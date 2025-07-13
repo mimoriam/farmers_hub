@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/firebase_options.dart';
 import 'package:farmers_hub/main.dart';
+import 'package:farmers_hub/screens/login/login_screen.dart';
 import 'package:farmers_hub/screens/notifications/notifications_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -28,24 +29,27 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   final firebaseService = FirebaseService();
 
-  final notifId = await firebaseService._firestore
-      .collection(firebaseService.userCollection)
-      .doc(firebaseService._auth.currentUser!.uid)
-      .collection(firebaseService.notificationCollection)
-      .add({
-        "title": message.notification!.title,
-        "body": message.notification!.body,
-        "createdAt": FieldValue.serverTimestamp(),
-        "hasBeenDeleted": false,
-        "userId": firebaseService._auth.currentUser!.uid,
-      });
+  if (firebaseService._auth.currentUser != null) {
+    print("IS THIS EXECUTING???");
+    final notifId = await firebaseService._firestore
+        .collection(firebaseService.userCollection)
+        .doc(firebaseService._auth.currentUser!.uid)
+        .collection(firebaseService.notificationCollection)
+        .add({
+          "title": message.notification!.title,
+          "body": message.notification!.body,
+          "createdAt": FieldValue.serverTimestamp(),
+          "hasBeenDeleted": false,
+          "userId": firebaseService._auth.currentUser!.uid,
+        });
 
-  await firebaseService._firestore
-      .collection(firebaseService.userCollection)
-      .doc(firebaseService._auth.currentUser!.uid)
-      .update({
-        "notificationIds": FieldValue.arrayUnion([notifId.id]),
-      });
+    await firebaseService._firestore
+        .collection(firebaseService.userCollection)
+        .doc(firebaseService._auth.currentUser!.uid)
+        .update({
+          "notificationIds": FieldValue.arrayUnion([notifId.id]),
+        });
+  }
 }
 
 class FirebaseService {
@@ -82,25 +86,27 @@ class FirebaseService {
 
     // This handles messages that arrive while the app is in the foreground.
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      final notifId = await _firestore
-          .collection(userCollection)
-          .doc(_auth.currentUser!.uid)
-          .collection(notificationCollection)
-          .add({
-            "title": message.notification!.title,
-            "body": message.notification!.body,
-            "createdAt": FieldValue.serverTimestamp(),
-            "hasBeenDeleted": false,
-            "userId": _auth.currentUser!.uid,
-          });
+      if (_auth.currentUser != null) {
+        final notifId = await _firestore
+            .collection(userCollection)
+            .doc(_auth.currentUser!.uid)
+            .collection(notificationCollection)
+            .add({
+              "title": message.notification!.title,
+              "body": message.notification!.body,
+              "createdAt": FieldValue.serverTimestamp(),
+              "hasBeenDeleted": false,
+              "userId": _auth.currentUser!.uid,
+            });
+
+        await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
+          "notificationIds": FieldValue.arrayUnion([notifId.id]),
+        });
+      }
 
       print('Got a message whilst in the foreground!');
       print('Message title: ${message.notification!.title}');
       print('Message Body: ${message.notification!.body}');
-
-      await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
-        "notificationIds": FieldValue.arrayUnion([notifId.id]),
-      });
     });
   }
 
@@ -108,9 +114,16 @@ class FirebaseService {
     if (message == null) return;
 
     // TODO: Push to navigator screen
-    navigatorKey.currentState?.push(
-      MaterialPageRoute(builder: (context) => NotificationsScreen(message: message)),
-    );
+    if (_auth.currentUser != null) {
+      navigatorKey.currentState?.push(
+        // MaterialPageRoute(builder: (context) => NotificationsScreen(message: message)),
+        MaterialPageRoute(builder: (context) => NotificationsScreen()),
+      );
+    } else {
+      navigatorKey.currentState?.pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    }
   }
 
   Future initPushNotifications() async {
