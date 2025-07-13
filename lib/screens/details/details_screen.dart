@@ -157,7 +157,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
   }
 
   Widget _buildDialogContent(BuildContext context) {
+    // TODO: Add reporting feature
     return Dialog(
+      insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
       elevation: 0,
       backgroundColor: Colors.transparent,
@@ -253,8 +255,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 },
               );
             },
-            icon: Icon(Icons.report_problem_outlined),
-            color: Colors.yellowAccent,
+            icon: Icon(Icons.report),
+            color: Colors.white,
           ),
         ],
         title: Text(

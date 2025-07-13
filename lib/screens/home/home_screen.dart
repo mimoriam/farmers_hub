@@ -175,6 +175,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late LocationService _locationService;
 
   String _selectedLocation = '';
+  bool _hasSelectedLocation = false;
   String _locationMessage = "Fetching location...";
   bool _isLoadingLocation = true;
 
@@ -991,13 +992,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                   vertical: 0,
                                   horizontal: 6,
                                 ),
+                                // border: OutlineInputBorder(
+                                //   borderSide: BorderSide(color: onboardingColor, width: 1.0),
+                                //   borderRadius: BorderRadius.circular(8),
+                                // ),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: onboardingColor, width: 1.0),
-                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: _hasSelectedLocation
+                                        ? onboardingColor
+                                        : onboardingTextColor,
+                                    width: 1.0,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
-                                  borderRadius: BorderRadius.circular(12),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
                               iconStyleData: IconStyleData(
@@ -1050,8 +1060,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .toList(),
 
                               onChanged: (value) {
+                                if (value == null) return;
+
+
                                 setState(() {
-                                  _selectedLocation = value!;
+                                  _selectedLocation = value;
+                                  _hasSelectedLocation = true;
                                 });
                               },
                             ),

@@ -1,4 +1,5 @@
 import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
+import 'package:farmers_hub/screens/land/land_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -42,13 +43,13 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   ];
 
   final List<Map<String, String>> popularCategories = [
-    {'name': 'Tomatoes', 'image': 'images/categories/tomatoes.jpg'},
-    {'name': 'Rice', 'image': 'images/categories/rice.jpg'},
-    {'name': 'Apples', 'image': 'images/categories/apples.png'},
-    {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
     {'name': 'Pomegranate', 'image': 'images/categories/iv_pomegranate.png'},
+    {'name': 'Apples', 'image': 'images/categories/apples.png'},
     {'name': 'Honey', 'image': 'images/categories/honey.png'},
+    {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
     {'name': 'Leafy Green', 'image': 'images/categories/leafy_green.png'},
+    // {'name': 'Tomatoes', 'image': 'images/categories/tomatoes.jpg'},
+    // {'name': 'Rice', 'image': 'images/categories/rice.jpg'},
   ];
 
   // Method to filter categories based on the search query
@@ -59,8 +60,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         _filteredCategories = List.from(categories);
       } else {
         _filteredCategories = categories
-            .where((category) =>
-            category['name']!.toLowerCase().contains(_searchQuery))
+            .where((category) => category['name']!.toLowerCase().contains(_searchQuery))
             .toList();
       }
     });
@@ -76,17 +76,30 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget _buildCategoryItem(BuildContext context, String name, String imageUrl) {
     return GestureDetector(
       onTap: () {
-        if (context.mounted) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => FilteredResultsScreen(
-                    searchQuery: name.split(' ')[0].toLowerCase(),
-                    selectedSearchOption: SearchOption.category,
-                  ),
-            ),
-          );
+        print(name);
+        if (name == "Land Services" || name == "Equipments" || name == "Delivery") {
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    // TODO: Add Searching for Land stuff
+                    (context) => LandScreen(),
+              ),
+            );
+          }
+        } else {
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => FilteredResultsScreen(
+                  searchQuery: name.split(' ')[0].toLowerCase(),
+                  selectedSearchOption: SearchOption.category,
+                ),
+              ),
+            );
+          }
         }
       },
       child: Card(
@@ -142,7 +155,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
@@ -152,7 +164,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         title: Text(
           "Search Categories",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: SafeArea(
@@ -176,7 +192,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                        textStyle: TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                        ),
                       ),
                       onChanged: (String? query) {
                         _filterCategories(query ?? '');
@@ -184,7 +204,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                       decoration: InputDecoration(
                         hintText: 'Search',
                         hintStyle: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                          textStyle: TextStyle(
+                            fontSize: 13.69,
+                            fontWeight: FontWeight.w400,
+                            height: 1.43,
+                          ),
                           color: Colors.grey,
                         ),
                         filled: true,
@@ -227,31 +251,39 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
                         _filteredCategories.isEmpty && _searchQuery.isNotEmpty
                             ? Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 30.0),
-                            child: Text(
-                              'No categories found for "$_searchQuery"',
-                              style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
-                            ),
-                          ),
-                        ) : GridView.builder(
-                          shrinkWrap: true,
-                          // Important to make GridView work inside SingleChildScrollView
-                          physics: const NeverScrollableScrollPhysics(),
-                          // Disable GridView's own scrolling
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2, // Number of columns
-                            crossAxisSpacing: 16.0, // Horizontal spacing between items
-                            mainAxisSpacing: 10.0, // Vertical spacing between items
-                            childAspectRatio: 1.2,
-                          ),
-                          // itemCount: categories.length,
-                            itemCount: _filteredCategories.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final category = _filteredCategories[index];
-                            return _buildCategoryItem(context, category["name"]!, category["image"]!);
-                          },
-                        ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 30.0),
+                                  child: Text(
+                                    'No categories found for "$_searchQuery"',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : GridView.builder(
+                                shrinkWrap: true,
+                                // Important to make GridView work inside SingleChildScrollView
+                                physics: const NeverScrollableScrollPhysics(),
+                                // Disable GridView's own scrolling
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2, // Number of columns
+                                  crossAxisSpacing: 16.0, // Horizontal spacing between items
+                                  mainAxisSpacing: 10.0, // Vertical spacing between items
+                                  childAspectRatio: 1.2,
+                                ),
+                                // itemCount: categories.length,
+                                itemCount: _filteredCategories.length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  final category = _filteredCategories[index];
+                                  return _buildCategoryItem(
+                                    context,
+                                    category["name"]!,
+                                    category["image"]!,
+                                  );
+                                },
+                              ),
 
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 20),
@@ -290,12 +322,11 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder:
-                                                (context) => FilteredResultsScreen(
-                                                  // TODO: Handle when Category has spaces in them
-                                                  searchQuery: category["name"]!.toLowerCase(),
-                                                  selectedSearchOption: SearchOption.category,
-                                                ),
+                                            builder: (context) => FilteredResultsScreen(
+                                              // TODO: Handle when Category has spaces in them
+                                              searchQuery: category["name"]!.toLowerCase(),
+                                              selectedSearchOption: SearchOption.category,
+                                            ),
                                           ),
                                         );
                                       }
@@ -307,7 +338,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                       decoration: ShapeDecoration(
                                         color: Colors.white,
                                         shape: RoundedRectangleBorder(
-                                          side: BorderSide(width: 0.2, color: const Color(0xFFFF9800)),
+                                          side: BorderSide(
+                                            width: 0.2,
+                                            color: const Color(0xFFFF9800),
+                                          ),
                                           borderRadius: BorderRadius.circular(8),
                                         ),
                                         shadows: [
@@ -329,7 +363,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                               width: 48,
                                               height: 46,
 
-                                              child: Image.asset(category['image']!, fit: BoxFit.contain),
+                                              child: Image.asset(
+                                                category['image']!,
+                                                fit: BoxFit.contain,
+                                              ),
                                               // child: SvgPicture.asset(
                                               //   category['image']!,
                                               //   semanticsLabel: category["semanticsLabel"],

@@ -425,6 +425,8 @@ class FirebaseService {
         "country": country ?? "",
         "village": village ?? "",
       },
+      "hasBeenReported": false,
+      "reports": [],
       // "imageUrl": imageUrl,
       "imageUrls": imageUrls,
       "hasBeenSold": false,
@@ -559,6 +561,7 @@ class FirebaseService {
           .where("featured", isEqualTo: true)
           .where("hasBeenSold", isEqualTo: false)
           .where("status", isEqualTo: "approved")
+          .orderBy("createdAt", descending: true)  // Order by the creation date in descending order
           .get();
 
       return querySnapshot.docs;
