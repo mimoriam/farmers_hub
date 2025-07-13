@@ -2,9 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/firebase_options.dart';
+import 'package:farmers_hub/main.dart';
+import 'package:farmers_hub/screens/notifications/notifications_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:farmers_hub/utils/auth_exceptions.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +18,35 @@ import 'package:path/path.dart' as p;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 enum currencyType { syria, usd, euro, lira }
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  print('Title: ${message.notification!.title}');
+  print('Body: ${message.notification!.body}');
+
+  final firebaseService = FirebaseService();
+
+  final notifId = await firebaseService._firestore
+      .collection(firebaseService.userCollection)
+      .doc(firebaseService._auth.currentUser!.uid)
+      .collection(firebaseService.notificationCollection)
+      .add({
+        "title": message.notification!.title,
+        "body": message.notification!.body,
+        "createdAt": FieldValue.serverTimestamp(),
+        "hasBeenDeleted": false,
+        "userId": firebaseService._auth.currentUser!.uid,
+      });
+
+  await firebaseService._firestore
+      .collection(firebaseService.userCollection)
+      .doc(firebaseService._auth.currentUser!.uid)
+      .update({
+        "notificationIds": FieldValue.arrayUnion([notifId.id]),
+      });
+}
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -21,6 +56,8 @@ class FirebaseService {
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
   // Stream for auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 
@@ -29,6 +66,62 @@ class FirebaseService {
 
   final userCollection = "users";
   final postCollection = "posts";
+
+  final notificationCollection = "notifications";
+
+  // Method to initialize notifications
+  Future<void> initNotifications() async {
+    await _firebaseMessaging.requestPermission();
+    final fcmToken = await _firebaseMessaging.getToken();
+    print("FCM Token: $fcmToken");
+
+    initPushNotifications();
+
+    // This handles messages that arrive while the app is in the background.
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    // This handles messages that arrive while the app is in the foreground.
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      final notifId = await _firestore
+          .collection(userCollection)
+          .doc(_auth.currentUser!.uid)
+          .collection(notificationCollection)
+          .add({
+            "title": message.notification!.title,
+            "body": message.notification!.body,
+            "createdAt": FieldValue.serverTimestamp(),
+            "hasBeenDeleted": false,
+            "userId": _auth.currentUser!.uid,
+          });
+
+      print('Got a message whilst in the foreground!');
+      print('Message title: ${message.notification!.title}');
+      print('Message Body: ${message.notification!.body}');
+
+      await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
+        "notificationIds": FieldValue.arrayUnion([notifId.id]),
+      });
+    });
+  }
+
+  void handleMessage(RemoteMessage? message) async {
+    if (message == null) return;
+
+    // TODO: Push to navigator screen
+    navigatorKey.currentState?.push(
+      MaterialPageRoute(builder: (context) => NotificationsScreen(message: message)),
+    );
+  }
+
+  Future initPushNotifications() async {
+    FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
+
+    FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+  }
+
+  Future<String?> get fcmToken async {
+    return await _firebaseMessaging.getToken();
+  }
 
   Future<String?> uploadImage(File image, {String? path}) async {
     try {
@@ -199,6 +292,8 @@ class FirebaseService {
     // required String signUpMode,
   }) async {
     try {
+      final fcmToken = await _firebaseMessaging.getToken();
+
       await _firestore.collection(userCollection).doc(user.uid).set({
         "createdAt": FieldValue.serverTimestamp(),
         "lastSeenAt": FieldValue.serverTimestamp(),
@@ -219,6 +314,8 @@ class FirebaseService {
         "profileImage": "default_pfp.jpg",
         "username": username,
         "hasBeenDeleted": true,
+        "FCMToken": fcmToken,
+        "notificationIds": [],
       });
 
       await currentUser!.updateDisplayName(username);
@@ -312,6 +409,10 @@ class FirebaseService {
       // if (data.containsKey("profileImage") && oldImageUrl != "default_pfp.jpg") {
       //   await deleteImageFromUrl(oldImageUrl);
       // }
+
+      final fcmToken = await _firebaseMessaging.getToken();
+
+      data["FCMToken"] = fcmToken;
 
       if (data.containsKey("username")) {
         await currentUser!.updateDisplayName(data["username"]);
@@ -561,7 +662,7 @@ class FirebaseService {
           .where("featured", isEqualTo: true)
           .where("hasBeenSold", isEqualTo: false)
           .where("status", isEqualTo: "approved")
-          .orderBy("createdAt", descending: true)  // Order by the creation date in descending order
+          .orderBy("createdAt", descending: true) // Order by the creation date in descending order
           .get();
 
       return querySnapshot.docs;
