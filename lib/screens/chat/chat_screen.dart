@@ -542,8 +542,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Widget _buildUserInput() {
+    final locale = Localizations.localeOf(context);
+
     return Padding(
-      padding: EdgeInsets.only(bottom: 20, left: 10),
+      padding: locale.languageCode == "ar"
+          ? EdgeInsets.only(bottom: 20, right: 10, left: 10)
+          : EdgeInsets.only(bottom: 20, left: 10),
       child: Row(
         children: [
           Expanded(

@@ -607,6 +607,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
     bool selectedTitle = true;
 
+    final locale = Localizations.localeOf(context);
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
@@ -873,7 +874,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     children: [
                       SizedBox(width: 6),
                       Padding(
-                        padding: const EdgeInsets.only(left: 14, right: 14),
+                        // padding: const EdgeInsets.only(left: 6, right: 14),
+                        padding: locale.languageCode == "ar"
+                            ? const EdgeInsets.only(left: 6, right: 8)
+                            : const EdgeInsets.only(left: 6, right: 14),
                         child: Row(
                           children: [
                             FilterChip(

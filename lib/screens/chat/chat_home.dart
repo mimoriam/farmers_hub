@@ -17,6 +17,7 @@ import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 
 class MessageItem {
   final String avatarUrl;
@@ -129,127 +130,36 @@ class _ChatHomeState extends State<ChatHome> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Speech Recognition Not Available'),
+        title: Text(AppLocalizations.of(context)!.speechRecognitionIssue),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Speech recognition is not available. This might be because:'),
+            Text(AppLocalizations.of(context)!.speechNotWorking),
             const SizedBox(height: 10),
-            const Text('• Microphone permissions not granted'),
-            const Text('• Speech services are disabled'),
+            Text(AppLocalizations.of(context)!.microphonePermissionNotGranted),
+            Text(AppLocalizations.of(context)!.speechServiceDisabled),
             const Text('• Device does not support speech recognition'),
             const SizedBox(height: 10),
             const Text('Please check your device settings and try again.'),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(AppLocalizations.of(context)!.ok),
+          ),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
               _initSpeech();
             },
-            child: const Text('Retry'),
+            child: Text(AppLocalizations.of(context)!.retry),
           ),
         ],
       ),
     );
   }
-
-  // Widget _buildUserList() {
-  //   if (_isLoading) {
-  //     return const Center(child: CircularProgressIndicator(color: onboardingColor));
-  //   }
-  //   return StreamBuilder(
-  //     // stream: _chatService.getUsersStream(),
-  //     stream: _chatService.getUsersStreamForChatBasedOnIds(userIds),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.connectionState == ConnectionState.waiting) {
-  //         return Center(child: CircularProgressIndicator(color: onboardingColor));
-  //       }
-  //
-  //       if (snapshot.hasError) {
-  //         // Always good to handle errors
-  //         return Center(child: Text("Something went wrong: ${snapshot.error}"));
-  //       }
-  //
-  //       if (snapshot.hasData) {
-  //         final users = snapshot.data!;
-  //         // snapshot.data?.map((user) {
-  //         // });
-  //
-  //         users.forEach((user) {
-  //           // Check if user isn't being duplicated and added to list
-  //           if (!(messages.any((item) => item.name == user["username"]))) {
-  //             messages.add(
-  //               MessageItem(
-  //                 avatarUrl:
-  //                     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-  //                 // name: user["username"],
-  //                 id: "${user["id"]}",
-  //                 name: "${user["username"]}",
-  //                 lastMessage: 'Hi its available',
-  //                 time: '12:00 PM',
-  //               ),
-  //             );
-  //           }
-  //         });
-  //
-  //         print(messages.length);
-  //         return ListView(
-  //           shrinkWrap: true,
-  //           children:
-  //               snapshot.data!.map<Widget>((userData) => _buildUserItemList(userData, context)).toList(),
-  //         ); // User is signed in
-  //       } else {
-  //         return Container();
-  //       }
-  //     },
-  //   );
-  // }
-  //
-  // Widget _buildUserItemList(Map<String, dynamic> userData, BuildContext context) {
-  //   // Return all users except current user
-  //   // print(widget.user.uid);
-  //   if (userData["email"] != widget.user.email) {
-  //     // return GestureDetector(
-  //     // onTap: () {
-  //     //   Navigator.of(context).push(
-  //     //     MaterialPageRoute(
-  //     //       builder:
-  //     //           (context) => ChatScreen(
-  //     //             receiverId: userData["id"],
-  //     //             receiverEmail: userData['email'],
-  //     //             user: widget.user,
-  //     //           ),
-  //     //     ),
-  //     //   );
-  //     // },
-  //     // child: Center(child: ElevatedButton(
-  //     return Center(
-  //       child: ElevatedButton(
-  //         style: ElevatedButton.styleFrom(backgroundColor: onboardingColor),
-  //         onPressed: () {
-  //           Navigator.of(context).push(
-  //             MaterialPageRoute(
-  //               builder:
-  //                   (context) => ChatScreen(
-  //                     receiverId: userData["id"],
-  //                     receiverEmail: userData['email'],
-  //                     user: widget.user,
-  //                   ),
-  //             ),
-  //           );
-  //         },
-  //         child: Text(userData['email'], style: TextStyle(color: Colors.white)),
-  //       ),
-  //     );
-  //     // );
-  //   } else {
-  //     return Container();
-  //   }
-  // }
 
   Widget _buildUserList2() {
     if (_isLoading) {
@@ -262,26 +172,26 @@ class _ChatHomeState extends State<ChatHome> {
             children: [
               ListTile(
                 leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
+                title: Text(AppLocalizations.of(context)!.userName),
+                subtitle: Text(AppLocalizations.of(context)!.lastMessage),
               ),
 
               ListTile(
                 leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
+                title: Text(AppLocalizations.of(context)!.userName),
+                subtitle: Text(AppLocalizations.of(context)!.lastMessage),
               ),
 
               ListTile(
                 leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
+                title: Text(AppLocalizations.of(context)!.userName),
+                subtitle: Text(AppLocalizations.of(context)!.lastMessage),
               ),
 
               ListTile(
                 leading: CircleAvatar(child: Icon(Icons.person)),
-                title: Text('User Name'),
-                subtitle: Text('Last message...'),
+                title: Text(AppLocalizations.of(context)!.userName),
+                subtitle: Text(AppLocalizations.of(context)!.lastMessage),
               ),
             ],
           ),
@@ -302,10 +212,10 @@ class _ChatHomeState extends State<ChatHome> {
                 shrinkWrap: true,
                 itemCount: 4, // Number of skeleton items
                 itemBuilder: (context, index) {
-                  return const ListTile(
+                  return ListTile(
                     leading: CircleAvatar(child: Icon(Icons.person)),
-                    title: Text('User Name...........'),
-                    subtitle: Text('Last message...'),
+                    title: Text(AppLocalizations.of(context)!.usernameSpace),
+                    subtitle: Text(AppLocalizations.of(context)!.lastMessage),
                   );
                 },
               ),
@@ -315,7 +225,9 @@ class _ChatHomeState extends State<ChatHome> {
 
         if (snapshot.hasError) {
           // Always good to handle errors
-          return Center(child: Text("Something went wrong: ${snapshot.error}"));
+          return Center(
+            child: Text("${AppLocalizations.of(context)!.somethingWrong} ${snapshot.error}"),
+          );
         }
 
         if (snapshot.hasData) {
@@ -379,36 +291,12 @@ class _ChatHomeState extends State<ChatHome> {
             );
           }
 
-          // users.forEach((user) {
-          //   // Check if user isn't being duplicated and added to list
-          //   if (!(messages.any((item) => item.name == user["username"]))) {
-          //     messages.add(
-          //       MessageItem(
-          //         // avatarUrl:
-          //         //     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-          //         avatarUrl: user["profileImage"],
-          //         // name: user["username"],
-          //         id: "${user["id"]}",
-          //         name: "${user["username"]}",
-          //         email: "${user["email"]}",
-          //         lastMessage: 'Hi its available',
-          //         time: '12:00 PM',
-          //       ),
-          //     );
-          //   }
-          // });
-
           return ListView.builder(
             shrinkWrap: true,
-            // itemCount: messages.length,
             itemCount: filteredUsers.length,
             itemBuilder: (context, index) {
               final user = filteredUsers[index];
               final otherUserId = user['id'];
-              // final message = messages[index];
-
-              // final useR = users[index];
-              // final otherUserId = useR['id'];
 
               final messageItem = MessageItem(
                 avatarUrl: user["profileImage"],
@@ -416,19 +304,16 @@ class _ChatHomeState extends State<ChatHome> {
                 name: user["username"],
                 email: user["email"],
                 lastMessage: '',
-                // This will be filled by the stream
-                time: '', // This will be filled by the stream
+                time: '',
               );
 
               return StreamBuilder<QuerySnapshot>(
-                // stream: _chatService.getLastMessage(message.id, widget.user.uid),
                 stream: _chatService.getLastMessage(widget.user.uid, otherUserId),
                 builder: (context, messageSnapshot) {
-                  String lastMessage = 'No messages yet';
+                  String lastMessage = AppLocalizations.of(context)!.noMessage;
                   String time = '';
 
                   if (messageSnapshot.connectionState == ConnectionState.waiting) {
-                    // return Center(child: CircularProgressIndicator(color: onboardingColor));
                     return Skeletonizer(
                       effect: ShimmerEffect(
                         baseColor: Colors.grey[300]!,
@@ -438,12 +323,12 @@ class _ChatHomeState extends State<ChatHome> {
                       child: SingleChildScrollView(
                         child: ListView.builder(
                           shrinkWrap: true,
-                          itemCount: 4, // Number of skeleton items
+                          itemCount: 4,
                           itemBuilder: (context, index) {
-                            return const ListTile(
+                            return ListTile(
                               leading: CircleAvatar(child: Icon(Icons.person)),
-                              title: Text('User Name...........'),
-                              subtitle: Text('Last message...'),
+                              title: Text(AppLocalizations.of(context)!.usernameSpace),
+                              subtitle: Text(AppLocalizations.of(context)!.lastMessage),
                             );
                           },
                         ),
@@ -452,8 +337,11 @@ class _ChatHomeState extends State<ChatHome> {
                   }
 
                   if (messageSnapshot.hasError) {
-                    // Always good to handle errors
-                    return Center(child: Text("Something went wrong: ${snapshot.error}"));
+                    return Center(
+                      child: Text(
+                        "${AppLocalizations.of(context)!.somethingWrong} ${snapshot.error}",
+                      ),
+                    );
                   }
 
                   if (messageSnapshot.hasData && messageSnapshot.data!.docs.isNotEmpty) {
@@ -471,8 +359,6 @@ class _ChatHomeState extends State<ChatHome> {
                     stream: _chatService.getUnreadMessageCount(otherUserId),
                     builder: (context, unreadCountSnapshot) {
                       if (unreadCountSnapshot.connectionState == ConnectionState.waiting) {
-                        // return Center(child: CircularProgressIndicator(color: onboardingColor));
-
                         return Center(
                           child: Skeletonizer(
                             effect: ShimmerEffect(
@@ -484,20 +370,20 @@ class _ChatHomeState extends State<ChatHome> {
                               children: [
                                 ListTile(
                                   leading: CircleAvatar(child: Icon(Icons.person)),
-                                  title: Text('User Name'),
-                                  subtitle: Text('Last message...'),
+                                  title: Text(AppLocalizations.of(context)!.userName),
+                                  subtitle: Text(AppLocalizations.of(context)!.lastMessage),
                                 ),
 
                                 ListTile(
                                   leading: CircleAvatar(child: Icon(Icons.person)),
-                                  title: Text('User Name'),
-                                  subtitle: Text('Last message...'),
+                                  title: Text(AppLocalizations.of(context)!.userName),
+                                  subtitle: Text(AppLocalizations.of(context)!.lastMessage),
                                 ),
 
                                 ListTile(
                                   leading: CircleAvatar(child: Icon(Icons.person)),
-                                  title: Text('User Name'),
-                                  subtitle: Text('Last message...'),
+                                  title: Text(AppLocalizations.of(context)!.userName),
+                                  subtitle: Text(AppLocalizations.of(context)!.lastMessage),
                                 ),
                               ],
                             ),
@@ -506,22 +392,16 @@ class _ChatHomeState extends State<ChatHome> {
                       }
 
                       if (unreadCountSnapshot.hasError) {
-                        // Always good to handle errors
-                        return Center(child: Text("Something went wrong: ${snapshot.error}"));
+                        return Center(
+                          child: Text(
+                            "${AppLocalizations.of(context)!.somethingWrong} ${snapshot.error}",
+                          ),
+                        );
                       }
 
-                      // print(unreadCountSnapshot.data);
                       final unreadCount = unreadCountSnapshot.data ?? 0;
 
                       return MessageListItem(
-                        // avatarUrl: message.avatarUrl,
-                        // name: message.name,
-                        // // lastMessage: message.lastMessage,
-                        // lastMessage: lastMessage,
-                        // // time: message.time,
-                        // time: time,
-                        // date: message.date,
-                        // unreadCount: unreadCount,
                         avatarUrl: messageItem.avatarUrl,
                         name: messageItem.name,
                         lastMessage: lastMessage,
@@ -533,8 +413,6 @@ class _ChatHomeState extends State<ChatHome> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => ChatScreen(
-                                  // receiverId: message.id,
-                                  // receiverEmail: message.email,
                                   receiverId: messageItem.id,
                                   receiverEmail: messageItem.email,
                                   user: widget.user,
@@ -557,48 +435,31 @@ class _ChatHomeState extends State<ChatHome> {
     );
   }
 
-  // Sample data - replace with your actual data source
-  final List<MessageItem> messages = [
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Ann',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   unreadCount: 1,
-    // ),
-    // MessageItem(
-    //   avatarUrl:
-    //       'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8cG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=100&q=60',
-    //   // Placeholder
-    //   name: 'Angel',
-    //   lastMessage: 'Hi its available',
-    //   time: '12:00 PM',
-    //   date: '12 07 2025',
-    // ),
-  ];
-
   void _showSupportDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Contact Support"),
-          content: Text("Would you like to contact an admin?"),
+          title: Text(AppLocalizations.of(context)!.contactSupport),
+          content: Text(AppLocalizations.of(context)!.contactAdmin),
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           actions: <Widget>[
             TextButton(
-              child: Text("Cancel", style: TextStyle(color: Colors.grey[600])),
+              child: Text(
+                AppLocalizations.of(context)!.cancel,
+                style: TextStyle(color: Colors.grey[600]),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: Text("Contact", style: TextStyle(color: onboardingColor)),
+              child: Text(
+                AppLocalizations.of(context)!.contact,
+                style: TextStyle(color: onboardingColor),
+              ),
               onPressed: () {
-                // TODO: Implement logic to find and start a chat with an admin.
                 print("Initiating chat with admin...");
                 Navigator.of(context).pop();
               },
@@ -615,20 +476,10 @@ class _ChatHomeState extends State<ChatHome> {
       backgroundColor: homebackgroundColor,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        // leading: BackButton(color: Colors.white),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.support_agent, color: Colors.white),
-        //     onPressed: () {
-        //       _showSupportDialog(context);
-        //     },
-        //   ),
-        // ],
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "All Chats",
-          // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          AppLocalizations.of(context)!.allChats,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 16,
@@ -655,17 +506,13 @@ class _ChatHomeState extends State<ChatHome> {
 
       bottomNavigationBar: BottomAppBar(
         height: 70,
-        // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
         notchMargin: 10,
         color: Colors.white,
         elevation: 0,
-        // Shadow for the BottomAppBar
-        // clipBehavior: Clip.antiAlias,
         clipBehavior: Clip.none,
 
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          // Children are the navigation items
           children: <Widget>[
             GestureDetector(
               onTap: () {
@@ -677,9 +524,12 @@ class _ChatHomeState extends State<ChatHome> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
+                  SvgPicture.asset(
+                    semanticsLabel: AppLocalizations.of(context)!.homeIcon,
+                    "images/icons/home.svg",
+                  ),
                   Text(
-                    'Home',
+                    AppLocalizations.of(context)!.home,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -693,9 +543,12 @@ class _ChatHomeState extends State<ChatHome> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat_selected.svg"),
+                SvgPicture.asset(
+                  semanticsLabel: AppLocalizations.of(context)!.chatIcon,
+                  "images/icons/chat_selected.svg",
+                ),
                 Text(
-                  'Chat',
+                  AppLocalizations.of(context)!.chat,
                   style: GoogleFonts.montserrat(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
@@ -722,9 +575,12 @@ class _ChatHomeState extends State<ChatHome> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(semanticsLabel: 'Favorites Icon', "images/icons/favorites.svg"),
+                  SvgPicture.asset(
+                    semanticsLabel: AppLocalizations.of(context)!.favoritesIcon,
+                    "images/icons/favorites.svg",
+                  ),
                   Text(
-                    'Favorites',
+                    AppLocalizations.of(context)!.favorites,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -747,9 +603,12 @@ class _ChatHomeState extends State<ChatHome> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
+                  SvgPicture.asset(
+                    semanticsLabel: AppLocalizations.of(context)!.profileIcon,
+                    "images/icons/profile.svg",
+                  ),
                   Text(
-                    'Profile',
+                    AppLocalizations.of(context)!.profile,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -763,7 +622,6 @@ class _ChatHomeState extends State<ChatHome> {
         ),
       ),
 
-      // body: SafeArea(child: _buildUserList()),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
@@ -774,10 +632,8 @@ class _ChatHomeState extends State<ChatHome> {
                   padding: const EdgeInsets.all(20),
                   child: FormBuilderTextField(
                     name: "search",
-                    // 2. UPDATE the text field to update the state
                     onChanged: (value) {
                       setState(() {
-                        // print(value);
                         _searchQuery = value ?? "";
                       });
                     },
@@ -789,7 +645,7 @@ class _ChatHomeState extends State<ChatHome> {
                       ),
                     ),
                     decoration: InputDecoration(
-                      hintText: 'Search',
+                      hintText: AppLocalizations.of(context)!.search,
                       hintStyle: GoogleFonts.poppins(
                         textStyle: TextStyle(
                           fontSize: 13.69,
@@ -801,18 +657,6 @@ class _ChatHomeState extends State<ChatHome> {
                       filled: true,
                       fillColor: Colors.white,
                       prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-
-                      // suffixIcon: IconButton(
-                      //   icon: Icon(
-                      //     _speechToText.isNotListening ? Icons.mic_off : Icons.mic,
-                      //     color: _speechEnabled
-                      //         ? (_speechToText.isNotListening ? onboardingColor : Colors.red)
-                      //         : Colors.grey,
-                      //   ),
-                      //   onPressed: _speechToText.isNotListening
-                      //       ? _startListening
-                      //       : _stopListening,
-                      // ),
                       suffixIcon: IconButton(
                         icon: Icon(Icons.mic, color: Color(0xFF999999)),
                         onPressed: () {},
@@ -832,72 +676,9 @@ class _ChatHomeState extends State<ChatHome> {
               ),
             ],
             body: _buildUserList2(),
-            // child: FormBuilder(
-            //   key: _formKey,
-            //   child: Column(
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     // mainAxisSize: MainAxisSize.min,
-            //     children: [
-            //       Padding(
-            //         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20, top: 20),
-            //         child: FormBuilderTextField(
-            //           name: "search",
-            //           style: GoogleFonts.poppins(
-            //             textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-            //           ),
-            //           decoration: InputDecoration(
-            //             hintText: 'Search',
-            //             hintStyle: GoogleFonts.poppins(
-            //               textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-            //               color: Colors.grey,
-            //             ),
-            //             filled: true,
-            //             fillColor: Colors.white,
-            //             prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-            //             // suffixIcon: IconButton(
-            //             //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-            //             //   onPressed: null,
-            //             // ),
-            //             enabledBorder: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(10),
-            //               borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-            //             ),
-            //             focusedBorder: OutlineInputBorder(
-            //               borderRadius: BorderRadius.circular(10),
-            //               borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-            //             ),
-            //           ),
-            //         ),
-            //       ),
-
-            // _buildUserList2(),
-            // ListView.builder(
-            //   shrinkWrap: true,
-            //   itemCount: messages.length,
-            //   itemBuilder: (context, index) {
-            //     final message = messages[index];
-            //
-            //     return MessageListItem(
-            //       avatarUrl: message.avatarUrl,
-            //       name: message.name,
-            //       lastMessage: message.lastMessage,
-            //       time: message.time,
-            //       date: message.date,
-            //       unreadCount: message.unreadCount,
-            //       onTap: () {
-            //         // Handle tap on message item, e.g., navigate to chat screen
-            //         print('Tapped on ${message.name}');
-            //       },
-            //     );
-            //   },
-            // ),
-            // ],
           ),
         ),
       ),
-      // ),
-      // ),
     );
   }
 }
@@ -931,32 +712,13 @@ class MessageListItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Dynamic Circle Avatar background and text
-            // CircleAvatar(
-            //   radius: 28,
-            //   backgroundImage:
-            //   avatarUrl != "default_pfp.jpg" ? NetworkImage(avatarUrl) : null,
-            //   child: avatarUrl == "default_pfp.jpg"
-            //       ? Text(
-            //     name.isNotEmpty ? name[0].toUpperCase() : '?',
-            //     style: TextStyle(
-            //         fontSize: 24,
-            //         color: Colors.white,
-            //         fontWeight: FontWeight.bold),
-            //   )
-            //       : null,
-            // ),
             avatarUrl == "default_pfp.jpg"
                 ? CircleAvatar(
                     radius: 24,
                     backgroundColor: onboardingColor,
                     child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
                   )
-                : CircleAvatar(
-                    radius: 28,
-                    backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage for URLs
-                    // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-                  ),
+                : CircleAvatar(radius: 28, backgroundImage: NetworkImage(avatarUrl)),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -966,7 +728,7 @@ class MessageListItem extends StatelessWidget {
                     name,
                     style: const TextStyle(
                       fontSize: 17,
-                      fontWeight: FontWeight.w500, // Slightly bolder than normal
+                      fontWeight: FontWeight.w500,
                       color: Colors.black87,
                     ),
                   ),
@@ -994,10 +756,7 @@ class MessageListItem extends StatelessWidget {
                 if (unreadCount > 0)
                   Container(
                     padding: const EdgeInsets.all(6),
-                    decoration: const BoxDecoration(
-                      color: Colors.green, // Color for unread count badge
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
                     child: Text(
                       unreadCount.toString(),
                       style: const TextStyle(
@@ -1007,7 +766,7 @@ class MessageListItem extends StatelessWidget {
                       ),
                     ),
                   )
-                else if (date != null) // Show date only if no unread count and date is available
+                else if (date != null)
                   Text(date!, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
               ],
             ),
