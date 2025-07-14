@@ -30,7 +30,6 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   final firebaseService = FirebaseService();
 
   if (firebaseService._auth.currentUser != null) {
-    print("IS THIS EXECUTING???");
     final notifId = await firebaseService._firestore
         .collection(firebaseService.userCollection)
         .doc(firebaseService._auth.currentUser!.uid)
@@ -41,6 +40,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           "createdAt": FieldValue.serverTimestamp(),
           "hasBeenDeleted": false,
           "userId": firebaseService._auth.currentUser!.uid,
+          "read": false,
         });
 
     await firebaseService._firestore
@@ -97,6 +97,7 @@ class FirebaseService {
               "createdAt": FieldValue.serverTimestamp(),
               "hasBeenDeleted": false,
               "userId": _auth.currentUser!.uid,
+              "read": false,
             });
 
         await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
@@ -134,6 +135,16 @@ class FirebaseService {
 
   Future<String?> get fcmToken async {
     return await _firebaseMessaging.getToken();
+  }
+
+  Stream<QuerySnapshot> getUserNotifications() {
+    final user = _auth.currentUser;
+    return _firestore
+        .collection(userCollection)
+        .doc(user!.uid)
+        .collection(notificationCollection)
+        .orderBy('createdAt', descending: true)
+        .snapshots();
   }
 
   Future<String?> uploadImage(File image, {String? path}) async {
