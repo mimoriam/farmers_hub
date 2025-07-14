@@ -296,7 +296,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         selectedCategory != "Worker Services"
                                     ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
                                     : "",
-                                quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
+                                quantity: int.parse(
+                                  _formKey.currentState?.fields['quantity']?.value,
+                                ),
                                 age:
                                     selectedCategory == "Live Stock" ||
                                         selectedCategory == "Worker Services"
