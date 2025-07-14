@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -32,7 +33,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         title: Text(
           "Forgot Password",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: SafeArea(
@@ -58,7 +63,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: 10),
 
                       Text(
-                        "Email Address",
+                        // "Email Address",
+                        AppLocalizations.of(context)!.emailAddress,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),

@@ -12,6 +12,7 @@ import 'package:farmers_hub/utils/auth_exceptions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -75,6 +76,35 @@ class FirebaseService {
   final postCollection = "posts";
 
   final notificationCollection = "notifications";
+
+  // Social Login (Facebook)
+  Future<UserCredential> signInWithFacebook() async {
+    try {
+      // Trigger the Facebook login flow
+      final LoginResult result = await FacebookAuth.instance.login();
+
+      // Check the status of the login
+      if (result.status == LoginStatus.success) {
+        // Create a credential from the access token
+        final AccessToken accessToken = result.accessToken!;
+        final OAuthCredential credential = FacebookAuthProvider.credential(accessToken.tokenString);
+
+        // Once signed in, return the UserCredential
+        return await _auth.signInWithCredential(credential);
+      } else {
+        // Handle login failure
+        throw AuthException(
+          'Facebook Sign-In failed. Status: ${result.status}. Message: ${result.message}',
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      // Handle Firebase-specific errors
+      throw AuthException('Facebook Sign-In failed. Please try again. Error: ${e.code}');
+    } catch (e) {
+      // Handle other errors
+      throw AuthException('An unexpected error occurred during Facebook Sign-In.');
+    }
+  }
 
   // Method to initialize notifications
   Future<void> initNotifications() async {
