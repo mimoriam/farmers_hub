@@ -876,7 +876,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       Padding(
                         // padding: const EdgeInsets.only(left: 6, right: 14),
                         padding: locale.languageCode == "ar"
-                            ? const EdgeInsets.only(left: 6, right: 8)
+                            ? const EdgeInsets.only(left: 6, right: 12)
                             : const EdgeInsets.only(left: 6, right: 14),
                         child: Row(
                           children: [

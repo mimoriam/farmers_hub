@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
@@ -36,7 +37,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "My Favorites",
+          AppLocalizations.of(context)!.myFavorites,
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 16,
@@ -87,7 +88,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 children: [
                   SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home.svg"),
                   Text(
-                    'Home',
+                    AppLocalizations.of(context)!.home,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -114,7 +115,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 children: [
                   SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
                   Text(
-                    'Chat',
+                    AppLocalizations.of(context)!.chat,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -137,7 +138,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     colorFilter: ColorFilter.mode(Color(0xFF008000), BlendMode.srcIn),
                   ),
                   Text(
-                    'Favorites',
+                    AppLocalizations.of(context)!.favorites,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -162,7 +163,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 children: [
                   SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
                   Text(
-                    'Profile',
+                    AppLocalizations.of(context)!.profile,
                     style: GoogleFonts.montserrat(
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
@@ -197,7 +198,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     ),
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Search',
+                    hintText: AppLocalizations.of(context)!.search,
                     hintStyle: GoogleFonts.poppins(
                       textStyle: TextStyle(
                         fontSize: 13.69,
@@ -245,15 +246,15 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.image, size: 50),
-                        title: Text("Favorite Post Title"),
-                        subtitle: Text("Post details..."),
+                        title: Text(AppLocalizations.of(context)!.myFavoritesPostTitle),
+                        subtitle: Text(AppLocalizations.of(context)!.postDetails),
                       ),
                     ),
                     Card(
                       child: ListTile(
                         leading: Icon(Icons.image, size: 50),
-                        title: Text("Favorite Post Title"),
-                        subtitle: Text("Post details..."),
+                        title: Text(AppLocalizations.of(context)!.myFavoritesPostTitle),
+                        subtitle: Text(AppLocalizations.of(context)!.postDetails),
                       ),
                     ),
                   ],
@@ -262,7 +263,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             }
 
             if (snapshot.hasError) {
-              return const Center(child: Text("Error loading favorites."));
+              return Center(child: Text(AppLocalizations.of(context)!.favoritesLoadingError));
             }
 
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -300,7 +301,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     const SizedBox(height: 4.0),
 
                     Text(
-                      'Like a post to see it here!',
+                      AppLocalizations.of(context)!.haveNoFavorites,
                       textAlign: TextAlign.center, // Ensures the text is center-aligned
                       style: TextStyle(
                         fontSize: 14.0,
@@ -317,14 +318,14 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
             final filteredPosts = _searchQuery.isEmpty
                 ? allPosts
                 : allPosts.where((post) {
-                    final title =
-                        (post.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ??
-                        '';
-                    return title.contains(_searchQuery.toLowerCase());
-                  }).toList();
+              final title =
+                  (post.data() as Map<String, dynamic>)['title']?.toString().toLowerCase() ??
+                      '';
+              return title.contains(_searchQuery.toLowerCase());
+            }).toList();
 
             if (filteredPosts.isEmpty) {
-              return const Center(child: Text("No favorites match your search."));
+              return Center(child: Text(AppLocalizations.of(context)!.noResults));
             }
 
             return Padding(

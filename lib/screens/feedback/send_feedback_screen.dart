@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -43,7 +44,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Send Feedback",
+          AppLocalizations.of(context)!.sendFeedback,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -61,7 +62,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Send Us Your Feedback!",
+                        AppLocalizations.of(context)!.sendYourFeedback,
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           color: Colors.black,
@@ -75,7 +76,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 23),
                         child: Text(
-                          "Do you have a suggestion or found a bug? Let us know in the field below.",
+                          AppLocalizations.of(context)!.suggestions,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             color: Colors.black87,
@@ -106,7 +107,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                         children: [
                           SizedBox(height: 4),
 
-                          Text("How was your experience?"),
+                          Text(AppLocalizations.of(context)!.yourExperience),
 
                           SizedBox(height: 10),
 
@@ -135,7 +136,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
 
                           SizedBox(height: 20),
 
-                          Text("Describe your experience here... "),
+                          Text(AppLocalizations.of(context)!.describeExperience),
 
                           SizedBox(height: 6),
 
@@ -147,7 +148,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                                 (context, {required currentLength, required isFocused, maxLength}) => null,
                             // Hide default counter
                             decoration: InputDecoration(
-                              hintText: 'Type here',
+                              hintText: AppLocalizations.of(context)!.typeHere,
                               border: _inputBorder,
                               enabledBorder: _inputBorder,
                               focusedBorder: _focusedInputBorder,
@@ -156,17 +157,17 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                               contentPadding: _contentPadding,
                               // helperText: 'Max 120 Characters',
                               counterText: "",
-                              counter: const Align(
+                              counter:  Align(
                                 alignment: Alignment.centerRight,
                                 child: Text(
-                                  'Max 120 Characters',
+                                  AppLocalizations.of(context)!.maxChars,
                                   style: TextStyle(color: Colors.grey, fontSize: 12),
                                 ),
                               ),
                               helperStyle: TextStyle(color: Colors.grey[600]),
                             ),
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(errorText: 'Feedback is required.'),
+                              FormBuilderValidators.required(errorText: AppLocalizations.of(context)!.feedbackRequires),
                               FormBuilderValidators.maxLength(120),
                             ]),
                           ),
@@ -188,7 +189,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                                       });
                                     },
                                   ),
-                                  const Text('Bug'),
+                                  Text(AppLocalizations.of(context)!.bug),
                                 ],
                               ),
 
@@ -204,7 +205,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                                       });
                                     },
                                   ),
-                                  const Text('Suggestion'),
+                                  Text(AppLocalizations.of(context)!.suggestion),
                                 ],
                               ),
 
@@ -221,7 +222,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                                         });
                                       },
                                     ),
-                                    const Text('Others'),
+                                    Text(AppLocalizations.of(context)!.others),
                                   ],
                                 ),
                               ),
@@ -240,7 +241,7 @@ class _SendFeedBackScreenState extends State<SendFeedBackScreen> {
                               ),
                               onPressed: () {},
                               child: Text(
-                                "Send Feedback",
+                                AppLocalizations.of(context)!.submitFeedback,
                                 style: GoogleFonts.montserrat(
                                   textStyle: TextStyle(
                                     fontSize: 16,

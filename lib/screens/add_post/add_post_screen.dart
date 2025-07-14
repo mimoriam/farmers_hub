@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/location_service.dart';
@@ -202,133 +203,133 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     ),
                     onPressed: isCommitted
                         ? () async {
-                            // The existing logic from the original "Submit" button's onTap is moved here.
-                            bool canPost = await firebaseService.canCreatePost();
+                      // The existing logic from the original "Submit" button's onTap is moved here.
+                      bool canPost = await firebaseService.canCreatePost();
 
-                            if (!canPost) {
-                              if (context.mounted) {
-                                Navigator.of(context).pop(); // Close the confirmation dialog
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.white,
-                                    title: const Text("Monthly Limit Reached"),
-                                    content: const Text(
-                                      "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(),
-                                        child: const Text("OK"),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          // TODO: Navigate to subscription screen
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: const Text("Subscribe"),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              return;
-                            }
-
-                            if (_images.isEmpty) {
-                              this.setState(() {
-                                error = "Upload an image!";
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-
-                                _scrollController.animateTo(
-                                  _scrollController.position.minScrollExtent,
-                                  curve: Curves.easeOut,
-                                  duration: const Duration(milliseconds: 300),
-                                );
-                              });
-
-                              return;
-                            }
-
-                            if (_formKey.currentState!.validate() &&
-                                selectedCategory != null &&
-                                _images.isNotEmpty) {
-                              List<String> imageUrls = [];
-
-                              if (_images.isNotEmpty && _images.length <= 4) {
-                                imageUrls = await firebaseService.uploadImages(_images);
-                              } else {
-                                this.setState(() {
-                                  error = "Can't upload more than 4 images!";
-                                  _scrollController.animateTo(
-                                    _scrollController.position.minScrollExtent,
-                                    curve: Curves.easeOut,
-                                    duration: const Duration(milliseconds: 300),
-                                  );
-                                });
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                  return;
-                                }
-                              }
-
-                              final doc = await firebaseService.getCurrentUserData();
-                              final userData = doc?.data() as Map<String, dynamic>?;
-
-                              final currency = userData?["defaultCurrency"] ?? "usd";
-
-                              firebaseService.createPost(
-                                title: _formKey.currentState?.fields['title']?.value,
-                                imageUrls: imageUrls,
-                                category: selectedCategory!,
-                                gender:
-                                    selectedCategory == "Live Stock" ||
-                                        selectedCategory == "Worker Services"
-                                    ? selectedGender
-                                    : "",
-                                currency: currency,
-                                averageWeight:
-                                    selectedCategory != "Live Stock" ||
-                                        selectedCategory != "Worker Services"
-                                    ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
-                                    : "",
-                                quantity: int.parse(
-                                  _formKey.currentState?.fields['quantity']?.value,
+                      if (!canPost) {
+                        if (context.mounted) {
+                          Navigator.of(context).pop(); // Close the confirmation dialog
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Colors.white,
+                              title: const Text("Monthly Limit Reached"),
+                              content: const Text(
+                                "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: const Text("OK"),
                                 ),
-                                age:
-                                    selectedCategory == "Live Stock" ||
-                                        selectedCategory == "Worker Services"
-                                    ? int.parse(_formKey.currentState?.fields['age']?.value)
-                                    : 0,
-                                price: int.parse(_formKey.currentState?.fields['price']?.value),
-                                details: _formKey.currentState?.fields['add_details']?.value,
-                                featured: true,
-                                city: widget.location ?? selectedCity,
-                                village: _formKey.currentState?.fields['village']?.value,
-                                // postColor: "0x${currentColor.toHexString()}",
-                                postColor: "0x${_colors[_selectedColorIndex].toHexString()}",
-                              );
+                                TextButton(
+                                  onPressed: () {
+                                    // TODO: Navigate to subscription screen
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Subscribe"),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        return;
+                      }
 
-                              _formKey.currentState?.reset();
-                              this.setState(() {
-                                locationSelected = false;
-                                error = "";
-                                _images = [];
-                              });
+                      if (_images.isEmpty) {
+                        this.setState(() {
+                          error = AppLocalizations.of(context)!.uploadImage;
 
-                              if (context.mounted) {
-                                Navigator.of(context).pop();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                                );
-                              }
-                            }
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
                           }
+
+                          _scrollController.animateTo(
+                            _scrollController.position.minScrollExtent,
+                            curve: Curves.easeOut,
+                            duration: const Duration(milliseconds: 300),
+                          );
+                        });
+
+                        return;
+                      }
+
+                      if (_formKey.currentState!.validate() &&
+                          selectedCategory != null &&
+                          _images.isNotEmpty) {
+                        List<String> imageUrls = [];
+
+                        if (_images.isNotEmpty && _images.length <= 4) {
+                          imageUrls = await firebaseService.uploadImages(_images);
+                        } else {
+                          this.setState(() {
+                            error = AppLocalizations.of(context)!.uploadFourImagesOnly;
+                            _scrollController.animateTo(
+                              _scrollController.position.minScrollExtent,
+                              curve: Curves.easeOut,
+                              duration: const Duration(milliseconds: 300),
+                            );
+                          });
+
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                            return;
+                          }
+                        }
+
+                        final doc = await firebaseService.getCurrentUserData();
+                        final userData = doc?.data() as Map<String, dynamic>?;
+
+                        final currency = userData?["defaultCurrency"] ?? "usd";
+
+                        firebaseService.createPost(
+                          title: _formKey.currentState?.fields['title']?.value,
+                          imageUrls: imageUrls,
+                          category: selectedCategory!,
+                          gender:
+                          selectedCategory == "Live Stock" ||
+                              selectedCategory == "Worker Services"
+                              ? selectedGender
+                              : "",
+                          currency: currency,
+                          averageWeight:
+                          selectedCategory != "Live Stock" ||
+                              selectedCategory != "Worker Services"
+                              ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                              : "",
+                          quantity: int.parse(
+                            _formKey.currentState?.fields['quantity']?.value,
+                          ),
+                          age:
+                          selectedCategory == "Live Stock" ||
+                              selectedCategory == "Worker Services"
+                              ? int.parse(_formKey.currentState?.fields['age']?.value)
+                              : 0,
+                          price: int.parse(_formKey.currentState?.fields['price']?.value),
+                          details: _formKey.currentState?.fields['add_details']?.value,
+                          featured: true,
+                          city: widget.location ?? selectedCity,
+                          village: _formKey.currentState?.fields['village']?.value,
+                          // postColor: "0x${currentColor.toHexString()}",
+                          postColor: "0x${_colors[_selectedColorIndex].toHexString()}",
+                        );
+
+                        _formKey.currentState?.reset();
+                        this.setState(() {
+                          locationSelected = false;
+                          error = "";
+                          _images = [];
+                        });
+
+                        if (context.mounted) {
+                          Navigator.of(context).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomeScreen()),
+                          );
+                        }
+                      }
+                    }
                         : null,
                     child: const Text('Confirm'),
                   ),
@@ -439,7 +440,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Create Post",
+          AppLocalizations.of(context)!.createPost,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -467,7 +468,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       SizedBox(height: 12),
                       Center(
                         child: Text(
-                          'Add pictures for your Product',
+                          AppLocalizations.of(context)!.addProducts,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontSize: 17,
@@ -578,35 +579,35 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         _images.length >= 4
                                             ? Container()
                                             : SizedBox(
-                                                width: double.infinity,
-                                                // Make button take full width of its parent.
-                                                child: ElevatedButton.icon(
-                                                  onPressed: _pickImage,
-                                                  icon: const Icon(
-                                                    Icons.add_photo_alternate_rounded,
-                                                    color: Colors.white,
-                                                  ),
-                                                  label: const Text(
-                                                    'Add Images',
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 16,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ),
-                                                  style: ElevatedButton.styleFrom(
-                                                    backgroundColor:
-                                                        onboardingColor, // Button background color.
-                                                    padding: const EdgeInsets.symmetric(
-                                                      vertical: 16,
-                                                    ),
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(12),
-                                                    ),
-                                                    elevation: 2, // Adds a subtle shadow.
-                                                  ),
-                                                ),
+                                          width: double.infinity,
+                                          // Make button take full width of its parent.
+                                          child: ElevatedButton.icon(
+                                            onPressed: _pickImage,
+                                            icon: const Icon(
+                                              Icons.add_photo_alternate_rounded,
+                                              color: Colors.white,
+                                            ),
+                                            label: Text(
+                                              AppLocalizations.of(context)!.addImages,
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
                                               ),
+                                            ),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                              onboardingColor, // Button background color.
+                                              padding: const EdgeInsets.symmetric(
+                                                vertical: 16,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              elevation: 2, // Adds a subtle shadow.
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -619,16 +620,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             _images.length >= 4
                                 ? Container()
                                 : Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.info_outline, color: onboardingColor, size: 20),
-                                      SizedBox(width: 8),
-                                      Text(
-                                        'Add up to 4 photos for more views!',
-                                        style: TextStyle(fontSize: 14, color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.info_outline, color: onboardingColor, size: 20),
+                                SizedBox(width: 8),
+                                Text(
+                                  AppLocalizations.of(context)!.addUpToFour,
+                                  style: TextStyle(fontSize: 14, color: Colors.black),
+                                ),
+                              ],
+                            ),
 
                             SizedBox(height: 6),
 
@@ -751,7 +752,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text("Add Post Title", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.addPostTitle, style: _labelStyle),
 
                                     const SizedBox(height: 8),
 
@@ -774,7 +775,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       //     }) => null,
                                       // Hide default counter
                                       decoration: InputDecoration(
-                                        hintText: 'Type here',
+                                        hintText: AppLocalizations.of(context)!.typeHere,
                                         hintStyle: TextStyle(color: loginTextFieldIconColor),
                                         counterText: "",
                                         // counter: const Align(
@@ -795,7 +796,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(
-                                          errorText: 'Post title is required.',
+                                          errorText: AppLocalizations.of(context)!.postTitleRequired,
                                         ),
                                         FormBuilderValidators.maxLength(120),
                                       ]),
@@ -803,7 +804,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                     const SizedBox(height: 8),
 
-                                    Text("City", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.city, style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     Padding(
@@ -812,7 +813,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       child: DropdownButtonFormField2<String>(
                                         autovalidateMode: validateMode,
                                         decoration: InputDecoration(
-                                          labelText: "Select Your City",
+                                          labelText: AppLocalizations.of(context)!.selectCity,
                                           floatingLabelBehavior: FloatingLabelBehavior.never,
                                           contentPadding: const EdgeInsets.symmetric(
                                             vertical: 0,
@@ -854,45 +855,45 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                            [
-                                              'Damascus',
-                                              'Aleppo',
-                                              'Homs',
-                                              'Hama',
-                                              "Latakia",
-                                              "Tartus",
-                                              "Baniyas",
-                                              "Idlib",
-                                              "Deir ez-Zor",
-                                              "Al-Hasakah",
-                                              "Qamishli",
-                                              "Raqqa",
-                                              "Daraa",
-                                              "As-Suwayda",
-                                              "Quneitra",
-                                              "Al-Mayadin",
-                                              "Al-Bukamal",
-                                              "Rif Dimashq",
-                                              "Afrin",
-                                              'Manbij',
-                                              "Tell Abyad",
-                                              "Ras al-Ayn",
-                                              "Kobani",
-                                            ].map((city) {
-                                              return DropdownMenuItem<String>(
-                                                onTap: () {
-                                                  setState(() {
-                                                    selectedCity = city;
-                                                    // widget.location = null;
-                                                  });
-                                                },
-                                                value: city,
-                                                child: Text(city),
-                                              );
-                                            }).toList(),
+                                        [
+                                          'Damascus',
+                                          'Aleppo',
+                                          'Homs',
+                                          'Hama',
+                                          "Latakia",
+                                          "Tartus",
+                                          "Baniyas",
+                                          "Idlib",
+                                          "Deir ez-Zor",
+                                          "Al-Hasakah",
+                                          "Qamishli",
+                                          "Raqqa",
+                                          "Daraa",
+                                          "As-Suwayda",
+                                          "Quneitra",
+                                          "Al-Mayadin",
+                                          "Al-Bukamal",
+                                          "Rif Dimashq",
+                                          "Afrin",
+                                          'Manbij',
+                                          "Tell Abyad",
+                                          "Ras al-Ayn",
+                                          "Kobani",
+                                        ].map((city) {
+                                          return DropdownMenuItem<String>(
+                                            onTap: () {
+                                              setState(() {
+                                                selectedCity = city;
+                                                // widget.location = null;
+                                              });
+                                            },
+                                            value: city,
+                                            child: Text(city),
+                                          );
+                                        }).toList(),
                                         validator: (value) {
                                           if (value == null) {
-                                            return 'City is required.';
+                                            return AppLocalizations.of(context)!.cityRequired;
                                           }
                                           return null;
                                         },
@@ -904,7 +905,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       ),
                                     ),
 
-                                    Text("Village", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.village, style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     FormBuilderTextField(
@@ -917,7 +918,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         ),
                                       ],
                                       decoration: InputDecoration(
-                                        hintText: 'Enter Village',
+                                        hintText: AppLocalizations.of(context)!.enterVillage,
                                         counterText: "",
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
@@ -933,14 +934,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       // keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(
-                                          errorText: 'Village is required.',
+                                          errorText: AppLocalizations.of(context)!.villageRequired,
                                         ),
                                       ]),
                                     ),
 
                                     const SizedBox(height: 8),
 
-                                    Text("Category", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.category, style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     Padding(
@@ -949,7 +950,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       child: DropdownButtonFormField2<String>(
                                         autovalidateMode: validateMode,
                                         decoration: InputDecoration(
-                                          labelText: "Select a category",
+                                          labelText: AppLocalizations.of(context)!.selectCategory,
                                           floatingLabelBehavior: FloatingLabelBehavior.never,
                                           contentPadding: const EdgeInsets.symmetric(
                                             vertical: 0,
@@ -992,33 +993,33 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
                                         // value: "Damascus",
                                         items:
-                                            [
-                                                  'Fruits',
-                                                  'Vegetables',
-                                                  'Olive Oil',
-                                                  "Live Stock",
-                                                  'Grains & Seeds',
-                                                  "Fertilizers",
-                                                  "Tools",
-                                                  "Land Services",
-                                                  "Equipments",
-                                                  "Delivery",
-                                                  "Worker Services",
-                                                  "Pesticides",
-                                                  "Animal Feed",
-                                                  "Others",
-                                                ]
-                                                .map(
-                                                  (lang) => DropdownMenuItem<String>(
-                                                    value: lang,
-                                                    child: Text(lang),
-                                                  ),
-                                                )
-                                                .toList(),
+                                        [
+                                          'Fruits',
+                                          'Vegetables',
+                                          'Olive Oil',
+                                          "Live Stock",
+                                          'Grains & Seeds',
+                                          "Fertilizers",
+                                          "Tools",
+                                          "Land Services",
+                                          "Equipments",
+                                          "Delivery",
+                                          "Worker Services",
+                                          "Pesticides",
+                                          "Animal Feed",
+                                          "Others",
+                                        ]
+                                            .map(
+                                              (lang) => DropdownMenuItem<String>(
+                                            value: lang,
+                                            child: Text(lang),
+                                          ),
+                                        )
+                                            .toList(),
                                         value: selectedCategory,
                                         validator: (String? value) {
                                           if (value == null) {
-                                            return 'Category is required.';
+                                            return AppLocalizations.of(context)!.categoryRequires;
                                           }
                                           return null;
                                         },
@@ -1057,221 +1058,221 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     selectedCategory == null
                                         ? Container()
                                         : Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              selectedCategory == "Live Stock" ||
-                                                      selectedCategory == "Worker Services"
-                                                  ? Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Gender", style: _labelStyle),
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        selectedCategory == "Live Stock" ||
+                                            selectedCategory == "Worker Services"
+                                            ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(AppLocalizations.of(context)!.gender, style: _labelStyle),
 
-                                                        const SizedBox(height: 8),
+                                            const SizedBox(height: 8),
 
-                                                        Padding(
-                                                          // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-                                                          padding: const EdgeInsets.only(
-                                                            right: 0,
-                                                            left: 0,
-                                                            bottom: 10,
-                                                          ),
-                                                          child: DropdownButtonFormField2<String>(
-                                                            autovalidateMode: validateMode,
-                                                            decoration: InputDecoration(
-                                                              labelText: "Select a Gender",
-                                                              floatingLabelBehavior:
-                                                                  FloatingLabelBehavior.never,
-                                                              contentPadding:
-                                                                  const EdgeInsets.symmetric(
-                                                                    vertical: 0,
-                                                                    horizontal: 6,
-                                                                  ),
-                                                              border: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                  color: onboardingTextColor,
-                                                                  width: 1.0,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(
-                                                                  12,
-                                                                ),
-                                                              ),
-                                                              enabledBorder: _inputBorder,
-                                                              errorBorder: _errorInputBorder,
-                                                              focusedBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                  color: onboardingTextColor,
-                                                                  width: 1.0,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(
-                                                                  12,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            iconStyleData: IconStyleData(
-                                                              // Using IconStyleData for icon properties
-                                                              iconEnabledColor: onboardingTextColor,
-                                                            ),
+                                            Padding(
+                                              // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                              padding: const EdgeInsets.only(
+                                                right: 0,
+                                                left: 0,
+                                                bottom: 10,
+                                              ),
+                                              child: DropdownButtonFormField2<String>(
+                                                autovalidateMode: validateMode,
+                                                decoration: InputDecoration(
+                                                  labelText: AppLocalizations.of(context)!.selectGender,
+                                                  floatingLabelBehavior:
+                                                  FloatingLabelBehavior.never,
+                                                  contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 0,
+                                                    horizontal: 6,
+                                                  ),
+                                                  border: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: onboardingTextColor,
+                                                      width: 1.0,
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(
+                                                      12,
+                                                    ),
+                                                  ),
+                                                  enabledBorder: _inputBorder,
+                                                  errorBorder: _errorInputBorder,
+                                                  focusedBorder: OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: onboardingTextColor,
+                                                      width: 1.0,
+                                                    ),
+                                                    borderRadius: BorderRadius.circular(
+                                                      12,
+                                                    ),
+                                                  ),
+                                                ),
+                                                iconStyleData: IconStyleData(
+                                                  // Using IconStyleData for icon properties
+                                                  iconEnabledColor: onboardingTextColor,
+                                                ),
 
-                                                            dropdownStyleData: DropdownStyleData(
-                                                              maxHeight: 160,
-                                                              offset: const Offset(0, -10),
-                                                              decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(
-                                                                  12,
-                                                                ),
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
+                                                dropdownStyleData: DropdownStyleData(
+                                                  maxHeight: 160,
+                                                  offset: const Offset(0, -10),
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(
+                                                      12,
+                                                    ),
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
 
-                                                            // value: "Damascus",
-                                                            items: ['Male', 'Female']
-                                                                .map(
-                                                                  (gender) =>
-                                                                      DropdownMenuItem<String>(
-                                                                        value: gender,
-                                                                        child: Text(gender),
-                                                                      ),
-                                                                )
-                                                                .toList(),
-                                                            value: selectedGender,
-                                                            validator: (String? value) {
-                                                              if (value == null) {
-                                                                return 'Gender is required.';
-                                                              }
-                                                              return null;
-                                                            },
-                                                            onChanged: (String? value) {
-                                                              setState(() {
-                                                                selectedGender = value;
-                                                              });
-                                                            },
-                                                          ),
-                                                        ),
+                                                // value: "Damascus",
+                                                items: ['Male', 'Female']
+                                                    .map(
+                                                      (gender) =>
+                                                      DropdownMenuItem<String>(
+                                                        value: gender,
+                                                        child: Text(gender),
+                                                      ),
+                                                )
+                                                    .toList(),
+                                                value: selectedGender,
+                                                validator: (String? value) {
+                                                  if (value == null) {
+                                                    return AppLocalizations.of(context)!.genderRequires;
+                                                  }
+                                                  return null;
+                                                },
+                                                onChanged: (String? value) {
+                                                  setState(() {
+                                                    selectedGender = value;
+                                                  });
+                                                },
+                                              ),
+                                            ),
 
-                                                        const SizedBox(height: 2),
-                                                      ],
-                                                    )
-                                                  : Container(),
+                                            const SizedBox(height: 2),
+                                          ],
+                                        )
+                                            : Container(),
 
-                                              // Average Weight (in kgs)
-                                              selectedCategory == "Fruits" ||
-                                                      selectedCategory == "Vegetables" ||
-                                                      selectedCategory == "Olive Oil" ||
-                                                      selectedCategory == "Grains & Seeds" ||
-                                                      selectedCategory == "Fertilizers" ||
-                                                      selectedCategory == "Tools" ||
-                                                      selectedCategory == "Land Services" ||
-                                                      selectedCategory == "Equipments" ||
-                                                      selectedCategory == "Delivery" ||
-                                                      selectedCategory == "Pesticides" ||
-                                                      selectedCategory == "Animal Feed" ||
-                                                      selectedCategory == "Others"
-                                                  ? Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text(
-                                                          "Average Weight (in kgs)",
-                                                          style: _labelStyle,
-                                                        ),
+                                        // Average Weight (in kgs)
+                                        selectedCategory == "Fruits" ||
+                                            selectedCategory == "Vegetables" ||
+                                            selectedCategory == "Olive Oil" ||
+                                            selectedCategory == "Grains & Seeds" ||
+                                            selectedCategory == "Fertilizers" ||
+                                            selectedCategory == "Tools" ||
+                                            selectedCategory == "Land Services" ||
+                                            selectedCategory == "Equipments" ||
+                                            selectedCategory == "Delivery" ||
+                                            selectedCategory == "Pesticides" ||
+                                            selectedCategory == "Animal Feed" ||
+                                            selectedCategory == "Others"
+                                            ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              AppLocalizations.of(context)!.averageWeight,
+                                              style: _labelStyle,
+                                            ),
 
-                                                        const SizedBox(height: 8),
+                                            const SizedBox(height: 8),
 
-                                                        FormBuilderTextField(
-                                                          name: 'avg_weight',
-                                                          maxLength: 3,
-                                                          autovalidateMode: validateMode,
-                                                          decoration: InputDecoration(
-                                                            counterText: "",
-                                                            hintText:
-                                                                'Enter Average Weight in kilograms',
-                                                            border: _inputBorder,
-                                                            enabledBorder: _inputBorder,
-                                                            focusedBorder: _focusedInputBorder,
-                                                            errorBorder: _errorInputBorder,
-                                                            focusedErrorBorder: _focusedInputBorder,
-                                                            contentPadding: _contentPadding,
-                                                            // The image shows a dropdown arrow, this is a stylistic choice.
-                                                            // If it's a free text field, suffixIcon is decorative.
-                                                            // If it's a dropdown, use FormBuilderDropdown.
-                                                            // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
-                                                          ),
-                                                          keyboardType:
-                                                              const TextInputType.numberWithOptions(
-                                                                decimal: true,
-                                                              ),
-                                                          validator: FormBuilderValidators.compose([
-                                                            FormBuilderValidators.required(
-                                                              errorText:
-                                                                  'Average weight is required.',
-                                                            ),
-                                                            FormBuilderValidators.numeric(
-                                                              errorText: 'Must be a number.',
-                                                            ),
-                                                            FormBuilderValidators.min(
-                                                              0,
-                                                              errorText:
-                                                                  'Weight cannot be negative.',
-                                                            ),
-                                                            FormBuilderValidators.max(
-                                                              10000,
-                                                              errorText: 'Weight cannot exceed.',
-                                                            ),
-                                                          ]),
-                                                        ),
+                                            FormBuilderTextField(
+                                              name: 'avg_weight',
+                                              maxLength: 3,
+                                              autovalidateMode: validateMode,
+                                              decoration: InputDecoration(
+                                                counterText: "",
+                                                hintText:
+                                                AppLocalizations.of(context)!.enterAverageWeight,
+                                                border: _inputBorder,
+                                                enabledBorder: _inputBorder,
+                                                focusedBorder: _focusedInputBorder,
+                                                errorBorder: _errorInputBorder,
+                                                focusedErrorBorder: _focusedInputBorder,
+                                                contentPadding: _contentPadding,
+                                                // The image shows a dropdown arrow, this is a stylistic choice.
+                                                // If it's a free text field, suffixIcon is decorative.
+                                                // If it's a dropdown, use FormBuilderDropdown.
+                                                // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                              ),
+                                              keyboardType:
+                                              const TextInputType.numberWithOptions(
+                                                decimal: true,
+                                              ),
+                                              validator: FormBuilderValidators.compose([
+                                                FormBuilderValidators.required(
+                                                  errorText:
+                                                  AppLocalizations.of(context)!.enterAverageWeightRequires,
+                                                ),
+                                                FormBuilderValidators.numeric(
+                                                  errorText: AppLocalizations.of(context)!.numberMust,
+                                                ),
+                                                FormBuilderValidators.min(
+                                                  0,
+                                                  errorText:
+                                                  AppLocalizations.of(context)!.weighNotNegative,
+                                                ),
+                                                FormBuilderValidators.max(
+                                                  10000,
+                                                  errorText: AppLocalizations.of(context)!.weighNotExceed,
+                                                ),
+                                              ]),
+                                            ),
 
-                                                        const SizedBox(height: 10),
-                                                      ],
-                                                    )
-                                                  : Container(),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        )
+                                            : Container(),
 
-                                              selectedCategory == "Live Stock" ||
-                                                      selectedCategory == "Worker Services"
-                                                  ? Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Age (in years)", style: _labelStyle),
+                                        selectedCategory == "Live Stock" ||
+                                            selectedCategory == "Worker Services"
+                                            ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(AppLocalizations.of(context)!.age, style: _labelStyle),
 
-                                                        const SizedBox(height: 8),
+                                            const SizedBox(height: 8),
 
-                                                        FormBuilderTextField(
-                                                          name: 'age',
-                                                          maxLength: 2,
-                                                          autovalidateMode: validateMode,
-                                                          decoration: InputDecoration(
-                                                            counterText: "",
-                                                            hintText: 'Enter age in years',
-                                                            border: _inputBorder,
-                                                            enabledBorder: _inputBorder,
-                                                            focusedBorder: _focusedInputBorder,
-                                                            errorBorder: _errorInputBorder,
-                                                            focusedErrorBorder: _focusedInputBorder,
-                                                            contentPadding: _contentPadding,
-                                                          ),
-                                                          keyboardType: TextInputType.number,
-                                                          validator: FormBuilderValidators.compose([
-                                                            FormBuilderValidators.required(
-                                                              errorText: 'Age is required.',
-                                                            ),
-                                                            FormBuilderValidators.numeric(
-                                                              errorText: 'Must be a number.',
-                                                            ),
-                                                            FormBuilderValidators.min(
-                                                              0,
-                                                              errorText: 'Age cannot be negative.',
-                                                            ),
-                                                            FormBuilderValidators.max(
-                                                              999,
-                                                              errorText: 'Age cannot exceed.',
-                                                            ),
-                                                          ]),
-                                                        ),
+                                            FormBuilderTextField(
+                                              name: 'age',
+                                              maxLength: 2,
+                                              autovalidateMode: validateMode,
+                                              decoration: InputDecoration(
+                                                counterText: "",
+                                                hintText: AppLocalizations.of(context)!.enterAge,
+                                                border: _inputBorder,
+                                                enabledBorder: _inputBorder,
+                                                focusedBorder: _focusedInputBorder,
+                                                errorBorder: _errorInputBorder,
+                                                focusedErrorBorder: _focusedInputBorder,
+                                                contentPadding: _contentPadding,
+                                              ),
+                                              keyboardType: TextInputType.number,
+                                              validator: FormBuilderValidators.compose([
+                                                FormBuilderValidators.required(
+                                                  errorText: AppLocalizations.of(context)!.ageRequires,
+                                                ),
+                                                FormBuilderValidators.numeric(
+                                                  errorText: AppLocalizations.of(context)!.numberMust,
+                                                ),
+                                                FormBuilderValidators.min(
+                                                  0,
+                                                  errorText: AppLocalizations.of(context)!.ageNotNegative,
+                                                ),
+                                                FormBuilderValidators.max(
+                                                  999,
+                                                  errorText: AppLocalizations.of(context)!.ageNotExceed,
+                                                ),
+                                              ]),
+                                            ),
 
-                                                        const SizedBox(height: 10),
-                                                      ],
-                                                    )
-                                                  : Container(),
-                                            ],
-                                          ),
+                                            const SizedBox(height: 10),
+                                          ],
+                                        )
+                                            : Container(),
+                                      ],
+                                    ),
 
                                     // FormBuilderRadioGroup<String>(
                                     //   name: 'gender',
@@ -1325,7 +1326,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     // ),
 
                                     // const SizedBox(height: 10),
-                                    Text("Quantity", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.quantity, style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     FormBuilderTextField(
@@ -1334,7 +1335,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       autovalidateMode: validateMode,
                                       decoration: InputDecoration(
                                         counterText: "",
-                                        hintText: 'Enter Quantity',
+                                        hintText: AppLocalizations.of(context)!.enterQuantity,
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,
@@ -1346,14 +1347,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       keyboardType: TextInputType.number,
                                       validator: FormBuilderValidators.compose([
                                         FormBuilderValidators.required(
-                                          errorText: 'Quantity is required.',
+                                          errorText: AppLocalizations.of(context)!.quantityRequired,
                                         ),
                                         FormBuilderValidators.integer(
-                                          errorText: 'Must be a whole number.',
+                                          errorText: AppLocalizations.of(context)!.mustWholeNumber,
                                         ),
                                         FormBuilderValidators.min(
                                           1,
-                                          errorText: 'Quantity must be at least 1.',
+                                          errorText: AppLocalizations.of(context)!.quantityLeastOne,
                                         ),
                                       ]),
                                     ),
@@ -1408,7 +1409,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                     // ),
 
                                     // const SizedBox(height: 10),
-                                    Text("Price", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.price, style: _labelStyle),
                                     const SizedBox(height: 8),
 
                                     Row(
@@ -1423,10 +1424,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               items: ['Syria', "Usd", "Euro", "Lira"]
                                                   .map(
                                                     (lang) => DropdownMenuItem<String>(
-                                                      value: lang,
-                                                      child: Text(lang),
-                                                    ),
-                                                  )
+                                                  value: lang,
+                                                  child: Text(lang),
+                                                ),
+                                              )
                                                   .toList(),
                                               decoration: InputDecoration(
                                                 contentPadding: const EdgeInsets.symmetric(
@@ -1474,7 +1475,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                             maxLength: 5,
                                             autovalidateMode: validateMode,
                                             decoration: InputDecoration(
-                                              hintText: 'Enter Your Price',
+                                              hintText: AppLocalizations.of(context)!.enterPrice,
                                               counterText: "",
                                               border: _inputBorder,
                                               enabledBorder: _inputBorder,
@@ -1483,7 +1484,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               focusedErrorBorder: _focusedInputBorder,
                                               contentPadding: _contentPadding,
                                               helperText:
-                                                  ' ', // This reserves the space. Note the space character.
+                                              ' ', // This reserves the space. Note the space character.
                                               errorStyle: const TextStyle(height: 0),
                                             ),
                                             keyboardType: const TextInputType.numberWithOptions(
@@ -1634,7 +1635,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text("Additional Details", style: _labelStyle),
+                                    Text(AppLocalizations.of(context)!.additionalDetails, style: _labelStyle),
 
                                     const SizedBox(height: 8),
 
@@ -1652,7 +1653,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       // Hide default counter
                                       decoration: InputDecoration(
                                         counterText: "",
-                                        hintText: 'Type here',
+                                        hintText: AppLocalizations.of(context)!.typeHere,
                                         border: _inputBorder,
                                         enabledBorder: _inputBorder,
                                         focusedBorder: _focusedInputBorder,
@@ -1834,8 +1835,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   //   });
                                   // }
                                   // }
-                                  child: const Text(
-                                    'Submit',
+                                  child: Text(
+                                    AppLocalizations.of(context)!.submit,
                                     style: TextStyle(fontSize: 18, color: Colors.white),
                                   ),
                                 );

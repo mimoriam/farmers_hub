@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/screens/details/details_user_posts_screen.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
@@ -149,9 +150,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     } else {
       // Show an error message if the device can't handle the request
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Could not launch the dialer for $phoneNumber")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.notLaunchDialer + " $phoneNumber")),
+        );
       }
     }
   }
@@ -260,7 +261,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
         ],
         title: Text(
-          "Details",
+          AppLocalizations.of(context)!.details,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -282,7 +283,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           }
 
           if (postSnapshot.hasError || !postSnapshot.hasData || !postSnapshot.data!.exists) {
-            return const Center(child: Text("Post not found or has been deleted."));
+            return Center(child: Text(AppLocalizations.of(context)!.postNotFound));
           }
 
           final postDetails = postSnapshot.data!.data() as Map<String, dynamic>;
@@ -382,7 +383,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               if (sellerSnapshot.hasError ||
                   !sellerSnapshot.hasData ||
                   sellerSnapshot.data == null) {
-                return const Center(child: Text("Failed to load user data."));
+                return Center(child: Text(AppLocalizations.of(context)!.failedToLoad));
               }
 
               // final postDetails = snapshot.data;
@@ -525,8 +526,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         shape: const Border(), // Removes the border when expanded
         collapsedShape: const Border(), // Removes the border when collapsed
         leading: Icon(Icons.privacy_tip_outlined, color: Colors.grey[700]),
-        title: const Text(
-          'Safety Guidelines',
+        title: Text(
+          AppLocalizations.of(context)!.privacyPolicy,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         children: <Widget>[
@@ -694,6 +695,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final bool isCurrentlyLiked = currentUserId != null && likedBy.contains(currentUserId);
     final String village = postDetails["location"]["village"];
 
+    final locale = Localizations.localeOf(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -735,7 +738,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Row(
                   children: [
                     Text(location["city"], style: TextStyle(fontSize: 14, color: Colors.grey[600])),
-                    Text(", "),
+                    locale.languageCode == "ar" ? Text(" ,") : Text(", "),
                     Text(village, style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                   ],
                 ),
@@ -865,6 +868,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
     final currentUserId = firebaseService.currentUser?.uid;
     final postedAgoText = formatTimeAgo(dated);
 
+    final locale = Localizations.localeOf(context);
+
     // CHANGED this from Row to Column
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -877,7 +882,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Icon(Icons.favorite, color: Colors.red[400], size: 16),
                 const SizedBox(width: 4),
 
-                Text("Likes:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                Text(
+                  locale.languageCode == "ar"
+                      ? "${AppLocalizations.of(context)!.likes}:"
+                      : AppLocalizations.of(context)!.likes,
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
                 const SizedBox(width: 1),
                 Text(likes, style: TextStyle(fontSize: 13, color: Colors.grey)),
               ],
@@ -890,7 +900,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 Icon(Icons.visibility_outlined, color: Colors.grey[600], size: 16),
                 const SizedBox(width: 4),
 
-                Text("Views:", style: TextStyle(fontSize: 13, color: Colors.grey)),
+                Text(
+                  locale.languageCode == "ar"
+                      ? "${AppLocalizations.of(context)!.views}:"
+                      : AppLocalizations.of(context)!.views,
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
                 const SizedBox(width: 1),
                 Text(views, style: TextStyle(fontSize: 13, color: Colors.grey)),
               ],
@@ -966,7 +981,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         Expanded(
                           child: ElevatedButton.icon(
                             icon: const Icon(Icons.manage_accounts_outlined, color: Colors.white),
-                            label: Text('Manage Posts', style: TextStyle(color: Colors.white)),
+                            label: Text(
+                              AppLocalizations.of(context)!.managePost,
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () async {
                               // Handle Chat action
 
@@ -1025,8 +1043,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
                           label: Text(
                             firebaseService.currentUser?.displayName == username
-                                ? "Can't chat with yourself"
-                                : 'Chat',
+                                ? AppLocalizations.of(context)!.cantChat
+                                : AppLocalizations.of(context)!.chat,
                             style: TextStyle(color: Colors.white),
                           ),
                           onPressed: onTap,
@@ -1048,7 +1066,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           child: ElevatedButton.icon(
                             // icon: const Icon(Icons.chat_bubble_outline, color: Colors.white),
                             icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white),
-                            label: Text('WhatsApp', style: TextStyle(color: Colors.white)),
+                            label: Text(
+                              AppLocalizations.of(context)!.whatsapp,
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () async {
                               // final String whatsapp = "+1-14821421408214";
                               final String whatsapp = phoneNumber;
@@ -1063,7 +1084,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 } else {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(context)!.whatsappNotInstalled,
+                                        ),
+                                      ),
                                     );
                                   }
                                 }
@@ -1074,7 +1099,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 } else {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(context)!.whatsappNotInstalled,
+                                        ),
+                                      ),
                                     );
                                   }
                                 }
@@ -1107,7 +1136,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Text(
-            'Verified Seller',
+            AppLocalizations.of(context)!.verifiedSeller,
             style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 12),
           ),
         ),
@@ -1127,9 +1156,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildDetailRow('Category:', category),
+        _buildDetailRow(AppLocalizations.of(context)!.category, category),
 
-        _buildDetailRow('Quantity:', quantity),
+        _buildDetailRow(AppLocalizations.of(context)!.quantity, quantity),
 
         category == "Fruits" ||
                 category == "Vegetables" ||
@@ -1144,10 +1173,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 category == "Animal Feed" ||
                 category == "Others"
             ? Container()
-            : _buildDetailRow('Gender:', gender),
+            : _buildDetailRow(AppLocalizations.of(context)!.gender, gender),
 
         (averageWeight.isNotEmpty)
-            ? _buildDetailRow('Average Weight (in kg):', averageWeight)
+            ? _buildDetailRow(AppLocalizations.of(context)!.averageWeight, averageWeight)
             : Container(),
 
         category == "Fruits" ||
@@ -1163,13 +1192,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 category == "Animal Feed" ||
                 category == "Others"
             ? Container()
-            : _buildDetailRow('Age (in years):', age), // Note: unusual age
+            : _buildDetailRow(AppLocalizations.of(context)!.age, age), // Note: unusual age
 
-        _buildDetailRow('Phone Number:', phoneNumber, phoneBlue: true),
+        _buildDetailRow(AppLocalizations.of(context)!.phoneNumber, phoneNumber, phoneBlue: true),
 
         const SizedBox(height: 8),
 
-        Text('Additional Information', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        Text(
+          AppLocalizations.of(context)!.additionalInfo,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 4),
         // Add Text widget here if there is additional info text
         Text(details),

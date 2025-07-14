@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -147,7 +148,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Currency Exchange",
+          AppLocalizations.of(context)!.currencyExchange,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -215,7 +216,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'Syria', // Title and subtitle
+                            AppLocalizations.of(context)!.syria, // Title and subtitle
                             style: TextStyle(
                               // color:
                               //     selected == 1 || _selectedCurrency == "syria"
@@ -311,7 +312,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'US Dollar', // Title and subtitle
+                            AppLocalizations.of(context)!.usDollar, // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               // color:
@@ -407,7 +408,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'Euro', // Title and subtitle
+                            AppLocalizations.of(context)!.euro, // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               // color:
@@ -505,7 +506,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            'Lira', // Title and subtitle
+                            AppLocalizations.of(context)!.lira, // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               // color:

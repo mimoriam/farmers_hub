@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Edit Profile",
+          AppLocalizations.of(context)!.editProfile,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -134,9 +135,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                             const SizedBox(width: 8),
 
-                            const Center(
+                            Center(
                               child: Text(
-                                'Change Photo',
+                                AppLocalizations.of(context)!.changePhoto,
                                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                               ),
                             ),
@@ -150,30 +151,30 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // --- DISPLAY NAME ---
-                          const Text(
-                            'Change Display Name',
+                          Text(
+                            AppLocalizations.of(context)!.changeDisplayName,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
+                          TextField(decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterName)),
                           const SizedBox(height: 14),
 
                           // --- PHONE NUMBER ---
-                          const Text(
-                            'Enter Phone Number',
+                          Text(
+                            AppLocalizations.of(context)!.enterPhoneNumber,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
+                          TextField(decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterName)),
                           const SizedBox(height: 14),
 
                           // --- ADDRESS ---
-                          const Text(
-                            'Change Your Address',
+                          Text(
+                            AppLocalizations.of(context)!.changeAddress,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
-                          TextField(decoration: _buildInputDecoration('Enter Your Name')),
+                          TextField(decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterAddress)),
                           const SizedBox(height: 14),
                         ],
                       ),
@@ -190,8 +191,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              child: const Text(
-                                'Cancel',
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -210,8 +211,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                 padding: const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                               ),
-                              child: const Text(
-                                'Save Changes',
+                              child: Text(
+                                AppLocalizations.of(context)!.saveChanges,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
@@ -231,7 +232,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           }
 
           if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text("Failed to load user data."));
+            return Center(child: Text(AppLocalizations.of(context)!.failedToLoad));
           }
 
           final userData = snapshot.data!.data() as Map<String, dynamic>?;
@@ -258,16 +259,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   radius: 40,
                                   backgroundColor: onboardingColor,
                                   backgroundImage:
-                                      _imageFile != null
-                                          ? FileImage(_imageFile!)
-                                          : (userData?['profileImage'] != "default_pfp.jpg"
-                                                  ? NetworkImage(userData?['profileImage'])
-                                                  : null)
-                                              as ImageProvider?,
+                                  _imageFile != null
+                                      ? FileImage(_imageFile!)
+                                      : (userData?['profileImage'] != "default_pfp.jpg"
+                                      ? NetworkImage(userData?['profileImage'])
+                                      : null)
+                                  as ImageProvider?,
                                   child:
-                                      _imageFile == null && (userData?['profileImage'] == "default_pfp.jpg")
-                                          ? Text('A', style: TextStyle(fontSize: 40, color: Colors.white))
-                                          : null,
+                                  _imageFile == null && (userData?['profileImage'] == "default_pfp.jpg")
+                                      ? Text('A', style: TextStyle(fontSize: 40, color: Colors.white))
+                                      : null,
                                 ),
                                 Positioned(
                                   bottom: 0,
@@ -290,9 +291,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                           const SizedBox(width: 8),
 
-                          const Center(
+                          Center(
                             child: Text(
-                              'Change Photo',
+                              AppLocalizations.of(context)!.changePhoto,
                               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                             ),
                           ),
@@ -309,62 +310,62 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // --- DISPLAY NAME ---
-                          const Text(
-                            'Change Display Name',
+                          Text(
+                            AppLocalizations.of(context)!.changeDisplayName,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
                           FormBuilderTextField(
                             name: 'username',
-                            decoration: _buildInputDecoration('Enter Your Name'),
+                            decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterName),
                             initialValue: initialName,
                             // readOnly: true,
                             // enabled: false,
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(errorText: 'Name is required.'),
+                              FormBuilderValidators.required(errorText: AppLocalizations.of(context)!.nameRequires),
                               FormBuilderValidators.minLength(
                                 3,
-                                errorText: 'Name must be at least 3 characters.',
+                                errorText: AppLocalizations.of(context)!.nameMustHaveThreeLetters,
                               ),
                             ]),
                           ),
                           const SizedBox(height: 14),
 
                           // --- PHONE NUMBER ---
-                          const Text(
-                            'Enter Phone Number',
+                          Text(
+                            AppLocalizations.of(context)!.enterPhoneNumber,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
                           FormBuilderTextField(
                             name: 'phone',
                             enabled: false,
-                            decoration: _buildInputDecoration('Enter Phone Number'),
+                            decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterPhoneNumber),
                             initialValue:
-                                phoneNumber["completeNumber"].isEmpty
-                                    ? ""
-                                    : "${phoneNumber["completeNumber"]}",
+                            phoneNumber["completeNumber"].isEmpty
+                                ? ""
+                                : "${phoneNumber["completeNumber"]}",
                             keyboardType: TextInputType.phone,
                             validator: FormBuilderValidators.compose([
-                              FormBuilderValidators.required(errorText: 'Phone number is required.'),
-                              FormBuilderValidators.numeric(errorText: 'Please enter a valid number.'),
+                              FormBuilderValidators.required(errorText: AppLocalizations.of(context)!.phoneNumberRequires),
+                              FormBuilderValidators.numeric(errorText: AppLocalizations.of(context)!.validPhoneNumber),
                             ]),
                           ),
                           const SizedBox(height: 14),
 
                           // --- ADDRESS ---
-                          const Text(
-                            'Change Your Address',
+                          Text(
+                            AppLocalizations.of(context)!.changeAddress,
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           const SizedBox(height: 8),
                           FormBuilderTextField(
                             name: 'address',
-                            decoration: _buildInputDecoration('Enter Address'),
+                            decoration: _buildInputDecoration(AppLocalizations.of(context)!.enterAddress),
                             // initialValue:
                             //     location["city"].isEmpty ? "" : "${location["city"]} ${location["province"]}",
                             initialValue: location["city"].isEmpty ? "" : "${location["city"]}",
-                            validator: FormBuilderValidators.required(errorText: 'Address is required.'),
+                            validator: FormBuilderValidators.required(errorText: AppLocalizations.of(context)!.addressRequires),
                           ),
                           const SizedBox(height: 14),
 
@@ -401,8 +402,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               padding: const EdgeInsets.symmetric(vertical: 16),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
-                            child: const Text(
-                              'Cancel',
+                            child: Text(
+                              AppLocalizations.of(context)!.cancel,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -444,8 +445,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   // Optionally navigate back after saving
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Changes saved successfully!'),
+                                      SnackBar(
+                                        content: Text(AppLocalizations.of(context)!.changesSuccess),
                                         backgroundColor: onboardingColor,
                                       ),
                                     );
@@ -456,7 +457,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('Error: ${e.toString()}'),
+                                        content: Text(AppLocalizations.of(context)!.error + ' ${e.toString()}'),
                                         backgroundColor: Colors.red,
                                       ),
                                     );
@@ -473,8 +474,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               } else {
                                 print("Form data is invalid.");
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Please correct the errors in the form.'),
+                                  SnackBar(
+                                    content: Text(AppLocalizations.of(context)!.errorsCorrection),
                                     backgroundColor: Colors.red,
                                   ),
                                 );
@@ -489,8 +490,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                   padding: const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                                 ),
-                                child: const Text(
-                                  'Save Changes',
+                                child: Text(
+                                  AppLocalizations.of(context)!.saveChanges,
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,

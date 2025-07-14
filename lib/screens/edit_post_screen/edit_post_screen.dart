@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -86,21 +87,21 @@ class _EditPostScreenState extends State<EditPostScreen> {
       context: context,
       builder:
           (context) => AlertDialog(
-            backgroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-            title: const Text("Subscription Required"),
-            content: const Text("You need to be a subscribed user to change post images."),
-            actions: [
-              TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK")),
-              TextButton(
-                onPressed: () {
-                  // TODO: Navigate to your subscription screen
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Subscribe"),
-              ),
-            ],
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        title: const Text("Subscription Required"),
+        content: const Text("You need to be a subscribed user to change post images."),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK")),
+          TextButton(
+            onPressed: () {
+              // TODO: Navigate to your subscription screen
+              Navigator.of(context).pop();
+            },
+            child: const Text("Subscribe"),
           ),
+        ],
+      ),
     );
     return false; // Deny the change.
   }
@@ -196,7 +197,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Edit Post",
+          AppLocalizations.of(context)!.editPost,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
         ),
@@ -314,7 +315,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                         return Card(
                           child: ListTile(
                             title: Text('Item number $index as title'),
-                            subtitle: const Text('Subtitle here'),
+                            subtitle: Text(AppLocalizations.of(context)!.subtitle),
                             trailing: const Icon(Icons.ac_unit),
                           ),
                         );
@@ -327,7 +328,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
           }
 
           if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-            return const Center(child: Text("Failed to load user data."));
+            return Center(child: Text(AppLocalizations.of(context)!.failedToLoad));
           }
 
           final postDetails = snapshot.data;
@@ -508,16 +509,16 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                 _imageUrls.length + _newImages.length >= 4
                                     ? Container()
                                     : Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(Icons.info_outline, color: onboardingColor, size: 20),
-                                        SizedBox(width: 8),
-                                        Text(
-                                          'You can add up to 4 photos.',
-                                          style: TextStyle(fontSize: 14, color: Colors.black),
-                                        ),
-                                      ],
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(Icons.info_outline, color: onboardingColor, size: 20),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'You can add up to 4 photos.',
+                                      style: TextStyle(fontSize: 14, color: Colors.black),
                                     ),
+                                  ],
+                                ),
 
                                 // error.isNotEmpty ? SizedBox(height: 2) : Container(),
                                 error.isNotEmpty
@@ -540,7 +541,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                     // itemCount: _images.length + (_images.length < 4 ? 1 : 0),
                                     itemCount:
-                                        _imageUrls.length +
+                                    _imageUrls.length +
                                         _newImages.length +
                                         ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
                                     itemBuilder: (context, index) {
@@ -653,7 +654,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("Edit Post Title", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.postTitle, style: _labelStyle),
 
                                         const SizedBox(height: 8),
 
@@ -675,7 +676,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           //     }) => null,
                                           // Hide default counter
                                           decoration: InputDecoration(
-                                            hintText: 'Type here',
+                                            hintText: AppLocalizations.of(context)!.typeHere,
                                             hintStyle: TextStyle(color: loginTextFieldIconColor),
                                             counterText: "",
                                             // counter: const Align(
@@ -696,7 +697,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           ),
                                           validator: FormBuilderValidators.compose([
                                             FormBuilderValidators.required(
-                                              errorText: 'Post title is required.',
+                                              errorText: AppLocalizations.of(context)!.postTitleRequired,
                                             ),
                                             FormBuilderValidators.maxLength(120),
                                           ]),
@@ -704,7 +705,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                         const SizedBox(height: 8),
 
-                                        Text("City", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.city, style: _labelStyle),
                                         const SizedBox(height: 8),
 
                                         Padding(
@@ -713,7 +714,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           child: DropdownButtonFormField2<String>(
                                             autovalidateMode: validateMode,
                                             decoration: InputDecoration(
-                                              labelText: "Select Your City",
+                                              labelText: AppLocalizations.of(context)!.selectYourCity,
                                               floatingLabelBehavior: FloatingLabelBehavior.never,
                                               contentPadding: const EdgeInsets.symmetric(
                                                 vertical: 0,
@@ -755,40 +756,40 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                             // value: "Damascus",
                                             items:
-                                                [
-                                                  'Damascus',
-                                                  'Aleppo',
-                                                  'Homs',
-                                                  'Hama',
-                                                  "Latakia",
-                                                  "Tartus",
-                                                  "Baniyas",
-                                                  "Idlib",
-                                                  "Deir ez-Zor",
-                                                  "Al-Hasakah",
-                                                  "Qamishli",
-                                                  "Raqqa",
-                                                  "Daraa",
-                                                  "As-Suwayda",
-                                                  "Quneitra",
-                                                  "Al-Mayadin",
-                                                  "Al-Bukamal",
-                                                  "Rif Dimashq",
-                                                  "Afrin",
-                                                  'Manbij',
-                                                  "Tell Abyad",
-                                                  "Ras al-Ayn",
-                                                  "Kobani",
-                                                ].map((city) {
-                                                  return DropdownMenuItem<String>(
-                                                    onTap: () {},
-                                                    value: city,
-                                                    child: Text(city),
-                                                  );
-                                                }).toList(),
+                                            [
+                                              'Damascus',
+                                              'Aleppo',
+                                              'Homs',
+                                              'Hama',
+                                              "Latakia",
+                                              "Tartus",
+                                              "Baniyas",
+                                              "Idlib",
+                                              "Deir ez-Zor",
+                                              "Al-Hasakah",
+                                              "Qamishli",
+                                              "Raqqa",
+                                              "Daraa",
+                                              "As-Suwayda",
+                                              "Quneitra",
+                                              "Al-Mayadin",
+                                              "Al-Bukamal",
+                                              "Rif Dimashq",
+                                              "Afrin",
+                                              'Manbij',
+                                              "Tell Abyad",
+                                              "Ras al-Ayn",
+                                              "Kobani",
+                                            ].map((city) {
+                                              return DropdownMenuItem<String>(
+                                                onTap: () {},
+                                                value: city,
+                                                child: Text(city),
+                                              );
+                                            }).toList(),
                                             validator: (value) {
                                               if (value == null) {
-                                                return 'City is required.';
+                                                return AppLocalizations.of(context)!.cityRequired;
                                               }
                                               return null;
                                             },
@@ -798,7 +799,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           ),
                                         ),
 
-                                        Text("Village", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.village, style: _labelStyle),
                                         const SizedBox(height: 8),
 
                                         FormBuilderTextField(
@@ -810,7 +811,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                             FilteringTextInputFormatter.allow(RegExp(r'^[a-zA-Z0-9 ]*$')),
                                           ],
                                           decoration: InputDecoration(
-                                            hintText: 'Enter Village',
+                                            hintText: AppLocalizations.of(context)!.enterVillage,
                                             counterText: "",
                                             border: _inputBorder,
                                             enabledBorder: _inputBorder,
@@ -825,13 +826,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           ),
                                           // keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                           validator: FormBuilderValidators.compose([
-                                            FormBuilderValidators.required(errorText: 'Village is required.'),
+                                            FormBuilderValidators.required(errorText: AppLocalizations.of(context)!.villageRequired),
                                           ]),
                                         ),
 
                                         const SizedBox(height: 8),
 
-                                        Text("Category", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.category, style: _labelStyle),
                                         const SizedBox(height: 8),
 
                                         Padding(
@@ -840,7 +841,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           child: DropdownButtonFormField2<String>(
                                             autovalidateMode: validateMode,
                                             decoration: InputDecoration(
-                                              labelText: "Select a category",
+                                              labelText: AppLocalizations.of(context)!.selectCategory,
                                               floatingLabelBehavior: FloatingLabelBehavior.never,
                                               contentPadding: const EdgeInsets.symmetric(
                                                 vertical: 0,
@@ -883,35 +884,35 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                             // value: "Damascus",
                                             items:
-                                                [
-                                                      'Fruits',
-                                                      'Vegetables',
-                                                      'Olive Oil',
-                                                      "Live Stock",
-                                                      'Grains & Seeds',
-                                                      "Fertilizers",
-                                                      "Tools",
-                                                      "Land Services",
-                                                      "Equipments",
-                                                      "Delivery",
-                                                      "Worker Services",
-                                                      "Pesticides",
-                                                      "Animal Feed",
-                                                      "Others",
-                                                    ]
-                                                    .map(
-                                                      (lang) => DropdownMenuItem<String>(
-                                                        value: lang,
-                                                        child: Text(lang),
-                                                      ),
-                                                    )
-                                                    .toList(),
+                                            [
+                                              'Fruits',
+                                              'Vegetables',
+                                              'Olive Oil',
+                                              "Live Stock",
+                                              'Grains & Seeds',
+                                              "Fertilizers",
+                                              "Tools",
+                                              "Land Services",
+                                              "Equipments",
+                                              "Delivery",
+                                              "Worker Services",
+                                              "Pesticides",
+                                              "Animal Feed",
+                                              "Others",
+                                            ]
+                                                .map(
+                                                  (lang) => DropdownMenuItem<String>(
+                                                value: lang,
+                                                child: Text(lang),
+                                              ),
+                                            )
+                                                .toList(),
                                             // value: selectedCategory,
                                             // TODO FIX THIS TOO FOR EDIT
                                             value: postCategory,
                                             validator: (String? value) {
                                               if (value == null) {
-                                                return 'Category is required.';
+                                                return AppLocalizations.of(context)!.categoryRequires;
                                               }
                                               return null;
                                             },
@@ -951,212 +952,212 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         postCategory == null
                                             ? Container()
                                             : Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            postCategory != "Live Stock" ||
+                                                postCategory != "Worker Services"
+                                                ? Container()
+                                                : Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                postCategory != "Live Stock" ||
-                                                        postCategory != "Worker Services"
-                                                    ? Container()
-                                                    : Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Gender", style: _labelStyle),
+                                                Text(AppLocalizations.of(context)!.gender, style: _labelStyle),
 
-                                                        const SizedBox(height: 8),
+                                                const SizedBox(height: 8),
 
-                                                        Padding(
-                                                          // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
-                                                          padding: const EdgeInsets.only(
-                                                            right: 0,
-                                                            left: 0,
-                                                            bottom: 10,
-                                                          ),
-                                                          child: DropdownButtonFormField2<String>(
-                                                            autovalidateMode: validateMode,
-                                                            decoration: InputDecoration(
-                                                              labelText: "Select a Gender",
-                                                              floatingLabelBehavior:
-                                                                  FloatingLabelBehavior.never,
-                                                              contentPadding: const EdgeInsets.symmetric(
-                                                                vertical: 0,
-                                                                horizontal: 6,
-                                                              ),
-                                                              border: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                  color: onboardingTextColor,
-                                                                  width: 1.0,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(12),
-                                                              ),
-                                                              enabledBorder: _inputBorder,
-                                                              errorBorder: _errorInputBorder,
-                                                              focusedBorder: OutlineInputBorder(
-                                                                borderSide: BorderSide(
-                                                                  color: onboardingTextColor,
-                                                                  width: 1.0,
-                                                                ),
-                                                                borderRadius: BorderRadius.circular(12),
-                                                              ),
-                                                            ),
-                                                            iconStyleData: IconStyleData(
-                                                              // Using IconStyleData for icon properties
-                                                              iconEnabledColor: onboardingTextColor,
-                                                            ),
-
-                                                            dropdownStyleData: DropdownStyleData(
-                                                              maxHeight: 160,
-                                                              offset: const Offset(0, -10),
-                                                              decoration: BoxDecoration(
-                                                                borderRadius: BorderRadius.circular(12),
-                                                                color: Colors.white,
-                                                              ),
-                                                            ),
-
-                                                            // value: "Damascus",
-                                                            items:
-                                                                ['Male', 'Female']
-                                                                    .map(
-                                                                      (gender) => DropdownMenuItem<String>(
-                                                                        value: gender,
-                                                                        child: Text(gender),
-                                                                      ),
-                                                                    )
-                                                                    .toList(),
-
-                                                            // TODO AGAIN FIX
-                                                            // value: selectedGender,
-                                                            value: postGender.isEmpty ? "" : postGender,
-                                                            validator: (String? value) {
-                                                              if (value == null) {
-                                                                return 'Gender is required.';
-                                                              }
-                                                              return null;
-                                                            },
-                                                            onChanged: (String? value) {
-                                                              setState(() {
-                                                                selectedGender = value;
-                                                              });
-                                                            },
-                                                          ),
+                                                Padding(
+                                                  // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                                                  padding: const EdgeInsets.only(
+                                                    right: 0,
+                                                    left: 0,
+                                                    bottom: 10,
+                                                  ),
+                                                  child: DropdownButtonFormField2<String>(
+                                                    autovalidateMode: validateMode,
+                                                    decoration: InputDecoration(
+                                                      labelText: AppLocalizations.of(context)!.selectGender,
+                                                      floatingLabelBehavior:
+                                                      FloatingLabelBehavior.never,
+                                                      contentPadding: const EdgeInsets.symmetric(
+                                                        vertical: 0,
+                                                        horizontal: 6,
+                                                      ),
+                                                      border: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: onboardingTextColor,
+                                                          width: 1.0,
                                                         ),
-
-                                                        const SizedBox(height: 2),
-                                                      ],
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      enabledBorder: _inputBorder,
+                                                      errorBorder: _errorInputBorder,
+                                                      focusedBorder: OutlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                          color: onboardingTextColor,
+                                                          width: 1.0,
+                                                        ),
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                    ),
+                                                    iconStyleData: IconStyleData(
+                                                      // Using IconStyleData for icon properties
+                                                      iconEnabledColor: onboardingTextColor,
                                                     ),
 
-                                                // Average Weight (in kgs)
-                                                postCategory == "Fruits" ||
-                                                        postCategory == "Vegetables" ||
-                                                        postCategory == "Olive Oil" ||
-                                                        postCategory == "Grains & Seeds" ||
-                                                        postCategory == "Fertilizers" ||
-                                                        postCategory == "Tools" ||
-                                                        postCategory == "Land Services" ||
-                                                        postCategory == "Equipments" ||
-                                                        postCategory == "Delivery" ||
-                                                        postCategory == "Pesticides" ||
-                                                        postCategory == "Animal Feed" ||
-                                                        postCategory == "Others"
-                                                    ? Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Average Weight (in kgs)", style: _labelStyle),
+                                                    dropdownStyleData: DropdownStyleData(
+                                                      maxHeight: 160,
+                                                      offset: const Offset(0, -10),
+                                                      decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(12),
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
 
-                                                        const SizedBox(height: 8),
-
-                                                        FormBuilderTextField(
-                                                          name: 'avg_weight',
-                                                          maxLength: 3,
-                                                          initialValue: postWeight,
-                                                          autovalidateMode: validateMode,
-                                                          decoration: InputDecoration(
-                                                            counterText: "",
-                                                            hintText: 'Enter Average Weight in kilograms',
-                                                            border: _inputBorder,
-                                                            enabledBorder: _inputBorder,
-                                                            focusedBorder: _focusedInputBorder,
-                                                            errorBorder: _errorInputBorder,
-                                                            focusedErrorBorder: _focusedInputBorder,
-                                                            contentPadding: _contentPadding,
-                                                            // The image shows a dropdown arrow, this is a stylistic choice.
-                                                            // If it's a free text field, suffixIcon is decorative.
-                                                            // If it's a dropdown, use FormBuilderDropdown.
-                                                            // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
-                                                          ),
-                                                          keyboardType: const TextInputType.numberWithOptions(
-                                                            decimal: true,
-                                                          ),
-                                                          validator: FormBuilderValidators.compose([
-                                                            FormBuilderValidators.required(
-                                                              errorText: 'Average weight is required.',
-                                                            ),
-                                                            FormBuilderValidators.numeric(
-                                                              errorText: 'Must be a number.',
-                                                            ),
-                                                            FormBuilderValidators.min(
-                                                              0,
-                                                              errorText: 'Weight cannot be negative.',
-                                                            ),
-                                                            FormBuilderValidators.max(
-                                                              10000,
-                                                              errorText: 'Weight cannot exceed.',
-                                                            ),
-                                                          ]),
-                                                        ),
-
-                                                        const SizedBox(height: 10),
-                                                      ],
+                                                    // value: "Damascus",
+                                                    items:
+                                                    ['Male', 'Female']
+                                                        .map(
+                                                          (gender) => DropdownMenuItem<String>(
+                                                        value: gender,
+                                                        child: Text(gender),
+                                                      ),
                                                     )
-                                                    : Container(),
+                                                        .toList(),
 
-                                                postCategory == "Live Stock" ||
-                                                        postCategory == "Worker Services"
-                                                    ? Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Text("Age (in years)", style: _labelStyle),
+                                                    // TODO AGAIN FIX
+                                                    // value: selectedGender,
+                                                    value: postGender.isEmpty ? "" : postGender,
+                                                    validator: (String? value) {
+                                                      if (value == null) {
+                                                        return AppLocalizations.of(context)!.genderRequires;
+                                                      }
+                                                      return null;
+                                                    },
+                                                    onChanged: (String? value) {
+                                                      setState(() {
+                                                        selectedGender = value;
+                                                      });
+                                                    },
+                                                  ),
+                                                ),
 
-                                                        const SizedBox(height: 8),
-
-                                                        FormBuilderTextField(
-                                                          name: 'age',
-                                                          maxLength: 2,
-                                                          initialValue: postAge.toString(),
-                                                          autovalidateMode: validateMode,
-                                                          decoration: InputDecoration(
-                                                            counterText: "",
-                                                            hintText: 'Enter age in years',
-                                                            border: _inputBorder,
-                                                            enabledBorder: _inputBorder,
-                                                            focusedBorder: _focusedInputBorder,
-                                                            errorBorder: _errorInputBorder,
-                                                            focusedErrorBorder: _focusedInputBorder,
-                                                            contentPadding: _contentPadding,
-                                                          ),
-                                                          keyboardType: TextInputType.number,
-                                                          validator: FormBuilderValidators.compose([
-                                                            FormBuilderValidators.required(
-                                                              errorText: 'Age is required.',
-                                                            ),
-                                                            FormBuilderValidators.numeric(
-                                                              errorText: 'Must be a number.',
-                                                            ),
-                                                            FormBuilderValidators.min(
-                                                              0,
-                                                              errorText: 'Age cannot be negative.',
-                                                            ),
-                                                            FormBuilderValidators.max(
-                                                              999,
-                                                              errorText: 'Age cannot exceed.',
-                                                            ),
-                                                          ]),
-                                                        ),
-
-                                                        const SizedBox(height: 10),
-                                                      ],
-                                                    )
-                                                    : Container(),
+                                                const SizedBox(height: 2),
                                               ],
                                             ),
+
+                                            // Average Weight (in kgs)
+                                            postCategory == "Fruits" ||
+                                                postCategory == "Vegetables" ||
+                                                postCategory == "Olive Oil" ||
+                                                postCategory == "Grains & Seeds" ||
+                                                postCategory == "Fertilizers" ||
+                                                postCategory == "Tools" ||
+                                                postCategory == "Land Services" ||
+                                                postCategory == "Equipments" ||
+                                                postCategory == "Delivery" ||
+                                                postCategory == "Pesticides" ||
+                                                postCategory == "Animal Feed" ||
+                                                postCategory == "Others"
+                                                ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(AppLocalizations.of(context)!.averageWeight, style: _labelStyle),
+
+                                                const SizedBox(height: 8),
+
+                                                FormBuilderTextField(
+                                                  name: 'avg_weight',
+                                                  maxLength: 3,
+                                                  initialValue: postWeight,
+                                                  autovalidateMode: validateMode,
+                                                  decoration: InputDecoration(
+                                                    counterText: "",
+                                                    hintText: AppLocalizations.of(context)!.enterAverageWeight,
+                                                    border: _inputBorder,
+                                                    enabledBorder: _inputBorder,
+                                                    focusedBorder: _focusedInputBorder,
+                                                    errorBorder: _errorInputBorder,
+                                                    focusedErrorBorder: _focusedInputBorder,
+                                                    contentPadding: _contentPadding,
+                                                    // The image shows a dropdown arrow, this is a stylistic choice.
+                                                    // If it's a free text field, suffixIcon is decorative.
+                                                    // If it's a dropdown, use FormBuilderDropdown.
+                                                    // suffixIcon: Icon(Icons.arrow_drop_down, color: Colors.grey[600]),
+                                                  ),
+                                                  keyboardType: const TextInputType.numberWithOptions(
+                                                    decimal: true,
+                                                  ),
+                                                  validator: FormBuilderValidators.compose([
+                                                    FormBuilderValidators.required(
+                                                      errorText: AppLocalizations.of(context)!.enterAverageWeightRequires,
+                                                    ),
+                                                    FormBuilderValidators.numeric(
+                                                      errorText: AppLocalizations.of(context)!.numberMust,
+                                                    ),
+                                                    FormBuilderValidators.min(
+                                                      0,
+                                                      errorText: AppLocalizations.of(context)!.weighNotNegative,
+                                                    ),
+                                                    FormBuilderValidators.max(
+                                                      10000,
+                                                      errorText: AppLocalizations.of(context)!.weighNotExceed,
+                                                    ),
+                                                  ]),
+                                                ),
+
+                                                const SizedBox(height: 10),
+                                              ],
+                                            )
+                                                : Container(),
+
+                                            postCategory == "Live Stock" ||
+                                                postCategory == "Worker Services"
+                                                ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(AppLocalizations.of(context)!.age, style: _labelStyle),
+
+                                                const SizedBox(height: 8),
+
+                                                FormBuilderTextField(
+                                                  name: 'age',
+                                                  maxLength: 2,
+                                                  initialValue: postAge.toString(),
+                                                  autovalidateMode: validateMode,
+                                                  decoration: InputDecoration(
+                                                    counterText: "",
+                                                    hintText: AppLocalizations.of(context)!.enterAge,
+                                                    border: _inputBorder,
+                                                    enabledBorder: _inputBorder,
+                                                    focusedBorder: _focusedInputBorder,
+                                                    errorBorder: _errorInputBorder,
+                                                    focusedErrorBorder: _focusedInputBorder,
+                                                    contentPadding: _contentPadding,
+                                                  ),
+                                                  keyboardType: TextInputType.number,
+                                                  validator: FormBuilderValidators.compose([
+                                                    FormBuilderValidators.required(
+                                                      errorText: AppLocalizations.of(context)!.ageRequires,
+                                                    ),
+                                                    FormBuilderValidators.numeric(
+                                                      errorText: AppLocalizations.of(context)!.numberMust,
+                                                    ),
+                                                    FormBuilderValidators.min(
+                                                      0,
+                                                      errorText: AppLocalizations.of(context)!.ageNotNegative,
+                                                    ),
+                                                    FormBuilderValidators.max(
+                                                      999,
+                                                      errorText: AppLocalizations.of(context)!.ageNotExceed,
+                                                    ),
+                                                  ]),
+                                                ),
+
+                                                const SizedBox(height: 10),
+                                              ],
+                                            )
+                                                : Container(),
+                                          ],
+                                        ),
 
                                         // FormBuilderRadioGroup<String>(
                                         //   name: 'gender',
@@ -1180,7 +1181,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         //   ),
                                         //   separator: const SizedBox(width: 16), // Spacing between options
                                         // ),
-                                        Text("Quantity", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.quantity, style: _labelStyle),
                                         const SizedBox(height: 8),
 
                                         FormBuilderTextField(
@@ -1190,7 +1191,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           autovalidateMode: validateMode,
                                           decoration: InputDecoration(
                                             counterText: "",
-                                            hintText: 'Enter Quantity',
+                                            hintText: AppLocalizations.of(context)!.enterQuantity,
                                             border: _inputBorder,
                                             enabledBorder: _inputBorder,
                                             focusedBorder: _focusedInputBorder,
@@ -1202,20 +1203,20 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           keyboardType: TextInputType.number,
                                           validator: FormBuilderValidators.compose([
                                             FormBuilderValidators.required(
-                                              errorText: 'Quantity is required.',
+                                              errorText: AppLocalizations.of(context)!.quantityRequired,
                                             ),
                                             FormBuilderValidators.integer(
-                                              errorText: 'Must be a whole number.',
+                                              errorText: AppLocalizations.of(context)!.mustWholeNumber,
                                             ),
                                             FormBuilderValidators.min(
                                               1,
-                                              errorText: 'Quantity must be at least 1.',
+                                              errorText: AppLocalizations.of(context)!.quantityLeastOne,
                                             ),
                                           ]),
                                         ),
                                         const SizedBox(height: 10),
 
-                                        Text("Price", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.price, style: _labelStyle),
                                         const SizedBox(height: 8),
 
                                         Row(
@@ -1227,7 +1228,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 initialValue: postPrice.toString(),
                                                 autovalidateMode: validateMode,
                                                 decoration: InputDecoration(
-                                                  hintText: 'Enter Your Price',
+                                                  hintText: AppLocalizations.of(context)!.enterPrice,
                                                   counterText: "",
                                                   border: _inputBorder,
                                                   enabledBorder: _inputBorder,
@@ -1241,14 +1242,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 ),
                                                 validator: FormBuilderValidators.compose([
                                                   FormBuilderValidators.required(
-                                                    errorText: 'Price is required.',
+                                                    errorText: AppLocalizations.of(context)!.priceRequires,
                                                   ),
                                                   FormBuilderValidators.numeric(
-                                                    errorText: 'Must be a number.',
+                                                    errorText: AppLocalizations.of(context)!.numberMust,
                                                   ),
                                                   FormBuilderValidators.min(
                                                     0,
-                                                    errorText: 'Price cannot be negative.',
+                                                    errorText: AppLocalizations.of(context)!.priceNotNegative,
                                                   ),
                                                 ]),
                                               ),
@@ -1258,7 +1259,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                               child: FormBuilderCheckbox(
                                                 name: 'hasBeenSold',
                                                 initialValue: postDetails["hasBeenSold"],
-                                                title: Text("Mark as sold", style: _labelStyle),
+                                                title: Text(AppLocalizations.of(context)!.sold, style: _labelStyle),
                                                 activeColor: onboardingColor,
                                               ),
                                             ),
@@ -1388,7 +1389,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Text("Additional Details", style: _labelStyle),
+                                        Text(AppLocalizations.of(context)!.additionalDetails, style: _labelStyle),
 
                                         const SizedBox(height: 8),
 
@@ -1407,7 +1408,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           // Hide default counter
                                           decoration: InputDecoration(
                                             counterText: "",
-                                            hintText: 'Type here',
+                                            hintText: AppLocalizations.of(context)!.typeHere,
                                             border: _inputBorder,
                                             enabledBorder: _inputBorder,
                                             focusedBorder: _focusedInputBorder,
@@ -1432,7 +1433,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                   onTap: () async {
                                     if (_imageUrls.isEmpty && _newImages.isEmpty) {
                                       setState(() {
-                                        error = "Upload an image!";
+                                        error = AppLocalizations.of(context)!.uploadImage;
 
                                         _scrollController.animateTo(
                                           _scrollController.position.minScrollExtent,
@@ -1448,7 +1449,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         (_imageUrls.isNotEmpty || _newImages.isNotEmpty)) {
                                       if ((_imageUrls.length + _newImages.length >= 5)) {
                                         setState(() {
-                                          error = "Can't upload more than 4 images!";
+                                          error = AppLocalizations.of(context)!.uploadFourImagesOnly;
 
                                           _scrollController.animateTo(
                                             _scrollController.position.minScrollExtent,
@@ -1480,27 +1481,27 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         imageUrls: finalImageUrls,
                                         category: postCategory,
                                         gender:
-                                            postCategory == "Live Stock" || postCategory == "Worker Services"
-                                                ? selectedGender
-                                                : "",
+                                        postCategory == "Live Stock" || postCategory == "Worker Services"
+                                            ? selectedGender
+                                            : "",
                                         currency: currency,
                                         averageWeight:
-                                            postCategory != "Live Stock" || postCategory != "Worker Services"
-                                                ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
-                                                : "",
+                                        postCategory != "Live Stock" || postCategory != "Worker Services"
+                                            ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                            : "",
                                         quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
                                         // age: int.parse(_formKey.currentState?.fields['age']?.value),
                                         age:
-                                            postCategory == "Live Stock" || postCategory == "Worker Services"
-                                                ? int.parse(_formKey.currentState?.fields['age']?.value)
-                                                : 0,
+                                        postCategory == "Live Stock" || postCategory == "Worker Services"
+                                            ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                            : 0,
                                         price: int.parse(_formKey.currentState?.fields['price']?.value),
                                         details: _formKey.currentState?.fields['add_details']?.value,
                                         featured: true,
                                         city: postCity,
                                         village: _formKey.currentState?.fields['village']?.value,
                                         hasBeenSold:
-                                            _formKey.currentState?.fields['hasBeenSold']?.value ?? false,
+                                        _formKey.currentState?.fields['hasBeenSold']?.value ?? false,
                                         // city: selectedCity,
                                         // city: placeDetails.city!,
                                         // province: placeDetails.province!,
@@ -1552,8 +1553,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         padding: const EdgeInsets.symmetric(vertical: 15),
                                       ),
                                       onPressed: onTap,
-                                      child: const Text(
-                                        'Edit',
+                                      child: Text(
+                                        AppLocalizations.of(context)!.submit,
                                         style: TextStyle(fontSize: 18, color: Colors.white),
                                       ),
                                     );
@@ -1613,27 +1614,27 @@ class _EditPostScreenState extends State<EditPostScreen> {
                       _imageUrls.length + _newImages.length >= 4
                           ? Container()
                           : SizedBox(
-                            width: double.infinity,
-                            // Make button take full width of its parent.
-                            child: ElevatedButton.icon(
-                              onPressed: _pickImage,
-                              icon: const Icon(Icons.add_photo_alternate_rounded, color: Colors.white),
-                              label: const Text(
-                                'Add Images',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: onboardingColor, // Button background color.
-                                padding: const EdgeInsets.symmetric(vertical: 16),
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                elevation: 2, // Adds a subtle shadow.
-                              ),
+                        width: double.infinity,
+                        // Make button take full width of its parent.
+                        child: ElevatedButton.icon(
+                          onPressed: _pickImage,
+                          icon: const Icon(Icons.add_photo_alternate_rounded, color: Colors.white),
+                          label: Text(
+                            AppLocalizations.of(context)!.addImages,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: onboardingColor, // Button background color.
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 2, // Adds a subtle shadow.
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -1645,133 +1646,133 @@ class _EditPostScreenState extends State<EditPostScreen> {
     );
   }
 
-  // Widget _buildImagePickerSection() {
-  //   return Column(
-  //     children: [
-  //       // if (_isLoadingImages)
-  //       // Center(child: CircularProgressIndicator(color: Colors.red,))
-  //       //   Center(child: Skeletonizer(
-  //       //     ignorePointers: true,
-  //       //     child: Column(
-  //       //       mainAxisAlignment: MainAxisAlignment.center,
-  //       //       children: [
-  //       //         // CircularProgressIndicator(),
-  //       //         SizedBox(height: 10), Text("Loading...")],
-  //       //     ),
-  //       //   ),)
-  //       // else
-  //       Skeletonizer(
-  //         ignorePointers: true,
-  //         ignoreContainers: true,
-  //         enabled: _isLoadingImages,
-  //         child: DottedBorder(
-  //           options: RoundedRectDottedBorderOptions(
-  //             radius: const Radius.circular(20),
-  //             color: onboardingColor,
-  //             strokeWidth: 1,
-  //           ),
-  //           child: ClipRRect(
-  //             borderRadius: const BorderRadius.all(Radius.circular(12)),
-  //             child: Container(
-  //               width: double.infinity,
-  //               height: 340,
-  //               color: Colors.white,
-  //               child: GridView.builder(
-  //                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-  //                   crossAxisCount: 2,
-  //                   crossAxisSpacing: 2,
-  //                   mainAxisSpacing: 2,
-  //                 ),
-  //                 itemCount:
-  //                     _imageUrls.length +
-  //                     _newImages.length +
-  //                     ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
-  //                 itemBuilder: (context, index) {
-  //                   if (index < _imageUrls.length) {
-  //                     return Stack(
-  //                       children: [
-  //                         Image.network(
-  //                           _imageUrls[index],
-  //                           fit: BoxFit.cover,
-  //                           width: double.infinity,
-  //                           height: double.infinity,
-  //                         ),
-  //                         Positioned(
-  //                           top: 4,
-  //                           left: 4,
-  //                           child: GestureDetector(
-  //                             onTap: () {
-  //                               _removeExistingImage(index);
-  //                               if (_imageUrls.length + _newImages.length <= 4) {
-  //                                 setState(() {
-  //                                   error = '';
-  //                                 });
-  //                               }
-  //                               return;
-  //                             },
-  //                             child: Container(
-  //                               decoration: BoxDecoration(
-  //                                 color: Colors.white,
-  //                                 shape: BoxShape.rectangle,
-  //                                 borderRadius: BorderRadius.circular(10),
-  //                               ),
-  //                               child: Icon(Icons.close, color: Colors.black, size: 20),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     );
-  //                   } else if (index < _imageUrls.length + _newImages.length) {
-  //                     final newImageIndex = index - _imageUrls.length;
-  //
-  //                     return Stack(
-  //                       children: [
-  //                         Image.file(
-  //                           _newImages[newImageIndex],
-  //                           fit: BoxFit.cover,
-  //                           width: double.infinity,
-  //                           height: double.infinity,
-  //                         ),
-  //                         Positioned(
-  //                           top: 4,
-  //                           left: 4,
-  //                           child: GestureDetector(
-  //                             onTap: () {
-  //                               _removeNewImage(newImageIndex);
-  //                               if (_imageUrls.length + _newImages.length <= 4) {
-  //                                 setState(() {
-  //                                   error = '';
-  //                                 });
-  //                               }
-  //                               return;
-  //                             },
-  //                             child: Container(
-  //                               decoration: BoxDecoration(
-  //                                 color: Colors.white,
-  //                                 shape: BoxShape.rectangle,
-  //                                 borderRadius: BorderRadius.circular(10),
-  //                               ),
-  //                               child: Icon(Icons.close, color: Colors.black, size: 20),
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     );
-  //                   } else {
-  //                     return Center(
-  //                       child: IconButton(
-  //                         icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
-  //                         onPressed: _pickImage,
-  //                       ),
-  //                     );
-  //                   }
-  //                 },
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
+// Widget _buildImagePickerSection() {
+//   return Column(
+//     children: [
+//       // if (_isLoadingImages)
+//       // Center(child: CircularProgressIndicator(color: Colors.red,))
+//       //   Center(child: Skeletonizer(
+//       //     ignorePointers: true,
+//       //     child: Column(
+//       //       mainAxisAlignment: MainAxisAlignment.center,
+//       //       children: [
+//       //         // CircularProgressIndicator(),
+//       //         SizedBox(height: 10), Text("Loading...")],
+//       //     ),
+//       //   ),)
+//       // else
+//       Skeletonizer(
+//         ignorePointers: true,
+//         ignoreContainers: true,
+//         enabled: _isLoadingImages,
+//         child: DottedBorder(
+//           options: RoundedRectDottedBorderOptions(
+//             radius: const Radius.circular(20),
+//             color: onboardingColor,
+//             strokeWidth: 1,
+//           ),
+//           child: ClipRRect(
+//             borderRadius: const BorderRadius.all(Radius.circular(12)),
+//             child: Container(
+//               width: double.infinity,
+//               height: 340,
+//               color: Colors.white,
+//               child: GridView.builder(
+//                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+//                   crossAxisCount: 2,
+//                   crossAxisSpacing: 2,
+//                   mainAxisSpacing: 2,
+//                 ),
+//                 itemCount:
+//                     _imageUrls.length +
+//                     _newImages.length +
+//                     ((_imageUrls.length + _newImages.length < 4) ? 1 : 0),
+//                 itemBuilder: (context, index) {
+//                   if (index < _imageUrls.length) {
+//                     return Stack(
+//                       children: [
+//                         Image.network(
+//                           _imageUrls[index],
+//                           fit: BoxFit.cover,
+//                           width: double.infinity,
+//                           height: double.infinity,
+//                         ),
+//                         Positioned(
+//                           top: 4,
+//                           left: 4,
+//                           child: GestureDetector(
+//                             onTap: () {
+//                               _removeExistingImage(index);
+//                               if (_imageUrls.length + _newImages.length <= 4) {
+//                                 setState(() {
+//                                   error = '';
+//                                 });
+//                               }
+//                               return;
+//                             },
+//                             child: Container(
+//                               decoration: BoxDecoration(
+//                                 color: Colors.white,
+//                                 shape: BoxShape.rectangle,
+//                                 borderRadius: BorderRadius.circular(10),
+//                               ),
+//                               child: Icon(Icons.close, color: Colors.black, size: 20),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     );
+//                   } else if (index < _imageUrls.length + _newImages.length) {
+//                     final newImageIndex = index - _imageUrls.length;
+//
+//                     return Stack(
+//                       children: [
+//                         Image.file(
+//                           _newImages[newImageIndex],
+//                           fit: BoxFit.cover,
+//                           width: double.infinity,
+//                           height: double.infinity,
+//                         ),
+//                         Positioned(
+//                           top: 4,
+//                           left: 4,
+//                           child: GestureDetector(
+//                             onTap: () {
+//                               _removeNewImage(newImageIndex);
+//                               if (_imageUrls.length + _newImages.length <= 4) {
+//                                 setState(() {
+//                                   error = '';
+//                                 });
+//                               }
+//                               return;
+//                             },
+//                             child: Container(
+//                               decoration: BoxDecoration(
+//                                 color: Colors.white,
+//                                 shape: BoxShape.rectangle,
+//                                 borderRadius: BorderRadius.circular(10),
+//                               ),
+//                               child: Icon(Icons.close, color: Colors.black, size: 20),
+//                             ),
+//                           ),
+//                         ),
+//                       ],
+//                     );
+//                   } else {
+//                     return Center(
+//                       child: IconButton(
+//                         icon: Icon(Icons.add_a_photo, size: 40, color: onboardingColor),
+//                         onPressed: _pickImage,
+//                       ),
+//                     );
+//                   }
+//                 },
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     ],
+//   );
+// }
 }

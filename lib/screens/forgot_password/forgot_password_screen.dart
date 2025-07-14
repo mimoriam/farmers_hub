@@ -31,7 +31,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Forgot Password",
+          AppLocalizations.of(context)!.forgotPassword,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -86,7 +86,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Enter your Email",
+                          hintText: AppLocalizations.of(context)!.enterEmail,
                           prefixIcon: Icon(Icons.email_outlined, color: loginTextFieldIconColor),
                           filled: true,
                           fillColor: Colors.white,
@@ -146,7 +146,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             }
                           },
                           child: Text(
-                            "Forgot Password",
+                            AppLocalizations.of(context)!.forgotPassword,
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
