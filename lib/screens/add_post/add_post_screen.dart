@@ -1008,6 +1008,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           "Pesticides",
                                           "Animal Feed",
                                           "Others",
+                                          "Pomegranate",
+                                          "Apples",
+                                          "Honey",
+                                          "Cheese",
+                                          "Leafy Green"
                                         ]
                                             .map(
                                               (lang) => DropdownMenuItem<String>(

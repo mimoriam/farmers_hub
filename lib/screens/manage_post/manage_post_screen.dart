@@ -92,6 +92,11 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         });
                       },
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          // icon: Icon(Icons.mic, color: Color(0xFF999999)),
+                          icon: Icon(Icons.mic, color: onboardingColor),
+                          onPressed: () {},
+                        ),
                         hintText: AppLocalizations.of(context)!.search,
                         hintStyle: GoogleFonts.poppins(
                           textStyle: TextStyle(

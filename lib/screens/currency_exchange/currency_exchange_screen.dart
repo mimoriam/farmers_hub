@@ -190,7 +190,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(7.0),
                     child: Row(
                       children: [
                         // Icon part for US Dollar
@@ -293,7 +293,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   // color: selected == 2 || _selectedCurrency == "usd" ? onboardingColor : Colors.white,
                   // Background color for an unselected card
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(7.0),
                     child: Row(
                       children: [
                         // Icon part for US Dollar
@@ -389,7 +389,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(7.0),
                     child: Row(
                       children: [
                         // Icon part for US Dollar
@@ -487,7 +487,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                   color: Colors.white,
                   // Background color for an unselected card
                   child: Padding(
-                    padding: const EdgeInsets.all(16.0),
+                    padding: const EdgeInsets.all(7.0),
                     child: Row(
                       children: [
                         // Icon part for US Dollar

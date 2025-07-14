@@ -1121,7 +1121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             fillColor: Colors.white,
                             prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.mic, color: Color(0xFF999999)),
+                              // icon: Icon(Icons.mic, color: Color(0xFF999999)),
+                              icon: Icon(Icons.mic, color: onboardingColor),
                               onPressed: () {},
                             ),
                             enabledBorder: OutlineInputBorder(
