@@ -59,7 +59,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
   SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
-  bool _isListening = false;
 
   List<QueryDocumentSnapshot> _searchResults = [];
   bool _isLoading = false;
@@ -135,55 +134,38 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
     }
   }
 
+  /// This has to happen only once per app
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+
+    if (!_speechEnabled) {
+      _showSpeechNotAvailableDialog();
+      return;
+    }
+  }
+
+  /// Each time to start a speech recognition session
   void _startListening() async {
-    if (!_speechEnabled) return;
+    var locales = await _speechToText.locales();
 
-    setState(() {
-      _isListening = true;
-      _lastWords = '';
-    });
+    await _speechToText.listen(onResult: _onSpeechResult, localeId: "en_US");
+    setState(() {});
+  }
 
-    print("AAAA STARTED");
-
-    // await Future.delayed(const Duration(milliseconds: 3000), () {});
-
-    await _speechToText.listen(
-      onResult: _onSpeechResult,
-      listenFor: Duration(seconds: 10),
-      pauseFor: Duration(seconds: 3),
-      partialResults: true,
-      localeId: "en_US", // You can change this to your preferred locale
-      cancelOnError: true,
-      listenMode: ListenMode.confirmation,
-    );
-
-    print("AAA AENDED");
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
   }
 
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
       _lastWords = result.recognizedWords;
-      // Update the search field with recognized text
-      _formKey.currentState?.patchValue({'search': _lastWords});
-      // Trigger search
-      _onSearchChanged(_lastWords);
+
+      _speechToText.isListening
+          ? _formKey.currentState?.fields['search']?.didChange(_lastWords)
+          : "";
     });
-
-    print(_lastWords);
-  }
-
-  /// Toggle speech recognition
-  void _toggleListening() async {
-    if (!_speechEnabled) {
-      _showSpeechNotAvailableDialog();
-      return;
-    }
-
-    if (_isListening) {
-      _stopListening();
-    } else {
-      _startListening();
-    }
   }
 
   void _showSpeechNotAvailableDialog() {
@@ -205,10 +187,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
           TextButton(
             onPressed: () {
               Navigator.pop(context);
@@ -219,37 +198,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
         ],
       ),
     );
-  }
-
-  /// Stop listening for speech
-  void _stopListening() async {
-    await _speechToText.stop();
-    setState(() {
-      _isListening = false;
-    });
-  }
-
-  void _initSpeech() async {
-    _speechEnabled = await _speechToText.initialize(
-      onError: (errorNotification) {
-        print('Speech error: ${errorNotification.errorMsg}');
-        setState(() {
-          _isListening = false;
-        });
-      },
-      onStatus: (status) {
-        print('Speech status: $status');
-        setState(() {
-          _isListening = status == 'listening';
-        });
-      },
-    );
-
-    if (!_speechEnabled) {
-      print('Speech recognition not available');
-    }
-
-    setState(() {});
   }
 
   // Future<void> _initializeSpeech() async {
@@ -741,6 +689,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+
                         // suffixIcon: IconButton(
                         //   // icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
                         //   icon: Icon(
@@ -752,16 +701,17 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         //   onPressed: _isInitializing ? null : _toggleListening,
                         //   // onPressed: _showOptionsDialog,
                         // ),
-
-                        // suffixIcon: IconButton(
-                        //   icon: Icon(
-                        //     _isListening ? Icons.mic_off : Icons.mic,
-                        //     color: _isInitialized
-                        //         ? (_isListening ? Colors.red : onboardingColor)
-                        //         : Colors.grey,
-                        //   ),
-                        //   onPressed: _isInitializing ? null : _toggleListening,
-                        // ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _speechToText.isNotListening ? Icons.mic_off : Icons.mic,
+                            color: _speechEnabled
+                                ? (_speechToText.isNotListening ? onboardingColor : Colors.red)
+                                : Colors.grey,
+                          ),
+                          onPressed: _speechToText.isNotListening
+                              ? _startListening
+                              : _stopListening,
+                        ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -773,14 +723,13 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       ),
                     ),
                   ),
-                  // IconButton(
-                  //   icon: Icon(
-                  //     _isListening ? Icons.mic : Icons.mic_none,
-                  //     color: _speechEnabled
-                  //         ? (_isListening ? Colors.red : onboardingColor)
-                  //         : Colors.grey,
-                  //   ),
-                  //   onPressed: _speechEnabled ? _toggleListening : _showSpeechNotAvailableDialog,
+                  // Text(
+                  //   // If listening is active show the recognized words
+                  //   _speechToText.isListening
+                  //       ? _lastWords
+                  //       : _speechEnabled
+                  //       ? 'Tap the microphone to start listening...'
+                  //       : 'Speech not available',
                   // ),
 
                   // Chip(
@@ -801,7 +750,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // SizedBox(width: 2),
-
                         FilterChip(
                           checkmarkColor: Colors.white,
                           onSelected: (bool selected) {
@@ -1051,13 +999,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               ),
 
                               // const SizedBox(height: 10.0),
-
                               const Text(
                                 'No search results',
-                                style: TextStyle(
-                                  fontSize: 14.0,
-                                  color: Colors.grey,
-                                ),
+                                style: TextStyle(fontSize: 14.0, color: Colors.grey),
                               ),
                             ],
                           ),
@@ -1103,7 +1047,6 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       itemBuilder: (context, index) {
                         final postData = _searchResults[index].data() as Map<String, dynamic>;
                         final postId = _searchResults[index].id;
-
 
                         // return ProductCard(postData: popularPostsData[index]);
                         return ProductCard2(
