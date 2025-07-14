@@ -296,7 +296,7 @@ class _ChatHomeState extends State<ChatHome> {
                     ),
                   ),
 
-                  const SizedBox(height: 8.0),
+                  const SizedBox(height: 4.0),
 
                   Text(
                     'Start a conversation with any of the sellers.\nYour chats will show here.',
