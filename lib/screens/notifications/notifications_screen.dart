@@ -20,10 +20,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   void initState() {
-    () async {
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      print(fcmToken);
-    }();
+    // () async {
+    //   final fcmToken = await FirebaseMessaging.instance.getToken();
+    //   print(fcmToken);
+    // }();
     super.initState();
   }
 
@@ -62,6 +62,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             }
 
             final notifications = snapshot.data!.docs;
+
+            // TODO: Update all notifications to read = true
 
             return SingleChildScrollView(
               child: Padding(
