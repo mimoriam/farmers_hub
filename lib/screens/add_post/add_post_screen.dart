@@ -137,14 +137,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
   );
 
   // Common padding for input content
-  final EdgeInsets _contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 14);
+  final EdgeInsets _contentPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 12);
 
   int _selectedColorIndex = 0;
 
   final List<Color> _colors = [
-    Colors.green.shade200,
-    Colors.yellow.shade200,
-    Colors.purple.shade200,
+    Colors.green.shade100,
+    Colors.yellow.shade100,
+    Colors.purple.shade100,
   ];
 
   Future<void> _showConfirmationDialog() async {
@@ -424,9 +424,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
               color: _colors[index],
               borderRadius: BorderRadius.circular(8.0),
               // Add a border and a checkmark if this box is selected
-              border: isSelected ? Border.all(color: Colors.black, width: 2.5) : null,
+              border: isSelected ? Border.all(color: Colors.black, width: 1) : null,
             ),
-            child: isSelected ? const Icon(Icons.check, color: Colors.white) : null,
+            child: isSelected ? const Icon(Icons.check, color: Colors.black) : null,
           ),
         ),
       );
@@ -745,7 +745,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0),
+                                // padding: const EdgeInsets.all(12.0),
+                                padding: const EdgeInsets.only(left: 12, right: 12, top: 12, bottom: 0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   mainAxisSize: MainAxisSize.min,
@@ -1416,7 +1417,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                         Expanded(
                                           flex: 1,
                                           child: Container(
-                                            padding: EdgeInsets.only(right: 0, top: 2, bottom: 2),
+                                            padding: EdgeInsets.only(right: 0, top: 2, bottom: 0),
                                             // No explicit border for dropdown, styling via DropdownButton properties
                                             child: DropdownButtonFormField2<String>(
                                               items: ['Syria', "Usd", "Euro", "Lira"]
@@ -1437,6 +1438,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                 focusedBorder: _focusedInputBorder,
                                                 errorBorder: _errorInputBorder,
                                                 focusedErrorBorder: _focusedInputBorder,
+                                                helperText: ' ',
+                                                errorStyle: const TextStyle(height: 0),
                                               ),
                                               iconStyleData: IconStyleData(
                                                 // Using IconStyleData for icon properties
@@ -1468,7 +1471,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                           flex: 2,
                                           child: FormBuilderTextField(
                                             name: 'price',
-                                            maxLength: 6,
+                                            maxLength: 5,
                                             autovalidateMode: validateMode,
                                             decoration: InputDecoration(
                                               hintText: 'Enter Your Price',
@@ -1479,20 +1482,26 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               errorBorder: _errorInputBorder,
                                               focusedErrorBorder: _focusedInputBorder,
                                               contentPadding: _contentPadding,
+                                              helperText:
+                                                  ' ', // This reserves the space. Note the space character.
+                                              errorStyle: const TextStyle(height: 0),
                                             ),
                                             keyboardType: const TextInputType.numberWithOptions(
                                               decimal: true,
                                             ),
                                             validator: FormBuilderValidators.compose([
                                               FormBuilderValidators.required(
-                                                errorText: 'Price is required.',
+                                                errorText: "",
+                                                // errorText: 'Price is required.',
                                               ),
                                               FormBuilderValidators.numeric(
-                                                errorText: 'Must be a number.',
+                                                errorText: "",
+                                                // errorText: 'Must be a number.',
                                               ),
                                               FormBuilderValidators.min(
                                                 0,
-                                                errorText: 'Price cannot be negative.',
+                                                errorText: "",
+                                                // errorText: 'Price cannot be negative.',
                                               ),
                                             ]),
                                           ),

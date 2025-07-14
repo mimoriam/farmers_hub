@@ -21,50 +21,19 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 
 enum currencyType { syria, usd, euro, lira }
 
-@pragma('vm:entry-point')
-Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
-  print("Got a message in background!");
-  print('Title: ${message.notification!.title}');
-  print('Body: ${message.notification!.body}');
-
-  final firebaseService = FirebaseService();
-
-  if (firebaseService._auth.currentUser != null) {
-    final notifId = await firebaseService._firestore
-        .collection(firebaseService.userCollection)
-        .doc(firebaseService._auth.currentUser!.uid)
-        .collection(firebaseService.notificationCollection)
-        .add({
-          "title": message.notification!.title,
-          "body": message.notification!.body,
-          "createdAt": FieldValue.serverTimestamp(),
-          "hasBeenDeleted": false,
-          "userId": firebaseService._auth.currentUser!.uid,
-          "read": false,
-        });
-
-    print({notifId});
-
-    await firebaseService._firestore
-        .collection(firebaseService.userCollection)
-        .doc(firebaseService._auth.currentUser!.uid)
-        .update({
-          "notificationIds": FieldValue.arrayUnion([notifId.id]),
-        });
-  }
-}
-
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   // Stream for auth state changes
   Stream<User?> get authStateChanges => _auth.authStateChanges();
@@ -114,8 +83,8 @@ class FirebaseService {
 
     initPushNotifications();
 
-    // This handles messages that arrive while the app is in the background.
-    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+    // // This handles messages that arrive while the app is in the background.
+    // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     // This handles messages that arrive while the app is in the foreground.
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {

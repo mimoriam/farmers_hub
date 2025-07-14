@@ -745,7 +745,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   //   ),
                   // ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 5, right: 10, bottom: 4),
+                    padding: const EdgeInsets.only(left: 0, right: 10, bottom: 4),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -873,7 +873,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     children: [
                       SizedBox(width: 6),
                       Padding(
-                        padding: const EdgeInsets.only(left: 10, right: 10),
+                        padding: const EdgeInsets.only(left: 14, right: 14),
                         child: Row(
                           children: [
                             FilterChip(
@@ -988,13 +988,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                                   // border: Border.all(color: Colors.grey.shade400, width: 1.5),
                                   // borderRadius: BorderRadius.circular(16.0),
                                 ),
-                                child: ImageFiltered(
-                                  imageFilter: ImageFilter.blur(sigmaX: 1.5, sigmaY: 1.5),
-                                  child: Icon(
-                                    Icons.search_outlined, // An icon that fits the context
-                                    color: Colors.grey[700],
-                                    size: 36.0,
-                                  ),
+                                child: Icon(
+                                  Icons.search_outlined, // An icon that fits the context
+                                  color: Colors.grey[700],
+                                  size: 36.0,
                                 ),
                               ),
 

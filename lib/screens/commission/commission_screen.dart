@@ -274,6 +274,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     // ),
 
                     DropdownButton2<String>(
+                      underline: const SizedBox.shrink(),
                       value: _selectedCurrency,
                       items: _currencies
                           .map((String item) => DropdownMenuItem<String>(

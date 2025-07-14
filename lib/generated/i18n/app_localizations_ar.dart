@@ -21,6 +21,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get yourCrop => 'محصولك';
 
   @override
+  String get yourCropHub => 'المحاصيل الخاصة بك';
+
+  @override
+  String get yourHubCrop => 'المحور الخاص بك';
+
+  @override
   String get buySell => 'اشترِي وبِيع بأمان عبر الإنترنت.';
 
   @override
@@ -147,7 +153,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get chatIcon => 'أيقونة الدردشة';
 
   @override
-  String get chat => '';
+  String get chat => 'محادثة';
 
   @override
   String get favoritesIcon => 'أيقونة المفضلة';
@@ -162,13 +168,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get profileIcon => 'أيقونة الملف الشخصي';
 
   @override
-  String get profile => '';
+  String get profile => 'حساب تعريفي';
 
   @override
-  String get location => 'الموقع';
+  String get location => 'الموقع ';
 
   @override
-  String get locationNew => '';
+  String get locationNew => 'Location';
 
   @override
   String get loading => 'جارٍ التحميل...';
@@ -192,7 +198,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get tartus => 'طرطوس';
 
   @override
-  String get baniyas => '';
+  String get baniyas => 'Baniyas';
 
   @override
   String get idlib => 'إدلب';
@@ -207,7 +213,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get qamishli => 'القامشلي';
 
   @override
-  String get raqqa => '';
+  String get raqqa => 'Raqqa';
 
   @override
   String get daraa => 'درعا';
@@ -216,7 +222,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get adsuwayda => 'السويداء';
 
   @override
-  String get quenitra => '';
+  String get quenitra => 'Quneitra';
 
   @override
   String get almayadin => 'الميادين';
@@ -562,7 +568,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get managePost => 'إدارة المنشورات';
 
   @override
-  String get post => '';
+  String get post => 'Posts';
 
   @override
   String get noUserPost => 'لا يوجد منشورات للمستخدم!';
@@ -672,7 +678,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bug => 'خطأ';
 
   @override
-  String get submitFeedback => '';
+  String get submitFeedback => 'Send Feedback';
 
   @override
   String get suggestion => 'اقتراحات';
@@ -699,7 +705,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get retry => 'إعادة المحاولة';
 
   @override
-  String get title => '';
+  String get title => 'Title';
 
   @override
   String get noResults => 'لا توجد نتائج';
@@ -772,7 +778,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get agreeTerms => 'الشروط والأحكام';
 
   @override
-  String get terms => '';
+  String get terms => 'Terms of Use Policy.';
 
   @override
   String get continueAgree => 'باستمرارك، فإنك توافق على';

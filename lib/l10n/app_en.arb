@@ -1,9 +1,11 @@
 {
   "@@locale": "en",
   "appTitle": "Farmer Hub",
-  "language": "language",
+  "language": "Language",
   "yourCropIcon": "Your Crop Icon",
   "yourCrop": "YOUR CROP",
+  "yourCropHub": "Your Crop",
+  "yourHubCrop": "Your Hub",
   "buySell": "Buy & Sell Securely Online.",
   "loginToCrop": "Login to YOUR CROP",
   "emailAddress": "Email Address",

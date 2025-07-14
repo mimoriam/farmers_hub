@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/signup/signup_google_screen.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -43,20 +44,19 @@ class AuthGate extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   const SizedBox(width: 20.0, height: 100.0),
-                  const Text(
-                    'Your',
-                    style: TextStyle(fontSize: 43.0),
-                  ),
+                  // const Text(
+                  //   'Your',
+                  //   style: TextStyle(fontSize: 43.0),
+                  // ),
                   const SizedBox(width: 20.0, height: 100.0),
                   DefaultTextStyle(
-                    style: const TextStyle(
-                      fontSize: 40.0,
-                      fontFamily: 'Horizon',
-                    ),
+                    style: const TextStyle(fontSize: 34.0, fontFamily: 'Horizon'),
                     child: AnimatedTextKit(
                       animatedTexts: [
-                        RotateAnimatedText('CROP'),
-                        RotateAnimatedText('HUB'),
+                        // RotateAnimatedText('Your CROP'),
+                        // RotateAnimatedText('Your HUB'),
+                        RotateAnimatedText(AppLocalizations.of(context)!.yourCropHub),
+                        RotateAnimatedText(AppLocalizations.of(context)!.yourHubCrop),
                       ],
                       totalRepeatCount: 4,
                       pause: const Duration(milliseconds: 4000),
@@ -100,20 +100,16 @@ class AuthGate extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         const SizedBox(width: 20.0, height: 100.0),
-                        const Text(
-                          'Your',
-                          style: TextStyle(fontSize: 43.0),
-                        ),
+                        // const Text('Your', style: TextStyle(fontSize: 43.0)),
                         const SizedBox(width: 20.0, height: 100.0),
                         DefaultTextStyle(
-                          style: const TextStyle(
-                            fontSize: 40.0,
-                            color: Colors.black,
-                          ),
+                          style: const TextStyle(fontSize: 34.0, color: Colors.black),
                           child: AnimatedTextKit(
                             animatedTexts: [
-                              RotateAnimatedText('CROP'),
-                              RotateAnimatedText('HUB'),
+                              // RotateAnimatedText('CROP'),
+                              RotateAnimatedText(AppLocalizations.of(context)!.yourCropHub),
+                              RotateAnimatedText(AppLocalizations.of(context)!.yourHubCrop),
+                              // RotateAnimatedText('HUB')
                             ],
                             totalRepeatCount: 4,
                             pause: const Duration(milliseconds: 4000),

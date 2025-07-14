@@ -12,13 +12,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Farmer Hub';
 
   @override
-  String get language => 'language';
+  String get language => 'Language';
 
   @override
   String get yourCropIcon => 'Your Crop Icon';
 
   @override
   String get yourCrop => 'YOUR CROP';
+
+  @override
+  String get yourCropHub => 'Your Crop';
+
+  @override
+  String get yourHubCrop => 'Your Hub';
 
   @override
   String get buySell => 'Buy & Sell Securely Online.';

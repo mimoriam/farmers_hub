@@ -107,7 +107,7 @@ abstract class AppLocalizations {
   /// No description provided for @language.
   ///
   /// In en, this message translates to:
-  /// **'language'**
+  /// **'Language'**
   String get language;
 
   /// No description provided for @yourCropIcon.
@@ -121,6 +121,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'YOUR CROP'**
   String get yourCrop;
+
+  /// No description provided for @yourCropHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Crop'**
+  String get yourCropHub;
+
+  /// No description provided for @yourHubCrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Hub'**
+  String get yourHubCrop;
 
   /// No description provided for @buySell.
   ///

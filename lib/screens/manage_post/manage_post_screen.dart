@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/details/details_screen.dart';
 import 'package:farmers_hub/screens/edit_post_screen/edit_post_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
@@ -54,9 +55,13 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Manage Posts",
+          AppLocalizations.of(context)!.managePosts,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
@@ -71,11 +76,15 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 10),
+                    padding: const EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 10),
                     child: FormBuilderTextField(
                       name: "search",
                       style: GoogleFonts.poppins(
-                        textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                        textStyle: TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                        ),
                       ),
                       onChanged: (value) {
                         setState(() {
@@ -83,18 +92,18 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: 'Search',
+                        hintText: AppLocalizations.of(context)!.search,
                         hintStyle: GoogleFonts.poppins(
-                          textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
+                          textStyle: TextStyle(
+                            fontSize: 13.69,
+                            fontWeight: FontWeight.w400,
+                            height: 1.43,
+                          ),
                           color: Colors.grey,
                         ),
                         filled: true,
                         fillColor: Colors.white,
                         prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                        // suffixIcon: IconButton(
-                        //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                        //   onPressed: null,
-                        // ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -106,84 +115,12 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                       ),
                     ),
                   ),
-
-                  // Center(
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.center,
-                  //       crossAxisAlignment: CrossAxisAlignment.center,
-                  //       children: [
-                  //         Row(
-                  //           children: [
-                  //             FilterChip(
-                  //               onSelected: (bool selected) {
-                  //                 if (selected) {
-                  //                   setState(() {
-                  //                     _showSoldPosts = !_showSoldPosts;
-                  //                   });
-                  //                 }
-                  //               },
-                  //               shape: RoundedRectangleBorder(
-                  //                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                  //               ),
-                  //               // selected: "",
-                  //               selected: _showSoldPosts == false,
-                  //               selectedColor: onboardingColor,
-                  //               backgroundColor: Colors.grey[300],
-                  //               label: Text(
-                  //                 "All Posts",
-                  //                 style: GoogleFonts.poppins(
-                  //                   fontSize: 14,
-                  //                   fontWeight: FontWeight.w500,
-                  //                   color: Colors.white,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //
-                  //             SizedBox(width: 8),
-                  //
-                  //             FilterChip(
-                  //               onSelected: (bool selected) {
-                  //                 if (selected) {
-                  //                   setState(() {
-                  //                     _showSoldPosts = !_showSoldPosts;
-                  //                   });
-                  //                 }
-                  //               },
-                  //               shape: RoundedRectangleBorder(
-                  //                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                  //               ),
-                  //               selectedColor: onboardingColor,
-                  //               selected: _showSoldPosts == true,
-                  //               backgroundColor: Colors.grey[300],
-                  //               label: Text(
-                  //                 "Sold",
-                  //                 style: GoogleFonts.poppins(
-                  //                   fontSize: 14,
-                  //                   fontWeight: FontWeight.w500,
-                  //                   color: Colors.white,
-                  //                 ),
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-
                   _buildTabBar(),
 
                   FutureBuilder(
-                    // future:
-                    //     _showSoldPosts == true
-                    //         ? firebaseService.getSoldPostsByCurrentUser()
-                    //         : firebaseService.getAllPostsByCurrentUser(),
                     future: _getFutureForSelectedTab(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                         return Skeletonizer(
                           ignoreContainers: true,
                           child: Column(
@@ -191,32 +128,32 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                               Card(
                                 child: ListTile(
                                   leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
+                                  title: Text(AppLocalizations.of(context)!.youPostTitle),
+                                  subtitle: Text(AppLocalizations.of(context)!.yourPostDetails),
                                 ),
                               ),
 
                               Card(
                                 child: ListTile(
                                   leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
+                                  title: Text(AppLocalizations.of(context)!.youPostTitle),
+                                  subtitle: Text(AppLocalizations.of(context)!.yourPostDetails),
                                 ),
                               ),
 
                               Card(
                                 child: ListTile(
                                   leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
+                                  title: Text(AppLocalizations.of(context)!.youPostTitle),
+                                  subtitle: Text(AppLocalizations.of(context)!.yourPostDetails),
                                 ),
                               ),
 
                               Card(
                                 child: ListTile(
                                   leading: Icon(Icons.image, size: 50),
-                                  title: Text("Your Post Title"),
-                                  subtitle: Text("Post details..."),
+                                  title: Text(AppLocalizations.of(context)!.youPostTitle),
+                                  subtitle: Text(AppLocalizations.of(context)!.yourPostDetails),
                                 ),
                               ),
                             ],
@@ -225,17 +162,12 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                       }
 
                       if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                        return const Center(child: Text("Failed to load user data."));
+                        return Center(child: Text(AppLocalizations.of(context)!.failedToLoad));
                       }
 
                       final postData = snapshot.data;
 
                       if (postData!.isEmpty) {
-                        // return SizedBox(
-                        //   height: MediaQuery.of(context).size.height * 0.5,
-                        //   child: Container(alignment: Alignment.center, child: Text("User has no posts!")),
-                        // );
-
                         return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
                           width: MediaQuery.of(context).size.width * 2,
@@ -244,38 +176,31 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Container(
-                                padding: const EdgeInsets.all(16.0),
-                                // decoration: BoxDecoration(
-                                //   border: Border.all(color: Colors.grey.shade400, width: 1.5),
-                                //   borderRadius: BorderRadius.circular(16.0),
-                                // ),
+                                padding: const EdgeInsets.symmetric(horizontal: 20),
                                 child: Icon(
-                                  Icons.post_add_outlined, // An icon that fits the context
+                                  Icons.post_add_outlined,
                                   color: Colors.grey[700],
                                   size: 34.0,
                                 ),
                               ),
-
-                              // const SizedBox(height: 2.0),
-
                               const Text(
                                 'Nothing to see here',
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF333A44), // A dark slate gray color
+                                  color: Color(0xFF333A44),
                                 ),
                               ),
 
                               const SizedBox(height: 6.0),
 
                               Text(
-                                'Your posts will show here!',
-                                textAlign: TextAlign.center, // Ensures the text is center-aligned
+                                'Your posts will show here',
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14.0,
                                   color: Colors.grey[600],
-                                  height: 1.5, // Line height for better readability
+                                  height: 1.5,
                                 ),
                               ),
                             ],
@@ -283,40 +208,33 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         );
                       }
 
-                      final filteredPosts =
-                          _searchQuery.isEmpty
-                              ? postData
-                              : postData.where((post) {
-                                final title =
-                                    (post.data() as Map<String, dynamic>)['title']
-                                        ?.toString()
-                                        .toLowerCase() ??
-                                    '';
-                                return title.contains(_searchQuery.toLowerCase());
-                              }).toList();
+                      final filteredPosts = _searchQuery.isEmpty
+                          ? postData
+                          : postData.where((post) {
+                              final title =
+                                  (post.data() as Map<String, dynamic>)['title']
+                                      ?.toString()
+                                      .toLowerCase() ??
+                                  '';
+                              return title.contains(_searchQuery.toLowerCase());
+                            }).toList();
 
                       if (filteredPosts.isEmpty) {
                         return SizedBox(
                           height: MediaQuery.of(context).size.height * 0.5,
                           child: Container(
                             alignment: Alignment.center,
-                            child: Text("No posts match your search."),
+                            child: Text(AppLocalizations.of(context)!.noPost),
                           ),
                         );
                       }
 
                       return ListView.builder(
-                        // itemCount: postData.length,
                         itemCount: filteredPosts.length,
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
-                          // final post = postData[index].data() as Map<String, dynamic>;
-                          // final postId = postData[index].id;
-                          //
-                          // final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
-
                           final post = filteredPosts[index].data() as Map<String, dynamic>;
                           final postId = filteredPosts[index].id;
                           final List<String> imageUrls = List<String>.from(post['imageUrls'] ?? []);
@@ -330,11 +248,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) => DetailsScreen(
-                                              postId: postId.toString(),
-                                              didComeFromManagedPosts: true,
-                                            ),
+                                        builder: (context) => DetailsScreen(
+                                          postId: postId.toString(),
+                                          didComeFromManagedPosts: true,
+                                        ),
                                       ),
                                     ).then((_) {
                                       if (mounted) {
@@ -344,7 +261,6 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                   }
                                 },
                                 child: Container(
-                                  // width: 350, // Set a fixed width for the card
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20.0),
@@ -353,17 +269,16 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                         color: Colors.grey.withOpacity(0.2),
                                         spreadRadius: 2,
                                         blurRadius: 10,
-                                        offset: const Offset(0, 5), // changes position of shadow
+                                        offset: const Offset(0, 5),
                                       ),
                                     ],
                                   ),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Column(
-                                      mainAxisSize: MainAxisSize.min, // To make the column wrap its content
+                                      mainAxisSize: MainAxisSize.min,
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // Top Section: Image and Details
                                         _buildTopSection(
                                           imageUrl: imageUrls.first,
                                           price: post["price"].toString(),
@@ -371,20 +286,14 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                           year: post["age"].toString(),
                                         ),
                                         const SizedBox(height: 12),
-
-                                        // Middle Section: Location, Likes, Views
                                         _buildStatsSection(
                                           location: post["location"],
                                           likes: post["likes"].toString(),
                                           views: post["views"].toString(),
                                         ),
                                         const SizedBox(height: 4),
-
-                                        // Sold Button
                                         _buildSoldButton(hasBeenSold: post["hasBeenSold"]),
                                         const SizedBox(height: 4),
-
-                                        // Bottom Section: Timestamp and Action Buttons
                                         _buildBottomSection(
                                           createdAt: post["createdAt"],
                                           postId: postId.toString(),
@@ -414,15 +323,12 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(12),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
-          _buildTabItem(0, "All Post"),
+          _buildTabItem(0, AppLocalizations.of(context)!.allPost),
           SizedBox(width: 10),
-          _buildTabItem(1, "Sold"),
+          _buildTabItem(1, AppLocalizations.of(context)!.sold),
           SizedBox(width: 10),
           _buildTabItem(2, "Pending"),
         ],
@@ -430,7 +336,6 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     );
   }
 
-  /// Builds an individual item for the tab bar.
   Widget _buildTabItem(int index, String title) {
     bool isSelected = _selectedTabIndex == index;
     return Expanded(
@@ -471,25 +376,25 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Car Image
         ClipRRect(
           borderRadius: BorderRadius.circular(12.0),
           child: Image.network(imageUrl, width: 140, height: 90, fit: BoxFit.fill),
-          // child: Image.asset('images/backgrounds/car_bg.png', fit: BoxFit.fill, width: 120, height: 80),
         ),
         const SizedBox(width: 14),
-        // Car Details
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(price, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87)),
+              Text(
+                price,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
+              ),
 
               const SizedBox(height: 8),
-              _buildDetailRow('Category:', category),
+              _buildDetailRow(AppLocalizations.of(context)!.category + ':', category),
 
               const SizedBox(height: 4),
-              _buildDetailRow('Model:', year),
+              _buildDetailRow(AppLocalizations.of(context)!.model, year),
             ],
           ),
         ),
@@ -509,14 +414,17 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             value,
-            style: const TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500),
+            style: const TextStyle(
+              fontSize: 14,
+              color: Colors.black54,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],
     );
   }
 
-  /// Builds the section for location, likes, and views.
   Widget _buildStatsSection({required Map location, required String likes, required String views}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,12 +433,19 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           children: [
             _buildIconTextRow(Icons.location_on, location["city"]),
             const SizedBox(width: 8),
-            _buildIconTextRow(Icons.favorite, "$likes likes", iconColor: Colors.red),
+            _buildIconTextRow(
+              Icons.favorite,
+              "$likes " + AppLocalizations.of(context)!.likes,
+              iconColor: Colors.red,
+            ),
             const SizedBox(width: 12),
-            _buildIconTextRow(Icons.visibility, "$views views", iconColor: Colors.green),
+            _buildIconTextRow(
+              Icons.visibility,
+              "$views " + AppLocalizations.of(context)!.views,
+              iconColor: Colors.green,
+            ),
           ],
         ),
-        // const SizedBox(width: 8),
       ],
     );
   }
@@ -547,7 +462,6 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     );
   }
 
-  /// Builds the green "Sold" button.
   Widget _buildSoldButton({required bool hasBeenSold}) {
     return MaterialButton(
       onPressed: () {},
@@ -562,7 +476,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
 
             SizedBox(width: 4),
 
-            Text(hasBeenSold ? "Sold" : "Un-Sold", style: TextStyle(color: Colors.white, fontSize: 13)),
+            Text(
+              hasBeenSold ? "Sold" : "Un-Sold",
+              style: TextStyle(color: Colors.white, fontSize: 13),
+            ),
           ],
         ),
       ),
@@ -578,27 +495,28 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Timestamp
-        // _buildIconTextRow(Icons.access_time, '02 days Ago'),
         _buildIconTextRow(Icons.access_time, formattedDate.toString()),
-
-        // Action buttons
         !hasBeenSold
             ? Row(
-              children: [
-                _buildActionButton(Icons.delete_outline, Colors.red, action: "Delete", postId: postId),
+                children: [
+                  _buildActionButton(
+                    Icons.delete_outline,
+                    Colors.red,
+                    action: "Delete",
+                    postId: postId,
+                  ),
 
-                const SizedBox(width: 14),
+                  const SizedBox(width: 14),
 
-                _buildActionButton(
-                  Icons.edit,
-                  onboardingColor,
-                  action: "Edit",
-                  postId: postId,
-                  hasBeenSold: hasBeenSold,
-                ),
-              ],
-            )
+                  _buildActionButton(
+                    Icons.edit,
+                    onboardingColor,
+                    action: "Edit",
+                    postId: postId,
+                    hasBeenSold: hasBeenSold,
+                  ),
+                ],
+              )
             : Row(children: []),
       ],
     );
@@ -616,14 +534,20 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
             children: [
               Container(
                 padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(color: Colors.red.withOpacity(0.1), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(Icons.priority_high_rounded, color: Colors.red, size: 40),
               ),
               SizedBox(height: 20),
-              Text("Are you Sure?", style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600)),
+              Text(
+                AppLocalizations.of(context)!.youSure,
+                style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+              ),
               SizedBox(height: 8),
               Text(
-                "Are you sure you want to delete this post? Once deleted, the data will be permanently removed.",
+                AppLocalizations.of(context)!.sureForDeletePost,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
               ),
@@ -634,7 +558,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: Icon(Icons.cancel_outlined, color: Colors.red),
-                      label: Text("Cancel", style: TextStyle(color: Colors.red)),
+                      label: Text(
+                        AppLocalizations.of(context)!.cancel,
+                        style: TextStyle(color: Colors.red),
+                      ),
                       style: OutlinedButton.styleFrom(
                         side: BorderSide(color: Colors.red),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -649,7 +576,10 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                   Expanded(
                     child: ElevatedButton.icon(
                       icon: Icon(Icons.delete_outline, color: Colors.white),
-                      label: Text("Delete", style: TextStyle(color: Colors.white)),
+                      label: Text(
+                        AppLocalizations.of(context)!.delete,
+                        style: TextStyle(color: Colors.white),
+                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -696,14 +626,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
         onPressed: () async {
           if (action == "Delete") {
             _showDeleteConfirmationDialog(postId);
-            // if (context.mounted) {
-            //   setState(() {});
-            // }
           }
 
           if (action == "Edit") {
-            // await firebaseService.markPostAsSold(postId);
-
             if (mounted) {
               Navigator.push(
                 context,

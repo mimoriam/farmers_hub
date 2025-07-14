@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -41,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: false,
         title: Text(
-          "Additional Information",
+          AppLocalizations.of(context)!.additionalInfo,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
         ),
@@ -61,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 10),
 
                       Text(
-                        "Please enter your contact details to continue",
+                        AppLocalizations.of(context)!.enterDetails,
                         style: GoogleFonts.poppins(
                           color: onboardingTextColor,
                           fontSize: 14,
@@ -82,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 12),
 
                       Text(
-                        "Enter Your Name",
+                        AppLocalizations.of(context)!.enterName,
                         style: GoogleFonts.poppins(
                           color: signUpTextColor,
                           fontSize: 14,
@@ -105,7 +106,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Enter Name",
+                          hintText: AppLocalizations.of(context)!.enterUsername,
                           prefixIcon: Icon(Icons.person_outline, color: loginTextFieldIconColor),
                           filled: true,
                           fillColor: Colors.white,
@@ -131,7 +132,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 18),
 
                       Text(
-                        "Enter Your Email",
+                        AppLocalizations.of(context)!.enterUserMail,
                         style: GoogleFonts.poppins(
                           color: signUpTextColor,
                           fontSize: 14,
@@ -154,18 +155,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Enter your Email",
+                          hintText: AppLocalizations.of(context)!.enterEmail,
                           prefixIcon: Icon(Icons.email_outlined, color: loginTextFieldIconColor),
                           filled: true,
                           fillColor: Colors.white,
-                          // border: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
-                          // focusedErrorBorder: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: textFieldBorderSideColor),
@@ -188,7 +181,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 14),
 
                       Text(
-                        "Enter Phone Number",
+                        AppLocalizations.of(context)!.enterPhoneNumber,
                         style: GoogleFonts.poppins(
                           color: signUpTextColor,
                           fontSize: 14,
@@ -208,7 +201,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
                         decoration: InputDecoration(
-                          hintText: 'Enter Phone Number',
+                          hintText: AppLocalizations.of(context)!.enterPhoneNumber,
                           filled: true,
                           fillColor: Colors.white,
                           counterText: "",
@@ -257,56 +250,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
 
                       SizedBox(height: 10),
-
-                      // Text(
-                      //   "Enter Your Address",
-                      //   style: GoogleFonts.poppins(
-                      //     color: signUpTextColor,
-                      //     fontSize: 14,
-                      //     fontWeight: FontWeight.w500,
-                      //   ),
-                      // ),
-                      //
-                      // SizedBox(height: 12),
-                      //
-                      // // TODO: Address validation:
-                      // FormBuilderTextField(
-                      //   name: 'address',
-                      //   maxLength: 60,
-                      //   autovalidateMode: validateMode,
-                      //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                      //   style: GoogleFonts.poppins(
-                      //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                      //   ),
-                      //   decoration: InputDecoration(
-                      //     counterText: "",
-                      //     hintText: "Enter Address",
-                      //     prefixIcon: Icon(Icons.location_on_outlined, color: loginTextFieldIconColor),
-                      //     filled: true,
-                      //     fillColor: Colors.white,
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //     enabledBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //     focusedBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //     focusedErrorBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //   ),
-                      // ),
-                      //
-                      // SizedBox(height: 26),
-
                       Text(
-                        "Enter Password",
+                        AppLocalizations.of(context)!.enterpassword,
                         style: GoogleFonts.poppins(
                           color: signUpTextColor,
                           fontSize: 14,
@@ -325,7 +270,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.minLength(
                             6,
-                            errorText: "Password must not be less than 6 characters",
+                            errorText: AppLocalizations.of(context)!.passwordCondition,
                           ),
                         ]),
                         style: GoogleFonts.poppins(
@@ -333,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Enter Your Password",
+                          hintText: AppLocalizations.of(context)!.enterPassword,
                           prefixIcon: Icon(Icons.lock_outline, color: loginTextFieldIconColor),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -344,14 +289,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          // border: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
-                          // focusedErrorBorder: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: textFieldBorderSideColor),
@@ -374,7 +311,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 18),
 
                       Text(
-                        "Confirm Password",
+                        AppLocalizations.of(context)!.confirmPassword,
                         style: GoogleFonts.poppins(
                           color: signUpTextColor,
                           fontSize: 14,
@@ -393,12 +330,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           FormBuilderValidators.required(),
                           FormBuilderValidators.minLength(
                             6,
-                            errorText: "Password must not be less than 6 characters",
+                            errorText: AppLocalizations.of(context)!.passwordCondition,
                           ),
 
-                          (val) {
+                              (val) {
                             if (_formKey.currentState?.fields['password']?.value != val) {
-                              return 'Passwords do not match';
+                              return AppLocalizations.of(context)!.wrongPassword;
                             }
                             return null; // Return null if validation passes
                           },
@@ -408,7 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                         decoration: InputDecoration(
                           counterText: "",
-                          hintText: "Confirm Your Password",
+                          hintText: AppLocalizations.of(context)!.confirmYourPassword,
                           prefixIcon: Icon(Icons.lock_outline, color: loginTextFieldIconColor),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -419,14 +356,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          // border: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
-                          // focusedErrorBorder: OutlineInputBorder(
-                          //   borderRadius: BorderRadius.circular(8),
-                          //   borderSide: BorderSide.none,
-                          // ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide(color: textFieldBorderSideColor),
@@ -445,78 +374,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-
-                      // SizedBox(height: 26),
-                      //
-                      // Text(
-                      //   "Select Mode",
-                      //   style: GoogleFonts.poppins(
-                      //     color: signUpTextColor,
-                      //     fontSize: 14,
-                      //     fontWeight: FontWeight.w500,
-                      //   ),
-                      // ),
-                      //
-                      // SizedBox(height: 12),
-                      //
-                      // FormBuilderDropdown(
-                      //   name: 'signUpMode',
-                      //   // initialValue: 'Seller',
-                      //   autovalidateMode: validateMode,
-                      //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                      //   hint: Text(
-                      //     "Category",
-                      //     style: GoogleFonts.poppins(
-                      //       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                      //     ),
-                      //   ),
-                      //   decoration: InputDecoration(
-                      //     prefixIcon: Icon(Icons.group, color: loginTextFieldIconColor),
-                      //     filled: true,
-                      //     fillColor: Colors.white,
-                      //     border: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //     enabledBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //     focusedBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: loginTextFieldIconColor),
-                      //     ),
-                      //     focusedErrorBorder: OutlineInputBorder(
-                      //       borderRadius: BorderRadius.circular(8),
-                      //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                      //     ),
-                      //   ),
-                      //   dropdownColor: scaffoldBackgroundColor,
-                      //   borderRadius: BorderRadius.circular(8),
-                      //   elevation: 4,
-                      //   menuMaxHeight: 300,
-                      //   items: [
-                      //     DropdownMenuItem(
-                      //       value: 'Seller',
-                      //       child: Text(
-                      //         'Signup as Seller',
-                      //         style: GoogleFonts.poppins(
-                      //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //     DropdownMenuItem(
-                      //       value: 'Buyer',
-                      //       child: Text(
-                      //         'Signup as Buyer',
-                      //         style: GoogleFonts.poppins(
-                      //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                      //         ),
-                      //       ),
-                      //     ),
-                      //   ],
-                      // ),
-
                       const SizedBox(height: 32),
 
                       SizedBox(
@@ -528,43 +385,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                           onPressed:
-                              // isPhoneValidated ?
-                                  () async {
-                                    if (_formKey.currentState!.validate() && isPhoneValidated) {
-                                      setState(() {
-                                        error = '';
-                                      });
-                                      try {
-                                        final user = await firebaseService.registerWithEmail(
-                                          email: _formKey.currentState?.fields['email']?.value,
-                                          password: _formKey.currentState?.fields['password']?.value,
-                                        );
+                          // isPhoneValidated ?
+                              () async {
+                            if (_formKey.currentState!.validate() && isPhoneValidated) {
+                              setState(() {
+                                error = '';
+                              });
+                              try {
+                                final user = await firebaseService.registerWithEmail(
+                                  email: _formKey.currentState?.fields['email']?.value,
+                                  password: _formKey.currentState?.fields['password']?.value,
+                                );
 
-                                        await firebaseService.saveUserDataOnRegister(
-                                          user: user.user!,
-                                          username: _formKey.currentState?.fields['username']?.value,
-                                          phone: phoneInfo,
-                                          // address: _formKey.currentState?.fields['address']?.value,
-                                          // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
-                                        );
+                                await firebaseService.saveUserDataOnRegister(
+                                  user: user.user!,
+                                  username: _formKey.currentState?.fields['username']?.value,
+                                  phone: phoneInfo,
+                                );
 
-                                        if (context.mounted) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                          );
-                                        }
-                                      } catch (e) {
-                                        setState(() {
-                                          debugPrint(e.toString());
-                                          error = e.toString();
-                                        });
-                                      }
-                                    }
-                                  },
-                                  // : null,
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                  );
+                                }
+                              } catch (e) {
+                                setState(() {
+                                  debugPrint(e.toString());
+                                  error = e.toString();
+                                });
+                              }
+                            }
+                          },
                           child: Text(
-                            "Signup",
+                            AppLocalizations.of(context)!.signup,
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
@@ -580,7 +434,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Already have an account? ",
+                            AppLocalizations.of(context)!.alreadyAccount,
                             style: GoogleFonts.montserrat(
                               color: accountText,
                               decoration: TextDecoration.underline, //* Underline the text
@@ -596,7 +450,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                             },
                             child: Text(
-                              "Login",
+                              AppLocalizations.of(context)!.login,
                               style: GoogleFonts.poppins(
                                 color: onboardingColor,
                                 textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),

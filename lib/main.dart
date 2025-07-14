@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/locale_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -25,6 +26,41 @@ import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 //   print("Handling a background message: ${message.messageId}");
 // }
 
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  print("Got a message in background!");
+  print('Title: ${message.notification!.title}');
+  print('Body: ${message.notification!.body}');
+
+  final firebaseService = FirebaseService();
+
+  if (firebaseService.auth.currentUser != null) {
+    final notifId = await firebaseService.firestore
+        .collection(firebaseService.userCollection)
+        .doc(firebaseService.auth.currentUser!.uid)
+        .collection(firebaseService.notificationCollection)
+        .add({
+          "title": message.notification!.title,
+          "body": message.notification!.body,
+          "createdAt": FieldValue.serverTimestamp(),
+          "hasBeenDeleted": false,
+          "userId": firebaseService.auth.currentUser!.uid,
+          "read": false,
+        });
+
+    print({notifId});
+
+    await firebaseService.firestore
+        .collection(firebaseService.userCollection)
+        .doc(firebaseService.auth.currentUser!.uid)
+        .update({
+          "notificationIds": FieldValue.arrayUnion([notifId.id]),
+        });
+  }
+}
+
 final navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
@@ -33,7 +69,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // await FirebaseMessaging.instance.requestPermission(); // Request notification permissions
-  // FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   final firebaseService = FirebaseService();
   await firebaseService.initNotifications();

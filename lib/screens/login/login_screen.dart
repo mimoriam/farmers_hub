@@ -109,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           decoration: InputDecoration(
                             counterText: "",
-                            hintText: "Enter your Email",
+                            hintText: AppLocalizations.of(context)!.enterEmail,
                             prefixIcon: Icon(Icons.email_outlined, color: loginTextFieldIconColor),
                             filled: true,
                             fillColor: Colors.white,
@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: 16),
 
                         Text(
-                          "Password",
+                          AppLocalizations.of(context)!.password,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
                             textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -158,7 +158,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             FormBuilderValidators.required(),
                             FormBuilderValidators.minLength(
                               6,
-                              errorText: "Password must not be less than 6 characters",
+                              errorText: AppLocalizations.of(context)!.passwordCondition,
                             ),
                           ]),
                           style: GoogleFonts.poppins(
@@ -166,7 +166,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           decoration: InputDecoration(
                             counterText: "",
-                            hintText: "Enter Your Password",
+                            hintText: AppLocalizations.of(context)!.enterPassword,
                             prefixIcon: Icon(Icons.lock_outline, color: loginTextFieldIconColor),
                             suffixIcon: IconButton(
                               icon: Icon(
@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              "Forgot Password?",
+                              AppLocalizations.of(context)!.forgotPassword,
                               style: GoogleFonts.poppins(
                                 textStyle: TextStyle(
                                   fontSize: 14,
@@ -260,7 +260,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               }
                             },
                             child: Text(
-                              "Login",
+                              AppLocalizations.of(context)!.login,
                               style: GoogleFonts.montserrat(
                                 textStyle: TextStyle(
                                   fontSize: 16,
@@ -308,7 +308,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              "Don't have an account?",
+                              AppLocalizations.of(context)!.noAccount,
                               style: GoogleFonts.montserrat(
                                 color: accountText,
                                 textStyle: TextStyle(
@@ -330,7 +330,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
                               },
                               child: Text(
-                                "Signup",
+                                AppLocalizations.of(context)!.signup,
                                 style: GoogleFonts.montserrat(
                                   color: onboardingColor,
                                   textStyle: TextStyle(
@@ -353,7 +353,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 10),
                               child: Text(
-                                "or continue with",
+                                AppLocalizations.of(context)!.continueWith,
                                 style: GoogleFonts.montserrat(
                                   color: onboardingTextColor,
                                   textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
@@ -378,154 +378,154 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             _isGoogleLoading
                                 ? Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 26),
-                                    child: Container(
-                                      color: scaffoldBackgroundColor,
-                                      child: Center(
-                                        child: CircularProgressIndicator(color: onboardingColor),
-                                      ),
-                                    ),
-                                  )
+                              padding: const EdgeInsets.symmetric(horizontal: 26),
+                              child: Container(
+                                color: scaffoldBackgroundColor,
+                                child: Center(
+                                  child: CircularProgressIndicator(color: onboardingColor),
+                                ),
+                              ),
+                            )
                                 : SignInButton.mini(
-                                    buttonType: ButtonType.google,
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isGoogleLoading = true;
-                                      });
+                              buttonType: ButtonType.google,
+                              onPressed: () async {
+                                setState(() {
+                                  _isGoogleLoading = true;
+                                });
 
-                                      try {
-                                        // final user = await firebaseService.signInWithGoogle();
-                                        final user = await firebaseService.signInWithGoogle();
-                                        if (user.additionalUserInfo?.isNewUser ?? false) {
-                                          if (context.mounted) {
-                                            Navigator.pushReplacement(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SignupGoogleScreen(user: user.user as User),
-                                              ),
-                                            );
-                                          }
-                                        } else {
-                                          // Feat: Check if user has completed registration properly
-                                          final userExists = await firebaseService
-                                              .checkIfUserDataExistsForSocialLogin(
-                                                user: user.user!,
-                                              );
+                                try {
+                                  // final user = await firebaseService.signInWithGoogle();
+                                  final user = await firebaseService.signInWithGoogle();
+                                  if (user.additionalUserInfo?.isNewUser ?? false) {
+                                    if (context.mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SignupGoogleScreen(user: user.user as User),
+                                        ),
+                                      );
+                                    }
+                                  } else {
+                                    // Feat: Check if user has completed registration properly
+                                    final userExists = await firebaseService
+                                        .checkIfUserDataExistsForSocialLogin(
+                                      user: user.user!,
+                                    );
 
-                                          if (userExists) {
-                                            if (context.mounted) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) => const HomeScreen(),
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            if (context.mounted) {
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SignupGoogleScreen(user: user.user as User),
-                                                ),
-                                              );
-                                            }
-                                          }
-                                        }
-                                      } catch (e) {
-                                        debugPrint(e.toString());
-                                      } finally {
-                                        if (mounted) {
-                                          setState(() {
-                                            _isGoogleLoading = false;
-                                          });
-                                        }
+                                    if (userExists) {
+                                      if (context.mounted) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => const HomeScreen(),
+                                          ),
+                                        );
                                       }
-                                    },
-                                    elevation: 1,
-                                    btnColor: scaffoldBackgroundColor,
-                                  ),
+                                    } else {
+                                      if (context.mounted) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SignupGoogleScreen(user: user.user as User),
+                                          ),
+                                        );
+                                      }
+                                    }
+                                  }
+                                } catch (e) {
+                                  debugPrint(e.toString());
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      _isGoogleLoading = false;
+                                    });
+                                  }
+                                }
+                              },
+                              elevation: 1,
+                              btnColor: scaffoldBackgroundColor,
+                            ),
 
                             _isFacebookLoading
                                 ? Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 26),
-                                    child: Container(
-                                      color: scaffoldBackgroundColor,
-                                      child: Center(
-                                        child: CircularProgressIndicator(color: onboardingColor),
-                                      ),
-                                    ),
-                                  )
+                              padding: const EdgeInsets.symmetric(horizontal: 26),
+                              child: Container(
+                                color: scaffoldBackgroundColor,
+                                child: Center(
+                                  child: CircularProgressIndicator(color: onboardingColor),
+                                ),
+                              ),
+                            )
                                 : SignInButton.mini(
-                                    buttonType: ButtonType.facebook,
-                                    onPressed: () async {
-                                      setState(() {
-                                        _isFacebookLoading = true;
-                                      });
+                              buttonType: ButtonType.facebook,
+                              onPressed: () async {
+                                setState(() {
+                                  _isFacebookLoading = true;
+                                });
 
-                                      try {
-                                        final userCredential = await firebaseService
-                                            .signInWithFacebook();
-                                        final user = userCredential.user;
+                                try {
+                                  final userCredential = await firebaseService
+                                      .signInWithFacebook();
+                                  final user = userCredential.user;
 
-                                        if (user != null) {
-                                          if (userCredential.additionalUserInfo?.isNewUser ??
-                                              false) {
-                                            if (context.mounted) {
-                                              Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      SignupGoogleScreen(user: user),
-                                                ),
-                                              );
-                                            }
-                                          } else {
-                                            final userExists = await firebaseService
-                                                .checkIfUserDataExistsForSocialLogin(user: user);
-                                            if (context.mounted) {
-                                              if (userExists) {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) => const HomeScreen(),
-                                                  ),
-                                                );
-                                              } else {
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        SignupGoogleScreen(user: user),
-                                                  ),
-                                                );
-                                              }
-                                            }
-                                          }
-                                        }
-                                      } catch (e) {
-                                        debugPrint(e.toString());
-                                        if (context.mounted) {
-                                          ScaffoldMessenger.of(context).showSnackBar(
-                                            SnackBar(
-                                              content: Text(e.toString()),
-                                              backgroundColor: Colors.red,
+                                  if (user != null) {
+                                    if (userCredential.additionalUserInfo?.isNewUser ??
+                                        false) {
+                                      if (context.mounted) {
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SignupGoogleScreen(user: user),
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      final userExists = await firebaseService
+                                          .checkIfUserDataExistsForSocialLogin(user: user);
+                                      if (context.mounted) {
+                                        if (userExists) {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => const HomeScreen(),
+                                            ),
+                                          );
+                                        } else {
+                                          Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SignupGoogleScreen(user: user),
                                             ),
                                           );
                                         }
-                                      } finally {
-                                        if (mounted) {
-                                          setState(() {
-                                            _isFacebookLoading = false;
-                                          });
-                                        }
                                       }
-                                    },
-                                    elevation: 1,
-                                    btnColor: scaffoldBackgroundColor,
-                                  ),
+                                    }
+                                  }
+                                } catch (e) {
+                                  debugPrint(e.toString());
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(e.toString()),
+                                        backgroundColor: Colors.red,
+                                      ),
+                                    );
+                                  }
+                                } finally {
+                                  if (mounted) {
+                                    setState(() {
+                                      _isFacebookLoading = false;
+                                    });
+                                  }
+                                }
+                              },
+                              elevation: 1,
+                              btnColor: scaffoldBackgroundColor,
+                            ),
                           ],
                         ),
 

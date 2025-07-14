@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LandScreen extends StatefulWidget {
-  const LandScreen({super.key});
+  String categoryOption;
+  LandScreen({super.key, required this.categoryOption});
 
   @override
   State<LandScreen> createState() => _LandScreenState();
@@ -15,6 +16,8 @@ class _LandScreenState extends State<LandScreen> {
   final firebaseService = FirebaseService();
 
   int _selectedTabIndex = 0;
+
+  List<QueryDocumentSnapshot> _searchResults = [];
 
   // Future<List<QueryDocumentSnapshot<Object?>>> _getFutureForSelectedTab() {
   //   switch (_selectedTabIndex) {
@@ -31,7 +34,7 @@ class _LandScreenState extends State<LandScreen> {
 
   Widget _buildTabBar() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
       padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
       child: Row(
@@ -86,7 +89,12 @@ class _LandScreenState extends State<LandScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Land",
+          widget.categoryOption == "Land"
+              ? "Land"
+              : widget.categoryOption == "Equipments"
+              ? "Equipments"
+              : widget.categoryOption,
+          // "Land",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -96,10 +104,44 @@ class _LandScreenState extends State<LandScreen> {
         ),
       ),
 
-      body: Column(children: [Padding(
-        padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 10),
-        child: _buildTabBar(),
-      )]),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10, right: 10, bottom: 6, top: 10),
+            child: _buildTabBar(),
+          ),
+
+          _searchResults.isEmpty
+              ? SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.7,
+                  width: MediaQuery.of(context).size.width * 2,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                        ),
+                        child: Icon(
+                          Icons.landscape, // An icon that fits the context
+                          color: Colors.grey[700],
+                          size: 36.0,
+                        ),
+                      ),
+
+                      // const SizedBox(height: 10.0),
+                      const Text(
+                        'No results',
+                        style: TextStyle(fontSize: 14.0, color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                )
+              : Container(),
+
+          SingleChildScrollView(child: Container()),
+        ],
+      ),
     );
   }
 }

@@ -26,7 +26,7 @@ import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dar
 import 'package:farmers_hub/screens/chat/chat_home.dart';
 
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -194,116 +194,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   late final AppLifecycleListener _listener;
 
-  // Future<void> _fetchLocation() async {
-  //   if (!mounted) return;
-  //   setState(() {
-  //     _isLoadingLocation = true;
-  //     _locationMessage = "Checking location...";
-  //   });
-  //
-  //   // 1. Check permission status
-  //   var permissionStatus = await Permission.location.status;
-  //
-  //   // 2. If permission is not granted, request it or guide the user to settings
-  //   if (!permissionStatus.isGranted) {
-  //     if (permissionStatus.isDenied) {
-  //       // Request permission for the first time
-  //       permissionStatus = await Permission.location.request();
-  //     } else if (permissionStatus.isPermanentlyDenied) {
-  //       // Guide user to app settings if permission is permanently denied
-  //       if (mounted) {
-  //         await showDialog(
-  //           context: context,
-  //           builder: (ctx) => AlertDialog(
-  //             title: const Text("Location Permission Required"),
-  //             content: const Text(
-  //                 "This app needs location access for weather and local content. Please grant permission in app settings."),
-  //             actions: [
-  //               TextButton(
-  //                   onPressed: () => Navigator.of(ctx).pop(),
-  //                   child: const Text("Cancel")),
-  //               TextButton(
-  //                   onPressed: () {
-  //                     openAppSettings();
-  //                     Navigator.of(ctx).pop();
-  //                   },
-  //                   child: const Text("Open Settings")),
-  //             ],
-  //           ),
-  //         );
-  //       }
-  //       setState(() {
-  //         _isLoadingLocation = false;
-  //         _locationMessage = "Permission denied.";
-  //       });
-  //       return;
-  //     }
-  //   }
-  //
-  //   // 3. If permission is granted, proceed to fetch location
-  //   if (permissionStatus.isGranted) {
-  //     // Check if location services are enabled on the device
-  //     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  //     if (!serviceEnabled) {
-  //       await Geolocator.openLocationSettings();
-  //       if (mounted) {
-  //         setState(() {
-  //           _isLoadingLocation = false;
-  //           _locationMessage = "Please enable location services.";
-  //         });
-  //       }
-  //       return;
-  //     }
-  //
-  //     // Now, safely get the location
-  //     try {
-  //       setState(() {
-  //         _locationMessage = "Fetching location...";
-  //       });
-  //
-  //       final position = await _locationService.getCurrentLocation();
-  //       final placeDetails = await _locationService.getPlaceDetails(position);
-  //       final finalCity = placeDetails.city ?? "Unknown";
-  //
-  //       // Update UI and save location data
-  //       if (mounted) {
-  //         setState(() {
-  //           _locationMessage = "$finalCity, ${placeDetails.country}";
-  //           _isLoadingLocation = false;
-  //         });
-  //       }
-  //       final Map<String, dynamic> updatedData = {
-  //         'location': {"city": finalCity}
-  //       };
-  //       await _saveLocationToProfile(updatedData);
-  //       await _fetchWeather(finalCity);
-  //
-  //     } catch (e) {
-  //       if (mounted) {
-  //         setState(() {
-  //           _isLoadingLocation = false;
-  //           _locationMessage = "Could not get location.";
-  //         });
-  //       }
-  //     }
-  //   } else {
-  //     // Handle case where permission is still not granted
-  //     if (mounted) {
-  //       setState(() {
-  //         _isLoadingLocation = false;
-  //         _locationMessage = "Location permission is required.";
-  //       });
-  //     }
-  //   }
-  //
-  //   // Always update last seen status
-  //   await firebaseService.updateLastSeenAs();
-  // }
+  bool _isInit = true;
 
   Future<void> _fetchLocation() async {
     setState(() {
       _isLoadingLocation = true;
-      _locationMessage = "Fetching location...";
+      _locationMessage = AppLocalizations.of(context)!.fetchingLocation;
     });
 
     String finalCity;
@@ -326,11 +222,7 @@ class _HomeScreenState extends State<HomeScreen> {
         // 2. Fetch new location if not cached
         final position = await _locationService.getCurrentLocation();
         final placeDetails = await _locationService.getPlaceDetails(position);
-        finalCity = placeDetails.city ?? "Unknown";
-
-        // Save the new location
-        // await asyncPrefs.setString("city", finalCity);
-        // await asyncPrefs.setString("country", placeDetails.country ?? "Unknown");
+        finalCity = placeDetails.city ?? AppLocalizations.of(context)!.unknown;
 
         if (mounted) {
           setState(() {
@@ -341,7 +233,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // 3. Update user profile:
       final Map<String, dynamic> updatedData = {
-        // 'username': firebaseService.currentUser!.displayName,
         'location': {"city": finalCity},
       };
 
@@ -350,18 +241,17 @@ class _HomeScreenState extends State<HomeScreen> {
       // 4. Fetch weather for the determined city
       await _fetchWeather(finalCity);
     } catch (e) {
-      // if (e.toString().contains("Location services are disabled")) {
       if (mounted) {
         setState(() {
-          _locationMessage = "Could not get location";
+          _locationMessage = AppLocalizations.of(context)!.gotNoLocation;
 
           if (e.toString().contains("denied") || e.toString().contains("disabled")) {
             showDialog(
               context: context,
               barrierDismissible: false,
               builder: (ctx) => AlertDialog(
-                title: Text("Location Services Disabled"),
-                content: Text("Please enable location services in settings."),
+                title: Text(AppLocalizations.of(context)!.locationServiceDisable),
+                content: Text(AppLocalizations.of(context)!.enableLocationService),
                 backgroundColor: Colors.white,
                 actions: [
                   TextButton(
@@ -372,13 +262,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         setState(() {});
                       }
                     },
-                    child: Text("Open Settings"),
+                    child: Text(AppLocalizations.of(context)!.openSettings),
                   ),
                   TextButton(
                     onPressed: () {
                       Navigator.of(ctx).pop();
                     },
-                    child: Text("Cancel"),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                 ],
               ),
@@ -426,7 +316,6 @@ class _HomeScreenState extends State<HomeScreen> {
           dio: dio,
           retries: 2, // retry count (optional)
           retryDelays: const [
-            // set delays between retries (optional)
             Duration(seconds: 2), // wait 1 sec before first retry
             Duration(seconds: 4), // wait 2 sec before second retry
           ],
@@ -449,8 +338,8 @@ class _HomeScreenState extends State<HomeScreen> {
       print("Failed to fetch weather: $e");
       if (mounted) {
         setState(() {
-          dynamicWeather = "N/A";
-          dynamicWeatherCondition = "Unavailable";
+          dynamicWeather = AppLocalizations.of(context)!.no;
+          dynamicWeatherCondition = AppLocalizations.of(context)!.unavailable;
         });
       }
     }
@@ -467,7 +356,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _locationService = LocationService();
 
-    _fetchLocation();
+    // Error causing line:
+    // _fetchLocation();
     _listener = AppLifecycleListener(onStateChange: _onStateChanged);
 
     _fetchBackgroundImages();
@@ -477,6 +367,16 @@ class _HomeScreenState extends State<HomeScreen> {
     () async {
       _updateFCMTokenOnLogin();
     }();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (_isInit) {
+      _fetchLocation();
+    }
+    _isInit = false;
   }
 
   @override
@@ -501,43 +401,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // void _openCountryPicker() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text("Select Country"),
-  //         content: SizedBox(
-  //           height: 300, // Limit height to avoid overflow
-  //           child: CountryCodePicker(
-  //             onChanged: (countryCode) {
-  //               setState(() {
-  //                 _selectedLocation = countryCode.name ?? countryCode.code!;
-  //               });
-  //               Navigator.of(context).pop(); // Close alert on selection
-  //             },
-  //             showCountryOnly: true,
-  //             showOnlyCountryWhenClosed: true,
-  //             showDropDownButton: true,
-  //             alignLeft: true,
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  int _currentCarouselPage = 0; // To keep track of the current carousel page
-
-  // Placeholder image URLs for the carousel
-  // final List<String> imgList = [
-  //   'images/backgrounds/tractor_ad.jpg',
-  //   'images/backgrounds/olive_oil_bottle_2.jpg',
-  //   'images/backgrounds/grains.jpg',
-  //   'images/backgrounds/food_marketplace.jpg',
-  //   'images/backgrounds/pomegranates.jpg',
-  // ];
-
+  int _currentCarouselPage = 0;
   List<String> _backgroundImages = [];
   bool _isLoadingCarousel = true;
 
@@ -564,9 +428,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         color: Colors.white,
         child: InkWell(
-          // onTap: () {
-          //   // TODO: Implement navigation or action for category item
-          // },
           borderRadius: BorderRadius.circular(10.0),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
@@ -576,12 +437,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8.0), // Space between image and text
-                    // Use Image.network here to dynamically load from DB
+                    padding: const EdgeInsets.only(bottom: 8.0),
                     child: Image.asset(
                       imageUrl,
-                      fit: BoxFit.contain, // Use contain to see the whole placeholder image
-                      // Error handling for image loading
+                      fit: BoxFit.contain,
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(Icons.broken_image, size: 40, color: Colors.grey);
                       },
@@ -597,7 +456,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontWeight: FontWeight.w400,
                     height: 1.54,
                   ),
-                  overflow: TextOverflow.ellipsis, // Handle long text
+                  overflow: TextOverflow.ellipsis,
                 ),
               ],
             ),
@@ -611,6 +470,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
 
+    final locale = Localizations.localeOf(context);
+
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat('MMMM d, y').format(now);
     final String formattedDay = DateFormat('EEEE').format(now);
@@ -623,61 +484,186 @@ class _HomeScreenState extends State<HomeScreen> {
       return condition;
     }
 
+    // final List<Map<String, String>> categories = [
+    //   {'name': AppLocalizations.of(context)!.fruits, 'image': 'images/categories/fruits.png'},
+    //   {
+    //     'name': AppLocalizations.of(context)!.vegetables,
+    //     'image': 'images/categories/vegetables.png',
+    //   },
+    //   {'name': AppLocalizations.of(context)!.oliveOil, 'image': 'images/categories/olive_oil.png'},
+    //   {
+    //     'name': AppLocalizations.of(context)!.grainSeeds,
+    //     'image': 'images/categories/grains_and_seeds.jpg',
+    //   },
+    //   {
+    //     'name': AppLocalizations.of(context)!.equipments,
+    //     'image': 'images/categories/equipments.jpg',
+    //   },
+    //   {
+    //     'name': AppLocalizations.of(context)!.liveStock,
+    //     'image': 'images/categories/live_stock.png',
+    //   },
+    // ];
+
     final List<Map<String, String>> categories = [
       {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
       {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
       {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
       {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
-      {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
+      // {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
+      {'name': "Tools", 'image': "images/categories/tools_and_equipments.jpg"},
       {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
     ];
 
     final List<Map<String, dynamic>> popularPostsData = const [
       {
         "image_url": "images/backgrounds/fertilizers_spray.jpg",
+
         "price": "330,000",
+
         "location": "Mirpur Mathelo",
+
         "likes": 4,
+
         "posted_ago": "02 Months Ago",
+
         "views": 274,
       },
 
       {
         "image_url": "images/backgrounds/cow.png",
+
         "price": "330,000",
+
         "location": "Mirpur Mathelo",
+
         "likes": 12,
+
         "posted_ago": "02 Months Ago",
+
         "views": 301,
       },
 
       {
         "image_url": "images/backgrounds/goat.png",
+
         "price": "430,000",
+
         "location": "Mirpur Mathelo",
+
         "likes": 12,
+
         "posted_ago": "02 Months Ago",
+
         "views": 301,
       },
 
       {
         "image_url": "images/backgrounds/grains.jpg",
+
         "price": "430,000",
+
         "location": "Mirpur Mathelo",
+
         "likes": 12,
+
         "posted_ago": "02 Months Ago",
+
         "views": 301,
       },
 
       {
         "image_url": "images/backgrounds/pomegranates.jpg",
+
         "price": "430,000",
+
         "location": "Mirpur Mathelo",
+
         "likes": 12,
+
         "posted_ago": "02 Months Ago",
+
         "views": 301,
       },
     ];
+
+    void showExitConfirmationDialogForHome() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.priority_high_rounded, color: Colors.red, size: 40),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  AppLocalizations.of(context)!.confirmExit,
+                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  AppLocalizations.of(context)!.exitApp,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+                ),
+                SizedBox(height: 24),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        icon: Icon(Icons.cancel_outlined, color: Colors.red),
+                        label: Text(
+                          AppLocalizations.of(context)!.cancel,
+                          style: TextStyle(color: Colors.red),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                          side: BorderSide(color: Colors.red),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        icon: Icon(Icons.exit_to_app_outlined, color: Colors.white),
+                        label: Text(
+                          AppLocalizations.of(context)!.exit,
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                          padding: EdgeInsets.symmetric(vertical: 12),
+                        ),
+                        onPressed: () async {
+                          SystemNavigator.pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: systemUiOverlayStyle,
@@ -685,33 +671,38 @@ class _HomeScreenState extends State<HomeScreen> {
         canPop: false,
         onPopInvokedWithResult: (bool didPop, Object? result) async {
           if (didPop) {
-            // If the route is popped, exit the app
           } else {
-            // Show a confirmation dialog before allowing the pop
-            await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  backgroundColor: Colors.white,
-                  title: Text("Confirm Exit!"),
-                  content: Text("Are you sure you want to exit the app?"),
-                  actions: <Widget>[
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Don't exit
-                      },
-                      child: Text("Cancel", style: TextStyle(color: Colors.grey[600])),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        SystemNavigator.pop();
-                      },
-                      child: Text("Exit", style: TextStyle(color: Colors.red)),
-                    ),
-                  ],
-                );
-              },
-            );
+            showExitConfirmationDialogForHome();
+            // await showDialog(
+            //   context: context,
+            //   builder: (BuildContext context) {
+            //     return AlertDialog(
+            //       backgroundColor: Colors.white,
+            //       title: Text(AppLocalizations.of(context)!.confirmExit),
+            //       content: Text(AppLocalizations.of(context)!.exitApp),
+            //       actions: <Widget>[
+            //         TextButton(
+            //           onPressed: () {
+            //             Navigator.of(context).pop();
+            //           },
+            //           child: Text(
+            //             AppLocalizations.of(context)!.cancel,
+            //             style: TextStyle(color: Colors.grey[600]),
+            //           ),
+            //         ),
+            //         TextButton(
+            //           onPressed: () {
+            //             SystemNavigator.pop();
+            //           },
+            //           child: Text(
+            //             AppLocalizations.of(context)!.exit,
+            //             style: TextStyle(color: Colors.red),
+            //           ),
+            //         ),
+            //       ],
+            //     );
+            //   },
+            // );
           }
         },
         child: Scaffold(
@@ -738,24 +729,23 @@ class _HomeScreenState extends State<HomeScreen> {
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: BottomAppBar(
             height: 70,
-            // shape: const UpwardNotchedAndRoundedRectangle(topCornerRadius: 12),
             notchMargin: 10,
             color: Colors.white,
             elevation: 0,
-            // Shadow for the BottomAppBar
-            // clipBehavior: Clip.antiAlias,
             clipBehavior: Clip.none,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              // Children are the navigation items
               children: <Widget>[
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset(semanticsLabel: 'Home Icon', "images/icons/home_selected.svg"),
+                    SvgPicture.asset(
+                      semanticsLabel: AppLocalizations.of(context)!.homeIcon,
+                      "images/icons/home_selected.svg",
+                    ),
                     Text(
-                      'Home',
+                      AppLocalizations.of(context)!.home,
                       style: GoogleFonts.montserrat(
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
@@ -777,40 +767,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
-
-                      // await Navigator.of(context).push(
-                      //   PageRouteBuilder(
-                      //     transitionDuration: const Duration(milliseconds: 500),
-                      //     pageBuilder:
-                      //         (context, animation, secondaryAnimation) =>
-                      //             ChatHome(user: firebaseService.currentUser),
-                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      //       return SharedAxisTransition(
-                      //         animation: animation,
-                      //         secondaryAnimation: secondaryAnimation,
-                      //         transitionType: SharedAxisTransitionType.vertical,
-                      //         child: child,
-                      //       );
-                      //     },
-                      //   ),
-                      // );
-
-                      // await Navigator.of(
-                      //   context,
-                      // ).push(SharedAxisPageRoute(page: ChatHome(user: firebaseService.currentUser)));
-                      //
-                      // if (mounted) {
-                      //   setState(() {});
-                      // }
                     }
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(semanticsLabel: 'Chat Icon', "images/icons/chat.svg"),
+                      SvgPicture.asset(
+                        semanticsLabel: AppLocalizations.of(context)!.chatIcon,
+                        "images/icons/chat.svg",
+                      ),
                       Text(
-                        'Chat',
+                        AppLocalizations.of(context)!.chat,
                         style: GoogleFonts.montserrat(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -832,29 +800,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
-
-                      // await Navigator.of(context).push(
-                      //   PageRouteBuilder(
-                      //     transitionDuration: const Duration(milliseconds: 500),
-                      //     pageBuilder: (context, animation, secondaryAnimation) => const FavoritesScreen(),
-                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      //       return SharedAxisTransition(
-                      //         animation: animation,
-                      //         secondaryAnimation: secondaryAnimation,
-                      //         transitionType: SharedAxisTransitionType.vertical,
-                      //         child: child,
-                      //       );
-                      //     },
-                      //   ),
-                      // );
-
-                      // await Navigator.of(
-                      //   context,
-                      // ).push(SharedAxisPageRoute(page: const FavoritesScreen(),));
-                      //
-                      // if (mounted) {
-                      //   setState(() {});
-                      // }
                     }
                   },
                   child: Column(
@@ -862,11 +807,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SvgPicture.asset(
-                        semanticsLabel: 'Favorites Icon',
+                        semanticsLabel: AppLocalizations.of(context)!.favoritesIcon,
                         "images/icons/favorites.svg",
                       ),
                       Text(
-                        'Favorites',
+                        AppLocalizations.of(context)!.favorites,
                         style: GoogleFonts.montserrat(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -887,38 +832,18 @@ class _HomeScreenState extends State<HomeScreen> {
                           setState(() {});
                         }
                       });
-
-                      // await Navigator.of(context).push(
-                      //   PageRouteBuilder(
-                      //     transitionDuration: const Duration(milliseconds: 500),
-                      //     pageBuilder: (context, animation, secondaryAnimation) => const ProfileScreen(),
-                      //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                      //       return SharedAxisTransition(
-                      //         animation: animation,
-                      //         secondaryAnimation: secondaryAnimation,
-                      //         transitionType: SharedAxisTransitionType.vertical,
-                      //         child: child,
-                      //       );
-                      //     },
-                      //   ),
-                      // );
-
-                      // await Navigator.of(
-                      //   context,
-                      // ).push(SharedAxisPageRoute(page:  const ProfileScreen(),));
-
-                      // if (mounted) {
-                      //   setState(() {});
-                      // }
                     }
                   },
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SvgPicture.asset(semanticsLabel: 'Profile Icon', "images/icons/profile.svg"),
+                      SvgPicture.asset(
+                        semanticsLabel: AppLocalizations.of(context)!.profileIcon,
+                        "images/icons/profile.svg",
+                      ),
                       Text(
-                        'Profile',
+                        AppLocalizations.of(context)!.profile,
                         style: GoogleFonts.montserrat(
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
@@ -936,15 +861,13 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Location Picker
                   Padding(
-                    // padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
                     padding: EdgeInsets.only(top: 8, bottom: 0, left: 10, right: 10),
                     child: Text.rich(
                       TextSpan(
                         children: [
                           TextSpan(
-                            text: 'Location: ',
+                            text: AppLocalizations.of(context)!.location,
                             style: GoogleFonts.poppins(
                               color: locationTextColor,
                               fontSize: 16,
@@ -954,8 +877,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
 
                           TextSpan(
-                            // text: 'City, Country',
-                            text: _isLoadingLocation ? 'Loading...' : _locationMessage,
+                            text: _isLoadingLocation
+                                ? AppLocalizations.of(context)!.loading
+                                : _locationMessage,
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontSize: 14,
@@ -974,43 +898,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        // ElevatedButton.icon(
-                        //   onPressed: _openCountryPicker,
-                        //   icon: const Icon(Icons.location_on_outlined, size: 20, color: onboardingColor),
-                        //   style: ElevatedButton.styleFrom(
-                        //     shape: RoundedRectangleBorder(
-                        //       side: BorderSide(width: 1, color: textFieldBorderSideColor),
-                        //       borderRadius: BorderRadius.circular(6),
-                        //     ),
-                        //     backgroundColor: homebackgroundColor,
-                        //     elevation: 0,
-                        //   ),
-                        //   label: Text(
-                        //     // 'Select Location',
-                        //     _selectedLocation,
-                        //     style: GoogleFonts.poppins(
-                        //       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //       color: onboardingColor,
-                        //     ),
-                        //     overflow: TextOverflow.ellipsis,
-                        //   ),
-                        // ),
                         Expanded(
                           child: Padding(
-                            // padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
                             padding: const EdgeInsets.only(right: 8),
                             child: DropdownButtonFormField2<String>(
                               decoration: InputDecoration(
-                                labelText: "Location",
+                                labelText: AppLocalizations.of(context)!.locationNew,
                                 floatingLabelBehavior: FloatingLabelBehavior.never,
                                 contentPadding: const EdgeInsets.symmetric(
                                   vertical: 0,
                                   horizontal: 6,
                                 ),
-                                // border: OutlineInputBorder(
-                                //   borderSide: BorderSide(color: onboardingColor, width: 1.0),
-                                //   borderRadius: BorderRadius.circular(8),
-                                // ),
                                 enabledBorder: OutlineInputBorder(
                                   borderSide: BorderSide(
                                     color: _hasSelectedLocation
@@ -1025,10 +923,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              iconStyleData: IconStyleData(
-                                // Using IconStyleData for icon properties
-                                iconEnabledColor: onboardingTextColor,
-                              ),
+                              iconStyleData: IconStyleData(iconEnabledColor: onboardingTextColor),
 
                               dropdownStyleData: DropdownStyleData(
                                 maxHeight: 300,
@@ -1038,9 +933,32 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-
-                              // value: "Damascus",
                               items:
+                                  // [
+                                  //       AppLocalizations.of(context)!.damascus,
+                                  //       AppLocalizations.of(context)!.aleppo,
+                                  //       AppLocalizations.of(context)!.homs,
+                                  //       AppLocalizations.of(context)!.hama,
+                                  //       AppLocalizations.of(context)!.latakia,
+                                  //       AppLocalizations.of(context)!.tartus,
+                                  //       AppLocalizations.of(context)!.baniyas,
+                                  //       AppLocalizations.of(context)!.idlib,
+                                  //       AppLocalizations.of(context)!.deirezzor,
+                                  //       AppLocalizations.of(context)!.alhasakah,
+                                  //       AppLocalizations.of(context)!.qamishli,
+                                  //       AppLocalizations.of(context)!.raqqa,
+                                  //       AppLocalizations.of(context)!.daraa,
+                                  //       AppLocalizations.of(context)!.adsuwayda,
+                                  //       AppLocalizations.of(context)!.quenitra,
+                                  //       AppLocalizations.of(context)!.almayadin,
+                                  //       "Al-Bukamal",
+                                  //       AppLocalizations.of(context)!.rifdimashq,
+                                  //       AppLocalizations.of(context)!.afrin,
+                                  //       AppLocalizations.of(context)!.manbij,
+                                  //       AppLocalizations.of(context)!.tellabyad,
+                                  //       AppLocalizations.of(context)!.asalayn,
+                                  //       AppLocalizations.of(context)!.kobani,
+                                  //     ]
                                   [
                                         'Damascus',
                                         'Aleppo',
@@ -1085,43 +1003,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-
-                        // Container(
-                        //   width: 176,
-                        //   decoration: BoxDecoration(
-                        //     borderRadius: BorderRadius.circular(6),
-                        //     color: homebackgroundColor,
-                        //     border: Border.all(
-                        //       width: 1,
-                        //       color: textFieldBorderSideColor,
-                        //     ),
-                        //   ),
-                        //   child: CountryCodePicker(
-                        //     showCountryOnly: true,
-                        //     showOnlyCountryWhenClosed: true,
-                        //     showFlag: false,
-                        //     initialSelection: "US",
-                        //       showFlagDialog: true,
-                        //     // alignLeft: true,
-                        //     textStyle: GoogleFonts.poppins(
-                        //       textStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
-                        //       color: onboardingColor,
-                        //     ),
-                        //     textOverflow: TextOverflow.ellipsis,
-                        //   ),
-                        // ),
-                        Row(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.only(top: 4, bottom: 7),
-                              child: ElevatedButton(
+                        Padding(
+                          padding: locale.languageCode == "ar"
+                              ? EdgeInsets.only(top: 6, bottom: 6, right: 8)
+                              : const EdgeInsets.only(top: 6, bottom: 6),
+                          child: Row(
+                            children: [
+                              ElevatedButton(
                                 onPressed: _selectedLocation.isEmpty
                                     ? null
                                     : () {
                                         if (context.mounted) {
                                           Navigator.push(
                                             context,
-                                            // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
                                             MaterialPageRoute(
                                               builder: (context) => FilteredResultsScreen(
                                                 searchQuery: _selectedLocation,
@@ -1130,19 +1024,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           );
                                         }
-                                        // if (context.mounted) {
-                                        //   Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder:
-                                        //           (context) => AddPostScreen(location: _selectedLocation),
-                                        //     ),
-                                        //   ).then((_) {
-                                        //     if (mounted) {
-                                        //       setState(() {});
-                                        //     }
-                                        //   });
-                                        // }
                                       },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -1154,20 +1035,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   elevation: 0,
                                 ),
                                 child: Text(
-                                  "Go",
+                                  AppLocalizations.of(context)!.go,
                                   style: GoogleFonts.poppins(
                                     textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ),
 
-                            SizedBox(width: 10),
+                              SizedBox(width: 10),
 
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 3),
-                              child: IconButton(
+                              IconButton(
                                 onPressed: () {
                                   if (context.mounted) {
                                     Navigator.push(
@@ -1187,17 +1065,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   backgroundColor: onboardingColor,
                                   foregroundColor: Colors.white,
                                 ),
-                                // padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                                padding: const EdgeInsets.only(
-                                  left: 20,
-                                  right: 20,
-                                  top: 12,
-                                  bottom: 13,
-                                ),
-                                // padding: EdgeInsets.only(left: 19, right: 19, top: 12, bottom: ),
+                                padding: const EdgeInsets.all(12),
+                                // padding: const EdgeInsets.only(
+                                //   left: 20,
+                                //   right: 20,
+                                //   top: 12,
+                                //   bottom: 13,
+                                // ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1211,7 +1088,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (context.mounted) {
                         Navigator.push(
                           context,
-                          // MaterialPageRoute(builder: (context) => const CategoriesScreen()),
                           MaterialPageRoute(builder: (context) => FilteredResultsScreen()),
                         );
                       }
@@ -1232,7 +1108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.grey,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Search',
+                            hintText: AppLocalizations.of(context)!.search,
                             hintStyle: GoogleFonts.poppins(
                               textStyle: TextStyle(
                                 fontSize: 13.69,
@@ -1244,10 +1120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                             filled: true,
                             fillColor: Colors.white,
                             prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                            // suffixIcon: IconButton(
-                            //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                            //   onPressed: null,
-                            // ),
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.mic, color: Color(0xFF999999)),
+                              onPressed: () {},
+                            ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide(color: Color(0xFFC1EBCA)),
@@ -1285,26 +1161,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 )
                               : Container(
                                   width: MediaQuery.of(context).size.width,
-                                  decoration: BoxDecoration(
-                                    // color: Colors.grey[300], // Placeholder background if image fails
-                                    // color: Colors.green,
-                                    color: scaffoldBackgroundColor,
-                                    // borderRadius: BorderRadius.circular(12.0),
-                                  ),
+                                  decoration: BoxDecoration(color: scaffoldBackgroundColor),
                                   child: ClipRRect(
-                                    // borderRadius: BorderRadius.circular(12.0),
-                                    // child: Image.asset(imgList[itemIndex], fit: BoxFit.fill),
                                     child: CachedNetworkImage(
                                       imageUrl: _backgroundImages[itemIndex],
                                       fit: BoxFit.fill,
                                       placeholder: (context, url) => Skeletonizer(
                                         enabled: true,
-                                        child: Container(
-                                          color: Colors.grey[300], // A base color for the skeleton
-                                        ),
+                                        child: Container(color: Colors.grey[300]),
                                       ),
                                       errorWidget: (context, url, error) {
-                                        return const Center(
+                                        return Center(
                                           child: Text(
                                             'Could not load image',
                                             style: TextStyle(color: Colors.red),
@@ -1312,22 +1179,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         );
                                       },
                                     ),
-                                    // child: Image.network(
-                                    //   _backgroundImages[itemIndex],
-                                    //   fit: BoxFit.fill,
-                                    //   errorBuilder: (
-                                    //     BuildContext context,
-                                    //     Object exception,
-                                    //     StackTrace? stackTrace,
-                                    //   ) {
-                                    //     return const Center(
-                                    //       child: Text(
-                                    //         'Could not load image',
-                                    //         style: TextStyle(color: Colors.red),
-                                    //       ),
-                                    //     );
-                                    //   },
-                                    // ),
                                   ),
                                 );
                         },
@@ -1336,66 +1187,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           viewportFraction: 1,
                           enableInfiniteScroll: true,
                           autoPlay: true,
-                          // enlargeCenterPage: true,
-                          // enlargeFactor: 1,
-                          // autoPlayInterval: Duration(seconds: 3),
                           autoPlayInterval: Duration(seconds: 6),
                           autoPlayAnimationDuration: Duration(milliseconds: 1000),
                           autoPlayCurve: Curves.fastOutSlowIn,
                           scrollDirection: Axis.horizontal,
-                          // onPageChanged: (index, reason) {
-                          //   if (reason.name == "manual") {
-                          //     if (context.mounted) {
-                          //       setState(() {
-                          //         _currentCarouselPage = index;
-                          //       });
-                          //     }
-                          //   } else {
-                          //     // Added for fixing the freeze bug on animation:
-                          //     Future.delayed(const Duration(milliseconds: 600), () {
-                          //       if (context.mounted) {
-                          //         setState(() {
-                          //           _currentCarouselPage = index; // Update the current page index
-                          //         });
-                          //       }
-                          //     });
-                          //   }
-                          // },
                         ),
                       ),
 
                       const SizedBox(height: 4),
-                      //
-                      // StatefulBuilder(
-                      //   builder: (BuildContext context, StateSetter setStateDots) {
-                      //     return Row(
-                      //       mainAxisAlignment: MainAxisAlignment.center,
-                      //       children:
-                      //           imgList.asMap().entries.map((entry) {
-                      //             return GestureDetector(
-                      //               onTap: () {
-                      //                 // Optional: Allow tapping dots to change carousel page
-                      //                 // _carouselController.animateToPage(entry.key);
-                      //               },
-                      //               child: Container(
-                      //                 width: _currentCarouselPage == entry.key ? 26 : 14,
-                      //                 height: 6.0,
-                      //                 margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-                      //                 decoration: ShapeDecoration(
-                      //                   shape: RoundedRectangleBorder(
-                      //                     borderRadius: BorderRadius.circular(20),
-                      //                   ),
-                      //                   color:
-                      //                       _currentCarouselPage == entry.key
-                      //                           ? onboardingColor
-                      //                           : carouselGrey,
-                      //                 ),
-                      //               ),
-                      //             );
-                      //           }).toList(),
-                      //     );
-                      //   },
-                      // ),
                     ],
                   ),
 
@@ -1420,7 +1219,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        spacing: 11,
                         children: [
                           SizedBox(
                             width: double.infinity,
@@ -1440,7 +1238,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          // '32°C',
                                           _isLoadingLocation ? "..." : "$dynamicWeather°C",
                                           style: GoogleFonts.montserrat(
                                             fontSize: 17.6,
@@ -1449,7 +1246,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                         ),
                                         Text(
-                                          // 'Clear Sky',
                                           _isLoadingLocation
                                               ? "..."
                                               : _formatWeatherCondition(dynamicWeatherCondition),
@@ -1466,15 +1262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                   ],
                                 ),
-
-                                // Right side: Date and day
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.end,
                                     children: [
                                       Text(
-                                        // 'April 22, 2025',
                                         formattedDate,
                                         style: GoogleFonts.poppins(
                                           fontSize: 13.6,
@@ -1483,7 +1276,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                       Text(
-                                        // 'Tuesday',
                                         formattedDay,
                                         style: GoogleFonts.poppins(
                                           fontSize: 12,
@@ -1501,28 +1293,17 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             width: double.infinity,
                             padding: const EdgeInsets.only(top: 12.7),
-
-                            // decoration: ShapeDecoration(
-                            //   shape: RoundedRectangleBorder(
-                            //     side: BorderSide(width: 0.98, color: const Color(0xFFE5E7EB)),
-                            //   ),
-                            // ),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 8),
                                   child: SvgPicture.asset(
-                                    semanticsLabel: 'Plant Icon',
+                                    semanticsLabel: AppLocalizations.of(context)!.plantIcon,
                                     "images/icons/farming_icon.svg",
                                     width: 20,
                                     height: 20,
                                   ),
-                                  // child: Icon(
-                                  //   Icons.agriculture_outlined,
-                                  //   size: 28,
-                                  //   color: Colors.orange[600],
-                                  // ),
                                 ),
                                 const SizedBox(width: 8.0),
 
@@ -1531,22 +1312,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: <Widget>[
                                       Text(
-                                        'Farming Tip of the Day',
+                                        AppLocalizations.of(context)!.farmingTip,
                                         style: GoogleFonts.poppins(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black,
                                         ),
                                       ),
-
-                                      // Text(
-                                      //   'Perfect day for soil preparation and planting seedlings. Moisture levels are optimal.',
-                                      //   style: GoogleFonts.poppins(
-                                      //     fontSize: 11,
-                                      //     fontWeight: FontWeight.w400,
-                                      //     color: clearSkyText,
-                                      //   ),
-                                      // ),
                                       _isLoadingTip
                                           ? Skeletonizer(
                                               effect: ShimmerEffect(
@@ -1555,7 +1327,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               ignorePointers: true,
                                               child: Text(
-                                                'Loading tip for you...',
+                                                AppLocalizations.of(context)!.loading,
                                                 style: GoogleFonts.poppins(
                                                   fontSize: 11,
                                                   fontWeight: FontWeight.w400,
@@ -1592,7 +1364,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Categories',
+                              AppLocalizations.of(context)!.categories,
                               style: GoogleFonts.poppins(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
@@ -1615,7 +1387,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
-                                    'View all',
+                                    AppLocalizations.of(context)!.viewAll,
                                     style: GoogleFonts.poppins(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
@@ -1633,11 +1405,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Grid view for categories
                         GridView.count(
                           crossAxisCount: 3,
-                          // 3 items per row
                           shrinkWrap: true,
-                          // Important to make GridView work inside ListView
                           physics: const NeverScrollableScrollPhysics(),
-                          // Disable GridView's own scrolling
                           mainAxisSpacing: 10.0,
                           crossAxisSpacing: 1.0,
                           children: categories.map((category) {
@@ -1655,7 +1424,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: [
                         Text(
-                          "Popular Posts",
+                          AppLocalizations.of(context)!.popularPost,
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontSize: 14,
@@ -1667,7 +1436,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         SvgPicture.asset(
                           'images/icons/flame_icon.svg',
-                          semanticsLabel: "Flame Icon",
+                          semanticsLabel: AppLocalizations.of(context)!.flameIcon,
                           width: 20,
                           height: 20,
                         ),
@@ -1680,18 +1449,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10),
                     child: SizedBox(
-                      height: 232,
+                      height: 220,
                       child: FutureBuilder(
                         future: firebaseService.getAllPostsByFeatured(),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.waiting) {
-                            // return const Center(child: CircularProgressIndicator(color: onboardingColor));
                             return Skeletonizer(
                               effect: ShimmerEffect(
                                 baseColor: Colors.grey[300]!,
                                 highlightColor: Colors.grey[100]!,
                               ),
-                              // ignoreContainers: true,
                               ignorePointers: true,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
@@ -1707,7 +1474,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       location: "",
                                       likes: 1,
                                       isLiked: true,
-                                      // postedAgo: formatTimeAgo(post['createdAt']),
                                       postedAgo: "",
                                       views: 1,
                                     ),
@@ -1718,21 +1484,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           }
 
                           if (snapshot.hasError || !snapshot.hasData || snapshot.data == null) {
-                            return const Center(child: Text("Failed to load user data."));
+                            return Center(child: Text(AppLocalizations.of(context)!.failedToLoad));
                           }
 
                           final featuredData = snapshot.data;
 
                           if (featuredData!.isEmpty) {
-                            return const Center(child: Text("No featured posts to view."));
+                            return Center(child: Text(AppLocalizations.of(context)!.noPost));
                           }
 
                           return ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: featuredData.length > 5 ? 5 : featuredData.length,
                             itemBuilder: (context, index) {
-                              // final post = popularPostsData[index];
-
                               final post = featuredData[index].data() as Map<String, dynamic>;
                               final currentUserId = firebaseService.currentUser?.uid;
                               final List<dynamic> likedBy = post['likedBy'] ?? [];
@@ -1742,7 +1506,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               final createdAtTimestamp = post['createdAt'] as Timestamp?;
                               final postedAgoText = createdAtTimestamp != null
                                   ? formatTimeAgo(createdAtTimestamp)
-                                  : 'Just now';
+                                  : AppLocalizations.of(context)!.justNow;
 
                               final List<String> imageUrls = List<String>.from(
                                 post['imageUrls'] ?? [],
@@ -1768,7 +1532,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 },
 
                                 child: PostCard(
-                                  // imageUrl: popularPostsData[index]['image_url'],
                                   imageUrl: imageUrls.first,
                                   debug: false,
                                   price: post['price'].toString(),
@@ -1776,7 +1539,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   location: post['location']["city"],
                                   likes: post['likes'],
                                   isLiked: isLiked,
-                                  // postedAgo: formatTimeAgo(post['createdAt']),
                                   postedAgo: postedAgoText,
                                   views: post['views'],
                                 ),
@@ -1797,8 +1559,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          // begin: Alignment(0.00, 0.50),
-                          // end: Alignment(1.00, 0.50),
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                           colors: [const Color(0x33FF9800), const Color(0x334CAF50)],
@@ -1824,7 +1584,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                                 Text(
-                                  'Explore our Products',
+                                  AppLocalizations.of(context)!.exploreProducts,
                                   style: GoogleFonts.poppins(
                                     color: const Color(0xFF555F6D),
                                     fontSize: 13,
@@ -1855,7 +1615,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                             child: Text(
-                              'Explore',
+                              AppLocalizations.of(context)!.explore,
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 16,
@@ -1881,7 +1641,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: OutlinedButton.icon(
                             icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 24),
                             label: Text(
-                              'Whatsapp',
+                              AppLocalizations.of(context)!.whatsapp,
                               style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -1889,7 +1649,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             style: OutlinedButton.styleFrom(
                               backgroundColor: onboardingColor,
-                              // padding: const EdgeInsets.symmetric(vertical: 14),
                               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                               side: BorderSide(color: onboardingColor, width: 1.5),
                               shape: RoundedRectangleBorder(
@@ -1898,7 +1657,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                             onPressed: () async {
                               final String whatsapp = "+1-14821421408214";
-                              // final String whatsapp = phoneNumber;
                               final String whatsappURlAndroid =
                                   "whatsapp://send?phone=$whatsapp&text=${""}";
                               final String whatsappIoSURL =
@@ -1910,18 +1668,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                 } else {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(context)!.whatsappNotInstalled,
+                                        ),
+                                      ),
                                     );
                                   }
                                 }
                               } else {
-                                // Android
                                 if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
                                   await launchUrl(Uri.parse(whatsappURlAndroid));
                                 } else {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Whatsapp not installed")),
+                                      SnackBar(
+                                        content: Text(
+                                          AppLocalizations.of(context)!.whatsappNotInstalled,
+                                        ),
+                                      ),
                                     );
                                   }
                                 }
@@ -1962,7 +1727,6 @@ class PostCard extends StatelessWidget {
     super.key,
     required this.imageUrl,
     required this.debug,
-    // required this.imageUrls,
     required this.price,
     required this.currency,
     required this.location,
@@ -1977,20 +1741,12 @@ class PostCard extends StatelessWidget {
     return Container(
       width: 216,
       margin: const EdgeInsets.only(right: 14.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12.0),
-        // boxShadow: [
-        //   BoxShadow(color: Color(0x3F8A8A8A), spreadRadius: 0, blurRadius: 9, offset: Offset(0, 1)),
-        // ],
-      ),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12.0)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Image with Favorite Icon
           Padding(
             padding: const EdgeInsets.only(left: 10, top: 10, right: 10),
-            // padding: const EdgeInsets.only(),
             child: Stack(
               children: [
                 ClipRRect(
@@ -2040,13 +1796,13 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  currency == "usd"
+                  currency == AppLocalizations.of(context)!.usd
                       ? "\$$price"
-                      : currency == "euro"
+                      : currency == AppLocalizations.of(context)!.euro
                       ? "€$price"
-                      : currency == "lira"
+                      : currency == AppLocalizations.of(context)!.lira
                       ? "₺$price"
-                      : "(SYP)",
+                      : AppLocalizations.of(context)!.syp,
                   style: GoogleFonts.poppins(
                     color: onboardingColor,
                     fontSize: 13,
@@ -2073,7 +1829,6 @@ class PostCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    // const Spacer(), // Pushes likes to the right if location text is short
                     Icon(Icons.favorite, size: 16, color: Colors.redAccent),
                     const SizedBox(width: 4),
                     Text(
@@ -2086,7 +1841,7 @@ class PostCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Row(
                   children: [
                     const Icon(
@@ -2103,9 +1858,9 @@ class PostCard extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                    const Spacer(), // Pushes views to the right
+                    const Spacer(),
                     const Icon(Icons.visibility_outlined, size: 16, color: onboardingColor),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 8),
                     Text(
                       views.toString(),
                       style: GoogleFonts.poppins(

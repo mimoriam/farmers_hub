@@ -76,15 +76,36 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   Widget _buildCategoryItem(BuildContext context, String name, String imageUrl) {
     return GestureDetector(
       onTap: () {
-        print(name);
-        if (name == "Land Services" || name == "Equipments" || name == "Delivery") {
+        if (name == "Land Services") {
           if (context.mounted) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder:
                     // TODO: Add Searching for Land stuff
-                    (context) => LandScreen(),
+                    (context) => LandScreen(categoryOption: "Land"),
+              ),
+            );
+          }
+        } else if (name == "Equipments") {
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    // TODO: Add Searching for Land stuff
+                    (context) => LandScreen(categoryOption: "Equipments"),
+              ),
+            );
+          }
+        } else if (name == "Delivery") {
+          if (context.mounted) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder:
+                    // TODO: Add Searching for Land stuff
+                    (context) => LandScreen(categoryOption: "Delivery"),
               ),
             );
           }

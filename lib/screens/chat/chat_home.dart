@@ -15,6 +15,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 class MessageItem {
   final String avatarUrl;
@@ -60,6 +62,10 @@ class _ChatHomeState extends State<ChatHome> {
 
   String _searchQuery = "";
 
+  SpeechToText _speechToText = SpeechToText();
+  bool _speechEnabled = false;
+  String _lastWords = '';
+
   Future<List> _getUserIds() async {
     return await _chatService.getUsersIdForChat();
   }
@@ -81,6 +87,74 @@ class _ChatHomeState extends State<ChatHome> {
         });
       }
     }();
+
+    _initSpeech();
+  }
+
+  void _initSpeech() async {
+    _speechEnabled = await _speechToText.initialize();
+    setState(() {});
+
+    if (!_speechEnabled) {
+      _showSpeechNotAvailableDialog();
+      return;
+    }
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    var locales = await _speechToText.locales();
+
+    await _speechToText.listen(onResult: _onSpeechResult, localeId: "en_US");
+    setState(() {});
+  }
+
+  void _stopListening() async {
+    await _speechToText.stop();
+    setState(() {});
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    print(result.recognizedWords);
+    setState(() {
+      _lastWords = result.recognizedWords;
+
+      _speechToText.isListening
+          ? _formKey.currentState?.fields['search']?.didChange(_lastWords)
+          : "";
+    });
+  }
+
+  void _showSpeechNotAvailableDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Speech Recognition Not Available'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Speech recognition is not available. This might be because:'),
+            const SizedBox(height: 10),
+            const Text('• Microphone permissions not granted'),
+            const Text('• Speech services are disabled'),
+            const Text('• Device does not support speech recognition'),
+            const SizedBox(height: 10),
+            const Text('Please check your device settings and try again.'),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _initSpeech();
+            },
+            child: const Text('Retry'),
+          ),
+        ],
+      ),
+    );
   }
 
   // Widget _buildUserList() {
@@ -181,10 +255,7 @@ class _ChatHomeState extends State<ChatHome> {
     if (_isLoading) {
       // return const Center(child: CircularProgressIndicator(color: onboardingColor));
       return Skeletonizer(
-        effect: ShimmerEffect(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-        ),
+        effect: ShimmerEffect(baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!),
         ignorePointers: true,
         child: SingleChildScrollView(
           child: Column(
@@ -224,10 +295,7 @@ class _ChatHomeState extends State<ChatHome> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // return Center(child: CircularProgressIndicator(color: onboardingColor));
           return Skeletonizer(
-            effect: ShimmerEffect(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-            ),
+            effect: ShimmerEffect(baseColor: Colors.grey[300]!, highlightColor: Colors.grey[100]!),
             ignorePointers: true,
             child: SingleChildScrollView(
               child: ListView.builder(
@@ -255,13 +323,12 @@ class _ChatHomeState extends State<ChatHome> {
           // snapshot.data?.map((user) {
           // });
 
-          final filteredUsers =
-              _searchQuery.isEmpty
-                  ? users
-                  : users.where((user) {
-                    final username = user['username'].toString().toLowerCase();
-                    return username.contains(_searchQuery.toLowerCase());
-                  }).toList();
+          final filteredUsers = _searchQuery.isEmpty
+              ? users
+              : users.where((user) {
+                  final username = user['username'].toString().toLowerCase();
+                  return username.contains(_searchQuery.toLowerCase());
+                }).toList();
 
           // print(filteredUsers);
 
@@ -390,7 +457,8 @@ class _ChatHomeState extends State<ChatHome> {
                   }
 
                   if (messageSnapshot.hasData && messageSnapshot.data!.docs.isNotEmpty) {
-                    final messageData = messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
+                    final messageData =
+                        messageSnapshot.data!.docs.first.data() as Map<String, dynamic>;
                     lastMessage = messageData['message'];
 
                     // Format the timestamp
@@ -464,14 +532,13 @@ class _ChatHomeState extends State<ChatHome> {
                           if (context.mounted) {
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder:
-                                    (context) => ChatScreen(
-                                      // receiverId: message.id,
-                                      // receiverEmail: message.email,
-                                      receiverId: messageItem.id,
-                                      receiverEmail: messageItem.email,
-                                      user: widget.user,
-                                    ),
+                                builder: (context) => ChatScreen(
+                                  // receiverId: message.id,
+                                  // receiverEmail: message.email,
+                                  receiverId: messageItem.id,
+                                  receiverEmail: messageItem.email,
+                                  user: widget.user,
+                                ),
                               ),
                             );
                           }
@@ -562,13 +629,20 @@ class _ChatHomeState extends State<ChatHome> {
         title: Text(
           "All Chats",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (context.mounted) {
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => AddPostScreen()));
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => AddPostScreen()),
+            );
           }
         },
         backgroundColor: onboardingColor,
@@ -694,53 +768,69 @@ class _ChatHomeState extends State<ChatHome> {
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: NestedScrollView(
-            headerSliverBuilder:
-                (context, innerBoxIsScrolled) => [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: FormBuilderTextField(
-                        name: "search",
-                        // 2. UPDATE the text field to update the state
-                        onChanged: (value) {
-                          setState(() {
-                            // print(value);
-                            _searchQuery = value ?? "";
-                          });
-                        },
-                        style: GoogleFonts.poppins(
-                          textStyle: const TextStyle(
-                            fontSize: 13.69,
-                            fontWeight: FontWeight.w400,
-                            height: 1.43,
-                          ),
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: FormBuilderTextField(
+                    name: "search",
+                    // 2. UPDATE the text field to update the state
+                    onChanged: (value) {
+                      setState(() {
+                        // print(value);
+                        _searchQuery = value ?? "";
+                      });
+                    },
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        fontSize: 13.69,
+                        fontWeight: FontWeight.w400,
+                        height: 1.43,
+                      ),
+                    ),
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      hintStyle: GoogleFonts.poppins(
+                        textStyle: TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
                         ),
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          hintStyle: GoogleFonts.poppins(
-                            textStyle: TextStyle(fontSize: 13.69, fontWeight: FontWeight.w400, height: 1.43),
-                            color: Colors.grey,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
-                          // suffixIcon: IconButton(
-                          //   icon: const Icon(Icons.mic_none_outlined, color: onboardingColor),
-                          //   onPressed: null,
-                          // ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: BorderSide(color: Color(0xFFC1EBCA)),
-                          ),
-                        ),
+                        color: Colors.grey,
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
+
+                      // suffixIcon: IconButton(
+                      //   icon: Icon(
+                      //     _speechToText.isNotListening ? Icons.mic_off : Icons.mic,
+                      //     color: _speechEnabled
+                      //         ? (_speechToText.isNotListening ? onboardingColor : Colors.red)
+                      //         : Colors.grey,
+                      //   ),
+                      //   onPressed: _speechToText.isNotListening
+                      //       ? _startListening
+                      //       : _stopListening,
+                      // ),
+                      suffixIcon: IconButton(
+                        icon: Icon(Icons.mic, color: Color(0xFF999999)),
+                        onPressed: () {},
+                      ),
+
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Color(0xFFC1EBCA)),
                       ),
                     ),
                   ),
-                ],
+                ),
+              ),
+            ],
             body: _buildUserList2(),
             // child: FormBuilder(
             //   key: _formKey,
@@ -858,15 +948,15 @@ class MessageListItem extends StatelessWidget {
             // ),
             avatarUrl == "default_pfp.jpg"
                 ? CircleAvatar(
-                  radius: 24,
-                  backgroundColor: onboardingColor,
-                  child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
-                )
+                    radius: 24,
+                    backgroundColor: onboardingColor,
+                    child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                  )
                 : CircleAvatar(
-                  radius: 28,
-                  backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage for URLs
-                  // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-                ),
+                    radius: 28,
+                    backgroundImage: NetworkImage(avatarUrl), // Use NetworkImage for URLs
+                    // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                  ),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -910,7 +1000,11 @@ class MessageListItem extends StatelessWidget {
                     ),
                     child: Text(
                       unreadCount.toString(),
-                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   )
                 else if (date != null) // Show date only if no unread count and date is available

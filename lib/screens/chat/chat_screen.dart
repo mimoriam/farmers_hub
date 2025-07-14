@@ -15,7 +15,12 @@ class ChatScreen extends StatefulWidget {
   final String receiverEmail;
   final user;
 
-  const ChatScreen({super.key, required this.receiverId, required this.receiverEmail, required this.user});
+  const ChatScreen({
+    super.key,
+    required this.receiverId,
+    required this.receiverEmail,
+    required this.user,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -54,7 +59,12 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void sendMessageToDB(String message) async {
-    await _chatService.sendMessage(widget.receiverId, widget.receiverEmail, widget.user.email, message);
+    await _chatService.sendMessage(
+      widget.receiverId,
+      widget.receiverEmail,
+      widget.user.email,
+      message,
+    );
   }
 
   @override
@@ -98,7 +108,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       children: [
                         Text(
                           "initialName",
-                          style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         Text("Time", style: TextStyle(color: Colors.white, fontSize: 14)),
                       ],
@@ -290,7 +304,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 );
               }
 
-              if (userDataSnapshot.hasError || !userDataSnapshot.hasData || userDataSnapshot.data == null) {
+              if (userDataSnapshot.hasError ||
+                  !userDataSnapshot.hasData ||
+                  userDataSnapshot.data == null) {
                 return Scaffold(
                   backgroundColor: Colors.white,
                   body: const Center(child: Text("Failed to load user data.")),
@@ -338,17 +354,17 @@ class _ChatScreenState extends State<ChatScreen> {
                       receiverProfileImageUrl == "default_pfp.jpg"
                           // widget.user.photoURL.contains("lh3.googleusercontent.com")
                           ? CircleAvatar(
-                            radius: 20,
-                            backgroundColor: onboardingColor,
-                            child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
-                          )
+                              radius: 20,
+                              backgroundColor: onboardingColor,
+                              child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                            )
                           : CircleAvatar(
-                            radius: 22,
-                            backgroundImage: NetworkImage(
-                              receiverProfileImageUrl,
-                            ), // Use NetworkImage for URLs
-                            // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-                          ),
+                              radius: 22,
+                              backgroundImage: NetworkImage(
+                                receiverProfileImageUrl,
+                              ), // Use NetworkImage for URLs
+                              // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                            ),
                       const SizedBox(width: 12.0),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,9 +372,16 @@ class _ChatScreenState extends State<ChatScreen> {
                           Text(
                             // initialName,
                             receiverName,
-                            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                          Text(formattedDateTime, style: TextStyle(color: Colors.white, fontSize: 14)),
+                          Text(
+                            formattedDateTime,
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
                         ],
                       ),
                     ],
@@ -381,16 +404,15 @@ class _ChatScreenState extends State<ChatScreen> {
                         Expanded(
                           child: ListView(
                             controller: _controller,
-                            children:
-                                snapshot.data!.docs
-                                    .map(
-                                      (doc) => _buildMessageItemList(
-                                        doc,
-                                        senderProfileImageUrl,
-                                        receiverProfileImageUrl,
-                                      ),
-                                    )
-                                    .toList(),
+                            children: snapshot.data!.docs
+                                .map(
+                                  (doc) => _buildMessageItemList(
+                                    doc,
+                                    senderProfileImageUrl,
+                                    receiverProfileImageUrl,
+                                  ),
+                                )
+                                .toList(),
                           ),
                         ),
                         _buildUserInput(),
@@ -462,19 +484,20 @@ class _ChatScreenState extends State<ChatScreen> {
               // if (!isCurrentUser)
               Padding(
                 padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-                child:
-                    profileImageUrl == "default_pfp.jpg"
+                child: profileImageUrl == "default_pfp.jpg"
                     // profileImageUrl!.contains("lh3.googleusercontent.com")
-                        ? CircleAvatar(
-                          radius: 22,
-                          backgroundColor: onboardingColor,
-                          child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
-                        )
-                        : CircleAvatar(
-                          radius: 24,
-                          backgroundImage: NetworkImage(profileImageUrl!), // Use NetworkImage for URLs
-                          // Or AssetImage for local assets: AssetImage('assets/your_image.png')
-                        ),
+                    ? CircleAvatar(
+                        radius: 22,
+                        backgroundColor: onboardingColor,
+                        child: Text('A', style: TextStyle(fontSize: 26, color: Colors.white)),
+                      )
+                    : CircleAvatar(
+                        radius: 24,
+                        backgroundImage: NetworkImage(
+                          profileImageUrl!,
+                        ), // Use NetworkImage for URLs
+                        // Or AssetImage for local assets: AssetImage('assets/your_image.png')
+                      ),
                 // child: CircleAvatar(
                 //   radius: 19,
                 //   backgroundImage: NetworkImage(
@@ -484,12 +507,14 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
               Flexible(
                 child: Container(
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   padding: const EdgeInsets.all(14),
-                  margin:
-                      isCurrentUser
-                          ? const EdgeInsets.symmetric(vertical: 4, horizontal: 10)
-                          : const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
+                  margin: isCurrentUser
+                      ? const EdgeInsets.symmetric(vertical: 4, horizontal: 10)
+                      : const EdgeInsets.symmetric(vertical: 4, horizontal: 0),
                   child: Text(data["message"]),
                 ),
               ),
@@ -524,9 +549,18 @@ class _ChatScreenState extends State<ChatScreen> {
           Expanded(
             child: FormBuilderTextField(
               name: "message",
-              style: GoogleFonts.poppins(textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              style: GoogleFonts.poppins(
+                textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              ),
               decoration: InputDecoration(
-                hintText: "🙂 Type your message...",
+                prefixIcon: IconButton(
+                  icon: Icon(
+                    Icons.emoji_emotions_outlined,
+                    color: Colors.grey, // Set your desired icon color
+                  ),
+                  onPressed: () {},
+                ),
+                hintText: "Type your message...",
                 filled: true,
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(
@@ -546,9 +580,7 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.white,
               shape: BoxShape.rectangle,
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: textFieldBorderSideColor
-              ),
+              border: Border.all(color: textFieldBorderSideColor),
             ),
             margin: EdgeInsets.only(right: 10),
             child: IconButton(
@@ -559,7 +591,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   // FocusScope.of(context).unfocus();
                 }
               },
-              icon: Icon(Icons.arrow_outward, color: Colors.grey),
+              icon: Icon(Icons.send, color: Colors.grey),
             ),
           ),
         ],

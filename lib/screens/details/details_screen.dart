@@ -187,13 +187,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     hintText: 'Enter your report here...',
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.blue, width: 2.0),
+                      borderSide: BorderSide(color: onboardingColor, width: 1.0),
                     ),
                   ),
                 ),
                 const SizedBox(height: 14.0),
-                Align(
-                  alignment: Alignment.bottomCenter,
+                SizedBox(
+                  width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () {
                       // Add report logic here
@@ -211,26 +211,26 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
           ),
           // The close button
-          // Positioned(
-          //   right: 0.0,
-          //   top: 0.0,
-          //   child: GestureDetector(
-          //     onTap: () {
-          //       Navigator.of(context).pop();
-          //     },
-          //     child: Container(
-          //       padding: const EdgeInsets.all(4),
-          //       decoration: BoxDecoration(
-          //         color: Colors.grey.shade200,
-          //         borderRadius: const BorderRadius.only(
-          //           topRight: Radius.circular(16),
-          //           bottomLeft: Radius.circular(12),
-          //         ),
-          //       ),
-          //       child: const Icon(Icons.close, color: Colors.black54),
-          //     ),
-          //   ),
-          // ),
+          Positioned(
+            right: 0.0,
+            top: 0.0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    bottomLeft: Radius.circular(12),
+                  ),
+                ),
+                child: const Icon(Icons.close, color: Colors.black54),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -512,6 +512,38 @@ class _DetailsScreenState extends State<DetailsScreen> {
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildPrivacyPolicyTile() {
+    return Theme(
+      data: Theme.of(
+        context,
+      ).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent),
+      child: ExpansionTile(
+        shape: const Border(), // Removes the border when expanded
+        collapsedShape: const Border(), // Removes the border when collapsed
+        leading: Icon(Icons.privacy_tip_outlined, color: Colors.grey[700]),
+        title: const Text(
+          'Safety Guidelines',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Text(
+              // 'This is a placeholder for your lengthy privacy policy. Your privacy is critically important to us. This policy outlines the types of personal information that is received and collected and how it is used.\n\nWe collect data to operate effectively and provide you with the best experiences. You provide some of this data directly when you create an account or post an item. We also get some data by recording how you interact with our services, for example, using technologies like cookies and receiving error reports or usage data from software running on your device.\n\nWe use the data to provide and improve the services we offer, including personalizing your experience. We do not share your personal data with third parties without your consent, except as necessary to complete a transaction or provide a service you have requested or authorized. This text should be replaced with your actual, legally-vetted privacy policy.',
+              "1 - Contact the person you intend to meet via the app or another secure means before the actual meeting to ensure their credibility.\n- It is preferable that the specified meeting place be in well-known, populated public places.\n- Before the meeting, inform a trusted person of the meeting details, such as the place and time, and inform them that you will be in contact with them after the meeting.\n\n2 - It is always preferable to have someone accompanying you during the meeting. Especially if the meeting is with a stranger.\n\n3 - Avoid sharing sensitive personal information during the first meeting, such as home addresses or financial information.\n\n4 - The identities of agricultural landowners and buyers must be verified before any agreement. Methods such as official ID verification or land ownership documents may be used.\n\n5 - Users should remember that the primary purpose of the application is to facilitate buying and selling processes and not to get involved in unrelated transactions.",
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[800],
+                height: 1.5, // Improves readability
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -1142,6 +1174,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
         // Add Text widget here if there is additional info text
         Text(details),
         // Text('Some additional details about the cow and calf...'),
+        // const Divider(height: 8),
+        _buildPrivacyPolicyTile(),
       ],
     );
   }

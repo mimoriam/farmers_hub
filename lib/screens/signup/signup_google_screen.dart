@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
@@ -43,14 +44,14 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
             builder: (BuildContext context) {
               return AlertDialog(
                 backgroundColor: scaffoldBackgroundColor,
-                title: Text("Warning!"),
-                content: Text("Please finish your user registration!"),
+                title: Text(AppLocalizations.of(context)!.warning),
+                content: Text(AppLocalizations.of(context)!.finishRegisteration),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(); // Don't exit
                     },
-                    child: Text("Okay"),
+                    child: Text(AppLocalizations.of(context)!.ok),
                   ),
                 ],
               );
@@ -65,7 +66,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
           backgroundColor: onboardingColor,
           automaticallyImplyLeading: false,
           title: Text(
-            "Additional Information",
+            AppLocalizations.of(context)!.additionalInfo,
             style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
           ),
         ),
@@ -84,7 +85,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         SizedBox(height: 10),
 
                         Text(
-                          "Please enter your contact details to continue",
+                          AppLocalizations.of(context)!.enterDetails,
                           style: GoogleFonts.poppins(
                             color: onboardingTextColor,
                             fontSize: 14,
@@ -105,7 +106,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         SizedBox(height: 14),
 
                         Text(
-                          "Enter Your Name",
+                          AppLocalizations.of(context)!.enterName,
                           style: GoogleFonts.poppins(
                             color: signUpTextColor,
                             fontSize: 14,
@@ -124,7 +125,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           enabled: false,
                           autovalidateMode: validateMode,
                           decoration: InputDecoration(
-                            hintText: "Enter Name",
+                            hintText: AppLocalizations.of(context)!.enterUsername,
                             prefixIcon: Icon(Icons.person_outline, color: loginTextFieldIconColor),
                             filled: true,
                             fillColor: Colors.white,
@@ -150,7 +151,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         SizedBox(height: 18),
 
                         Text(
-                          "Enter Your Email",
+                          AppLocalizations.of(context)!.enterUserMail,
                           style: GoogleFonts.poppins(
                             color: signUpTextColor,
                             fontSize: 14,
@@ -169,18 +170,10 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           enabled: false,
                           autovalidateMode: validateMode,
                           decoration: InputDecoration(
-                            hintText: "Enter your Email",
+                            hintText: AppLocalizations.of(context)!.enterEmail,
                             prefixIcon: Icon(Icons.email_outlined, color: loginTextFieldIconColor),
                             filled: true,
                             fillColor: Colors.white,
-                            // border: OutlineInputBorder(
-                            //   borderRadius: BorderRadius.circular(8),
-                            //   borderSide: BorderSide.none,
-                            // ),
-                            // focusedErrorBorder: OutlineInputBorder(
-                            //   borderRadius: BorderRadius.circular(8),
-                            //   borderSide: BorderSide.none,
-                            // ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(color: textFieldBorderSideColor),
@@ -203,7 +196,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         SizedBox(height: 14),
 
                         Text(
-                          "Enter Phone Number",
+                          AppLocalizations.of(context)!.enterPhoneNumber,
                           style: GoogleFonts.poppins(
                             color: signUpTextColor,
                             fontSize: 14,
@@ -215,7 +208,6 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
 
                         IntlPhoneField(
                           showCountryFlag: false,
-                          // dropdownTextStyle: TextStyle(fontWeight: FontWeight.w500),
                           dropdownTextStyle: GoogleFonts.poppins(
                             textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                           ),
@@ -224,7 +216,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                           ),
                           pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
                           decoration: InputDecoration(
-                            hintText: 'Enter Phone Number',
+                            hintText: AppLocalizations.of(context)!.enterPhoneNumber,
                             filled: true,
                             fillColor: Colors.white,
                             counterText: "",
@@ -273,155 +265,39 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                         ),
 
                         SizedBox(height: 10),
-
-                        // Text(
-                        //   "Enter Your Address",
-                        //   style: GoogleFonts.poppins(
-                        //     color: signUpTextColor,
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                        //
-                        // SizedBox(height: 12),
-                        //
-                        // // TODO: Address validation:
-                        // FormBuilderTextField(
-                        //   name: 'address',
-                        //   maxLength: 60,
-                        //   autovalidateMode: validateMode,
-                        //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                        //   style: GoogleFonts.poppins(
-                        //     textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //   ),
-                        //   decoration: InputDecoration(
-                        //     counterText: "",
-                        //     hintText: "Enter Address",
-                        //     prefixIcon: Icon(Icons.location_on_outlined, color: loginTextFieldIconColor),
-                        //     filled: true,
-                        //     fillColor: Colors.white,
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     enabledBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     focusedErrorBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //   ),
-                        // ),
-                        //
-                        // SizedBox(height: 26),
-
-                        // Text(
-                        //   "Select Mode",
-                        //   style: GoogleFonts.poppins(
-                        //     color: signUpTextColor,
-                        //     fontSize: 14,
-                        //     fontWeight: FontWeight.w500,
-                        //   ),
-                        // ),
-                        // SizedBox(height: 12),
-                        //
-                        // FormBuilderDropdown(
-                        //   name: 'signUpMode',
-                        //   // initialValue: 'Seller',
-                        //   hint: Text(
-                        //     "Category",
-                        //     style: GoogleFonts.poppins(
-                        //       textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //     ),
-                        //   ),
-                        //   autovalidateMode: validateMode,
-                        //   validator: FormBuilderValidators.compose([FormBuilderValidators.required()]),
-                        //   decoration: InputDecoration(
-                        //     filled: true,
-                        //     fillColor: Colors.white,
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     enabledBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: loginTextFieldIconColor),
-                        //     ),
-                        //     focusedErrorBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(8),
-                        //       borderSide: BorderSide(color: textFieldBorderSideColor),
-                        //     ),
-                        //   ),
-                        //   dropdownColor: scaffoldBackgroundColor,
-                        //   borderRadius: BorderRadius.circular(8),
-                        //   elevation: 4,
-                        //   menuMaxHeight: 300,
-                        //   items: [
-                        //     DropdownMenuItem(
-                        //       value: 'Seller',
-                        //       child: Text(
-                        //         'Signup as Seller',
-                        //         style: GoogleFonts.poppins(
-                        //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //     DropdownMenuItem(
-                        //       value: 'Buyer',
-                        //       child: Text(
-                        //         'Signup as Buyer',
-                        //         style: GoogleFonts.poppins(
-                        //           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         const SizedBox(height: 14),
 
                         TapDebouncer(
                           cooldown: const Duration(milliseconds: 2000),
                           onTap:
-                              isPhoneValidated
-                                  ? () async {
-                                    if (_formKey.currentState!.validate()) {
-                                      setState(() {
-                                        error = '';
-                                      });
-                                      try {
-                                        await firebaseService.saveUserDataOnRegister(
-                                          user: widget.user,
-                                          username: _formKey.currentState?.fields['username']?.value,
-                                          phone: phoneInfo,
-                                          // address: _formKey.currentState?.fields['address']?.value,
-                                          // signUpMode: _formKey.currentState?.fields['signUpMode']?.value,
-                                        );
+                          isPhoneValidated
+                              ? () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                error = '';
+                              });
+                              try {
+                                await firebaseService.saveUserDataOnRegister(
+                                  user: widget.user,
+                                  username: _formKey.currentState?.fields['username']?.value,
+                                  phone: phoneInfo,
+                                );
 
-                                        if (context.mounted) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(builder: (context) => const HomeScreen()),
-                                          );
-                                        }
-                                      } catch (e) {
-                                        setState(() {
-                                          debugPrint(e.toString());
-                                          error = e.toString();
-                                        });
-                                      }
-                                    }
-                                  }
-                                  : null,
+                                if (context.mounted) {
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                                  );
+                                }
+                              } catch (e) {
+                                setState(() {
+                                  debugPrint(e.toString());
+                                  error = e.toString();
+                                });
+                              }
+                            }
+                          }
+                              : null,
 
                           builder: (BuildContext context, TapDebouncerFunc? onTap) {
                             return SizedBox(
@@ -434,7 +310,7 @@ class _SignupGoogleScreenState extends State<SignupGoogleScreen> {
                                 ),
                                 onPressed: onTap,
                                 child: Text(
-                                  "Signup",
+                                  AppLocalizations.of(context)!.signup,
                                   style: GoogleFonts.poppins(
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold,
