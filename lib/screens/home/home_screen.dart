@@ -473,12 +473,22 @@ class _HomeScreenState extends State<HomeScreen> {
     _fetchBackgroundImages();
 
     _fetchTipOfTheDay();
+
+    () async {
+      _updateFCMTokenOnLogin();
+    }();
   }
 
   @override
   void dispose() {
     _listener.dispose();
     super.dispose();
+  }
+
+  Future<void> _updateFCMTokenOnLogin() async {
+    final fcmToken = await firebaseService.fcmToken;
+
+    await firebaseService.updateUserFCMToken(fcmToken!);
   }
 
   Future<void> _fetchBackgroundImages() async {

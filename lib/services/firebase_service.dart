@@ -24,6 +24,7 @@ enum currencyType { syria, usd, euro, lira }
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  print("Got a message in background!");
   print('Title: ${message.notification!.title}');
   print('Body: ${message.notification!.body}');
 
@@ -42,6 +43,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           "userId": firebaseService._auth.currentUser!.uid,
           "read": false,
         });
+
+    print({notifId});
 
     await firebaseService._firestore
         .collection(firebaseService.userCollection)
@@ -77,7 +80,7 @@ class FirebaseService {
   Future<void> initNotifications() async {
     await _firebaseMessaging.requestPermission();
     final fcmToken = await _firebaseMessaging.getToken();
-    print("FCM Token: $fcmToken");
+    // print("FCM Token: $fcmToken");
 
     initPushNotifications();
 
@@ -100,6 +103,8 @@ class FirebaseService {
               "read": false,
             });
 
+        print({notifId});
+
         await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
           "notificationIds": FieldValue.arrayUnion([notifId.id]),
         });
@@ -108,6 +113,12 @@ class FirebaseService {
       print('Got a message whilst in the foreground!');
       print('Message title: ${message.notification!.title}');
       print('Message Body: ${message.notification!.body}');
+    });
+  }
+
+  Future<void> updateUserFCMToken(String fcmToken) async {
+    await _firestore.collection(userCollection).doc(_auth.currentUser!.uid).update({
+      "FCMToken": fcmToken,
     });
   }
 
