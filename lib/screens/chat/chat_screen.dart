@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -545,9 +546,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final locale = Localizations.localeOf(context);
 
     return Padding(
-      padding: locale.languageCode == "ar"
-          ? EdgeInsets.only(bottom: 20, right: 10, left: 10)
-          : EdgeInsets.only(bottom: 20, left: 10),
+      padding: EdgeInsetsDirectional.only(bottom: 20, start: 10, end: 5),
+      // padding: locale.languageCode == "ar"
+      //     ? EdgeInsets.only(bottom: 20, right: 10, left: 10)
+      //     : EdgeInsets.only(bottom: 20, left: 10),
       child: Row(
         children: [
           Expanded(
@@ -564,7 +566,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   onPressed: () {},
                 ),
-                hintText: "Type your message...",
+                // hintText: "Type your message...",
+                hintText: AppLocalizations.of(context)!.typeMessage,
                 filled: true,
                 fillColor: Colors.white,
                 enabledBorder: OutlineInputBorder(

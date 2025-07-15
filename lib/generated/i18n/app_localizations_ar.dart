@@ -174,7 +174,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get location => 'الموقع ';
 
   @override
-  String get locationNew => 'Location';
+  String get locationNew => 'موقع';
 
   @override
   String get loading => 'جارٍ التحميل...';
@@ -301,7 +301,16 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lira => 'ليرة تركية (₺)';
 
   @override
-  String get syp => 'ل.س (الليرة السورية)';
+  String get syp => 'ل.س';
+
+  @override
+  String get usd2 => '\$';
+
+  @override
+  String get euro2 => '€';
+
+  @override
+  String get lira2 => '₺';
 
   @override
   String get createPost => 'إنشاء منشور';
@@ -868,4 +877,25 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get lookingForMore => 'ابحث عن المزيد كما تريد!';
+
+  @override
+  String get requiredField => 'لا يمكن أن يكون هذا الحقل فارغًا.';
+
+  @override
+  String get validEmail => 'يتطلب هذا الحقل عنوان بريد إلكتروني صالحًا.';
+
+  @override
+  String get invalidNumber => 'رقم الهاتف المحمول غير صالح';
+
+  @override
+  String get titleS => 'عنوان';
+
+  @override
+  String get categoryS => 'فئة';
+
+  @override
+  String get cityS => 'المدينة';
+
+  @override
+  String get villageS => 'القرية';
 }

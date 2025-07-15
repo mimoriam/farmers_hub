@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/services/speech_service.dart';
 import 'package:farmers_hub/utils/time_format.dart';
@@ -615,7 +616,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Filtered Search Result",
+          // "Filtered Search Result",
+          AppLocalizations.of(context)!.filteredSearchResults,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -678,7 +680,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       initialValue: widget.searchQuery.isEmpty ? "" : widget.searchQuery,
                       // initialValue: qs.isEmpty ? "" : widget.searchQuery,
                       decoration: InputDecoration(
-                        hintText: 'Search',
+                        // hintText: 'Search',
+                        hintText: AppLocalizations.of(context)!.search,
                         hintStyle: GoogleFonts.poppins(
                           textStyle: TextStyle(
                             fontSize: 13.69,
@@ -746,9 +749,10 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   //   ),
                   // ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 10, bottom: 4),
+                    // padding: const EdgeInsets.only(left: 0, right: 10, bottom: 4),
+                    padding: const EdgeInsetsDirectional.only(start: 10),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // SizedBox(width: 2),
                         FilterChip(
@@ -769,7 +773,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Title",
+                            // "Title",
+                            AppLocalizations.of(context)!.titleS,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -799,7 +804,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Category",
+                            // "Category",
+                            AppLocalizations.of(context)!.categoryS,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -828,7 +834,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "City",
+                            // "City",
+                            AppLocalizations.of(context)!.cityS,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -857,7 +864,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                           selectedColor: onboardingColor,
                           backgroundColor: Colors.grey[300],
                           label: Text(
-                            "Village",
+                            // "Village",
+                            AppLocalizations.of(context)!.villageS,
                             style: GoogleFonts.poppins(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -872,13 +880,15 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                   Row(
                     // mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(width: 6),
+                      // SizedBox(width: 6),
                       Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 10),
                         // padding: const EdgeInsets.only(left: 6, right: 14),
-                        padding: locale.languageCode == "ar"
-                            ? const EdgeInsets.only(left: 6, right: 12)
-                            : const EdgeInsets.only(left: 6, right: 14),
+                        // padding: locale.languageCode == "ar"
+                        //     ? const EdgeInsets.only(left: 6, right: 12)
+                        //     : const EdgeInsets.only(left: 6, right: 14),
                         child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             FilterChip(
                               checkmarkColor: Colors.white,
@@ -898,7 +908,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               selectedColor: onboardingColor,
                               backgroundColor: Colors.grey[300],
                               label: Text(
-                                "Descending",
+                                // "Descending",
+                                AppLocalizations.of(context)!.descending,
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
@@ -928,7 +939,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               selectedColor: onboardingColor,
                               backgroundColor: Colors.grey[300],
                               label: Text(
-                                "Ascending",
+                                // "Ascending",
+                                AppLocalizations.of(context)!.ascending,
                                 style: GoogleFonts.poppins(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w500,
@@ -948,7 +960,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Search Results',
+                          // 'Search Results',
+                          AppLocalizations.of(context)!.searchResults,
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -957,7 +970,8 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         ),
 
                         Text(
-                          'Results (${_searchResults.length})',
+                          // 'Results (${_searchResults.length})',
+                          '${AppLocalizations.of(context)!.results} (${_searchResults.length})',
                           style: GoogleFonts.poppins(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
@@ -1167,7 +1181,7 @@ class _ProductCard2State extends State<ProductCard2> {
                 Expanded(
                   flex: 1, //* Changed flex to 2 for the stats
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsetsDirectional.only(start: 1),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceAround,

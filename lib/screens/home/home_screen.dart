@@ -39,6 +39,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:skeletonizer/skeletonizer.dart';
+import 'package:translator/translator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class UpwardNotchedAndRoundedRectangle extends NotchedShape {
@@ -292,10 +293,15 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _isLoadingTip = true;
     });
+
     final String tip = await firebaseService.getTipOfTheDay();
+
     if (mounted) {
       setState(() {
         _tipOfTheDay = tip;
+        _tipOfTheDay.translate(to: "ar").then((t) {
+          _tipOfTheDay = t.toString();
+        });
         _isLoadingTip = false;
       });
     }
@@ -405,7 +411,9 @@ class _HomeScreenState extends State<HomeScreen> {
   List<String> _backgroundImages = [];
   bool _isLoadingCarousel = true;
 
-  Widget _buildCategoryItem(String name, String imageUrl) {
+  Widget _buildCategoryItem(String name, String imageUrl, String t) {
+    final locale = Localizations.localeOf(context);
+
     return GestureDetector(
       onTap: () {
         if (context.mounted) {
@@ -448,7 +456,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  name,
+                  locale.languageCode == "ar" ? t : name,
+                  // name,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     color: categoriesTextColor,
@@ -471,6 +480,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final systemUiOverlayStyle = SystemUiOverlayStyle(statusBarColor: onboardingColor);
 
     final locale = Localizations.localeOf(context);
+
+    final translator = GoogleTranslator();
 
     final DateTime now = DateTime.now();
     final String formattedDate = DateFormat('MMMM d, y').format(now);
@@ -506,13 +517,17 @@ class _HomeScreenState extends State<HomeScreen> {
     // ];
 
     final List<Map<String, String>> categories = [
-      {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
-      {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
-      {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
-      {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
+      {'name': 'Fruits', 'image': 'images/categories/fruits.png', "t": "فواكه"},
+      {'name': 'Vegetables', 'image': 'images/categories/vegetables.png', "t": "خضروات"},
+      {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png', "t": "زيت الزيتون"},
+      {
+        'name': 'Grain & Seeds',
+        'image': 'images/categories/grains_and_seeds.jpg',
+        "t": "حبوب وبذور",
+      },
       // {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
-      {'name': "Tools", 'image': "images/categories/tools_and_equipments.jpg"},
-      {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
+      {'name': "Tools", 'image': "images/categories/tools_and_equipments.jpg", "t": "أدوات"},
+      {'name': 'Live Stock', 'image': 'images/categories/live_stock.png', "t": "المواشي"},
     ];
 
     final List<Map<String, dynamic>> popularPostsData = const [
@@ -1411,7 +1426,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           mainAxisSpacing: 10.0,
                           crossAxisSpacing: 1.0,
                           children: categories.map((category) {
-                            return _buildCategoryItem(category["name"]!, category["image"]!);
+                            return _buildCategoryItem(
+                              category["name"]!,
+                              category["image"]!,
+                              category["t"]!,
+                            );
                           }).toList(),
                         ),
                       ],
@@ -1554,7 +1573,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 14),
 
                   Padding(
-                    padding: const EdgeInsets.only(left: 10),
+                    padding: EdgeInsetsDirectional.only(start: 10),
+                    // padding: const EdgeInsets.only(left: 10),
                     child: Container(
                       width: 365,
                       padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
@@ -1672,6 +1692,8 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(currency);
+    print(AppLocalizations.of(context)!.usd);
     return Container(
       width: 216,
       margin: const EdgeInsets.only(right: 14.0),
@@ -1730,13 +1752,17 @@ class PostCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  currency == AppLocalizations.of(context)!.usd
-                      ? "\$$price"
-                      : currency == AppLocalizations.of(context)!.euro
-                      ? "€$price"
-                      : currency == AppLocalizations.of(context)!.lira
-                      ? "₺$price"
-                      : AppLocalizations.of(context)!.syp,
+                  currency == "usd"
+                      // ? "\$$price"
+                      ? "${AppLocalizations.of(context)!.usd2}$price"
+                      // : currency == "${AppLocalizations.of(context)!.euro}€$price"
+                      : currency == "euro"
+                      ? "${AppLocalizations.of(context)!.euro2}$price"
+                      // ? "€$price"
+                      : currency == "lira"
+                      ? "${AppLocalizations.of(context)!.lira2}$price"
+                      // ? "₺$price"
+                      : "${AppLocalizations.of(context)!.syp}$price",
                   style: GoogleFonts.poppins(
                     color: onboardingColor,
                     fontSize: 13,

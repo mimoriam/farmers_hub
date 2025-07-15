@@ -36,6 +36,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TextDirection currentDirection = Directionality.of(context);
+
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
       appBar: AppBar(
@@ -44,7 +46,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         title: Text(
           AppLocalizations.of(context)!.additionalInfo,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
       body: SafeArea(
@@ -98,8 +104,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         maxLength: 24,
                         autovalidateMode: validateMode,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.username(),
+                          FormBuilderValidators.required(
+                            errorText: AppLocalizations.of(context)!.requiredField,
+                          ),
+                          FormBuilderValidators.username(
+                            errorText: AppLocalizations.of(context)!.error,
+                          ),
                         ]),
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -147,8 +157,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         maxLength: 30,
                         autovalidateMode: validateMode,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.email(),
+                          FormBuilderValidators.required(
+                            errorText: AppLocalizations.of(context)!.requiredField,
+                          ),
+                          FormBuilderValidators.email(
+                            errorText: AppLocalizations.of(context)!.validEmail,
+                          ),
                         ]),
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -192,6 +206,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 8),
 
                       IntlPhoneField(
+                        invalidNumberMessage: AppLocalizations.of(context)!.invalidNumber,
+                        textAlign: currentDirection == TextDirection.rtl
+                            ? TextAlign.right
+                            : TextAlign.left,
                         showCountryFlag: false,
                         dropdownTextStyle: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
@@ -199,7 +217,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         style: GoogleFonts.poppins(
                           textStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                         ),
-                        pickerDialogStyle: PickerDialogStyle(backgroundColor: Colors.white),
+                        pickerDialogStyle: PickerDialogStyle(
+                          backgroundColor: Colors.white,
+                          searchFieldInputDecoration: InputDecoration(
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey.shade300),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: const BorderSide(color: onboardingColor),
+                            ),
+                          ),
+                        ),
                         decoration: InputDecoration(
                           hintText: AppLocalizations.of(context)!.enterPhoneNumber,
                           filled: true,
@@ -267,7 +295,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         obscureText: _obscureText,
                         autovalidateMode: validateMode,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                            errorText: AppLocalizations.of(context)!.requiredField,
+                          ),
                           FormBuilderValidators.minLength(
                             6,
                             errorText: AppLocalizations.of(context)!.passwordCondition,
@@ -327,13 +357,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         obscureText: _obscureText,
                         autovalidateMode: validateMode,
                         validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
+                          FormBuilderValidators.required(
+                            errorText: AppLocalizations.of(context)!.requiredField,
+                          ),
                           FormBuilderValidators.minLength(
                             6,
                             errorText: AppLocalizations.of(context)!.passwordCondition,
                           ),
 
-                              (val) {
+                          (val) {
                             if (_formKey.currentState?.fields['password']?.value != val) {
                               return AppLocalizations.of(context)!.wrongPassword;
                             }
@@ -385,38 +417,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           ),
                           onPressed:
-                          // isPhoneValidated ?
+                              // isPhoneValidated ?
                               () async {
-                            if (_formKey.currentState!.validate() && isPhoneValidated) {
-                              setState(() {
-                                error = '';
-                              });
-                              try {
-                                final user = await firebaseService.registerWithEmail(
-                                  email: _formKey.currentState?.fields['email']?.value,
-                                  password: _formKey.currentState?.fields['password']?.value,
-                                );
+                                if (_formKey.currentState!.validate() && isPhoneValidated) {
+                                  setState(() {
+                                    error = '';
+                                  });
+                                  try {
+                                    final user = await firebaseService.registerWithEmail(
+                                      email: _formKey.currentState?.fields['email']?.value,
+                                      password: _formKey.currentState?.fields['password']?.value,
+                                    );
 
-                                await firebaseService.saveUserDataOnRegister(
-                                  user: user.user!,
-                                  username: _formKey.currentState?.fields['username']?.value,
-                                  phone: phoneInfo,
-                                );
+                                    await firebaseService.saveUserDataOnRegister(
+                                      user: user.user!,
+                                      username: _formKey.currentState?.fields['username']?.value,
+                                      phone: phoneInfo,
+                                    );
 
-                                if (context.mounted) {
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                  );
+                                    if (context.mounted) {
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => const LoginScreen(),
+                                        ),
+                                      );
+                                    }
+                                  } catch (e) {
+                                    setState(() {
+                                      debugPrint(e.toString());
+                                      error = e.toString();
+                                    });
+                                  }
                                 }
-                              } catch (e) {
-                                setState(() {
-                                  debugPrint(e.toString());
-                                  error = e.toString();
-                                });
-                              }
-                            }
-                          },
+                              },
                           child: Text(
                             AppLocalizations.of(context)!.signup,
                             style: GoogleFonts.poppins(

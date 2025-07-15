@@ -97,7 +97,10 @@
   "usd": "usd",
   "euro": "euro",
   "lira": "lira",
-  "syp": "(SYP)",
+  "syp": "ل.س",
+  "usd2": "$",
+  "euro2": "€",
+  "lira2": "₺",
   "createPost": "Create Post",
   "addProducts": "Add pictures for your Product",
   "addImages": "Add Images",
@@ -284,5 +287,12 @@
   "privacyPolicy": "Privacy Policy",
   "userProfile": "User Profile",
   "profileSettings": "Profile Settings",
-  "lookingForMore": "Looking for more as you want!"
+  "lookingForMore": "Looking for more as you want!",
+  "requiredField": "This field cannot be empty.",
+  "validEmail": "This field requires a valid email address.",
+  "invalidNumber": "Invalid Mobile Number",
+  "titleS": "Title",
+  "categoryS": "Category",
+  "cityS": "City",
+  "villageS": "Village"
 }

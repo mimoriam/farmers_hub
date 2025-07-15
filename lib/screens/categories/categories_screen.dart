@@ -1,3 +1,4 @@
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/filtered_results/filtered_results_screen.dart';
 import 'package:farmers_hub/screens/land/land_screen.dart';
 import 'package:flutter/material.dart';
@@ -24,30 +25,34 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   List<Map<String, String>> _filteredCategories = [];
 
   final List<Map<String, String>> categories = [
-    {'name': 'Fruits', 'image': 'images/categories/fruits.png'},
-    {'name': 'Vegetables', 'image': 'images/categories/vegetables.png'},
-    {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png'},
-    {'name': 'Live Stock', 'image': 'images/categories/live_stock.png'},
-    {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg'},
-    {'name': 'Fertilizers', 'image': 'images/categories/fertilizers.jpg'},
-    {'name': 'Tools', 'image': 'images/categories/tools_and_equipments.jpg'},
-    {'name': 'Land Services', 'image': 'images/categories/land_services.jpg'},
-    {'name': 'Equipments', 'image': 'images/categories/equipments.jpg'},
-    {'name': 'Delivery', 'image': 'images/categories/delivery.jpg'},
-    {'name': 'Worker Services', 'image': 'images/categories/worker_services.jpg'},
-    {'name': 'Pesticides', 'image': 'images/categories/pesticides.jpg'},
-    {'name': 'Animal Feed', 'image': 'images/categories/animal_feed.jpg'},
-    {'name': 'Jams & Molasses', 'image': 'images/categories/jam.png'},
-    {'name': 'Irrigation System', 'image': 'images/categories/irrigation.png'},
-    {'name': 'Others', 'image': 'images/categories/others.png'},
+    {'name': 'Fruits', 'image': 'images/categories/fruits.png', "t": "فواكه"},
+    {'name': 'Vegetables', 'image': 'images/categories/vegetables.png', "t": "خضروات"},
+    {'name': 'Olive Oil', 'image': 'images/categories/olive_oil.png', "t": "زيت الزيتون"},
+    {'name': 'Live Stock', 'image': 'images/categories/live_stock.png', "t": "المواشي"},
+    {'name': 'Grain & Seeds', 'image': 'images/categories/grains_and_seeds.jpg', "t": "حبوب وبذور"},
+    {'name': 'Fertilizers', 'image': 'images/categories/fertilizers.jpg', "t": "أسمدة"},
+    {'name': 'Tools', 'image': 'images/categories/tools_and_equipments.jpg', "t": "أدوات"},
+    {'name': 'Land Services', 'image': 'images/categories/land_services.jpg', "t": "خدمات الأراضي"},
+    {'name': 'Equipments', 'image': 'images/categories/equipments.jpg', "t": "معدات"},
+    {'name': 'Delivery', 'image': 'images/categories/delivery.jpg', "t": "توصيل"},
+    {
+      'name': 'Worker Services',
+      'image': 'images/categories/worker_services.jpg',
+      "t": "خدمات العمال",
+    },
+    {'name': 'Pesticides', 'image': 'images/categories/pesticides.jpg', "t": "مبيدات حشرية"},
+    {'name': 'Animal Feed', 'image': 'images/categories/animal_feed.jpg', "t": "علف الحيوانات"},
+    {'name': 'Jams & Molasses', 'image': 'images/categories/jam.png', "t": "المربى والدبس"},
+    {'name': 'Irrigation System', 'image': 'images/categories/irrigation.png', "t": "نظام الري"},
+    {'name': 'Others', 'image': 'images/categories/others.png', "t": "أخرى"},
   ];
 
   final List<Map<String, String>> popularCategories = [
-    {'name': 'Pomegranate', 'image': 'images/categories/iv_pomegranate.png'},
-    {'name': 'Apples', 'image': 'images/categories/apples.png'},
-    {'name': 'Honey', 'image': 'images/categories/honey.png'},
-    {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png'},
-    {'name': 'Leafy Green', 'image': 'images/categories/leafy_green.png'},
+    {'name': 'Pomegranate', 'image': 'images/categories/iv_pomegranate.png', "t": "رمان"},
+    {'name': 'Apples', 'image': 'images/categories/apples.png', "t": "التفاح"},
+    {'name': 'Honey', 'image': 'images/categories/honey.png', "t": "عسل"},
+    {'name': 'Cheese', 'image': 'images/categories/iv_cheese.png', "t": "جبن"},
+    {'name': 'Leafy Green', 'image': 'images/categories/leafy_green.png', "t": "الورقية الخضراء"},
     // {'name': 'Tomatoes', 'image': 'images/categories/tomatoes.jpg'},
     // {'name': 'Rice', 'image': 'images/categories/rice.jpg'},
   ];
@@ -73,7 +78,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     _filteredCategories = List.from(categories);
   }
 
-  Widget _buildCategoryItem(BuildContext context, String name, String imageUrl) {
+  Widget _buildCategoryItem(BuildContext context, String name, String imageUrl, String t) {
+    final locale = Localizations.localeOf(context);
+
     return GestureDetector(
       onTap: () {
         if (name == "Land Services") {
@@ -156,7 +163,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   ),
                 ),
                 Text(
-                  name,
+                  // name,
+                  locale.languageCode == "ar" ? t : name,
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     color: categoriesTextColor,
@@ -176,6 +184,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
@@ -183,7 +193,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Search Categories",
+          // "Search Categories",
+          AppLocalizations.of(context)!.searchCategories,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -223,7 +234,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         _filterCategories(query ?? '');
                       },
                       decoration: InputDecoration(
-                        hintText: 'Search',
+                        hintText: AppLocalizations.of(context)!.search,
                         hintStyle: GoogleFonts.poppins(
                           textStyle: TextStyle(
                             fontSize: 13.69,
@@ -260,7 +271,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
-                            'Categories',
+                            AppLocalizations.of(context)!.categories,
                             style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -302,6 +313,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                     context,
                                     category["name"]!,
                                     category["image"]!,
+                                    category["t"]!,
                                   );
                                 },
                               ),
@@ -309,7 +321,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 20, bottom: 20),
                           child: Text(
-                            'Popular Categories',
+                            // 'Popular Categories',
+                            AppLocalizations.of(context)!.popularCategories,
                             style: GoogleFonts.poppins(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
@@ -398,7 +411,10 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                                             ),
                                           ),
                                           Text(
-                                            category["name"]!,
+                                            // category["name"]!,
+                                            locale.languageCode == "ar"
+                                                ? category["t"]!
+                                                : category["name"]!,
                                             style: TextStyle(
                                               color: const Color(0xFF505050),
                                               fontSize: 13.69,

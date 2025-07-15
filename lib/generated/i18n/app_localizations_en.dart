@@ -302,7 +302,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lira => 'lira';
 
   @override
-  String get syp => '(SYP)';
+  String get syp => 'ل.س';
+
+  @override
+  String get usd2 => '\$';
+
+  @override
+  String get euro2 => '€';
+
+  @override
+  String get lira2 => '₺';
 
   @override
   String get createPost => 'Create Post';
@@ -872,4 +881,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lookingForMore => 'Looking for more as you want!';
+
+  @override
+  String get requiredField => 'This field cannot be empty.';
+
+  @override
+  String get validEmail => 'This field requires a valid email address.';
+
+  @override
+  String get invalidNumber => 'Invalid Mobile Number';
+
+  @override
+  String get titleS => 'Title';
+
+  @override
+  String get categoryS => 'Category';
+
+  @override
+  String get cityS => 'City';
+
+  @override
+  String get villageS => 'Village';
 }

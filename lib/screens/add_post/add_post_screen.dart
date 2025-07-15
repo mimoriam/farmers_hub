@@ -173,26 +173,29 @@ class _AddPostScreenState extends State<AddPostScreen> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(
-                        'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
-                        style: TextStyle(fontSize: 13),
-                      ),
+                    Text(
+                      'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
+                      style: TextStyle(fontSize: 13),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Checkbox(
-                          activeColor: onboardingColor,
-                          checkColor: Colors.white,
-                          value: isCommitted,
-                          onChanged: (bool? value) {
-                            setState(() {
-                              isCommitted = value!;
-                            });
-                          },
+                        SizedBox(
+                          width: 20,
+                          // height: 10,
+                          child: Checkbox(
+                            activeColor: onboardingColor,
+                            checkColor: Colors.white,
+                            value: isCommitted,
+                            onChanged: (bool? value) {
+                              setState(() {
+                                isCommitted = value!;
+                              });
+                            },
+                          ),
                         ),
+
+                        SizedBox(width: 6),
                         const Text('I commit to that'),
                       ],
                     ),

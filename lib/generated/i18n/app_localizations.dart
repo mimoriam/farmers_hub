@@ -683,8 +683,26 @@ abstract class AppLocalizations {
   /// No description provided for @syp.
   ///
   /// In en, this message translates to:
-  /// **'(SYP)'**
+  /// **'ل.س'**
   String get syp;
+
+  /// No description provided for @usd2.
+  ///
+  /// In en, this message translates to:
+  /// **'\$'**
+  String get usd2;
+
+  /// No description provided for @euro2.
+  ///
+  /// In en, this message translates to:
+  /// **'€'**
+  String get euro2;
+
+  /// No description provided for @lira2.
+  ///
+  /// In en, this message translates to:
+  /// **'₺'**
+  String get lira2;
 
   /// No description provided for @createPost.
   ///
@@ -1807,6 +1825,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Looking for more as you want!'**
   String get lookingForMore;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'This field cannot be empty.'**
+  String get requiredField;
+
+  /// No description provided for @validEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'This field requires a valid email address.'**
+  String get validEmail;
+
+  /// No description provided for @invalidNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid Mobile Number'**
+  String get invalidNumber;
+
+  /// No description provided for @titleS.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get titleS;
+
+  /// No description provided for @categoryS.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get categoryS;
+
+  /// No description provided for @cityS.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get cityS;
+
+  /// No description provided for @villageS.
+  ///
+  /// In en, this message translates to:
+  /// **'Village'**
+  String get villageS;
 }
 
 class _AppLocalizationsDelegate
