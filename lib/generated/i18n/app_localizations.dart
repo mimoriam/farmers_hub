@@ -1801,6 +1801,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile Settings'**
   String get profileSettings;
+
+  /// No description provided for @lookingForMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Looking for more as you want!'**
+  String get lookingForMore;
 }
 
 class _AppLocalizationsDelegate

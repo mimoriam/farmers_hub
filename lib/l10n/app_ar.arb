@@ -283,5 +283,6 @@
   "logout": "تسجيل الخروج من الحساب",
   "privacyPolicy": "سياسة الخصوصية",
   "userProfile": "ملف تعريف المستخدم",
-  "profileSettings": "إعدادات الملف الشخصي"
+  "profileSettings": "إعدادات الملف الشخصي",
+  "lookingForMore": "ابحث عن المزيد كما تريد!"
 }

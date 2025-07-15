@@ -865,4 +865,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profileSettings => 'إعدادات الملف الشخصي';
+
+  @override
+  String get lookingForMore => 'ابحث عن المزيد كما تريد!';
 }

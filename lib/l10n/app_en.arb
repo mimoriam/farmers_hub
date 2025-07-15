@@ -283,5 +283,6 @@
   "logout": "Logout of account",
   "privacyPolicy": "Privacy Policy",
   "userProfile": "User Profile",
-  "profileSettings": "Profile Settings"
+  "profileSettings": "Profile Settings",
+  "lookingForMore": "Looking for more as you want!"
 }

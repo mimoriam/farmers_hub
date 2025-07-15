@@ -1576,7 +1576,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Looking for more as you want!',
+                                  AppLocalizations.of(context)!.lookingForMore,
                                   style: GoogleFonts.poppins(
                                     color: lookingForMoreText,
                                     fontSize: 13,

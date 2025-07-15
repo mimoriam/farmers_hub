@@ -869,4 +869,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileSettings => 'Profile Settings';
+
+  @override
+  String get lookingForMore => 'Looking for more as you want!';
 }

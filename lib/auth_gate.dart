@@ -79,51 +79,51 @@ class AuthGate extends StatelessWidget {
             builder: (context, userExistsSnapshot) {
               if (userExistsSnapshot.connectionState == ConnectionState.waiting) {
                 // return const Scaffold(body: Center(child: CircularProgressIndicator(color: onboardingColor)));
-                // return const Scaffold(
-                //   body: Center(
-                //     child: Skeletonizer(
-                //       ignorePointers: true,
-                //       child: Column(
-                //         mainAxisAlignment: MainAxisAlignment.center,
-                //         children: [
-                //           // CircularProgressIndicator(),
-                //           SizedBox(height: 10), Text("Loading... "),
-                //          ],
-                //       ),
-                //     ),
-                //   ),
-                // );
-
-                return Scaffold(
+                return const Scaffold(
                   body: Center(
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        const SizedBox(width: 20.0, height: 100.0),
-                        // const Text('Your', style: TextStyle(fontSize: 43.0)),
-                        const SizedBox(width: 20.0, height: 100.0),
-                        DefaultTextStyle(
-                          style: const TextStyle(fontSize: 34.0, color: Colors.black),
-                          child: AnimatedTextKit(
-                            animatedTexts: [
-                              // RotateAnimatedText('CROP'),
-                              RotateAnimatedText(AppLocalizations.of(context)!.yourCropHub),
-                              RotateAnimatedText(AppLocalizations.of(context)!.yourHubCrop),
-                              // RotateAnimatedText('HUB')
-                            ],
-                            totalRepeatCount: 4,
-                            pause: const Duration(milliseconds: 4000),
-                            displayFullTextOnTap: true,
-                            stopPauseOnTap: true,
-                            onTap: () {
-                              print("Tap Event");
-                            },
-                          ),
-                        ),
-                      ],
+                    child: Skeletonizer(
+                      ignorePointers: true,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // CircularProgressIndicator(),
+                          SizedBox(height: 10), Text("Loading... "),
+                         ],
+                      ),
                     ),
                   ),
                 );
+
+                // return Scaffold(
+                //   body: Center(
+                //     child: Row(
+                //       mainAxisSize: MainAxisSize.min,
+                //       children: <Widget>[
+                //         const SizedBox(width: 20.0, height: 100.0),
+                //         // const Text('Your', style: TextStyle(fontSize: 43.0)),
+                //         const SizedBox(width: 20.0, height: 100.0),
+                //         DefaultTextStyle(
+                //           style: const TextStyle(fontSize: 34.0, color: Colors.black),
+                //           child: AnimatedTextKit(
+                //             animatedTexts: [
+                //               // RotateAnimatedText('CROP'),
+                //               RotateAnimatedText(AppLocalizations.of(context)!.yourCropHub),
+                //               RotateAnimatedText(AppLocalizations.of(context)!.yourHubCrop),
+                //               // RotateAnimatedText('HUB')
+                //             ],
+                //             totalRepeatCount: 4,
+                //             pause: const Duration(milliseconds: 4000),
+                //             displayFullTextOnTap: true,
+                //             stopPauseOnTap: true,
+                //             onTap: () {
+                //               print("Tap Event");
+                //             },
+                //           ),
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // );
               }
               if (userExistsSnapshot.hasData && userExistsSnapshot.data == true) {
                 // User data exists in Firestore, proceed to home screen.

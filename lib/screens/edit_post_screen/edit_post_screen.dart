@@ -1309,7 +1309,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                         FormBuilderTextField(
                                           name: 'quantity',
-                                          maxLength: 3,
+                                          maxLength: 9,
                                           initialValue: postQuantity.toString(),
                                           autovalidateMode: validateMode,
                                           decoration: InputDecoration(
@@ -1356,7 +1356,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                             Expanded(
                                               child: FormBuilderTextField(
                                                 name: 'price',
-                                                maxLength: 6,
+                                                maxLength: 9,
                                                 initialValue: postPrice.toString(),
                                                 autovalidateMode: validateMode,
                                                 decoration: InputDecoration(
