@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
@@ -18,6 +20,7 @@ import 'package:flutter/material.dart';
 
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -482,6 +485,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontWeight: FontWeight.w500,
           ),
         ),
+
+        actions: [
+          OutlinedButton.icon(
+            icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 20),
+            label: Text(
+              AppLocalizations.of(context)!.whatsapp,
+              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
+            ),
+            style: OutlinedButton.styleFrom(
+              backgroundColor: onboardingColor,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              side: BorderSide(color: onboardingColor, width: 1.5),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+            ),
+            onPressed: () async {
+              final String whatsapp = "+1-14821421408214";
+              final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
+              final String whatsappIoSURL =
+                  "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+
+              if (Platform.isIOS) {
+                if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+                  await launchUrl(Uri.parse(whatsappIoSURL));
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!.whatsappNotInstalled),
+                      ),
+                    );
+                  }
+                }
+              } else {
+                if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+                  await launchUrl(Uri.parse(whatsappURlAndroid));
+                } else {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(AppLocalizations.of(context)!.whatsappNotInstalled),
+                      ),
+                    );
+                  }
+                }
+              }
+            },
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

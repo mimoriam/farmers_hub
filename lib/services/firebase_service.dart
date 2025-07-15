@@ -532,6 +532,7 @@ class FirebaseService {
     String? country,
     String? details,
     bool? featured,
+    String? rentOrSale,
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
@@ -570,6 +571,7 @@ class FirebaseService {
       "createdAt": FieldValue.serverTimestamp(),
       "hasBeenDeleted": false,
       "status": "pending",
+      "rentOrSale": rentOrSale ?? "",
     });
   }
 
@@ -592,6 +594,7 @@ class FirebaseService {
     String? details,
     bool? featured,
     String? color,
+    String? rentOrSale,
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
@@ -620,6 +623,7 @@ class FirebaseService {
       "imageUrls": imageUrls,
       "hasBeenSold": hasBeenSold,
       "details": details ?? "",
+      "rentOrSale": rentOrSale ?? "",
     };
 
     if (color != null) {

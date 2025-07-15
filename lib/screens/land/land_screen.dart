@@ -19,19 +19,6 @@ class _LandScreenState extends State<LandScreen> {
 
   List<QueryDocumentSnapshot> _searchResults = [];
 
-  // Future<List<QueryDocumentSnapshot<Object?>>> _getFutureForSelectedTab() {
-  //   switch (_selectedTabIndex) {
-  //     case 0:
-  //       return firebaseService.getAllPostsByCurrentUser();
-  //     case 1:
-  //       return firebaseService.getSoldPostsByCurrentUser();
-  //     case 2:
-  //       return firebaseService.getFavoritedPosts();
-  //     default:
-  //       return firebaseService.getAllPostsByCurrentUser();
-  //   }
-  // }
-
   Widget _buildTabBar() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
+import 'package:farmers_hub/screens/add_post/add_post_screen.dart';
 import 'package:farmers_hub/screens/home/home_screen.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
@@ -27,6 +28,8 @@ class EditPostScreen extends StatefulWidget {
 class _EditPostScreenState extends State<EditPostScreen> {
   final firebaseService = FirebaseService();
 
+  Future<Map<String, dynamic>?>? _postDetailsFuture;
+
   final _formKey = GlobalKey<FormBuilderState>();
   final validateMode = AutovalidateMode.onUnfocus;
   String error = '';
@@ -45,6 +48,36 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   bool _isSubscribed = false;
   bool _isLoadingSubscription = true;
+
+  final List<Map<String, String>> _currencyOptions = [
+    {'value': 'Syria', 'label': 'Syria (£)'},
+    {'value': 'Usd', 'label': 'Usd (\$)'},
+    {'value': 'Euro', 'label': 'Euro (€)'},
+    {'value': 'Lira', 'label': 'Lira (₺)'},
+  ];
+
+  String? defaultRentOrSale;
+  // String? defaultCurrency;
+
+  // Future<void> _fetchDefaultCurrency() async {
+  //   final userDoc = await firebaseService.getCurrentUserData();
+  //   if (userDoc != null) {
+  //     final userData = userDoc.data() as Map<String, dynamic>?;
+  //     setState(() {
+  //       defaultCurrency = userData?['defaultCurrency'];
+  //     });
+  //   }
+  // }
+
+  Future<void> _fetchDefaultRentOrSale() async {
+    final userDoc = await firebaseService.getCurrentUserData();
+    if (userDoc != null) {
+      final userData = userDoc.data() as Map<String, dynamic>?;
+      setState(() {
+        defaultRentOrSale = userData?['rentOrSale'];
+      });
+    }
+  }
 
   Future<void> _loadPostImages() async {
     final postDetails = await firebaseService.getPostDetails(widget.postId);
@@ -72,8 +105,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
   @override
   void initState() {
     super.initState();
-    _loadPostImages();
 
+    // _fetchDefaultCurrency();
+    _fetchDefaultRentOrSale();
+    _postDetailsFuture = firebaseService.getPostDetails(widget.postId);
+    _loadPostImages();
     _checkSubscriptionStatus();
   }
 
@@ -207,7 +243,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
       ),
 
       body: FutureBuilder(
-        future: firebaseService.getPostDetails(widget.postId),
+        // future: firebaseService.getPostDetails(widget.postId),
+        future: _postDetailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             // return Center(child: CircularProgressIndicator(color: onboardingColor,));
@@ -346,6 +383,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
           final postWeight = postDetails["averageWeight"];
           final postAge = postDetails["age"];
           final postDetailsDetailsLolWhatAName = postDetails["details"];
+          final postCurrency = postDetails["currency"];
 
           return SafeArea(
             child: Stack(
@@ -686,11 +724,11 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           maxLines: 2,
                                           initialValue: postTitle,
                                           autovalidateMode: validateMode,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter.allow(
-                                              RegExp(r'^[a-zA-Z0-9 ]*$'),
-                                            ),
-                                          ],
+                                          // inputFormatters: [
+                                          //   FilteringTextInputFormatter.allow(
+                                          //     RegExp(r'^[a-zA-Z0-9 ]*$'),
+                                          //   ),
+                                          // ],
                                           // buildCounter:
                                           //     (
                                           //       context, {
@@ -1122,6 +1160,67 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                           ],
                                                         ),
 
+                                                  selectedCategory == "Land Services" ||
+                                                          selectedCategory == "Equipments" ||
+                                                          selectedCategory == "Delivery"
+                                                      ? Container(
+                                                          padding: EdgeInsets.only(
+                                                            right: 0,
+                                                            top: 2,
+                                                            bottom: 0,
+                                                          ),
+                                                          // No explicit border for dropdown, styling via DropdownButton properties
+                                                          child: DropdownButtonFormField2<String>(
+                                                            items: ["Rent", "Sale"]
+                                                                .map(
+                                                                  (lang) =>
+                                                                      DropdownMenuItem<String>(
+                                                                        value: lang,
+                                                                        child: Text(lang),
+                                                                      ),
+                                                                )
+                                                                .toList(),
+                                                            decoration: InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    vertical: 1,
+                                                                    horizontal: 2,
+                                                                  ),
+                                                              border: _inputBorder,
+                                                              enabledBorder: _inputBorder,
+                                                              focusedBorder: _focusedInputBorder,
+                                                              errorBorder: _errorInputBorder,
+                                                              focusedErrorBorder:
+                                                                  _focusedInputBorder,
+                                                              helperText: ' ',
+                                                              errorStyle: const TextStyle(
+                                                                height: 0,
+                                                              ),
+                                                            ),
+                                                            iconStyleData: IconStyleData(
+                                                              // Using IconStyleData for icon properties
+                                                              iconEnabledColor: onboardingTextColor,
+                                                            ),
+
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              offset: const Offset(0, 0),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(
+                                                                  16,
+                                                                ),
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            // value: "USD",
+                                                            value: defaultRentOrSale,
+                                                            onChanged: (value) async {
+                                                              defaultRentOrSale = value;
+                                                              setState(() {});
+                                                            },
+                                                          ),
+                                                        )
+                                                      : Container(),
+
                                                   // Average Weight (in kgs)
                                                   postCategory == "Fruits" ||
                                                           postCategory == "Vegetables" ||
@@ -1129,9 +1228,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                           postCategory == "Grains & Seeds" ||
                                                           postCategory == "Fertilizers" ||
                                                           postCategory == "Tools" ||
-                                                          postCategory == "Land Services" ||
-                                                          postCategory == "Equipments" ||
-                                                          postCategory == "Delivery" ||
+                                                          // postCategory == "Land Services" ||
+                                                          // postCategory == "Equipments" ||
+                                                          // postCategory == "Delivery" ||
                                                           postCategory == "Pesticides" ||
                                                           postCategory == "Animal Feed" ||
                                                           postCategory == "Others"
@@ -1150,7 +1249,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                                             FormBuilderTextField(
                                                               name: 'avg_weight',
-                                                              maxLength: 3,
+                                                              maxLength: 9,
                                                               initialValue: postWeight,
                                                               autovalidateMode: validateMode,
                                                               decoration: InputDecoration(
@@ -1224,7 +1323,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
                                                             FormBuilderTextField(
                                                               name: 'age',
-                                                              maxLength: 2,
+                                                              maxLength: 3,
                                                               initialValue: postAge.toString(),
                                                               autovalidateMode: validateMode,
                                                               decoration: InputDecoration(
@@ -1354,6 +1453,73 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         Row(
                                           children: [
                                             Expanded(
+                                              flex: 2,
+                                              child: Container(
+                                                padding: EdgeInsets.only(
+                                                  right: 0,
+                                                  top: 2,
+                                                  bottom: 0,
+                                                ),
+                                                // No explicit border for dropdown, styling via DropdownButton properties
+                                                child: DropdownButtonFormField2<String>(
+                                                  // items: ['Syria', "Usd", "Euro", "Lira"]
+                                                  //     .map(
+                                                  //       (lang) => DropdownMenuItem<String>(
+                                                  //     value: lang,
+                                                  //     child: Text(lang),
+                                                  //   ),
+                                                  // )
+                                                  //     .toList(),
+                                                  items: _currencyOptions
+                                                      .map(
+                                                        (currency) => DropdownMenuItem<String>(
+                                                          value: currency['value'],
+                                                          child: Text(currency['label']!),
+                                                        ),
+                                                      )
+                                                      .toList(),
+                                                  decoration: InputDecoration(
+                                                    contentPadding: const EdgeInsets.symmetric(
+                                                      vertical: 1,
+                                                      horizontal: 2,
+                                                    ),
+                                                    border: _inputBorder,
+                                                    enabledBorder: _inputBorder,
+                                                    focusedBorder: _focusedInputBorder,
+                                                    errorBorder: _errorInputBorder,
+                                                    focusedErrorBorder: _focusedInputBorder,
+                                                    helperText: ' ',
+                                                    errorStyle: const TextStyle(height: 0),
+                                                  ),
+                                                  iconStyleData: IconStyleData(
+                                                    // Using IconStyleData for icon properties
+                                                    iconEnabledColor: onboardingTextColor,
+                                                  ),
+
+                                                  dropdownStyleData: DropdownStyleData(
+                                                    offset: const Offset(0, 0),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(16),
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                                  // value: "USD",
+                                                  // value: defaultCurrency?.toCapitalize() ?? "Usd",
+                                                  value: postCurrency.toString().toCapitalize(),
+                                                  onChanged: (value) async {
+                                                    await firebaseService.updateCurrency(
+                                                      value!.toLowerCase(),
+                                                    );
+                                                    setState(() {});
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+
+                                            SizedBox(width: 8),
+
+                                            Expanded(
+                                              flex: 3,
                                               child: FormBuilderTextField(
                                                 name: 'price',
                                                 maxLength: 9,
@@ -1370,6 +1536,9 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                   errorBorder: _errorInputBorder,
                                                   focusedErrorBorder: _focusedInputBorder,
                                                   contentPadding: _contentPadding,
+                                                  helperText:
+                                                      ' ', // This reserves the space. Note the space character.
+                                                  errorStyle: const TextStyle(height: 0),
                                                 ),
                                                 keyboardType: const TextInputType.numberWithOptions(
                                                   decimal: true,
@@ -1394,19 +1563,17 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 ]),
                                               ),
                                             ),
-
-                                            Expanded(
-                                              child: FormBuilderCheckbox(
-                                                name: 'hasBeenSold',
-                                                initialValue: postDetails["hasBeenSold"],
-                                                title: Text(
-                                                  AppLocalizations.of(context)!.sold,
-                                                  style: _labelStyle,
-                                                ),
-                                                activeColor: onboardingColor,
-                                              ),
-                                            ),
                                           ],
+                                        ),
+
+                                        FormBuilderCheckbox(
+                                          name: 'hasBeenSold',
+                                          initialValue: postDetails["hasBeenSold"],
+                                          title: Text(
+                                            AppLocalizations.of(context)!.sold,
+                                            style: _labelStyle,
+                                          ),
+                                          activeColor: onboardingColor,
                                         ),
                                         // const SizedBox(height: 30),
                                       ],
@@ -1614,7 +1781,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       final doc = await firebaseService.getCurrentUserData();
                                       final userData = doc?.data() as Map<String, dynamic>?;
 
-                                      final currency = userData?["defaultCurrency"] ?? "usd";
+                                      // final currency = userData?["defaultCurrency"] ?? "usd";
 
                                       List<String> newImageUrls = await firebaseService
                                           .uploadImages(_newImages);
@@ -1625,6 +1792,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                       ];
 
                                       firebaseService.editPost(
+                                        rentOrSale: defaultRentOrSale,
                                         postId: widget.postId,
                                         title: _formKey.currentState?.fields['title']?.value,
                                         imageUrls: finalImageUrls,
@@ -1634,7 +1802,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 postCategory == "Worker Services"
                                             ? selectedGender
                                             : "",
-                                        currency: currency,
+                                        // currency: postCurrency,
+                                        currency: postCurrency.toString().toCapitalize(),
                                         averageWeight:
                                             postCategory != "Live Stock" ||
                                                 postCategory != "Worker Services"
