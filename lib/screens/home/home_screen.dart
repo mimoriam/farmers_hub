@@ -296,12 +296,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final String tip = await firebaseService.getTipOfTheDay();
 
+    // _tipOfTheDay.translate(to: "ar").then((t) {
+    //   _tipOfTheDay = t.toString();
+    // });
+
     if (mounted) {
       setState(() {
         _tipOfTheDay = tip;
-        _tipOfTheDay.translate(to: "ar").then((t) {
-          _tipOfTheDay = t.toString();
-        });
         _isLoadingTip = false;
       });
     }
@@ -928,13 +929,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   borderSide: BorderSide(
                                     color: _hasSelectedLocation
                                         ? onboardingColor
-                                        : onboardingTextColor,
+                                        : Colors.grey.shade500,
                                     width: 1.0,
                                   ),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: onboardingTextColor, width: 1.0),
+                                  borderSide: BorderSide(color: Colors.grey.shade500, width: 1.0),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
@@ -1352,7 +1353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                             )
                                           : Text(
-                                              _tipOfTheDay,
+                                        _tipOfTheDay,
                                               style: GoogleFonts.poppins(
                                                 fontSize: 11,
                                                 fontWeight: FontWeight.w400,
@@ -1760,7 +1761,9 @@ class PostCard extends StatelessWidget {
                       : currency == "lira"
                       ? "${AppLocalizations.of(context)!.lira2}$price"
                       // ? "₺$price"
-                      : "${AppLocalizations.of(context)!.syp}$price",
+                      : currency == "syria"
+                      ? "${AppLocalizations.of(context)!.syp}$price"
+                      : "",
                   style: GoogleFonts.poppins(
                     color: onboardingColor,
                     fontSize: 13,

@@ -346,7 +346,8 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                               final category = popularCategories[index];
                               return Padding(
                                 padding: EdgeInsets.only(
-                                  right: index == popularCategories.length - 1 ? 0 : 12.0,
+                                  right: locale.languageCode == "ar" ? 0 : index == popularCategories.length - 1 ? 0 : 12.0,
+                                  left: locale.languageCode == "ar" ? index == popularCategories.length - 1 ? 0 : 12.0 : 0,
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.only(bottom: 20),

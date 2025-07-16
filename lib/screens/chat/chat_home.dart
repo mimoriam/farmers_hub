@@ -266,8 +266,9 @@ class _ChatHomeState extends State<ChatHome> {
 
                   const SizedBox(height: 8.0),
 
-                  const Text(
-                    'Nothing to see here',
+                  Text(
+                    // 'Nothing to see here',
+                    AppLocalizations.of(context)!.nothingToSeeHere,
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -278,7 +279,8 @@ class _ChatHomeState extends State<ChatHome> {
                   const SizedBox(height: 4.0),
 
                   Text(
-                    'Start a conversation with any of the sellers.\nYour chats will show here.',
+                    AppLocalizations.of(context)!.startAConversation,
+                    // 'Start a conversation with any of the sellers.\nYour chats will show here.',
                     textAlign: TextAlign.center, // Ensures the text is center-aligned
                     style: TextStyle(
                       fontSize: 14.0,
@@ -659,7 +661,10 @@ class _ChatHomeState extends State<ChatHome> {
                       prefixIcon: const Icon(Icons.search, color: Color(0xFF999999)),
                       suffixIcon: IconButton(
                         // icon: Icon(Icons.mic, color: Color(0xFF999999)),
-                        icon: Icon(Icons.mic, color: onboardingColor),
+                        icon: Icon(Icons.mic, color: onboardingColor, ),
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        ),
                         onPressed: () {},
                       ),
 

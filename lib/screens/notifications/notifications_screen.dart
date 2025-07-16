@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,7 +37,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Notifications",
+          AppLocalizations.of(context)!.notifications,
+          // "Notifications",
           style: GoogleFonts.poppins(
             color: Colors.white,
             fontSize: 16,

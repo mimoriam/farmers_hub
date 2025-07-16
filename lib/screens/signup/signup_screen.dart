@@ -220,6 +220,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         pickerDialogStyle: PickerDialogStyle(
                           backgroundColor: Colors.white,
                           searchFieldInputDecoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.searchByCountries,
                             enabledBorder: UnderlineInputBorder(
                               borderSide: BorderSide(color: Colors.grey.shade300),
                             ),

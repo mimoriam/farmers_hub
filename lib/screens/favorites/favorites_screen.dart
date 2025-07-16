@@ -213,6 +213,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                     suffixIcon: IconButton(
                       // icon: Icon(Icons.mic, color: Color(0xFF999999)),
                       icon: Icon(Icons.mic, color: onboardingColor),
+                      style: ButtonStyle(
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      ),
                       onPressed: () {},
                     ),
                     enabledBorder: OutlineInputBorder(
@@ -290,8 +293,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
 
                     const SizedBox(height: 8.0),
 
-                    const Text(
-                      'Nothing to see here',
+                    Text(
+                      // 'Nothing to see here',
+                      AppLocalizations.of(context)!.nothingToSeeHere,
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,

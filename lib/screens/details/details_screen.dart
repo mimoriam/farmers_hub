@@ -177,15 +177,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
             child: Column(
               mainAxisSize: MainAxisSize.min, // To make the card compact
               children: <Widget>[
-                const Text(
-                  'Report a violating ad',
+                Text(
+                  AppLocalizations.of(context)!.reportAd,
+                  // 'Report a violating ad',
                   style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 12.0),
-                const TextField(
+                TextField(
                   maxLines: 4,
                   decoration: InputDecoration(
-                    hintText: 'Enter your report here...',
+                    // hintText: 'Enter your report here...',
+                    hintText: AppLocalizations.of(context)!.enterReport,
                     border: OutlineInputBorder(),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: onboardingColor, width: 1.0),
@@ -205,33 +207,51 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
                     ),
-                    child: const Text('Report to admin'),
+                    // child: const Text('Report to admin'),
+                    child: Text(AppLocalizations.of(context)!.reportToAdmin),
+                  ),
+                ),
+
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add report logic here
+                      Navigator.of(context).pop(); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade800,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                    ),
+                    // child: const Text('Report to admin'),
+                    child: Text(AppLocalizations.of(context)!.cancel),
                   ),
                 ),
               ],
             ),
           ),
           // The close button
-          Positioned(
-            right: 0.0,
-            top: 0.0,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    bottomLeft: Radius.circular(12),
-                  ),
-                ),
-                child: const Icon(Icons.close, color: Colors.black54),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   right: 0.0,
+          //   top: 0.0,
+          //   child: GestureDetector(
+          //     onTap: () {
+          //       Navigator.of(context).pop();
+          //     },
+          //     child: Container(
+          //       padding: const EdgeInsets.all(4),
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         borderRadius: const BorderRadius.only(
+          //           topRight: Radius.circular(16),
+          //           bottomLeft: Radius.circular(12),
+          //         ),
+          //       ),
+          //       child: const Icon(Icons.close, color: Colors.black54),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -524,20 +544,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
       data: Theme.of(
         context,
       ).copyWith(splashColor: Colors.transparent, highlightColor: Colors.transparent),
+
       child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
         shape: const Border(), // Removes the border when expanded
         collapsedShape: const Border(), // Removes the border when collapsed
         leading: Icon(Icons.privacy_tip_outlined, color: Colors.grey[700]),
+        iconColor: onboardingColor, // Color when EXPANDED
+        collapsedIconColor: Colors.grey[700],
         title: Text(
           AppLocalizations.of(context)!.privacyPolicy,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 2.0, vertical: 8.0),
             child: Text(
-              // 'This is a placeholder for your lengthy privacy policy. Your privacy is critically important to us. This policy outlines the types of personal information that is received and collected and how it is used.\n\nWe collect data to operate effectively and provide you with the best experiences. You provide some of this data directly when you create an account or post an item. We also get some data by recording how you interact with our services, for example, using technologies like cookies and receiving error reports or usage data from software running on your device.\n\nWe use the data to provide and improve the services we offer, including personalizing your experience. We do not share your personal data with third parties without your consent, except as necessary to complete a transaction or provide a service you have requested or authorized. This text should be replaced with your actual, legally-vetted privacy policy.',
-              "1 - Contact the person you intend to meet via the app or another secure means before the actual meeting to ensure their credibility.\n- It is preferable that the specified meeting place be in well-known, populated public places.\n- Before the meeting, inform a trusted person of the meeting details, such as the place and time, and inform them that you will be in contact with them after the meeting.\n\n2 - It is always preferable to have someone accompanying you during the meeting. Especially if the meeting is with a stranger.\n\n3 - Avoid sharing sensitive personal information during the first meeting, such as home addresses or financial information.\n\n4 - The identities of agricultural landowners and buyers must be verified before any agreement. Methods such as official ID verification or land ownership documents may be used.\n\n5 - Users should remember that the primary purpose of the application is to facilitate buying and selling processes and not to get involved in unrelated transactions.",
+              // "1 - Contact the person you intend to meet via the app or another secure means before the actual meeting to ensure their credibility.\n- It is preferable that the specified meeting place be in well-known, populated public places.\n- Before the meeting, inform a trusted person of the meeting details, such as the place and time, and inform them that you will be in contact with them after the meeting.\n\n2 - It is always preferable to have someone accompanying you during the meeting. Especially if the meeting is with a stranger.\n\n3 - Avoid sharing sensitive personal information during the first meeting, such as home addresses or financial information.\n\n4 - The identities of agricultural landowners and buyers must be verified before any agreement. Methods such as official ID verification or land ownership documents may be used.\n\n5 - Users should remember that the primary purpose of the application is to facilitate buying and selling processes and not to get involved in unrelated transactions.",
+              AppLocalizations.of(context)!.safetyGuidelines,
               textAlign: TextAlign.justify,
               style: TextStyle(
                 fontSize: 14,
@@ -719,7 +743,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ? "€"
                           : currency == "lira"
                           ? "₺"
-                          : "(SYP)",
+                          : "ل س",
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -727,7 +751,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       ),
                     ),
                     Text(
-                      price,
+                      " $price ",
                       style: const TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -1211,7 +1235,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ),
         const SizedBox(height: 4),
         // Add Text widget here if there is additional info text
-        Text(details),
+        Text("$details"),
         // Text('Some additional details about the cow and calf...'),
         // const Divider(height: 8),
         _buildPrivacyPolicyTile(),
@@ -1226,6 +1250,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: TextStyle(fontSize: 15, color: Colors.grey[700])),
+
           GestureDetector(
             onTap: phoneBlue == true
                 ? () {
@@ -1233,7 +1258,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   }
                 : null,
             child: Text(
-              value,
+              // Unicode Left-to-Right Mark character forces the text that follows it to be rendered as LTR
+              '\u200E$value',
+              // value,
               style: TextStyle(
                 fontSize: 15,
                 fontWeight: FontWeight.w500,

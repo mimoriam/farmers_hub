@@ -156,18 +156,21 @@ class _AddPostScreenState extends State<AddPostScreen> {
     return showDialog<void>(
       context: context,
       barrierDismissible: true,
+      requestFocus: false,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setState) {
             return AlertDialog(
               backgroundColor: Colors.white,
               insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
-              title: Center(child: const Text('Allah Your Mubarak')),
+              // title: Center(child: const Text('Allah Your Mubarak')),
+              title: Center(child: Text(AppLocalizations.of(context)!.allahMubarak)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     Text(
-                      'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
+                      // 'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
+                      AppLocalizations.of(context)!.sellProduct,
                       style: TextStyle(fontSize: 13),
                     ),
                     Row(
@@ -189,7 +192,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                         ),
 
                         SizedBox(width: 6),
-                        const Text('I commit to that'),
+                        // const Text('I commit to that'),
+                        Text(AppLocalizations.of(context)!.commitToThat),
                       ],
                     ),
                   ],
@@ -218,21 +222,25 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                   context: context,
                                   builder: (context) => AlertDialog(
                                     backgroundColor: Colors.white,
-                                    title: const Text("Monthly Limit Reached"),
-                                    content: const Text(
-                                      "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
+                                    // title: const Text("Monthly Limit Reached"),
+                                    title: Text(AppLocalizations.of(context)!.monthlyLimitReached),
+                                    content: Text(
+                                      AppLocalizations.of(context)!.monthlyLimitLabel,
+                                      // "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
                                     ),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.of(context).pop(),
-                                        child: const Text("OK"),
+                                        // child: const Text("OK"),
+                                        child: Text(AppLocalizations.of(context)!.ok),
                                       ),
                                       TextButton(
                                         onPressed: () {
                                           // TODO: Navigate to subscription screen
                                           Navigator.of(context).pop();
                                         },
-                                        child: const Text("Subscribe"),
+                                        // child: const Text("Subscribe"),
+                                        child: Text(AppLocalizations.of(context)!.subscribe),
                                       ),
                                     ],
                                   ),
@@ -337,7 +345,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             }
                           }
                         : null,
-                    child: const Text('Confirm'),
+                    // child: Text('Confirm'),
+                    child: Text(AppLocalizations.of(context)!.confirmD),
                   ),
                 ),
               ],
@@ -1811,7 +1820,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             const SizedBox(height: 16),
 
                             TapDebouncer(
-                              cooldown: const Duration(milliseconds: 1000),
+                              cooldown: const Duration(milliseconds: 2000),
                               onTap: () async {
                                 // Check if the user can create a post.
 

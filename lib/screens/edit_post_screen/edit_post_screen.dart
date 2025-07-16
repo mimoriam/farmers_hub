@@ -49,12 +49,12 @@ class _EditPostScreenState extends State<EditPostScreen> {
   bool _isSubscribed = false;
   bool _isLoadingSubscription = true;
 
-  final List<Map<String, String>> _currencyOptions = [
-    {'value': 'Syria', 'label': 'Syria (£)'},
-    {'value': 'Usd', 'label': 'Usd (\$)'},
-    {'value': 'Euro', 'label': 'Euro (€)'},
-    {'value': 'Lira', 'label': 'Lira (₺)'},
-  ];
+  // final List<Map<String, String>> _currencyOptions = [
+  //   {'value': 'Syria', 'label': 'Syria (£)'},
+  //   {'value': 'Usd', 'label': 'Usd (\$)'},
+  //   {'value': 'Euro', 'label': 'Euro (€)'},
+  //   {'value': 'Lira', 'label': 'Lira (₺)'},
+  // ];
 
   String? defaultRentOrSale;
   // String? defaultCurrency;
@@ -225,6 +225,19 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+
+    final List<Map<String, String>> currencyOptions = [
+      {'value': 'Syria', 'label': AppLocalizations.of(context)!.syriaLabel},
+      // {'value': 'Syria', 'label': 'Syria (£)'},
+      // {'value': 'Usd', 'label': 'Usd (\$)'},
+      {'value': 'Usd', 'label': AppLocalizations.of(context)!.usdLabel},
+      {'value': 'Euro', 'label': AppLocalizations.of(context)!.euroLabel},
+      // {'value': 'Euro', 'label': 'Euro (€)'},
+      // {'value': 'Lira', 'label': 'Lira (₺)'},
+      {'value': 'Lira', 'label': AppLocalizations.of(context)!.liraLabel},
+    ];
+
     return Scaffold(
       backgroundColor: homebackgroundColor,
       appBar: AppBar(
@@ -559,7 +572,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           ),
                                           SizedBox(width: 8),
                                           Text(
-                                            'You can add up to 4 photos.',
+                                            // 'You can add up to 4 photos.',
+                                              AppLocalizations.of(context)!.addPhotos,
                                             style: TextStyle(fontSize: 14, color: Colors.black),
                                           ),
                                         ],
@@ -1453,7 +1467,8 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                         Row(
                                           children: [
                                             Expanded(
-                                              flex: 2,
+                                              // flex: 2,
+                                              flex: locale.languageCode == "ar" ? 5 : 3,
                                               child: Container(
                                                 padding: EdgeInsets.only(
                                                   right: 0,
@@ -1470,7 +1485,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                   //   ),
                                                   // )
                                                   //     .toList(),
-                                                  items: _currencyOptions
+                                                  items: currencyOptions
                                                       .map(
                                                         (currency) => DropdownMenuItem<String>(
                                                           value: currency['value'],
@@ -1481,7 +1496,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                   decoration: InputDecoration(
                                                     contentPadding: const EdgeInsets.symmetric(
                                                       vertical: 1,
-                                                      horizontal: 2,
+                                                      horizontal: 1,
                                                     ),
                                                     border: _inputBorder,
                                                     enabledBorder: _inputBorder,

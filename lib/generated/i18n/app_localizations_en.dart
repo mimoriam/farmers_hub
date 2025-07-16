@@ -929,4 +929,65 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get liraLabel => 'Lira (₺)';
+
+  @override
+  String get allahMubarak => 'Allah You\'re Mubarak';
+
+  @override
+  String get sellProduct =>
+      'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows';
+
+  @override
+  String get commitToThat => 'I commit to that';
+
+  @override
+  String get confirmD => 'Confirm';
+
+  @override
+  String get monthlyLimitReached => 'Monthly Limit Reached';
+
+  @override
+  String get monthlyLimitLabel =>
+      'You have reached your limit of 2 posts per month. Subscribe now to post without limits.';
+
+  @override
+  String get subscribe => 'Subscribe';
+
+  @override
+  String get addPhotos => 'You can add up to 4 photos.';
+
+  @override
+  String get safetyGuidelines =>
+      '1 - Contact the person you intend to meet via the app or another secure means before the actual meeting to ensure their credibility.\n- It is preferable that the specified meeting place be in well-known, populated public places.\n- Before the meeting, inform a trusted person of the meeting details, such as the place and time, and inform them that you will be in contact with them after the meeting.\n\n2 - It is always preferable to have someone accompanying you during the meeting. Especially if the meeting is with a stranger.\n\n3 - Avoid sharing sensitive personal information during the first meeting, such as home addresses or financial information.\n\n4 - The identities of agricultural landowners and buyers must be verified before any agreement. Methods such as official ID verification or land ownership documents may be used.\n\n5 - Users should remember that the primary purpose of the application is to facilitate buying and selling processes and not to get involved in unrelated transactions.';
+
+  @override
+  String get nothingToSeeHere => 'Nothing to see here';
+
+  @override
+  String get startAConversation =>
+      'Start a conversation with any of the sellers.\nYour chats will show here.';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get rent => 'Rent';
+
+  @override
+  String get sale => 'Sale';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get reportAd => 'Report a violating ad';
+
+  @override
+  String get enterReport => 'Enter your report here...';
+
+  @override
+  String get reportToAdmin => 'Report to admin';
+
+  @override
+  String get searchByCountries => 'Search country';
 }

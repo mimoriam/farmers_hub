@@ -95,6 +95,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                         suffixIcon: IconButton(
                           // icon: Icon(Icons.mic, color: Color(0xFF999999)),
                           icon: Icon(Icons.mic, color: onboardingColor),
+                          style: ButtonStyle(
+                            overlayColor: MaterialStateProperty.all(Colors.transparent),
+                          ),
                           onPressed: () {},
                         ),
                         hintText: AppLocalizations.of(context)!.search,
@@ -188,8 +191,9 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                   size: 34.0,
                                 ),
                               ),
-                              const Text(
-                                'Nothing to see here',
+                              Text(
+                                // 'Nothing to see here',
+                                AppLocalizations.of(context)!.nothingToSeeHere,
                                 style: TextStyle(
                                   fontSize: 18.0,
                                   fontWeight: FontWeight.bold,

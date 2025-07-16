@@ -925,4 +925,65 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get liraLabel => 'ليرة تركية (₺)';
+
+  @override
+  String get allahMubarak => 'الله يبارك';
+
+  @override
+  String get sellProduct =>
+      'بع منتجك بعمولة ١٪ فقط على موقع Mahsolek. العمولة هي أمانة يتحملها المعلن، سواءً كان البيع من قِبل الموقع أو بفضله، وقيمتها موضحة أدناه.';
+
+  @override
+  String get commitToThat => 'أنا ملتزم بذلك';
+
+  @override
+  String get confirmD => 'يتأكد';
+
+  @override
+  String get monthlyLimitReached => 'تم الوصول إلى الحد الشهري';
+
+  @override
+  String get monthlyLimitLabel =>
+      'لقد بلغتَ الحد الأقصى المسموح به للنشر، وهو منشوران شهريًا. اشترك الآن لنشر بلا حدود.';
+
+  @override
+  String get subscribe => 'يشترك';
+
+  @override
+  String get addPhotos => 'يمكنك إضافة ما يصل إلى 4 صور.';
+
+  @override
+  String get safetyGuidelines =>
+      '١ - تواصل مع الشخص الذي تنوي مقابلته عبر التطبيق أو أي وسيلة آمنة أخرى قبل الاجتماع الفعلي للتأكد من مصداقيته.\n- يُفضل أن يكون مكان الاجتماع المحدد في أماكن عامة معروفة ومأهولة.\n- قبل الاجتماع، أبلغ شخصًا موثوقًا به تفاصيل الاجتماع، مثل المكان والزمان، وأخبره بأنك ستكون على تواصل معه بعد الاجتماع.\n\n٢ - يُفضل دائمًا أن يكون هناك شخص يرافقك أثناء الاجتماع. خاصة إذا كان الاجتماع مع شخص غريب.\n\n٣ - تجنب مشاركة المعلومات الشخصية الحساسة خلال الاجتماع الأول، مثل عناوين المنازل أو المعلومات المالية.\n\n٤ - يجب التحقق من هويات أصحاب الأراضي الزراعية والمشترين قبل أي اتفاق. يمكن استخدام طرق مثل التحقق من الهوية الرسمية أو وثائق ملكية الأرض.\n\n٥ - يجب على المستخدمين أن يتذكروا أن الغرض الأساسي للتطبيق هو تسهيل عمليات البيع والشراء وليس التورط في معاملات غير ذات صلة.';
+
+  @override
+  String get nothingToSeeHere => 'لا شيء لنرى هنا';
+
+  @override
+  String get startAConversation =>
+      'ابدأ محادثة مع أي من البائعين.\nستظهر محادثاتك هنا.';
+
+  @override
+  String get all => 'الجميع';
+
+  @override
+  String get rent => 'إيجار';
+
+  @override
+  String get sale => 'أُوكَازيُون';
+
+  @override
+  String get notifications => 'إشعارات';
+
+  @override
+  String get reportAd => 'الإبلاغ عن إعلان مخالف';
+
+  @override
+  String get enterReport => 'أدخل تقريرك هنا...';
+
+  @override
+  String get reportToAdmin => 'تقرير إلى المشرف';
+
+  @override
+  String get searchByCountries => 'بحث عن البلد';
 }

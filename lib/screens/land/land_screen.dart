@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/services/firebase_service.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -26,11 +27,14 @@ class _LandScreenState extends State<LandScreen> {
       decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(12)),
       child: Row(
         children: [
-          _buildTabItem(0, "All"),
+          // _buildTabItem(0, "All"),
+          _buildTabItem(0, AppLocalizations.of(context)!.all),
           SizedBox(width: 10),
-          _buildTabItem(1, "Rent"),
+          // _buildTabItem(1, "Rent"),
+          _buildTabItem(1, AppLocalizations.of(context)!.rent),
           SizedBox(width: 10),
-          _buildTabItem(2, "Sell"),
+          // _buildTabItem(2, "Sell"),
+          _buildTabItem(2, AppLocalizations.of(context)!.sale),
         ],
       ),
     );
@@ -77,9 +81,14 @@ class _LandScreenState extends State<LandScreen> {
         automaticallyImplyLeading: true,
         title: Text(
           widget.categoryOption == "Land"
-              ? "Land"
+              // ? "Land"
+              ? AppLocalizations.of(context)!.landServices
               : widget.categoryOption == "Equipments"
-              ? "Equipments"
+              // ? "Equipments"
+              ? AppLocalizations.of(context)!.equipments
+              : widget.categoryOption == "Delivery"
+              // ? "Delivery
+              ? AppLocalizations.of(context)!.delivery
               : widget.categoryOption,
           // "Land",
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
@@ -107,8 +116,7 @@ class _LandScreenState extends State<LandScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        decoration: BoxDecoration(
-                        ),
+                        decoration: BoxDecoration(),
                         child: Icon(
                           Icons.landscape, // An icon that fits the context
                           color: Colors.grey[700],
@@ -117,8 +125,9 @@ class _LandScreenState extends State<LandScreen> {
                       ),
 
                       // const SizedBox(height: 10.0),
-                      const Text(
-                        'No results',
+                      Text(
+                        // 'No results',
+                        AppLocalizations.of(context)!.noResults,
                         style: TextStyle(fontSize: 14.0, color: Colors.grey),
                       ),
                     ],

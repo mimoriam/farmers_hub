@@ -1921,6 +1921,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Lira (₺)'**
   String get liraLabel;
+
+  /// No description provided for @allahMubarak.
+  ///
+  /// In en, this message translates to:
+  /// **'Allah You\'re Mubarak'**
+  String get allahMubarak;
+
+  /// No description provided for @sellProduct.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows'**
+  String get sellProduct;
+
+  /// No description provided for @commitToThat.
+  ///
+  /// In en, this message translates to:
+  /// **'I commit to that'**
+  String get commitToThat;
+
+  /// No description provided for @confirmD.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirmD;
+
+  /// No description provided for @monthlyLimitReached.
+  ///
+  /// In en, this message translates to:
+  /// **'Monthly Limit Reached'**
+  String get monthlyLimitReached;
+
+  /// No description provided for @monthlyLimitLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'You have reached your limit of 2 posts per month. Subscribe now to post without limits.'**
+  String get monthlyLimitLabel;
+
+  /// No description provided for @subscribe.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscribe'**
+  String get subscribe;
+
+  /// No description provided for @addPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add up to 4 photos.'**
+  String get addPhotos;
+
+  /// No description provided for @safetyGuidelines.
+  ///
+  /// In en, this message translates to:
+  /// **'1 - Contact the person you intend to meet via the app or another secure means before the actual meeting to ensure their credibility.\n- It is preferable that the specified meeting place be in well-known, populated public places.\n- Before the meeting, inform a trusted person of the meeting details, such as the place and time, and inform them that you will be in contact with them after the meeting.\n\n2 - It is always preferable to have someone accompanying you during the meeting. Especially if the meeting is with a stranger.\n\n3 - Avoid sharing sensitive personal information during the first meeting, such as home addresses or financial information.\n\n4 - The identities of agricultural landowners and buyers must be verified before any agreement. Methods such as official ID verification or land ownership documents may be used.\n\n5 - Users should remember that the primary purpose of the application is to facilitate buying and selling processes and not to get involved in unrelated transactions.'**
+  String get safetyGuidelines;
+
+  /// No description provided for @nothingToSeeHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to see here'**
+  String get nothingToSeeHere;
+
+  /// No description provided for @startAConversation.
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation with any of the sellers.\nYour chats will show here.'**
+  String get startAConversation;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @rent.
+  ///
+  /// In en, this message translates to:
+  /// **'Rent'**
+  String get rent;
+
+  /// No description provided for @sale.
+  ///
+  /// In en, this message translates to:
+  /// **'Sale'**
+  String get sale;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @reportAd.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a violating ad'**
+  String get reportAd;
+
+  /// No description provided for @enterReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your report here...'**
+  String get enterReport;
+
+  /// No description provided for @reportToAdmin.
+  ///
+  /// In en, this message translates to:
+  /// **'Report to admin'**
+  String get reportToAdmin;
+
+  /// No description provided for @searchByCountries.
+  ///
+  /// In en, this message translates to:
+  /// **'Search country'**
+  String get searchByCountries;
 }
 
 class _AppLocalizationsDelegate

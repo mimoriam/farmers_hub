@@ -20,7 +20,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   String _totalCommission = "0"; // Initial commission
   String _selectedCurrency = '\$'; // Default currency
-  final List<String> _currencies = ['₹', '\$', '€', '₺']; // Example currencies
+  final List<String> _currencies = ['ل س', '\$', '€', '₺']; // Example currencies
 
   // Dummy image URL for the receipt placeholder
   final String receiptPlaceholderImageUrl =
@@ -276,6 +276,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     DropdownButton2<String>(
                       underline: const SizedBox.shrink(),
                       value: _selectedCurrency,
+
                       items: _currencies
                           .map((String item) => DropdownMenuItem<String>(
                         value: item,
@@ -302,7 +303,8 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         ),
                       ),
                       buttonStyleData: ButtonStyleData(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        // padding: EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.only(left: 16, right: 8),
                         height: 40,
                         width: 80,
                       ),
@@ -482,7 +484,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade600,
+                  color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(12.0),
                 ),
                 child: Stack(
@@ -502,7 +504,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 // color: receiptBackgroundColor, // Use the same background
-                                color: Colors.grey.shade600,
+                                color: Colors.grey.shade200,
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                               child: Center(
