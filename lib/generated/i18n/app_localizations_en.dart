@@ -1033,4 +1033,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get checkEmail => 'Please check your email!';
+
+  @override
+  String get noSearchResults => 'No search results';
 }

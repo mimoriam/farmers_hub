@@ -1029,4 +1029,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get checkEmail => 'يرجى التحقق من بريدك الإلكتروني!';
+
+  @override
+  String get noSearchResults => 'لا توجد نتائج بحث';
 }

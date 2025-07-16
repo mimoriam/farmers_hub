@@ -336,5 +336,6 @@
   "upload": "Upload File",
   "sendingReceipt": "Sending receipt...",
   "emailSent": "Email Sent",
-  "checkEmail": "Please check your email!"
+  "checkEmail": "Please check your email!",
+  "noSearchResults": "No search results"
 }

@@ -1014,8 +1014,9 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                               ),
 
                               // const SizedBox(height: 10.0),
-                              const Text(
-                                'No search results',
+                              Text(
+                                // 'No search results',
+                                AppLocalizations.of(context)!.noSearchResults,
                                 style: TextStyle(fontSize: 14.0, color: Colors.grey),
                               ),
                             ],
@@ -1025,6 +1026,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
 
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
+
                     // child: SingleChildScrollView(
                     //   child: ListView.builder(
                     //     shrinkWrap: true,
@@ -1043,20 +1045,48 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                     //     }
                     //   ),
                     // ),
+                    // child: GridView.builder(
+                    //   shrinkWrap: true,
+                    //   // Important to make GridView work inside SingleChildScrollView
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    //     crossAxisCount: 1, // Number of columns
+                    //     crossAxisSpacing: 4.0, // Horizontal space between cards
+                    //     mainAxisSpacing: 12.0, // Vertical space between cards
+                    //     // childAspectRatio: 0.78, // Adjust to fit content (width / height)
+                    //     // IMPORTANT: You'll likely need to adjust the item height.
+                    //     // A GridView item defaults to a square aspect ratio (1.0).
+                    //     // A full-width square will be very tall. Adjust this ratio to make
+                    //     // your items look more like list items (wider than they are tall).
+                    //     childAspectRatio: 3, // Example: Item is 3x wider than it is tall.
+                    //   ),
+                    //   itemCount: _searchResults.length,
+                    //   itemBuilder: (context, index) {
+                    //     final postData = _searchResults[index].data() as Map<String, dynamic>;
+                    //     final postId = _searchResults[index].id;
+                    //
+                    //     // return ProductCard(postData: popularPostsData[index]);
+                    //     return ProductCard2(
+                    //       postData: postData,
+                    //       postId: postId,
+                    //       firebaseService: firebaseService,
+                    //     );
+                    //   },
+                    // ),
                     child: GridView.builder(
                       shrinkWrap: true,
                       // Important to make GridView work inside SingleChildScrollView
                       physics: const NeverScrollableScrollPhysics(),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1, // Number of columns
-                        crossAxisSpacing: 4.0, // Horizontal space between cards
-                        mainAxisSpacing: 12.0, // Vertical space between cards
+                        crossAxisCount: 2, // Number of columns
+                        crossAxisSpacing: 10.0, // Horizontal space between cards
+                        mainAxisSpacing: 10.0, // Vertical space between cards
                         // childAspectRatio: 0.78, // Adjust to fit content (width / height)
                         // IMPORTANT: You'll likely need to adjust the item height.
                         // A GridView item defaults to a square aspect ratio (1.0).
                         // A full-width square will be very tall. Adjust this ratio to make
                         // your items look more like list items (wider than they are tall).
-                        childAspectRatio: 3, // Example: Item is 3x wider than it is tall.
+                        childAspectRatio: 0.78, // Example: Item is 3x wider than it is tall.
                       ),
                       itemCount: _searchResults.length,
                       itemBuilder: (context, index) {
@@ -1064,7 +1094,7 @@ class _FilteredResultsScreenState extends State<FilteredResultsScreen> {
                         final postId = _searchResults[index].id;
 
                         // return ProductCard(postData: popularPostsData[index]);
-                        return ProductCard2(
+                        return ProductCard(
                           postData: postData,
                           postId: postId,
                           firebaseService: firebaseService,

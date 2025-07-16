@@ -2119,6 +2119,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please check your email!'**
   String get checkEmail;
+
+  /// No description provided for @noSearchResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No search results'**
+  String get noSearchResults;
 }
 
 class _AppLocalizationsDelegate
