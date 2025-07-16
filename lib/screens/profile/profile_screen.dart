@@ -24,6 +24,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -645,7 +646,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           icon: Icons.share_outlined,
                           text: AppLocalizations.of(context)!.shareApp,
                           onTap: () {
-                            print('Share App tapped');
+                            SharePlus.instance.share(
+                              ShareParams(uri: Uri.tryParse("https://google.com")),
+                            );
                           },
                         ),
                         _buildSettingsItem(
