@@ -986,4 +986,47 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get searchByCountries => 'بحث عن البلد';
+
+  @override
+  String get commissionMembership => 'لجنة العضوية';
+
+  @override
+  String get sellProductCommission =>
+      'بع منتجك بعمولة 1%\nفقط لدى محصولك. العمولة أمانة في ذمة\nالمعلن، سواءً تم البيع عن طريق الموقع أو\nبسببه، وقيمتها موضحةكالتالي';
+
+  @override
+  String get calculateCommission => 'احسب العمولة';
+
+  @override
+  String get salePrice => 'أدخل سعر البيع';
+
+  @override
+  String get totalComission => 'إجمالي العمولة';
+
+  @override
+  String get payNow => 'ادفع الآن';
+
+  @override
+  String get onlinePayment => 'كيفية الدفع بالطريقة الأولى';
+
+  @override
+  String get onlinePayment2 => 'الدفع عبر الإنترنت';
+
+  @override
+  String get sendCopyReceipt => 'إرسال نسخة من الإيصال';
+
+  @override
+  String get send => 'يرسل';
+
+  @override
+  String get upload => 'رفع';
+
+  @override
+  String get sendingReceipt => 'جارٍ إرسال الإيصال...';
+
+  @override
+  String get emailSent => 'تم إرسال البريد الإلكتروني';
+
+  @override
+  String get checkEmail => 'يرجى التحقق من بريدك الإلكتروني!';
 }

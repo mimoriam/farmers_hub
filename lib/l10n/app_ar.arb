@@ -322,6 +322,19 @@
   "reportAd": "الإبلاغ عن إعلان مخالف",
   "enterReport": "أدخل تقريرك هنا...",
   "reportToAdmin": "تقرير إلى المشرف",
-  "searchByCountries": "بحث عن البلد"
-
+  "searchByCountries": "بحث عن البلد",
+  "commissionMembership": "لجنة العضوية",
+  "sellProductCommission": "بع منتجك بعمولة 1%\nفقط لدى محصولك. العمولة أمانة في ذمة\nالمعلن، سواءً تم البيع عن طريق الموقع أو\nبسببه، وقيمتها موضحةكالتالي",
+  "calculateCommission": "احسب العمولة",
+  "salePrice": "أدخل سعر البيع",
+  "totalComission": "إجمالي العمولة",
+  "payNow": "ادفع الآن",
+  "onlinePayment": "كيفية الدفع بالطريقة الأولى",
+  "onlinePayment2": "الدفع عبر الإنترنت",
+  "sendCopyReceipt": "إرسال نسخة من الإيصال",
+  "send": "يرسل",
+  "upload": "رفع",
+  "sendingReceipt": "جارٍ إرسال الإيصال...",
+  "emailSent": "تم إرسال البريد الإلكتروني",
+  "checkEmail": "يرجى التحقق من بريدك الإلكتروني!"
 }

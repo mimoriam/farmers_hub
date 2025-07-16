@@ -990,4 +990,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchByCountries => 'Search country';
+
+  @override
+  String get commissionMembership => 'Commission of Membership';
+
+  @override
+  String get sellProductCommission =>
+      'Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows';
+
+  @override
+  String get calculateCommission => 'Calculate Commission';
+
+  @override
+  String get salePrice => 'Enter Sale Price';
+
+  @override
+  String get totalComission => 'Total Commission';
+
+  @override
+  String get payNow => 'Pay Now';
+
+  @override
+  String get onlinePayment => 'How to Pay First Method';
+
+  @override
+  String get onlinePayment2 => 'Online Payment';
+
+  @override
+  String get sendCopyReceipt => 'Send Copy Receipt';
+
+  @override
+  String get send => 'Send';
+
+  @override
+  String get upload => 'Upload File';
+
+  @override
+  String get sendingReceipt => 'Sending receipt...';
+
+  @override
+  String get emailSent => 'Email Sent';
+
+  @override
+  String get checkEmail => 'Please check your email!';
 }

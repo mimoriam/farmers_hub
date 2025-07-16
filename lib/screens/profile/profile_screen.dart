@@ -348,21 +348,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: homebackgroundColor,
       resizeToAvoidBottomInset: false,
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     if (context.mounted) {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(builder: (context) => AddPostScreen()),
+      //       );
+      //     }
+      //   },
+      //   backgroundColor: onboardingColor,
+      //   elevation: 0,
+      //   shape: CircleBorder(),
+      //   child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
+      // ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (context.mounted) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => AddPostScreen()),
-            );
+        onPressed: () async {
+          final String whatsapp = "+1-14821421408214";
+          final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
+          final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+
+          if (Platform.isIOS) {
+            if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+              await launchUrl(Uri.parse(whatsappIoSURL));
+            } else {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
+                );
+              }
+            }
+          } else {
+            if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+              await launchUrl(Uri.parse(whatsappURlAndroid));
+            } else {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
+                );
+              }
+            }
           }
         },
         backgroundColor: onboardingColor,
         elevation: 0,
         shape: CircleBorder(),
-        child: Icon(Icons.camera_alt_outlined, color: Colors.white, size: 24),
+        child: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 27),
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: BottomAppBar(
@@ -488,48 +520,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
 
-        actions: [
-          OutlinedButton.icon(
-            icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 20),
-            label: Text(
-              AppLocalizations.of(context)!.whatsapp,
-              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
-            ),
-            style: OutlinedButton.styleFrom(
-              backgroundColor: onboardingColor,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              side: BorderSide(color: onboardingColor, width: 1.5),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-            ),
-            onPressed: () async {
-              final String whatsapp = "+1-14821421408214";
-              final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
-              final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
-
-              if (Platform.isIOS) {
-                if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
-                  await launchUrl(Uri.parse(whatsappIoSURL));
-                } else {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
-                    );
-                  }
-                }
-              } else {
-                if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
-                  await launchUrl(Uri.parse(whatsappURlAndroid));
-                } else {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
-                    );
-                  }
-                }
-              }
-            },
-          ),
-        ],
+        // actions: [
+        //   OutlinedButton.icon(
+        //     icon: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 20),
+        //     label: Text(
+        //       AppLocalizations.of(context)!.whatsapp,
+        //       style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500),
+        //     ),
+        //     style: OutlinedButton.styleFrom(
+        //       backgroundColor: onboardingColor,
+        //       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        //       side: BorderSide(color: onboardingColor, width: 1.5),
+        //       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+        //     ),
+        //     onPressed: () async {
+        //       final String whatsapp = "+1-14821421408214";
+        //       final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
+        //       final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+        //
+        //       if (Platform.isIOS) {
+        //         if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
+        //           await launchUrl(Uri.parse(whatsappIoSURL));
+        //         } else {
+        //           if (context.mounted) {
+        //             ScaffoldMessenger.of(context).showSnackBar(
+        //               SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
+        //             );
+        //           }
+        //         }
+        //       } else {
+        //         if (await canLaunchUrl(Uri.parse(whatsappURlAndroid))) {
+        //           await launchUrl(Uri.parse(whatsappURlAndroid));
+        //         } else {
+        //           if (context.mounted) {
+        //             ScaffoldMessenger.of(context).showSnackBar(
+        //               SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
+        //             );
+        //           }
+        //         }
+        //       }
+        //     },
+        //   ),
+        // ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(

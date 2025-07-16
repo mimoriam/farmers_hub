@@ -1048,12 +1048,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                   "Worker Services",
                                                   "Pesticides",
                                                   "Animal Feed",
-                                                  "Others",
                                                   "Pomegranate",
                                                   "Apples",
                                                   "Honey",
                                                   "Cheese",
                                                   "Leafy Green",
+                                                  "Others",
                                                 ]
                                                 .map(
                                                   (lang) => DropdownMenuItem<String>(
@@ -1274,7 +1274,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                       // selectedCategory == "Delivery" ||
                                                       selectedCategory == "Pesticides" ||
                                                       selectedCategory == "Animal Feed" ||
-                                                      selectedCategory == "Others"
+                                                      selectedCategory == "Others" ||
+                                                      selectedCategory == "Pomegranate" ||
+                                                      selectedCategory == "Apples" ||
+                                                      selectedCategory == "Honey" ||
+                                                      selectedCategory == "Cheese" ||
+                                                      selectedCategory == "Leafy Green"
                                                   ? Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [

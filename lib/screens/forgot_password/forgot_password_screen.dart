@@ -24,6 +24,62 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    void showConfirmedDialogForPassword() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(Icons.priority_high_rounded, color: Colors.red, size: 40),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  AppLocalizations.of(context)!.emailSent,
+                  style: GoogleFonts.poppins(fontSize: 20, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  AppLocalizations.of(context)!.checkEmail,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[600]),
+                ),
+                SizedBox(height: 24),
+                SizedBox(
+                  width: 100,
+                  child: OutlinedButton.icon(
+                    icon: Icon(Icons.cancel_outlined, color: Colors.red),
+                    label: Text(
+                      AppLocalizations.of(context)!.ok,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      side: BorderSide(color: Colors.red),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+                      padding: EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      );
+    }
+
     return Scaffold(
       backgroundColor: scaffoldBackgroundColor,
       appBar: AppBar(
@@ -135,7 +191,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 );
 
                                 if (context.mounted) {
-                                  Navigator.pop(context);
+                                  showConfirmedDialogForPassword();
+                                  // Navigator.pop(context);
                                 }
                               } catch (e) {
                                 setState(() {

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -147,7 +148,8 @@ class _CommissionScreenState extends State<CommissionScreen> {
         backgroundColor: onboardingColor,
         automaticallyImplyLeading: true,
         title: Text(
-          "Commission of Membership",
+          // "Commission of Membership",
+          AppLocalizations.of(context)!.commissionMembership,
           // style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
           style: GoogleFonts.poppins(
             color: Colors.white,
@@ -172,11 +174,12 @@ class _CommissionScreenState extends State<CommissionScreen> {
             children: <Widget>[
               // --- Informational Text (Keep as before) ---
               Text(
-                'Sell your product at 1% commission\n'
-                'Only at Mahsolek. The fee is a trust owed by the\n'
-                'advertiser, whether the sale is made for By or\n'
-                'because of the site, the value of which is\n'
-                'explained as follows',
+                // "Sell your product at 1% commission\n"
+                //     "Only at Mahsolek. The fee is a trust owed by the\n"
+                //     "advertiser, whether the sale is made for By or\n"
+                //     "because of the site, the value of which is\n"
+                //     "explained as follows",
+                AppLocalizations.of(context)!.sellProductCommission,
                 style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700], height: 1.5),
               ),
               const SizedBox(height: 6),
@@ -187,7 +190,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                   // _calculateCommission();
                 },
                 child: Text(
-                  'Calculate Commission',
+                  AppLocalizations.of(context)!.calculateCommission,
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: primaryColor,
@@ -203,7 +206,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
 
               // --- Enter Sale Price ---
               Text(
-                'Enter Sale Price',
+                AppLocalizations.of(context)!.salePrice,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -245,6 +248,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                       ),
                     ),
                     const SizedBox(width: 8),
+
                     // You can keep the DropdownButton as is, or use FormBuilderDropdown
                     // For simplicity, keeping the stateful DropdownButton here
                     // DropdownButtonHideUnderline(
@@ -272,23 +276,24 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     //     },
                     //   ),
                     // ),
-
                     DropdownButton2<String>(
                       underline: const SizedBox.shrink(),
                       value: _selectedCurrency,
 
                       items: _currencies
-                          .map((String item) => DropdownMenuItem<String>(
-                        value: item,
-                        child: Text(
-                          item,
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black87,
-                          ),
-                        ),
-                      ))
+                          .map(
+                            (String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                          )
                           .toList(),
                       onChanged: (String? newValue) {
                         setState(() {
@@ -297,10 +302,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         });
                       },
                       iconStyleData: IconStyleData(
-                        icon: Icon(
-                          Icons.keyboard_arrow_down,
-                          color: Colors.grey[700],
-                        ),
+                        icon: Icon(Icons.keyboard_arrow_down, color: Colors.grey[700]),
                       ),
                       buttonStyleData: ButtonStyleData(
                         // padding: EdgeInsets.symmetric(horizontal: 16),
@@ -323,9 +325,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         //   thumbVisibility: MaterialStateProperty.all<bool>(true),
                         // ),
                       ),
-                      menuItemStyleData: const MenuItemStyleData(
-                        height: 40,
-                      ),
+                      menuItemStyleData: const MenuItemStyleData(height: 40),
                     ),
                     // const SizedBox(width: 8), // Padding for the dropdown
                   ],
@@ -335,7 +335,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
 
               // --- Total Commission (Keep as before, but updated by _calculateCommission) ---
               Text(
-                'Total Commission',
+                AppLocalizations.of(context)!.totalComission,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -383,7 +383,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     child: OutlinedButton.icon(
                       icon: FaIcon(FontAwesomeIcons.whatsapp, color: onboardingColor, size: 24),
                       label: Text(
-                        'Contact',
+                        'Whatsapp',
                         style: GoogleFonts.poppins(
                           color: primaryColor,
                           fontWeight: FontWeight.w500,
@@ -419,7 +419,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         }
                       },
                       child: Text(
-                        'Pay Now',
+                        AppLocalizations.of(context)!.payNow,
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
@@ -437,12 +437,12 @@ class _CommissionScreenState extends State<CommissionScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'How to Pay First Method',
+                    AppLocalizations.of(context)!.onlinePayment,
                     style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 8),
                   Text(
-                    'Online Payment',
+                    AppLocalizations.of(context)!.onlinePayment2,
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: primaryColor,
@@ -472,7 +472,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
               // --- Send Copy Receipt (Keep as before, this is not part of the form builder logic) ---
               // ... (Receipt image and upload/send buttons) ...
               Text(
-                'Send Copy Receipt',
+                AppLocalizations.of(context)!.sendCopyReceipt,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,
@@ -550,7 +550,7 @@ class _CommissionScreenState extends State<CommissionScreen> {
                         _pickReceiptImage(ImageSource.gallery);
                       },
                       child: Text(
-                        'Upload File',
+                        AppLocalizations.of(context)!.upload,
                         style: GoogleFonts.poppins(
                           color: primaryColor,
                           fontWeight: FontWeight.w500,
@@ -572,12 +572,14 @@ class _CommissionScreenState extends State<CommissionScreen> {
                               // TODO: Implement send receipt action with _receiptImage
                               print("Send button tapped with image: ${_receiptImage!.path}");
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Sending receipt...')),
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.sendingReceipt),
+                                ),
                               );
                             }
                           : null,
                       child: Text(
-                        'Send',
+                        AppLocalizations.of(context)!.send,
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,

@@ -2035,6 +2035,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search country'**
   String get searchByCountries;
+
+  /// No description provided for @commissionMembership.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission of Membership'**
+  String get commissionMembership;
+
+  /// No description provided for @sellProductCommission.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows'**
+  String get sellProductCommission;
+
+  /// No description provided for @calculateCommission.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculate Commission'**
+  String get calculateCommission;
+
+  /// No description provided for @salePrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Sale Price'**
+  String get salePrice;
+
+  /// No description provided for @totalComission.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Commission'**
+  String get totalComission;
+
+  /// No description provided for @payNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Now'**
+  String get payNow;
+
+  /// No description provided for @onlinePayment.
+  ///
+  /// In en, this message translates to:
+  /// **'How to Pay First Method'**
+  String get onlinePayment;
+
+  /// No description provided for @onlinePayment2.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Payment'**
+  String get onlinePayment2;
+
+  /// No description provided for @sendCopyReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Copy Receipt'**
+  String get sendCopyReceipt;
+
+  /// No description provided for @send.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get send;
+
+  /// No description provided for @upload.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload File'**
+  String get upload;
+
+  /// No description provided for @sendingReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Sending receipt...'**
+  String get sendingReceipt;
+
+  /// No description provided for @emailSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Sent'**
+  String get emailSent;
+
+  /// No description provided for @checkEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your email!'**
+  String get checkEmail;
 }
 
 class _AppLocalizationsDelegate
