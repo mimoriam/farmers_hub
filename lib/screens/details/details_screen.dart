@@ -20,6 +20,7 @@ import 'package:tap_debouncer/tap_debouncer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:collection/collection.dart';
+import 'package:share_plus/share_plus.dart';
 
 class FavoriteIconButton extends StatefulWidget {
   final String postId;
@@ -433,7 +434,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildTitleAndActions2(postDetails),
+                            _buildTitleAndActions2(postDetails, sellerData),
                             // _buildTitleAndActions(
                             //   currency: postDetails["currency"].toString().toLowerCase(),
                             //   title: postDetails["title"],
@@ -711,7 +712,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     );
   }
 
-  Widget _buildTitleAndActions2(Map<String, dynamic> postDetails) {
+  Widget _buildTitleAndActions2(Map<String, dynamic> postDetails, Map<String, dynamic> sellerData) {
     final String currency = postDetails["currency"].toString().toLowerCase();
     final String title = postDetails["title"];
     final String price = postDetails["price"].toString();
@@ -774,7 +775,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.share_outlined),
-                  onPressed: () {},
+                  onPressed: () {
+                    final shareText =
+                        'Check out this post on Farmer\'s Hub!\n\n'
+                        'Title: $title\n'
+                        'Price: $price $currency\n'
+                        'Location: ${location["city"]}\n'
+                        'Village: $village\n'
+                        'Category: ${postDetails['category']}\n'
+                        'Phone Number: ${sellerData["phoneInfo"]["completeNumber"]}';
+
+                    SharePlus.instance.share(ShareParams(text: shareText));
+                  },
                   color: Colors.grey[700],
                 ),
                 // USE THE NEW WIDGET HERE
