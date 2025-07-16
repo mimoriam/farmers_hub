@@ -164,33 +164,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  void showFeedbackDialog(BuildContext context) {
-    int currentRating = 5; // To hold the selected star rating
-
-    showDialog(
-      context: context,
-      barrierDismissible: true, // Allows dismissing by tapping outside
-      builder: (BuildContext dialogContext) {
-        // Use StatefulBuilder if you need to update the dialog's content (like the star rating)
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Dialog(
-              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-              elevation: 5,
-              backgroundColor: Colors.transparent, // Make Dialog's own background transparent
-              child: _buildDialogContent(dialogContext, setState, currentRating, (rating) {
-                setState(() {
-                  currentRating = rating;
-                });
-              }),
-            );
-          },
-        );
-      },
-    );
-  }
-
   // Separate function for the dialog content to keep it organized
   Widget _buildDialogContent(
     BuildContext context,
@@ -198,6 +171,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     int currentRating,
     Function(int) onRatingUpdate,
   ) {
+    final locale = Localizations.localeOf(context);
+
     final Color primaryGreen = onboardingColor;
     final Color darkTextColor = Colors.black87;
     final Color lightTextColor = Colors.grey.shade600;
@@ -242,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisSize: MainAxisSize.min, // Important for dialogs
             children: <Widget>[
               Text(
-                'Review by ${_firebaseService.currentUser!.displayName}',
+                '${AppLocalizations.of(context)!.reviewBy} ${_firebaseService.currentUser!.displayName}',
                 style: GoogleFonts.poppins(
                   fontSize: 12,
                   color: lightTextColor,
@@ -265,7 +240,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.poppins(fontSize: 13, color: lightTextColor, height: 1.4),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 8),
               // Star Rating
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -284,7 +259,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   );
                 }),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 8),
               // Share Feedback Button
               ElevatedButton.icon(
                 icon: Icon(Icons.thumb_up_alt_outlined, color: Colors.white, size: 20),
@@ -338,6 +313,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  void showFeedbackDialog(BuildContext context) {
+    int currentRating = 5; // To hold the selected star rating
+
+    showDialog(
+      context: context,
+      barrierDismissible: true, // Allows dismissing by tapping outside
+      builder: (BuildContext dialogContext) {
+        // Use StatefulBuilder if you need to update the dialog's content (like the star rating)
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+              elevation: 5,
+              backgroundColor: Colors.transparent, // Make Dialog's own background transparent
+              child: _buildDialogContent(dialogContext, setState, currentRating, (rating) {
+                setState(() {
+                  currentRating = rating;
+                });
+              }),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -502,8 +504,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () async {
               final String whatsapp = "+1-14821421408214";
               final String whatsappURlAndroid = "whatsapp://send?phone=$whatsapp&text=${""}";
-              final String whatsappIoSURL =
-                  "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
+              final String whatsappIoSURL = "https://wa.me/$whatsapp?text=${Uri.tryParse("AAA")}";
 
               if (Platform.isIOS) {
                 if (await canLaunchUrl(Uri.parse(whatsappIoSURL))) {
@@ -511,9 +512,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 } else {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.whatsappNotInstalled),
-                      ),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
                     );
                   }
                 }
@@ -523,9 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 } else {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(AppLocalizations.of(context)!.whatsappNotInstalled),
-                      ),
+                      SnackBar(content: Text(AppLocalizations.of(context)!.whatsappNotInstalled)),
                     );
                   }
                 }
@@ -581,7 +578,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     _buildSettingsItem(
                       icon: Icons.currency_bitcoin,
-                      text: 'Commission & Membership',
+                      // text: 'Commission & Membership',
+                      text: AppLocalizations.of(context)!.commission,
                       onTap: () {
                         if (context.mounted) {
                           Navigator.push(
@@ -595,7 +593,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     _buildSettingsItem(
                       icon: Icons.thumb_up_outlined,
-                      text: 'Rate us',
+                      // text: 'Rate us',
+                      text: AppLocalizations.of(context)!.rateus,
                       onTap: () {
                         showFeedbackDialog(context);
                       },
@@ -626,7 +625,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (await canLaunch(email)) {
                               await launchUrlString(email);
                             } else {
-                              throw AppLocalizations.of(context)!.noLaunch + ' $email';
+                              throw '${AppLocalizations.of(context)!.noLaunch} $email';
                             }
                           },
                         ),
@@ -828,6 +827,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _buildSettingsList() {
+    final locale = Localizations.localeOf(context);
+
     return Column(
       children: [
         _buildSettingItemCard(
@@ -884,7 +885,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   padding: EdgeInsets.only(left: 100, right: 0, top: 2, bottom: 2),
                   child: DropdownButtonFormField2<String>(
                     items: ['English', 'Arabic']
-                        .map((lang) => DropdownMenuItem<String>(value: lang, child: Text(lang)))
+                        .map(
+                          (lang) => DropdownMenuItem<String>(
+                            value: lang,
+                            child: Text(
+                              lang == "English"
+                                  ? AppLocalizations.of(context)!.english
+                                  : AppLocalizations.of(context)!.arabic,
+                              // lang
+                            ),
+                          ),
+                        )
                         .toList(),
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 2),

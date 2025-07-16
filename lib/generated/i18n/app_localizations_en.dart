@@ -473,6 +473,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get syria => 'Syria';
 
   @override
+  String get syriaC => 'Syria';
+
+  @override
   String get price => 'Price';
 
   @override
@@ -902,4 +905,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get villageS => 'Village';
+
+  @override
+  String get commission => 'Commission & Membership';
+
+  @override
+  String get rateus => 'Rate us';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get reviewBy => 'Review by';
+
+  @override
+  String get syriaLabel => 'Syria (ل.س)';
+
+  @override
+  String get usdLabel => 'Usd (\$)';
+
+  @override
+  String get euroLabel => 'Euro (€)';
+
+  @override
+  String get liraLabel => 'Lira (₺)';
 }

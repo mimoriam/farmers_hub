@@ -335,7 +335,8 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
           SizedBox(width: 10),
           _buildTabItem(1, AppLocalizations.of(context)!.sold),
           SizedBox(width: 10),
-          _buildTabItem(2, "Pending"),
+          // _buildTabItem(2, "Pending"),
+          _buildTabItem(2, AppLocalizations.of(context)!.pending),
         ],
       ),
     );

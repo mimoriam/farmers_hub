@@ -216,7 +216,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            AppLocalizations.of(context)!.syria, // Title and subtitle
+                            AppLocalizations.of(context)!.syriaC, // Title and subtitle
                             style: TextStyle(
                               // color:
                               //     selected == 1 || _selectedCurrency == "syria"
@@ -312,7 +312,7 @@ class _CurrencyExchangeScreenState extends State<CurrencyExchangeScreen> {
                         // Text part
                         Expanded(
                           child: Text(
-                            AppLocalizations.of(context)!.usDollar, // Title and subtitle
+                            AppLocalizations.of(context)!.usd, // Title and subtitle
                             style: TextStyle(
                               color: Colors.grey.shade600,
                               // color:

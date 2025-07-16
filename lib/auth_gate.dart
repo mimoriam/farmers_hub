@@ -63,7 +63,6 @@ class AuthGate extends StatelessWidget {
                       displayFullTextOnTap: true,
                       stopPauseOnTap: true,
                       onTap: () {
-                        print("Tap Event");
                       },
                     ),
                   ),

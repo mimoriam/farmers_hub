@@ -63,13 +63,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
   Color pickerColor = Color(0xff443a49);
   Color currentColor = scaffoldBackgroundColor;
 
-  final List<Map<String, String>> _currencyOptions = [
-    {'value': 'Syria', 'label': 'Syria (£)'},
-    {'value': 'Usd', 'label': 'Usd (\$)'},
-    {'value': 'Euro', 'label': 'Euro (€)'},
-    {'value': 'Lira', 'label': 'Lira (₺)'},
-  ];
-
   String? defaultRentOrSale;
 
   void changeColor(Color color) {
@@ -357,6 +350,19 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+
+    final List<Map<String, String>> currencyOptions = [
+      {'value': 'Syria', 'label': AppLocalizations.of(context)!.syriaLabel},
+      // {'value': 'Syria', 'label': 'Syria (£)'},
+      // {'value': 'Usd', 'label': 'Usd (\$)'},
+      {'value': 'Usd', 'label': AppLocalizations.of(context)!.usdLabel},
+      {'value': 'Euro', 'label': AppLocalizations.of(context)!.euroLabel},
+      // {'value': 'Euro', 'label': 'Euro (€)'},
+      // {'value': 'Lira', 'label': 'Lira (₺)'},
+      {'value': 'Lira', 'label': AppLocalizations.of(context)!.liraLabel},
+    ];
+
     void showColorPickerDialog() {
       const List<Color> colors = [
         Colors.red,
@@ -1535,7 +1541,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                       children: [
                                         // Text(defaultCurrency.toString().to),
                                         Expanded(
-                                          flex: 2,
+                                          flex: locale.languageCode == "ar" ? 5 : 3,
                                           child: Container(
                                             padding: EdgeInsets.only(right: 0, top: 2, bottom: 0),
                                             // No explicit border for dropdown, styling via DropdownButton properties
@@ -1548,7 +1554,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               //   ),
                                               // )
                                               //     .toList(),
-                                              items: _currencyOptions
+                                              items: currencyOptions
                                                   .map(
                                                     (currency) => DropdownMenuItem<String>(
                                                       value: currency['value'],
@@ -1559,7 +1565,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                               decoration: InputDecoration(
                                                 contentPadding: const EdgeInsets.symmetric(
                                                   vertical: 1,
-                                                  horizontal: 2,
+                                                  horizontal: 1,
                                                 ),
                                                 border: _inputBorder,
                                                 enabledBorder: _inputBorder,

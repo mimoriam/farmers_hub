@@ -1692,8 +1692,6 @@ class PostCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(currency);
-    print(AppLocalizations.of(context)!.usd);
     return Container(
       width: 216,
       margin: const EdgeInsets.only(right: 14.0),

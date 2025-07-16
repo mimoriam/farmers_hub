@@ -939,6 +939,7 @@ class FirebaseService {
           .collection(postCollection)
           .where("sellerId", isEqualTo: currentUser?.uid)
           .where("status", isEqualTo: "pending")
+          .where("hasBeenSold", isEqualTo: false)
           .get();
 
       return querySnapshot.docs;

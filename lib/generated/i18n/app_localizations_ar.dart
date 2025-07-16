@@ -292,13 +292,13 @@ class AppLocalizationsAr extends AppLocalizations {
   String get explore => 'استكشاف';
 
   @override
-  String get usd => 'دولار أمريكي (\$)';
+  String get usd => 'دولار أمريكي';
 
   @override
-  String get euro => 'يورو (€)';
+  String get euro => 'يورو';
 
   @override
-  String get lira => 'ليرة تركية (₺)';
+  String get lira => 'ليرة تركية';
 
   @override
   String get syp => 'ل.س';
@@ -470,6 +470,9 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get syria => 'ل.س (الليرة السورية)';
+
+  @override
+  String get syriaC => 'الليرة السورية';
 
   @override
   String get price => 'السعر';
@@ -687,7 +690,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get bug => 'خطأ';
 
   @override
-  String get submitFeedback => 'Send Feedback';
+  String get submitFeedback => 'إرسال الملاحظات';
 
   @override
   String get suggestion => 'اقتراحات';
@@ -898,4 +901,28 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get villageS => 'القرية';
+
+  @override
+  String get commission => 'اللجنة والعضوية';
+
+  @override
+  String get rateus => 'قيمنا';
+
+  @override
+  String get pending => 'قيد الانتظار';
+
+  @override
+  String get reviewBy => 'مراجعة بواسطة';
+
+  @override
+  String get syriaLabel => '(ل.س) الليرة السورية';
+
+  @override
+  String get usdLabel => 'دولار أمريكي (\$)';
+
+  @override
+  String get euroLabel => 'يورو (€)';
+
+  @override
+  String get liraLabel => 'ليرة تركية (₺)';
 }

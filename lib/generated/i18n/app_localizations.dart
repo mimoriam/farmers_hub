@@ -1022,6 +1022,12 @@ abstract class AppLocalizations {
   /// **'Syria'**
   String get syria;
 
+  /// No description provided for @syriaC.
+  ///
+  /// In en, this message translates to:
+  /// **'Syria'**
+  String get syriaC;
+
   /// No description provided for @price.
   ///
   /// In en, this message translates to:
@@ -1867,6 +1873,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Village'**
   String get villageS;
+
+  /// No description provided for @commission.
+  ///
+  /// In en, this message translates to:
+  /// **'Commission & Membership'**
+  String get commission;
+
+  /// No description provided for @rateus.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate us'**
+  String get rateus;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @reviewBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Review by'**
+  String get reviewBy;
+
+  /// No description provided for @syriaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Syria (ل.س)'**
+  String get syriaLabel;
+
+  /// No description provided for @usdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Usd (\$)'**
+  String get usdLabel;
+
+  /// No description provided for @euroLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Euro (€)'**
+  String get euroLabel;
+
+  /// No description provided for @liraLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Lira (₺)'**
+  String get liraLabel;
 }
 
 class _AppLocalizationsDelegate

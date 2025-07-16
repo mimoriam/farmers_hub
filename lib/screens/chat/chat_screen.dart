@@ -546,10 +546,10 @@ class _ChatScreenState extends State<ChatScreen> {
     final locale = Localizations.localeOf(context);
 
     return Padding(
-      padding: EdgeInsetsDirectional.only(bottom: 20, start: 10, end: 5),
-      // padding: locale.languageCode == "ar"
-      //     ? EdgeInsets.only(bottom: 20, right: 10, left: 10)
-      //     : EdgeInsets.only(bottom: 20, left: 10),
+      // padding: EdgeInsetsDirectional.only(bottom: 13, start: 10, end: 6),
+      padding: locale.languageCode == "ar"
+          ? EdgeInsets.only(bottom: 13, right: 10, left: 10)
+          : EdgeInsets.only(bottom: 13, left: 10),
       child: Row(
         children: [
           Expanded(
@@ -581,7 +581,9 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
+
+          locale.languageCode == "ar" ? Container() : const SizedBox(width: 10),
+
           Container(
             decoration: BoxDecoration(
               color: Colors.white,

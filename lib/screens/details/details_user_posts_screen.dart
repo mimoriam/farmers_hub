@@ -24,7 +24,6 @@ class _DetailsUserPostsScreenState extends State<DetailsUserPostsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.postSellerData["id"]);
     return Scaffold(
       backgroundColor: homebackgroundColor,
 

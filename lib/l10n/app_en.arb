@@ -154,6 +154,7 @@
   "quantityLeastOne": "Quantity must be at least 1.",
   "currency": "Currency",
   "syria": "Syria",
+  "syriaC": "Syria",
   "price": "Price",
   "enterPrice": "Enter Your Price",
   "priceRequires": "Price is required.",
@@ -294,5 +295,13 @@
   "titleS": "Title",
   "categoryS": "Category",
   "cityS": "City",
-  "villageS": "Village"
+  "villageS": "Village",
+  "commission": "Commission & Membership",
+  "rateus": "Rate us",
+  "pending": "Pending",
+  "reviewBy": "Review by",
+  "syriaLabel": "Syria (ل.س)",
+  "usdLabel": "Usd ($)",
+  "euroLabel": "Euro (€)",
+  "liraLabel": "Lira (₺)"
 }
