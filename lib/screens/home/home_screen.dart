@@ -1578,7 +1578,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     // padding: const EdgeInsets.only(left: 10),
                     child: Container(
                       width: 365,
-                      padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
+                      // padding: EdgeInsets.only(left: 16, top: 16, bottom: 16, right: 10),
+                      padding: EdgeInsetsDirectional.only(start: 10, end: 10, top: 16, bottom: 16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topLeft,
@@ -1651,7 +1652,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 16),
 
                   const SizedBox(height: 16),
                 ],

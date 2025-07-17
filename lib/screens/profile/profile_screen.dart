@@ -394,7 +394,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: onboardingColor,
         elevation: 0,
         shape: CircleBorder(),
-        child: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 27),
+        child: FaIcon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 24),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
@@ -610,7 +610,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     _buildSettingsItem(
-                      icon: Icons.currency_bitcoin,
+                      // icon: FontAwesomeIcons.dollarSign,
+                      icon: FontAwesomeIcons.moneyCheckDollar,
+                      // icon: Icons.curr,
                       // text: 'Commission & Membership',
                       text: AppLocalizations.of(context)!.commission,
                       onTap: () {

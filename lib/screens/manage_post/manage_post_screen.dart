@@ -307,6 +307,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                                           createdAt: post["createdAt"],
                                           postId: postId.toString(),
                                           hasBeenSold: post["hasBeenSold"],
+                                          postDetails: post,
                                         ),
                                       ],
                                     ),
@@ -500,8 +501,16 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
     required Timestamp createdAt,
     required String postId,
     required bool hasBeenSold,
+    required postDetails,
   }) {
     final String formattedDate = DateFormat('MMMM d, y').format(createdAt.toDate());
+
+    final TextStyle _labelStyle = const TextStyle(
+      fontWeight: FontWeight.w500,
+      // color: Colors.black87,
+      fontSize: 16,
+    );
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -509,6 +518,36 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
         !hasBeenSold
             ? Row(
                 children: [
+                  Padding(
+                    padding: EdgeInsetsDirectional.only(end: 20),
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: postDetails["hasBeenSold"],
+                          activeColor: onboardingColor,
+                          onChanged: (value) async {
+                            if (value != null) {
+                              await firebaseService.markPostAsSold(postId);
+                              if (mounted) {
+                                setState(() {});
+                              }
+                            }
+                          },
+                        ),
+                        Text(AppLocalizations.of(context)!.sold, style: _labelStyle),
+                      ],
+                    ),
+                  ),
+
+                  // FormBuilderCheckbox(
+                  //   name: 'hasBeenSold',
+                  //   initialValue: postDetails["hasBeenSold"],
+                  //   title: Text(
+                  //     AppLocalizations.of(context)!.sold,
+                  //     style: _labelStyle,
+                  //   ),
+                  //   activeColor: onboardingColor,
+                  // ),
                   _buildActionButton(
                     Icons.delete_outline,
                     Colors.red,
@@ -527,7 +566,7 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                   ),
                 ],
               )
-            : Row(children: []),
+            : Container(),
       ],
     );
   }

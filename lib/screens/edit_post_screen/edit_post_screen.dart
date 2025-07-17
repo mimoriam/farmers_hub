@@ -124,16 +124,19 @@ class _EditPostScreenState extends State<EditPostScreen> {
       builder: (context) => AlertDialog(
         backgroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        title: const Text("Subscription Required"),
-        content: const Text("You need to be a subscribed user to change post images."),
+        title: Text(AppLocalizations.of(context)!.subscriptionRequired),
+        content: Text(AppLocalizations.of(context)!.needToBeSubscribedUser),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("OK")),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context)!.ok),
+          ),
           TextButton(
             onPressed: () {
               // TODO: Navigate to your subscription screen
               Navigator.of(context).pop();
             },
-            child: const Text("Subscribe"),
+            child: Text(AppLocalizations.of(context)!.subscribe),
           ),
         ],
       ),
@@ -143,15 +146,21 @@ class _EditPostScreenState extends State<EditPostScreen> {
 
   Future<void> _pickImage() async {
     // Check for permission before picking an image.
-    if (!await _handleImageChangeAttempt()) return;
+    if (_imageUrls.isNotEmpty) {
+      if (!await _handleImageChangeAttempt()) {
+        return;
+      }
+    }
 
     final int totalImages = _imageUrls.length + _newImages.length;
 
     if (totalImages >= 4) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('You can only have up to 4 images.')));
-      return;
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.addUpToFour)));
+        return;
+      }
     }
 
     final int remaining = 4 - totalImages;
@@ -182,7 +191,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
   // *** MODIFIED: Track URL before removing from UI ***
   Future<void> _removeExistingImage(int index) async {
     // Check for permission before removing an image.
-    if (!await _handleImageChangeAttempt()) return;
+    // if (!await _handleImageChangeAttempt()) return;
 
     setState(() {
       _removedImageUrls.add(_imageUrls[index] as String);
@@ -191,8 +200,13 @@ class _EditPostScreenState extends State<EditPostScreen> {
   }
 
   Future<void> _removeNewImage(int index) async {
+    print(_newImages);
     // Check for permission before removing an image.
-    if (!await _handleImageChangeAttempt()) return;
+    if (_newImages.isEmpty) {
+      if (!await _handleImageChangeAttempt()) {
+        return;
+      }
+    }
 
     setState(() {
       _newImages.removeAt(index);
@@ -573,7 +587,7 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                           SizedBox(width: 8),
                                           Text(
                                             // 'You can add up to 4 photos.',
-                                              AppLocalizations.of(context)!.addPhotos,
+                                            AppLocalizations.of(context)!.addPhotos,
                                             style: TextStyle(fontSize: 14, color: Colors.black),
                                           ),
                                         ],
@@ -625,15 +639,14 @@ class _EditPostScreenState extends State<EditPostScreen> {
                                                 onTap: () async {
                                                   await _removeExistingImage(index);
 
-                                                  if (_isSubscribed) {
-                                                    if (_imageUrls.length + _newImages.length <=
-                                                        4) {
-                                                      setState(() {
-                                                        error = '';
-                                                      });
-                                                    }
-                                                    return;
+                                                  // if (_isSubscribed) {
+                                                  if (_imageUrls.length + _newImages.length <= 4) {
+                                                    setState(() {
+                                                      error = '';
+                                                    });
                                                   }
+                                                  return;
+                                                  // }
                                                 },
                                                 child: Container(
                                                   decoration: BoxDecoration(

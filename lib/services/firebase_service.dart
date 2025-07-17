@@ -533,6 +533,7 @@ class FirebaseService {
     String? details,
     bool? featured,
     String? rentOrSale,
+    String? landArea,
   }) async {
     final List<String> keywordsTitle = _generateKeywords(title);
     final List<String> keywordsCategory = _generateKeywords(category);
@@ -572,6 +573,7 @@ class FirebaseService {
       "hasBeenDeleted": false,
       "status": "pending",
       "rentOrSale": rentOrSale ?? "",
+      "landArea": landArea ?? "",
     });
   }
 

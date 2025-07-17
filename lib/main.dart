@@ -18,6 +18,8 @@ import 'firebase_options.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 
+// dart run rename_app:main all="Farmer's Hub"
+
 // @pragma('vm:entry-point')
 // Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 //   // If you're going to use other Firebase services in the background, such as Firestore,

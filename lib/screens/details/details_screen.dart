@@ -392,6 +392,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 phoneNumber: "",
                                 details: "",
                                 landFor: "",
+                                landArea: "",
                               ),
                             ],
                           ),
@@ -525,6 +526,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               phoneNumber: sellerNumber["completeNumber"],
                               details: postDetails["details"],
                               landFor: postDetails["rentOrSale"],
+                              landArea: postDetails["landArea"],
                             ),
                           ],
                         ),
@@ -1191,6 +1193,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
     required String phoneNumber,
     required String details,
     required String landFor,
+    required String landArea,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1232,6 +1235,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 category == "Others"
             ? Container()
             : _buildDetailRow(AppLocalizations.of(context)!.age, age),
+
+        category == "Land Services"
+            ? _buildDetailRow("Area in Square Meter", landArea)
+            : Container(),
 
         category == "Land Services" || category == "Equipments" || category == "Delivery"
             ? _buildDetailRow("Land For", landFor)

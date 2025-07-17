@@ -1934,6 +1934,24 @@ abstract class AppLocalizations {
   /// **'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows'**
   String get sellProduct;
 
+  /// No description provided for @sellProduct2.
+  ///
+  /// In en, this message translates to:
+  /// **'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n\"And fulfill the covenant of Allah when\nyou have taken it, and do not break\noaths after their confirmation while\nyou have made Allah a witness over\nyou. Verily, Allah knows what you do.\"\nAllah, the almighty has spoken\nthe truth. '**
+  String get sellProduct2;
+
+  /// No description provided for @iPledge.
+  ///
+  /// In en, this message translates to:
+  /// **'• I pledge and swear by Allah that I, the\n advertiser, will pay the commission\n of the website, which is 2% of the\n sale value, whether the sale occurred\n through the website or because of it.'**
+  String get iPledge;
+
+  /// No description provided for @iPledge2.
+  ///
+  /// In en, this message translates to:
+  /// **'• I also pledge to pay the commission\n within 7 days from receiving the sale amount. '**
+  String get iPledge2;
+
   /// No description provided for @commitToThat.
   ///
   /// In en, this message translates to:
@@ -2048,6 +2066,12 @@ abstract class AppLocalizations {
   /// **'Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows'**
   String get sellProductCommission;
 
+  /// No description provided for @sellProductCommission2.
+  ///
+  /// In en, this message translates to:
+  /// **'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. '**
+  String get sellProductCommission2;
+
   /// No description provided for @calculateCommission.
   ///
   /// In en, this message translates to:
@@ -2125,6 +2149,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No search results'**
   String get noSearchResults;
+
+  /// No description provided for @subscriptionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Subscription Required'**
+  String get subscriptionRequired;
+
+  /// No description provided for @needToBeSubscribedUser.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to be a subscribed user to change post images.'**
+  String get needToBeSubscribedUser;
+
+  /// No description provided for @fourImagesLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You can only have up to 4 images.'**
+  String get fourImagesLimit;
+
+  /// No description provided for @landInSquareMeter.
+  ///
+  /// In en, this message translates to:
+  /// **'Land in square meter (m²)'**
+  String get landInSquareMeter;
+
+  /// No description provided for @enterLandArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Land Area'**
+  String get enterLandArea;
+
+  /// No description provided for @landAreaRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Land Area is required.'**
+  String get landAreaRequired;
 }
 
 class _AppLocalizationsDelegate

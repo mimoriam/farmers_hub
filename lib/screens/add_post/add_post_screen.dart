@@ -162,19 +162,57 @@ class _AddPostScreenState extends State<AddPostScreen> {
           builder: (context, setState) {
             return AlertDialog(
               backgroundColor: Colors.white,
-              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0),
+              insetPadding: const EdgeInsets.symmetric(horizontal: 24.0),
               // title: Center(child: const Text('Allah Your Mubarak')),
               title: Center(child: Text(AppLocalizations.of(context)!.allahMubarak)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     Text(
+                      textAlign: TextAlign.center,
                       // 'Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows',
-                      AppLocalizations.of(context)!.sellProduct,
-                      style: TextStyle(fontSize: 13),
+                      // AppLocalizations.of(context)!.sellProduct,
+                      AppLocalizations.of(context)!.sellProduct2,
+                      // style: TextStyle(fontSize: 14, color: onboardingTextColor),
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                          color: onboardingTextColor,
+                        ),
+                      ),
+                    ),
+
+                    Text(
+                      textAlign: TextAlign.center,
+                      // "• I pledge and swear by Allah that I, the\n advertiser, will pay the commission\n of the website, which is 2% of the\n sale value, whether the sale occurred\n through the website or because of it.",
+                      AppLocalizations.of(context)!.iPledge,
+                      // style: TextStyle(fontSize: 14),
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      textAlign: TextAlign.center,
+                      // "• I also pledge to pay the commission\n within 7 days from receiving the sale amount. ",
+                      AppLocalizations.of(context)!.iPledge2,
+                      // style: TextStyle(fontSize: 14),
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                          fontSize: 13.69,
+                          fontWeight: FontWeight.w400,
+                          height: 1.43,
+                        ),
+                      ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         SizedBox(
                           width: 20,
@@ -201,62 +239,74 @@ class _AddPostScreenState extends State<AddPostScreen> {
               ),
               actionsAlignment: MainAxisAlignment.center,
               actions: <Widget>[
-                SizedBox(
-                  width: 260,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      // padding: const EdgeInsets.symmetric(vertical: 15),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                      backgroundColor: onboardingColor,
-                      foregroundColor: Colors.white,
-                    ),
-                    onPressed: isCommitted
-                        ? () async {
-                            // The existing logic from the original "Submit" button's onTap is moved here.
-                            bool canPost = await firebaseService.canCreatePost();
+                TapDebouncer(
+                  cooldown: const Duration(milliseconds: 2000),
+                  onTap: isCommitted
+                      ? () async {
+                          if (_images.isEmpty) {
+                            this.setState(() {
+                              error = AppLocalizations.of(context)!.uploadImage;
 
-                            if (!canPost) {
                               if (context.mounted) {
-                                Navigator.of(context).pop(); // Close the confirmation dialog
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    backgroundColor: Colors.white,
-                                    // title: const Text("Monthly Limit Reached"),
-                                    title: Text(AppLocalizations.of(context)!.monthlyLimitReached),
-                                    content: Text(
-                                      AppLocalizations.of(context)!.monthlyLimitLabel,
-                                      // "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () => Navigator.of(context).pop(),
-                                        // child: const Text("OK"),
-                                        child: Text(AppLocalizations.of(context)!.ok),
-                                      ),
-                                      TextButton(
-                                        onPressed: () {
-                                          // TODO: Navigate to subscription screen
-                                          Navigator.of(context).pop();
-                                        },
-                                        // child: const Text("Subscribe"),
-                                        child: Text(AppLocalizations.of(context)!.subscribe),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                Navigator.of(context).pop();
                               }
-                              return;
+
+                              _scrollController.animateTo(
+                                _scrollController.position.minScrollExtent,
+                                curve: Curves.easeOut,
+                                duration: const Duration(milliseconds: 300),
+                              );
+                            });
+
+                            return;
+                          }
+
+                          bool canPost = await firebaseService.canCreatePost();
+
+                          if (!canPost) {
+                            if (context.mounted) {
+                              Navigator.of(context).pop(); // Close the confirmation dialog
+                              showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  backgroundColor: Colors.white,
+                                  // title: const Text("Monthly Limit Reached"),
+                                  title: Text(AppLocalizations.of(context)!.monthlyLimitReached),
+                                  content: Text(
+                                    AppLocalizations.of(context)!.monthlyLimitLabel,
+                                    // "You have reached your limit of 2 posts per month. Subscribe now to post without limits.",
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(),
+                                      // child: const Text("OK"),
+                                      child: Text(AppLocalizations.of(context)!.ok),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        // TODO: Navigate to subscription screen
+                                        Navigator.of(context).pop();
+                                      },
+                                      // child: const Text("Subscribe"),
+                                      child: Text(AppLocalizations.of(context)!.subscribe),
+                                    ),
+                                  ],
+                                ),
+                              );
                             }
+                            return;
+                          }
 
-                            if (_images.isEmpty) {
+                          if (_formKey.currentState!.validate() &&
+                              selectedCategory != null &&
+                              _images.isNotEmpty) {
+                            List<String> imageUrls = [];
+
+                            if (_images.isNotEmpty && _images.length <= 4) {
+                              imageUrls = await firebaseService.uploadImages(_images);
+                            } else {
                               this.setState(() {
-                                error = AppLocalizations.of(context)!.uploadImage;
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                }
-
+                                error = AppLocalizations.of(context)!.uploadFourImagesOnly;
                                 _scrollController.animateTo(
                                   _scrollController.position.minScrollExtent,
                                   curve: Curves.easeOut,
@@ -264,90 +314,82 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                 );
                               });
 
-                              return;
-                            }
-
-                            if (_formKey.currentState!.validate() &&
-                                selectedCategory != null &&
-                                _images.isNotEmpty) {
-                              List<String> imageUrls = [];
-
-                              if (_images.isNotEmpty && _images.length <= 4) {
-                                imageUrls = await firebaseService.uploadImages(_images);
-                              } else {
-                                this.setState(() {
-                                  error = AppLocalizations.of(context)!.uploadFourImagesOnly;
-                                  _scrollController.animateTo(
-                                    _scrollController.position.minScrollExtent,
-                                    curve: Curves.easeOut,
-                                    duration: const Duration(milliseconds: 300),
-                                  );
-                                });
-
-                                if (context.mounted) {
-                                  Navigator.of(context).pop();
-                                  return;
-                                }
-                              }
-
-                              final doc = await firebaseService.getCurrentUserData();
-                              final userData = doc?.data() as Map<String, dynamic>?;
-
-                              final currency = userData?["defaultCurrency"] ?? "usd";
-
-                              firebaseService.createPost(
-                                rentOrSale: defaultRentOrSale,
-                                title: _formKey.currentState?.fields['title']?.value,
-                                imageUrls: imageUrls,
-                                category: selectedCategory!,
-                                gender:
-                                    selectedCategory == "Live Stock" ||
-                                        selectedCategory == "Worker Services"
-                                    ? selectedGender
-                                    : "",
-                                currency: currency,
-                                averageWeight:
-                                    selectedCategory != "Live Stock" ||
-                                        selectedCategory != "Worker Services"
-                                    ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
-                                    : "",
-                                quantity: int.parse(
-                                  _formKey.currentState?.fields['quantity']?.value,
-                                ),
-                                age:
-                                    selectedCategory == "Live Stock" ||
-                                        selectedCategory == "Worker Services"
-                                    ? int.parse(_formKey.currentState?.fields['age']?.value)
-                                    : 0,
-                                price: int.parse(_formKey.currentState?.fields['price']?.value),
-                                details: _formKey.currentState?.fields['add_details']?.value,
-                                featured: true,
-                                city: widget.location ?? selectedCity,
-                                village: _formKey.currentState?.fields['village']?.value,
-                                // postColor: "0x${currentColor.toHexString()}",
-                                postColor: "0x${_colors[_selectedColorIndex].toHexString()}",
-                              );
-
-                              _formKey.currentState?.reset();
-                              this.setState(() {
-                                locationSelected = false;
-                                error = "";
-                                _images = [];
-                              });
-
                               if (context.mounted) {
                                 Navigator.of(context).pop();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => HomeScreen()),
-                                );
+                                return;
                               }
                             }
+
+                            final doc = await firebaseService.getCurrentUserData();
+                            final userData = doc?.data() as Map<String, dynamic>?;
+
+                            final currency = userData?["defaultCurrency"] ?? "usd";
+
+                            firebaseService.createPost(
+                              landArea: _formKey.currentState?.fields['landArea']?.value ?? "",
+                              rentOrSale: defaultRentOrSale,
+                              title: _formKey.currentState?.fields['title']?.value,
+                              imageUrls: imageUrls,
+                              category: selectedCategory!,
+                              gender:
+                                  selectedCategory == "Live Stock" ||
+                                      selectedCategory == "Worker Services"
+                                  ? selectedGender
+                                  : "",
+                              currency: currency,
+                              averageWeight:
+                                  selectedCategory != "Live Stock" ||
+                                      selectedCategory != "Worker Services"
+                                  ? _formKey.currentState?.fields['avg_weight']?.value ?? ""
+                                  : "",
+                              quantity: int.parse(_formKey.currentState?.fields['quantity']?.value),
+                              age:
+                                  selectedCategory == "Live Stock" ||
+                                      selectedCategory == "Worker Services"
+                                  ? int.parse(_formKey.currentState?.fields['age']?.value)
+                                  : 0,
+                              price: int.parse(_formKey.currentState?.fields['price']?.value),
+                              details: _formKey.currentState?.fields['add_details']?.value,
+                              featured: true,
+                              city: widget.location ?? selectedCity,
+                              village: _formKey.currentState?.fields['village']?.value,
+                              // postColor: "0x${currentColor.toHexString()}",
+                              postColor: "0x${_colors[_selectedColorIndex].toHexString()}",
+                            );
+
+                            _formKey.currentState?.reset();
+                            this.setState(() {
+                              locationSelected = false;
+                              error = "";
+                              _images = [];
+                            });
+
+                            if (context.mounted) {
+                              Navigator.of(context).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => HomeScreen()),
+                              );
+                            }
                           }
-                        : null,
-                    // child: Text('Confirm'),
-                    child: Text(AppLocalizations.of(context)!.confirmD),
-                  ),
+                        }
+                      : null,
+                  builder: (BuildContext context, TapDebouncerFunc? onTap) {
+                    return SizedBox(
+                      width: 230,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          // padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          backgroundColor: onboardingColor,
+                          foregroundColor: Colors.white,
+                        ),
+                        onPressed: onTap,
+                        // child: Text('Confirm'),
+                        child: Text(AppLocalizations.of(context)!.confirmD),
+                      ),
+                    );
+                  },
                 ),
               ],
             );
@@ -1207,8 +1249,108 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                     )
                                                   : Container(),
 
-                                              selectedCategory == "Land Services" ||
-                                                      selectedCategory == "Equipments" ||
+                                              selectedCategory == "Land Services"
+                                                  ? Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          AppLocalizations.of(
+                                                            context,
+                                                          )!.landInSquareMeter,
+                                                          style: _labelStyle,
+                                                        ),
+                                                        const SizedBox(height: 8),
+
+                                                        FormBuilderTextField(
+                                                          name: 'landArea',
+                                                          maxLength: 120,
+                                                          autovalidateMode: validateMode,
+                                                          decoration: InputDecoration(
+                                                            hintText: AppLocalizations.of(
+                                                              context,
+                                                            )!.enterLandArea,
+                                                            counterText: "",
+                                                            border: _inputBorder,
+                                                            enabledBorder: _inputBorder,
+                                                            focusedBorder: _focusedInputBorder,
+                                                            errorBorder: _errorInputBorder,
+                                                            focusedErrorBorder: _focusedInputBorder,
+                                                            contentPadding: _contentPadding,
+                                                          ),
+                                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                                          validator: FormBuilderValidators.compose([
+                                                            FormBuilderValidators.required(
+                                                              errorText: AppLocalizations.of(
+                                                                context,
+                                                              )!.landAreaRequired,
+                                                            ),
+                                                          ]),
+                                                        ),
+
+                                                        SizedBox(height: 8),
+
+                                                        Container(
+                                                          padding: EdgeInsets.only(
+                                                            right: 0,
+                                                            top: 2,
+                                                            bottom: 0,
+                                                          ),
+                                                          // No explicit border for dropdown, styling via DropdownButton properties
+                                                          child: DropdownButtonFormField2<String>(
+                                                            items: ["Rent", "Sale"]
+                                                                .map(
+                                                                  (lang) =>
+                                                                      DropdownMenuItem<String>(
+                                                                        value: lang,
+                                                                        child: Text(lang),
+                                                                      ),
+                                                                )
+                                                                .toList(),
+                                                            decoration: InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    vertical: 1,
+                                                                    horizontal: 2,
+                                                                  ),
+                                                              border: _inputBorder,
+                                                              enabledBorder: _inputBorder,
+                                                              focusedBorder: _focusedInputBorder,
+                                                              errorBorder: _errorInputBorder,
+                                                              focusedErrorBorder:
+                                                                  _focusedInputBorder,
+                                                              helperText: ' ',
+                                                              errorStyle: const TextStyle(
+                                                                height: 0,
+                                                              ),
+                                                            ),
+                                                            iconStyleData: IconStyleData(
+                                                              // Using IconStyleData for icon properties
+                                                              iconEnabledColor: onboardingTextColor,
+                                                            ),
+
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              offset: const Offset(0, 16),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(
+                                                                  14,
+                                                                ),
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            // value: "USD",
+                                                            value: defaultRentOrSale ?? "Rent",
+                                                            onChanged: (value) async {
+                                                              defaultRentOrSale = value;
+                                                              setState(() {});
+                                                            },
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Container(),
+
+                                              // selectedCategory == "Land Services" ||
+                                              selectedCategory == "Equipments" ||
                                                       selectedCategory == "Delivery"
                                                   ? Container(
                                                       padding: EdgeInsets.only(
@@ -1216,48 +1358,57 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                         top: 2,
                                                         bottom: 0,
                                                       ),
-                                                      // No explicit border for dropdown, styling via DropdownButton properties
-                                                      child: DropdownButtonFormField2<String>(
-                                                        items: ["Rent", "Sale"]
-                                                            .map(
-                                                              (lang) => DropdownMenuItem<String>(
-                                                                value: lang,
-                                                                child: Text(lang),
+                                                      child: Column(
+                                                        children: [
+                                                          DropdownButtonFormField2<String>(
+                                                            items: ["Rent", "Sale"]
+                                                                .map(
+                                                                  (lang) =>
+                                                                      DropdownMenuItem<String>(
+                                                                        value: lang,
+                                                                        child: Text(lang),
+                                                                      ),
+                                                                )
+                                                                .toList(),
+                                                            decoration: InputDecoration(
+                                                              contentPadding:
+                                                                  const EdgeInsets.symmetric(
+                                                                    vertical: 1,
+                                                                    horizontal: 2,
+                                                                  ),
+                                                              border: _inputBorder,
+                                                              enabledBorder: _inputBorder,
+                                                              focusedBorder: _focusedInputBorder,
+                                                              errorBorder: _errorInputBorder,
+                                                              focusedErrorBorder:
+                                                                  _focusedInputBorder,
+                                                              helperText: ' ',
+                                                              errorStyle: const TextStyle(
+                                                                height: 0,
                                                               ),
-                                                            )
-                                                            .toList(),
-                                                        decoration: InputDecoration(
-                                                          contentPadding:
-                                                              const EdgeInsets.symmetric(
-                                                                vertical: 1,
-                                                                horizontal: 2,
-                                                              ),
-                                                          border: _inputBorder,
-                                                          enabledBorder: _inputBorder,
-                                                          focusedBorder: _focusedInputBorder,
-                                                          errorBorder: _errorInputBorder,
-                                                          focusedErrorBorder: _focusedInputBorder,
-                                                          helperText: ' ',
-                                                          errorStyle: const TextStyle(height: 0),
-                                                        ),
-                                                        iconStyleData: IconStyleData(
-                                                          // Using IconStyleData for icon properties
-                                                          iconEnabledColor: onboardingTextColor,
-                                                        ),
+                                                            ),
+                                                            iconStyleData: IconStyleData(
+                                                              // Using IconStyleData for icon properties
+                                                              iconEnabledColor: onboardingTextColor,
+                                                            ),
 
-                                                        dropdownStyleData: DropdownStyleData(
-                                                          offset: const Offset(0, 0),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(16),
-                                                            color: Colors.white,
+                                                            dropdownStyleData: DropdownStyleData(
+                                                              offset: const Offset(0, 16),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(
+                                                                  14,
+                                                                ),
+                                                                color: Colors.white,
+                                                              ),
+                                                            ),
+                                                            // value: "USD",
+                                                            value: defaultRentOrSale ?? "Rent",
+                                                            onChanged: (value) async {
+                                                              defaultRentOrSale = value;
+                                                              setState(() {});
+                                                            },
                                                           ),
-                                                        ),
-                                                        // value: "USD",
-                                                        value: defaultRentOrSale ?? "Rent",
-                                                        onChanged: (value) async {
-                                                          defaultRentOrSale = value;
-                                                          setState(() {});
-                                                        },
+                                                        ],
                                                       ),
                                                     )
                                                   : Container(),
@@ -1825,7 +1976,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             const SizedBox(height: 16),
 
                             TapDebouncer(
-                              cooldown: const Duration(milliseconds: 2000),
+                              cooldown: const Duration(milliseconds: 1000),
                               onTap: () async {
                                 // Check if the user can create a post.
 

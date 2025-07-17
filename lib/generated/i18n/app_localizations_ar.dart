@@ -934,6 +934,18 @@ class AppLocalizationsAr extends AppLocalizations {
       'بع منتجك بعمولة ١٪ فقط على موقع Mahsolek. العمولة هي أمانة يتحملها المعلن، سواءً كان البيع من قِبل الموقع أو بفضله، وقيمتها موضحة أدناه.';
 
   @override
+  String get sellProduct2 =>
+      'بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\nقال الله تعالى:\n\"وَأَوْفُوا بِعَهْدِ اللَّهِ إِذَا عَاهَدتُّمْ\nوَلَا تَنقُضُوا الْأَيْمَانَ بَعْدَ تَوْكِيدِهَا\nوَقَدْ جَعَلْتُمُ اللَّهَ عَلَيْكُمْ كَفِيلًا ۚ\nإِنَّ اللَّهَ يَعْلَمُ مَا تَفْعَلُونَ\"\nصدق الله العظيم.';
+
+  @override
+  String get iPledge =>
+      '• أتعهد وأقسم بالله أنا، المعلن،\n بأن أدفع عمولة الموقع، وهي 2% من\n قيمة البيع، سواء تمت عملية البيع\n عن طريق الموقع أو بسببه.';
+
+  @override
+  String get iPledge2 =>
+      '• كما أتعهد بدفع العمولة\n خلال 7 أيام من استلام مبلغ البيع.';
+
+  @override
   String get commitToThat => 'أنا ملتزم بذلك';
 
   @override
@@ -995,6 +1007,10 @@ class AppLocalizationsAr extends AppLocalizations {
       'بع منتجك بعمولة 1%\nفقط لدى محصولك. العمولة أمانة في ذمة\nالمعلن، سواءً تم البيع عن طريق الموقع أو\nبسببه، وقيمتها موضحةكالتالي';
 
   @override
+  String get sellProductCommission2 =>
+      'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. ';
+
+  @override
   String get calculateCommission => 'احسب العمولة';
 
   @override
@@ -1032,4 +1048,23 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noSearchResults => 'لا توجد نتائج بحث';
+
+  @override
+  String get subscriptionRequired => 'الاشتراك مطلوب';
+
+  @override
+  String get needToBeSubscribedUser =>
+      'يجب أن تكون مستخدمًا مشتركًا لتغيير صور المنشور.';
+
+  @override
+  String get fourImagesLimit => 'يمكنك الحصول على ما يصل إلى 4 صور فقط.';
+
+  @override
+  String get landInSquareMeter => 'المساحة بالمتر المربع (م²)';
+
+  @override
+  String get enterLandArea => 'أدخل مساحة الأرض';
+
+  @override
+  String get landAreaRequired => 'مساحة الأرض مطلوبة.';
 }

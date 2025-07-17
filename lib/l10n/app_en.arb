@@ -306,6 +306,9 @@
   "liraLabel": "Lira (₺)",
   "allahMubarak": "Allah You're Mubarak",
   "sellProduct": "Sell your product at 1% commission Only at Mahsolek. The fee is a trust owed by the advertiser, whether the sale is made for By or because of the site, the value of which is explained as follows",
+  "sellProduct2": "In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n\"And fulfill the covenant of Allah when\nyou have taken it, and do not break\noaths after their confirmation while\nyou have made Allah a witness over\nyou. Verily, Allah knows what you do.\"\nAllah, the almighty has spoken\nthe truth. ",
+  "iPledge": "• I pledge and swear by Allah that I, the\n advertiser, will pay the commission\n of the website, which is 2% of the\n sale value, whether the sale occurred\n through the website or because of it.",
+  "iPledge2": "• I also pledge to pay the commission\n within 7 days from receiving the sale amount. ",
   "commitToThat": "I commit to that",
   "confirmD": "Confirm",
   "monthlyLimitReached": "Monthly Limit Reached",
@@ -325,6 +328,7 @@
   "searchByCountries": "Search country",
   "commissionMembership": "Commission of Membership",
   "sellProductCommission": "Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows",
+  "sellProductCommission2": "In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. ",
   "calculateCommission": "Calculate Commission",
   "salePrice": "Enter Sale Price",
   "totalComission": "Total Commission",
@@ -337,5 +341,11 @@
   "sendingReceipt": "Sending receipt...",
   "emailSent": "Email Sent",
   "checkEmail": "Please check your email!",
-  "noSearchResults": "No search results"
+  "noSearchResults": "No search results",
+  "subscriptionRequired": "Subscription Required",
+  "needToBeSubscribedUser": "You need to be a subscribed user to change post images.",
+  "fourImagesLimit": "You can only have up to 4 images.",
+  "landInSquareMeter": "Land in square meter (m²)",
+  "enterLandArea": "Enter Land Area",
+  "landAreaRequired": "Land Area is required."
 }
