@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farmers_hub/generated/i18n/app_localizations.dart';
 import 'package:farmers_hub/screens/chat/chat_home.dart';
+import 'package:farmers_hub/screens/details/details_images.dart';
 import 'package:farmers_hub/screens/details/details_user_posts_screen.dart';
 import 'package:farmers_hub/screens/manage_post/manage_post_screen.dart';
 import 'package:farmers_hub/services/chat_service.dart';
@@ -152,7 +153,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
       // Show an error message if the device can't handle the request
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)!.notLaunchDialer + " $phoneNumber")),
+          SnackBar(content: Text("${AppLocalizations.of(context)!.notLaunchDialer} $phoneNumber")),
         );
       }
     }
@@ -428,7 +429,19 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // _buildImageSection(),
-                      _buildImageSection(imageUrls),
+                      GestureDetector(
+                        onTap: () {
+                          if (context.mounted) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailsImages(items: imageUrls),
+                              ),
+                            );
+                          }
+                        },
+                        child: _buildImageSection(imageUrls),
+                      ),
 
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),

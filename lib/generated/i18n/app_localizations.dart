@@ -1130,6 +1130,12 @@ abstract class AppLocalizations {
   /// **'Something went wrong:'**
   String get somethingWrong;
 
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications found.'**
+  String get noNotifications;
+
   /// No description provided for @itsAvalabe.
   ///
   /// In en, this message translates to:
@@ -2065,12 +2071,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows'**
   String get sellProductCommission;
-
-  /// No description provided for @sellProductCommission2.
-  ///
-  /// In en, this message translates to:
-  /// **'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. '**
-  String get sellProductCommission2;
 
   /// No description provided for @calculateCommission.
   ///

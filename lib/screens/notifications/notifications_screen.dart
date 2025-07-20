@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class NotificationsScreen extends StatefulWidget {
   RemoteMessage? message;
@@ -52,15 +53,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           stream: _firebaseService.getUserNotifications(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Skeletonizer(child: Center(child: CircularProgressIndicator()));
             }
 
             if (snapshot.hasError) {
-              return const Center(child: Text('Something went wrong.'));
+              return Center(child: Text(AppLocalizations.of(context)!.somethingWrong));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text('No notifications found.'));
+              return  Center(child: Text(AppLocalizations.of(context)!.noNotifications));
             }
 
             final notifications = snapshot.data!.docs;

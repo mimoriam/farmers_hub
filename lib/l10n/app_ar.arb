@@ -346,5 +346,6 @@
   "fourImagesLimit": "يمكنك الحصول على ما يصل إلى 4 صور فقط.",
   "landInSquareMeter": "المساحة بالمتر المربع (م²)",
   "enterLandArea": "أدخل مساحة الأرض",
-  "landAreaRequired": "مساحة الأرض مطلوبة."
+  "landAreaRequired": "مساحة الأرض مطلوبة.",
+  "noNotifications": "لم يتم العثور على أي إشعارات."
 }

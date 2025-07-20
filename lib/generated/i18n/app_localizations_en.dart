@@ -527,6 +527,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWrong => 'Something went wrong:';
 
   @override
+  String get noNotifications => 'No notifications found.';
+
+  @override
   String get itsAvalabe => 'Hi its available';
 
   @override
@@ -1009,10 +1012,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get sellProductCommission =>
       'Sell your product at 1% commission\nOnly at Mahsolek. The fee is a trust owed by the\nadvertiser, whether the sale is made for By or\nbecause of the site, the value of which is\nexplained as follows';
-
-  @override
-  String get sellProductCommission2 =>
-      'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. ';
 
   @override
   String get calculateCommission => 'Calculate Commission';

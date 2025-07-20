@@ -526,6 +526,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get somethingWrong => 'حدث خطأ ما!';
 
   @override
+  String get noNotifications => 'لم يتم العثور على أي إشعارات.';
+
+  @override
   String get itsAvalabe => 'متوفر';
 
   @override
@@ -1005,10 +1008,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get sellProductCommission =>
       'بع منتجك بعمولة 1%\nفقط لدى محصولك. العمولة أمانة في ذمة\nالمعلن، سواءً تم البيع عن طريق الموقع أو\nبسببه، وقيمتها موضحةكالتالي';
-
-  @override
-  String get sellProductCommission2 =>
-      'In the name of Allah, the Most\nGracious, the most Merciful.\nAllah the Almighty said:\n \"And fulfill the covenant of Allah when\n you have taken it, and do not break\n oaths after their confirmation while\n you have made Allah a witness over\nyou. Verily, Allah knows what you do.\" \nAllah, the almighty has spoken the truth. ';
 
   @override
   String get calculateCommission => 'احسب العمولة';

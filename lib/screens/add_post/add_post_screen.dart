@@ -87,6 +87,24 @@ class _AddPostScreenState extends State<AddPostScreen> {
       final pickedFiles = await picker.pickMultiImage(limit: remainingImages);
 
       if (pickedFiles.isNotEmpty) {
+        if (pickedFiles.length > remainingImages) {
+          pickedFiles.clear();
+          if (mounted) {
+            setState(() {
+              error = AppLocalizations.of(context)!.uploadFourImagesOnly;
+              _scrollController.animateTo(
+                _scrollController.position.minScrollExtent,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 300),
+              );
+
+              return;
+            });
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(content: Text("Length exceeded")),
+            // );
+          }
+        }
         if (mounted) {
           setState(() {
             _images.addAll(pickedFiles.map((pickedFile) => File(pickedFile.path)).toList());
@@ -1277,7 +1295,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                             focusedErrorBorder: _focusedInputBorder,
                                                             contentPadding: _contentPadding,
                                                           ),
-                                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                                          keyboardType:
+                                                              const TextInputType.numberWithOptions(
+                                                                decimal: true,
+                                                              ),
                                                           validator: FormBuilderValidators.compose([
                                                             FormBuilderValidators.required(
                                                               errorText: AppLocalizations.of(
@@ -1419,7 +1440,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                                                       selectedCategory == "Olive Oil" ||
                                                       selectedCategory == "Grains & Seeds" ||
                                                       selectedCategory == "Fertilizers" ||
-                                                      selectedCategory == "Tools" ||
+                                                      // selectedCategory == "Tools" ||
                                                       // selectedCategory == "Land Services" ||
                                                       // selectedCategory == "Equipments" ||
                                                       // selectedCategory == "Delivery" ||

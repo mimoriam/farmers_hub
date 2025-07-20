@@ -175,6 +175,24 @@ class _EditPostScreenState extends State<EditPostScreen> {
     } else {
       final pickedFiles = await picker.pickMultiImage(limit: remaining);
       if (pickedFiles.isNotEmpty) {
+        if (pickedFiles.length > remaining) {
+          pickedFiles.clear();
+          if (mounted) {
+            setState(() {
+              error = AppLocalizations.of(context)!.uploadFourImagesOnly;
+              _scrollController.animateTo(
+                _scrollController.position.minScrollExtent,
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 300),
+              );
+
+              return;
+            });
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(content: Text("Length exceeded")),
+            // );
+          }
+        }
         setState(() {
           _newImages.addAll(pickedFiles.map((file) => File(file.path)));
         });
