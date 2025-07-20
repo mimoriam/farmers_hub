@@ -1070,4 +1070,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get landAreaRequired => 'Land Area is required.';
+
+  @override
+  String get landFor => 'Land For';
+
+  @override
+  String get areaInM2 => 'Area in Square Meter';
+
+  @override
+  String get yourPostsWillShowUpHere => 'Your posts will show up here.';
 }

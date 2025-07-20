@@ -2185,6 +2185,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Land Area is required.'**
   String get landAreaRequired;
+
+  /// No description provided for @landFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Land For'**
+  String get landFor;
+
+  /// No description provided for @areaInM2.
+  ///
+  /// In en, this message translates to:
+  /// **'Area in Square Meter'**
+  String get areaInM2;
+
+  /// No description provided for @yourPostsWillShowUpHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Your posts will show up here.'**
+  String get yourPostsWillShowUpHere;
 }
 
 class _AppLocalizationsDelegate

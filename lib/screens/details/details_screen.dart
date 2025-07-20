@@ -1250,11 +1250,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
             : _buildDetailRow(AppLocalizations.of(context)!.age, age),
 
         category == "Land Services"
-            ? _buildDetailRow("Area in Square Meter", landArea)
+            ? _buildDetailRow(AppLocalizations.of(context)!.areaInM2, landArea)
             : Container(),
 
         category == "Land Services" || category == "Equipments" || category == "Delivery"
-            ? _buildDetailRow("Land For", landFor)
+            ? _buildDetailRow(AppLocalizations.of(context)!.landFor, landFor)
             : Container(),
 
         _buildDetailRow(AppLocalizations.of(context)!.phoneNumber, phoneNumber, phoneBlue: true),

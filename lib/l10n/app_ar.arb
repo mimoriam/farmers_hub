@@ -347,5 +347,8 @@
   "landInSquareMeter": "المساحة بالمتر المربع (م²)",
   "enterLandArea": "أدخل مساحة الأرض",
   "landAreaRequired": "مساحة الأرض مطلوبة.",
-  "noNotifications": "لم يتم العثور على أي إشعارات."
+  "noNotifications": "لم يتم العثور على أي إشعارات.",
+  "landFor": "الارض المستخدمة ل",
+  "areaInM2": "المساحة بالمتر المربع",
+  "yourPostsWillShowUpHere": "ستظهر مشاركاتك هنا."
 }

@@ -347,5 +347,8 @@
   "fourImagesLimit": "You can only have up to 4 images.",
   "landInSquareMeter": "Land in square meter (m²)",
   "enterLandArea": "Enter Land Area",
-  "landAreaRequired": "Land Area is required."
+  "landAreaRequired": "Land Area is required.",
+  "landFor": "Land For",
+  "areaInM2": "Area in Square Meter",
+  "yourPostsWillShowUpHere": "Your posts will show up here."
 }

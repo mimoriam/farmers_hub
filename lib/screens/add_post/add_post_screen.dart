@@ -170,6 +170,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   Future<void> _showConfirmationDialog() async {
     bool isCommitted = false;
+    bool processing = false;
 
     return showDialog<void>(
       context: context,
@@ -338,6 +339,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                               }
                             }
 
+                            setState(() {
+                              processing = true;
+                            });
+
                             final doc = await firebaseService.getCurrentUserData();
                             final userData = doc?.data() as Map<String, dynamic>?;
 
@@ -376,10 +381,12 @@ class _AddPostScreenState extends State<AddPostScreen> {
                             );
 
                             _formKey.currentState?.reset();
+
                             this.setState(() {
                               locationSelected = false;
                               error = "";
                               _images = [];
+                              processing = false;
                             });
 
                             if (context.mounted) {
@@ -395,7 +402,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   builder: (BuildContext context, TapDebouncerFunc? onTap) {
                     return SizedBox(
                       width: 230,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           // padding: const EdgeInsets.symmetric(vertical: 15),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -403,8 +410,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
                           foregroundColor: Colors.white,
                         ),
                         onPressed: onTap,
+                        icon: processing ? CircularProgressIndicator(): null,
                         // child: Text('Confirm'),
-                        child: Text(AppLocalizations.of(context)!.confirmD),
+                        label: Text(AppLocalizations.of(context)!.confirmD),
                       ),
                     );
                   },

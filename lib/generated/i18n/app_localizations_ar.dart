@@ -1066,4 +1066,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get landAreaRequired => 'مساحة الأرض مطلوبة.';
+
+  @override
+  String get landFor => 'الارض المستخدمة ل';
+
+  @override
+  String get areaInM2 => 'المساحة بالمتر المربع';
+
+  @override
+  String get yourPostsWillShowUpHere => 'ستظهر مشاركاتك هنا.';
 }

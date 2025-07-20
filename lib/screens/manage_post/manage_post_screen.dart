@@ -204,7 +204,8 @@ class _ManagePostScreenState extends State<ManagePostScreen> {
                               const SizedBox(height: 6.0),
 
                               Text(
-                                'Your posts will show here',
+                                // 'Your posts will show here',
+                                AppLocalizations.of(context)!.yourPostsWillShowUpHere,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14.0,

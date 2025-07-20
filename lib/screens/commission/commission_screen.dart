@@ -383,7 +383,8 @@ class _CommissionScreenState extends State<CommissionScreen> {
                     child: OutlinedButton.icon(
                       icon: FaIcon(FontAwesomeIcons.whatsapp, color: onboardingColor, size: 24),
                       label: Text(
-                        'Whatsapp',
+                        // 'Whatsapp',
+                        AppLocalizations.of(context)!.whatsapp,
                         style: GoogleFonts.poppins(
                           color: primaryColor,
                           fontWeight: FontWeight.w500,
